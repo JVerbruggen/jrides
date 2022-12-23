@@ -1,0 +1,10 @@
+main: com.jverbruggen.jrides.Main
+name: jrides
+version: 1.19.2
+authors: [MeneerPinguin]
+api-version: 1.19
+load: POSTWORLD
+depend: [ProtocolLib]
+permissions:
+
+commands:
