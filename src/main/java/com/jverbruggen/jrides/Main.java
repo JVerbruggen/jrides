@@ -14,7 +14,6 @@ import org.modelmapper.ModelMapper;
 import java.util.logging.Logger;
 
 public class Main extends JavaPlugin {
-
     @Override
     public void onEnable() {
         ServiceProvider.Register(Logger.class, getLogger());
