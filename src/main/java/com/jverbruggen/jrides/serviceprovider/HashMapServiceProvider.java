@@ -12,9 +12,8 @@ public class HashMapServiceProvider implements ServiceProvider {
     }
 
     @Override
-    public <T> T getSingleton(Class type) {
-        Object instance = instances.get(type);
-        return (T) instance;
+    public <T> T getSingleton(Class<T> type) {
+        return (T) instances.get(type);
     }
 
     @Override

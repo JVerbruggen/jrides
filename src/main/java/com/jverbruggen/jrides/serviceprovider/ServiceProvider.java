@@ -3,14 +3,14 @@ package com.jverbruggen.jrides.serviceprovider;
 import java.util.function.Function;
 
 public interface ServiceProvider {
-    <T> T getSingleton(Class type);
+    <T> T getSingleton(Class<T> type);
 
     void register(Class type, Object instance);
     <T extends ServiceProvider, R> void register(Class<R> type, Function<T, R> function);
 
     ServiceProvider instance = new HashMapServiceProvider();
 
-    static <T> T GetSingleton(Class type){
+    static <T> T GetSingleton(Class<T> type){
         return instance.getSingleton(type);
     }
 

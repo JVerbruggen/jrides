@@ -36,6 +36,10 @@ public class Vector3 {
         return z;
     }
 
+    public boolean isZero(){
+        return x == 0 && y == 0 && z == 0;
+    }
+
     public Vector2 getXY() {
         return new Vector2(x, y);
     }

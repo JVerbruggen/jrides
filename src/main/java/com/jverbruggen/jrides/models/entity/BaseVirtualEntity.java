@@ -9,10 +9,12 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     protected PacketSender packetSender;
 
     protected UUID uuid;
+    protected int entityId;
     protected Vector3 location;
 
-    public BaseVirtualEntity(PacketSender packetSender) {
+    public BaseVirtualEntity(PacketSender packetSender, int entityId) {
         this.packetSender = packetSender;
+        this.entityId = entityId;
         this.uuid = UUID.randomUUID();
         this.location = new Vector3(0,0,0);
     }

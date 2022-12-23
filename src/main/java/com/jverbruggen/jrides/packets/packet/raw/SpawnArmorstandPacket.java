@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.packets.packet;
+package com.jverbruggen.jrides.packets.packet.raw;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
@@ -9,7 +9,7 @@ import com.jverbruggen.jrides.packets.Packet;
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
-public class SpawnVirtualEntityPacket implements Packet {
+public class SpawnArmorstandPacket implements Packet {
     private ProtocolManager protocolManager;
 
     private int entityId;
@@ -20,7 +20,7 @@ public class SpawnVirtualEntityPacket implements Packet {
     private double yawRotation;
     private UUID uuid;
 
-    public SpawnVirtualEntityPacket(ProtocolManager protocolManager, int entityId, int entityType, double locationX, double locationY, double locationZ, double yawRotation, UUID uuid) {
+    public SpawnArmorstandPacket(ProtocolManager protocolManager, int entityId, int entityType, double locationX, double locationY, double locationZ, double yawRotation, UUID uuid) {
         this.protocolManager = protocolManager;
         this.entityId = entityId;
         this.entityType = entityType;
@@ -50,7 +50,6 @@ public class SpawnVirtualEntityPacket implements Packet {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-
         return true;
     }
 }

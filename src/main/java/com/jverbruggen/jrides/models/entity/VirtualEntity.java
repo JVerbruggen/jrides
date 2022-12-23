@@ -10,5 +10,6 @@ public interface VirtualEntity {
     Player getPassenger();
     void setPassenger(Player player);
     Vector3 getLocation();
+
     void spawnFor(Player player);
 }
