@@ -24,6 +24,18 @@ public class Vector3 {
         this.z = z;
     }
 
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getZ() {
+        return z;
+    }
+
     public Vector2 getXY() {
         return new Vector2(x, y);
     }

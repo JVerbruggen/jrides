@@ -1,7 +1,8 @@
 package com.jverbruggen.jrides.packets;
 
-import javax.annotation.Nullable;
+import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.math.Vector3;
 
 public interface PacketSender {
-    Packet sendPacket(PacketType type, @Nullable Object options);
+    void sendSpawnVirtualEntityPacket(Player player, Vector3 location, double yawRotation);
 }

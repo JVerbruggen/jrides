@@ -3,6 +3,7 @@ package com.jverbruggen.jrides;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.jverbruggen.jrides.models.entity.VirtualEntityFactory;
+import com.jverbruggen.jrides.models.message.MessageFactory;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.PacketSender_1_19_2;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -19,6 +20,7 @@ public class Main extends JavaPlugin {
         ServiceProvider.Register(Logger.class, getLogger());
         ServiceProvider.Register(ModelMapper.class, new ModelMapper());
         ServiceProvider.Register(ProtocolManager.class, ProtocolLibrary.getProtocolManager());
+        ServiceProvider.Register(MessageFactory.class, sp -> new MessageFactory(sp.getSingleton(ProtocolManager.class)));
         ServiceProvider.Register(RideManager.class, new RideManager());
         ServiceProvider.Register(PacketSender.class,
                 sp -> new PacketSender_1_19_2(sp.getSingleton(ProtocolManager.class)));
