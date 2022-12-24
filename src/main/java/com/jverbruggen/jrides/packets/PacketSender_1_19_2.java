@@ -78,9 +78,13 @@ public class PacketSender_1_19_2 implements PacketSender {
         ).send(player);
     }
 
-    public void destroyVirtualArmorstand(Player player, int entityId){
+    public void destroyVirtualEntity(Player player, int entityId){
         new EntityDestroyPacket(
                 protocolManager, entityId
         ).send(player);
+    }
+
+    public void teleportVirtualEntity(Player player, int entityId, Vector3 location){
+        new EntityTeleportPacket(entityId, location).send(player);
     }
 }

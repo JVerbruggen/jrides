@@ -36,6 +36,18 @@ public class Vector3 {
         return z;
     }
 
+    public int getBlockX(){
+        return (int) x;
+    }
+
+    public int getBlockY(){
+        return (int) y;
+    }
+
+    public int getBlockZ(){
+        return (int) z;
+    }
+
     public boolean isZero(){
         return x == 0 && y == 0 && z == 0;
     }
