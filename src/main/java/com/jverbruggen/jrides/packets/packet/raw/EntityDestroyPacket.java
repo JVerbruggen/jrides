@@ -6,24 +6,26 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.jverbruggen.jrides.packets.packet.SingularPacket;
 import com.jverbruggen.jrides.packets.Packet;
 
-public class AttachEntityPacket extends SingularPacket implements Packet {
+import java.util.ArrayList;
+import java.util.List;
+
+public class EntityDestroyPacket extends SingularPacket implements Packet {
     private ProtocolManager protocolManager;
     private int entityId;
-    private int leashedToEntityId;
 
-    public AttachEntityPacket(ProtocolManager protocolManager, int entityId, int leashedToEntityId) {
+    public EntityDestroyPacket(ProtocolManager protocolManager, int entityId) {
         this.protocolManager = protocolManager;
         this.entityId = entityId;
-        this.leashedToEntityId = leashedToEntityId;
     }
 
     @Override
     public PacketContainer getPacket() {
-        PacketContainer leashPacket = new PacketContainer(PacketType.Play.Server.ATTACH_ENTITY);
-        leashPacket.getIntegers()
-                .write(0, entityId)
-                .write(1, leashedToEntityId);
+        PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
+        List<Integer> toDestroy = new ArrayList<>();
+        toDestroy.add(this.entityId);
+        packet.getIntLists()
+                .write(0, toDestroy);
 
-        return leashPacket;
+        return packet;
     }
 }

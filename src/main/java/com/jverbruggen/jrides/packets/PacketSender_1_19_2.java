@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandRotations;
 import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandModels;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.packet.raw.*;
+import org.bukkit.util.Vector;
 
 import java.util.UUID;
 
@@ -67,5 +68,19 @@ public class PacketSender_1_19_2 implements PacketSender {
         sendRotationPacket(player, entityId, ArmorstandRotationPacket.Type.RIGHT_LEG, rotations.getRightLeg());
 
         sendAttachLeashPacket(player, entityId, leashedToEntity);
+    }
+
+    public void moveVirtualArmorstand(Player player, int entityId, Vector3 location, double yawRotation){
+        Vector vector = location.toBukkitVector();
+
+        new ArmorstandMovePacket(
+                protocolManager, entityId, location, yawRotation
+        ).send(player);
+    }
+
+    public void destroyVirtualArmorstand(Player player, int entityId){
+        new EntityDestroyPacket(
+                protocolManager, entityId
+        ).send(player);
     }
 }

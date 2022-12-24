@@ -9,6 +9,7 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     private Player passenger;
     private double yawRotation;
     private ArmorstandRotations rotations;
+    private ArmorstandModels models;
     private boolean invisible;
     private int leashedToEntity;
 
@@ -18,6 +19,7 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         this.passenger = null;
         this.yawRotation = 0d;
         this.rotations = new ArmorstandRotations();
+        this.models = new ArmorstandModels();
         this.invisible = false;
         this.leashedToEntity = -1;
     }
@@ -34,6 +36,6 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
 
     @Override
     public void spawnFor(Player player) {
-        packetSender.spawnVirtualArmorstand(player, entityId, location, yawRotation, rotations, invisible, leashedToEntity);
+        packetSender.spawnVirtualArmorstand(player, entityId, location, yawRotation, rotations, models, invisible, leashedToEntity);
     }
 }

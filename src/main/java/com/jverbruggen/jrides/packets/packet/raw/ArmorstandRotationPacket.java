@@ -4,13 +4,11 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.packets.packet.SingularPacket;
 import com.jverbruggen.jrides.packets.Packet;
 
-import java.lang.reflect.InvocationTargetException;
-
-public class ArmorstandRotationPacket implements Packet {
+public class ArmorstandRotationPacket extends SingularPacket implements Packet {
     public static class Type{
         public static final int HEAD = 16;
         public static final int BODY = 17;
@@ -33,19 +31,16 @@ public class ArmorstandRotationPacket implements Packet {
     }
 
     @Override
-    public boolean send(Player player) {
+    public PacketContainer getPacket() {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
         packet.getIntegers().write(0, this.entityId);
+
         WrappedDataWatcher watcher = new WrappedDataWatcher();
         WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(Vector3.class);
         watcher.setObject(rotationType, serializer, rotation);
-        packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
-        try {
-            this.protocolManager.sendServerPacket(player.getBukkitPlayer(), packet);
-        }catch(InvocationTargetException e) {
-            e.printStackTrace();
-        }
 
-        return true;
+        packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
+
+        return packet;
     }
 }

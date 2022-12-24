@@ -3,13 +3,12 @@ package com.jverbruggen.jrides.packets.packet.raw;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
-import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.packets.Packet;
+import com.jverbruggen.jrides.packets.packet.SingularPacket;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
-public class SpawnArmorstandPacket implements Packet {
+public class SpawnArmorstandPacket extends SingularPacket implements Packet {
     private ProtocolManager protocolManager;
 
     private int entityId;
@@ -32,7 +31,7 @@ public class SpawnArmorstandPacket implements Packet {
     }
 
     @Override
-    public boolean send(Player player) {
+    public PacketContainer getPacket() {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY_LIVING);
         packet.getIntegers()
                 .write(0, entityId)
@@ -45,11 +44,7 @@ public class SpawnArmorstandPacket implements Packet {
                 .write(0, (byte)yawRotation);
         packet.getUUIDs()
                 .write(0, uuid);
-        try {
-            protocolManager.sendServerPacket(player.getBukkitPlayer(), packet);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return true;
+
+        return packet;
     }
 }

@@ -84,6 +84,10 @@ public class Vector3 {
         return "{x=" + x + ", y=" + y + ", z=" + z + "}";
     }
 
+    public Vector toBukkitVector(){
+        return new Vector(x, y, z);
+    }
+
     public boolean equals(Vector3 p) {
         return p.x == x && p.y == y && p.z == z;
     }
