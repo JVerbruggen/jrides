@@ -14,11 +14,12 @@ public interface ServiceProvider {
         return instance.getSingleton(type);
     }
 
-    static void Register(Class type, Object o){
+    static <R> R Register(Class<R> type, R o){
         instance.register(type, o);
+        return o;
     }
 
-    static <T extends ServiceProvider, R> void Register(Class<R> type, Function<T, R> function){
+    static <T extends ServiceProvider, R> void RegisterWith(Class<R> type, Function<T, R> function){
         instance.register(type, function);
     }
 }

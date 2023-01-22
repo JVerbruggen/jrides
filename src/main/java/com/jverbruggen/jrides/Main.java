@@ -1,15 +1,14 @@
 package com.jverbruggen.jrides;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.jverbruggen.jrides.config.ConfigManager;
-import com.jverbruggen.jrides.models.entity.EntityIdFactory;
-import com.jverbruggen.jrides.models.entity.VirtualEntityFactory;
-import com.jverbruggen.jrides.models.message.MessageFactory;
-import com.jverbruggen.jrides.packets.PacketSender;
-import com.jverbruggen.jrides.packets.PacketSender_1_19_2;
+import com.jverbruggen.jrides.command.JRidesCommandExecutor;
+import com.jverbruggen.jrides.config.ride.RideConfig;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import com.jverbruggen.jrides.state.ride.RideManager;
+import com.jverbruggen.jrides.serviceprovider.configuration.ServiceProviderConfigurator;
+import com.jverbruggen.jrides.state.player.PlayerManager;
+import com.jverbruggen.jrides.state.player.PlayerManagerListener;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
@@ -17,26 +16,25 @@ import java.util.logging.Logger;
 public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
-        ServiceProvider.Register(Logger.class, getLogger());
-        ServiceProvider.Register(ConfigManager.class, new ConfigManager(this));
-        ServiceProvider.Register(ProtocolManager.class, ProtocolLibrary.getProtocolManager());
-        ServiceProvider.Register(EntityIdFactory.class, sp -> new EntityIdFactory(1_500_000, Integer.MAX_VALUE));
-        ServiceProvider.Register(MessageFactory.class, sp -> new MessageFactory(sp.getSingleton(ProtocolManager.class)));
-        ServiceProvider.Register(RideManager.class, new RideManager());
-        ServiceProvider.Register(PacketSender.class,
-                sp -> new PacketSender_1_19_2(sp.getSingleton(ProtocolManager.class)));
-        ServiceProvider.Register(VirtualEntityFactory.class,
-                sp -> new VirtualEntityFactory(
-                        sp.getSingleton(PacketSender.class),
-                        sp.getSingleton(EntityIdFactory.class)));
+        JRidesPlugin.setBukkitPluginHost(this);
+        ServiceProviderConfigurator.configure(this);
+
+        PluginManager pluginManager = getServer().getPluginManager();
+        pluginManager.registerEvents(new PlayerManagerListener(ServiceProvider.GetSingleton(PlayerManager.class)), this);
+
+        getServer().getPluginCommand("jrides").setExecutor(
+                new JRidesCommandExecutor(ServiceProvider.GetSingleton(PlayerManager.class)));
 
         Logger logger = ServiceProvider.GetSingleton(Logger.class);
-        logger.warning("JRIDES ENABLED YE");
+        logger.warning("JRides enabled");
+
+        World world = Bukkit.getWorld("world");
+        ServiceProvider.GetSingleton(RideConfig.class).initAllRides(world);
     }
 
     @Override
     public void onDisable() {
         Logger logger = ServiceProvider.GetSingleton(Logger.class);
-        logger.warning("JRIDES DISABLED YE");
+        logger.warning("JRides disabled");
     }
 }

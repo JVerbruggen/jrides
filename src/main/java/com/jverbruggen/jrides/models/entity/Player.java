@@ -20,6 +20,10 @@ public class Player {
         return new Vector3(x, y, z);
     }
 
+    public void sendMessage(String message){
+        bukkitPlayer.sendMessage(message);
+    }
+
     public org.bukkit.entity.Player getBukkitPlayer(){
         return bukkitPlayer;
     }

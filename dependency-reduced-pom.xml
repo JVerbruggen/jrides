@@ -51,6 +51,10 @@
               <pattern>de.tr7zw.changeme.nbtapi</pattern>
               <shadedPattern>com.jverbruggen.jrides.nbtapi</shadedPattern>
             </relocation>
+            <relocation>
+              <pattern>com.google.code.gson</pattern>
+              <shadedPattern>com.jverbruggen.jrides.gson</shadedPattern>
+            </relocation>
           </relocations>
         </configuration>
       </plugin>

@@ -15,4 +15,9 @@ public class ArmorstandSeat implements Seat {
     public Player getPassenger() {
         return passenger;
     }
+
+    @Override
+    public void setPassenger(Player player) {
+
+    }
 }
