@@ -8,6 +8,7 @@ public class ArmorstandSeat implements Seat {
     private VirtualArmorstand virtualArmorstand;
 
     public ArmorstandSeat(VirtualArmorstand virtualArmorstand) {
+        this.passenger = null;
         this.virtualArmorstand = virtualArmorstand;
     }
 
@@ -19,5 +20,10 @@ public class ArmorstandSeat implements Seat {
     @Override
     public void setPassenger(Player player) {
 
+    }
+
+    @Override
+    public boolean hasPassenger() {
+        return passenger != null;
     }
 }

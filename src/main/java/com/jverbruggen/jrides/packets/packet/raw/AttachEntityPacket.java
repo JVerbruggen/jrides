@@ -7,12 +7,11 @@ import com.jverbruggen.jrides.packets.packet.SingularPacket;
 import com.jverbruggen.jrides.packets.Packet;
 
 public class AttachEntityPacket extends SingularPacket implements Packet {
-    private ProtocolManager protocolManager;
     private int entityId;
     private int leashedToEntityId;
 
     public AttachEntityPacket(ProtocolManager protocolManager, int entityId, int leashedToEntityId) {
-        this.protocolManager = protocolManager;
+        super(protocolManager);
         this.entityId = entityId;
         this.leashedToEntityId = leashedToEntityId;
     }

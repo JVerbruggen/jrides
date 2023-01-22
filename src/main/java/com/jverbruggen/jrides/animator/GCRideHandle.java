@@ -1,30 +1,38 @@
 package com.jverbruggen.jrides.animator;
 
+import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.models.ride.Ride;
-import org.bukkit.Location;
+import com.jverbruggen.jrides.models.ride.coaster.Track;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GCRideHandle {
     private Ride ride;
-    private List<NoLimitsExportPositionRecord> positions;
+    private Track track;
+    private List<TrainHandle> trains;
     private World world;
-    private TrackVisualisationTool visualisationTool;
+    private ParticleTrackVisualisationTool visualisationTool;
 
-    public GCRideHandle(Ride ride, List<NoLimitsExportPositionRecord> positions, World world) {
+    public GCRideHandle(Ride ride, List<TrainHandle> trains, Track track, World world) {
         this.ride = ride;
-        this.positions = positions;
+        this.track = track;
+        this.trains = trains;
         this.world = world;
+        this.visualisationTool = ParticleTrackVisualisationTool.fromTrack(world, track, 20);
 
-        List<Location> locations = positions.stream()
-                .map(p -> new Location(world, p.getPosX(), p.getPosY(), p.getPosZ()))
-                .collect(Collectors.toList());
-        this.visualisationTool = new TrackVisualisationTool(world, locations);
+        Bukkit.getScheduler().runTaskTimer(JRidesPlugin.getBukkitPlugin(), this::tick, 1l, 1l);
     }
 
-    public TrackVisualisationTool getVisualisationTool() {
+    public ParticleTrackVisualisationTool getVisualisationTool() {
         return visualisationTool;
+    }
+
+    public void tick(){
+        for(TrainHandle trainHandle : trains){
+            trainHandle.tick();
+        }
     }
 }

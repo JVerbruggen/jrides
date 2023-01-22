@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.config;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.ride.RideConfig;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -36,7 +37,7 @@ public class ConfigManager {
     public CoasterConfig getCoasterConfig(String identifier){
         String fileName = "coasters/" + identifier + ".coaster.yml";
         YamlConfiguration yamlConfiguration = getYamlConfiguration(fileName);
-        CoasterConfig coasterConfig = (CoasterConfig) yamlConfiguration.get("config");
+        CoasterConfig coasterConfig = CoasterConfig.fromConfigurationSection(yamlConfiguration.getConfigurationSection("config"));
 
         return coasterConfig;
     }
@@ -44,7 +45,7 @@ public class ConfigManager {
     public RideConfig getRideConfig(){
         String fileName = "rides.yml";
         YamlConfiguration yamlConfiguration = getYamlConfiguration(fileName);
-        RideConfig rideConfig = (RideConfig) yamlConfiguration.get("config");
+        RideConfig rideConfig = RideConfig.fromConfigurationSection(yamlConfiguration.getConfigurationSection("config"));
 
         return rideConfig;
     }

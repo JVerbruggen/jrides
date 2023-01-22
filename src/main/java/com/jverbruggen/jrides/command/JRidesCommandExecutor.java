@@ -1,10 +1,8 @@
 package com.jverbruggen.jrides.command;
 
 import com.jverbruggen.jrides.animator.GCRideHandle;
-import com.jverbruggen.jrides.animator.TrackVisualisationTool;
+import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.models.entity.Player;
-import com.jverbruggen.jrides.models.identifier.RideIdentifier;
-import com.jverbruggen.jrides.models.identifier.SimpleRideIdentifier;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.ride.RideManager;
@@ -52,7 +50,7 @@ public class JRidesCommandExecutor implements CommandExecutor {
         String identifier = args[0];
 
         GCRideHandle rideHandle = ServiceProvider.GetSingleton(RideManager.class).getRideHandle(identifier);
-        TrackVisualisationTool tool = rideHandle.getVisualisationTool();
+        ParticleTrackVisualisationTool tool = rideHandle.getVisualisationTool();
 
         Player player = playerManager.getPlayer((org.bukkit.entity.Player) commandSender);
         if(tool.isViewer(player)){

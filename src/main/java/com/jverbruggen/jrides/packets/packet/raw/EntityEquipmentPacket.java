@@ -14,13 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityEquipmentPacket extends SingularPacket implements Packet {
-    private final ProtocolManager protocolManager;
     private final int entityId;
     private final EnumWrappers.ItemSlot itemSlot;
     private final TrainModelItem model;
 
     public EntityEquipmentPacket(ProtocolManager protocolManager, int entityId, EnumWrappers.ItemSlot itemSlot, TrainModelItem model) {
-        this.protocolManager = protocolManager;
+        super(protocolManager);
         this.entityId = entityId;
         this.itemSlot = itemSlot;
         this.model = model;

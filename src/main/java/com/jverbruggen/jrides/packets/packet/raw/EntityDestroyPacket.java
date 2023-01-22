@@ -10,11 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityDestroyPacket extends SingularPacket implements Packet {
-    private ProtocolManager protocolManager;
     private int entityId;
 
     public EntityDestroyPacket(ProtocolManager protocolManager, int entityId) {
-        this.protocolManager = protocolManager;
+        super(protocolManager);
         this.entityId = entityId;
     }
 

@@ -3,7 +3,9 @@ package com.jverbruggen.jrides.models.entity.armorstand;
 import com.jverbruggen.jrides.models.entity.BaseVirtualEntity;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
+import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.PacketSender;
+import com.jverbruggen.jrides.state.viewport.ViewportManager;
 
 public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntity {
     private Player passenger;
@@ -13,8 +15,8 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     private boolean invisible;
     private int leashedToEntity;
 
-    public VirtualArmorstand(PacketSender packetSender, int entityId) {
-        super(packetSender, entityId);
+    public VirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, int entityId) {
+        super(packetSender, viewportManager, location, entityId);
 
         this.passenger = null;
         this.yawRotation = 0d;

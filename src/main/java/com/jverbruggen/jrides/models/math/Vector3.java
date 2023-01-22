@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.models.math;
 
+import com.comphenix.protocol.wrappers.Vector3F;
 import org.bukkit.util.Vector;
 
 public class Vector3 {
@@ -100,6 +101,13 @@ public class Vector3 {
         return new Vector(x, y, z);
     }
 
+    public Vector3F toVector3F(){
+        float x = (float) this.x;
+        float y = (float) this.y;
+        float z = (float) this.z;
+        return new Vector3F(x, y, z);
+    }
+
     public boolean equals(Vector3 p) {
         return p.x == x && p.y == y && p.z == z;
     }
@@ -167,4 +175,5 @@ public class Vector3 {
     public static double dot(Vector3 v1, Vector3 v2) {
         return (v1.x*v2.x + v1.y*v2.y + v1.z*v2.z);
     }
+
 }

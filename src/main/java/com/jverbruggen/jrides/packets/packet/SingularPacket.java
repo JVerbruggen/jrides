@@ -11,6 +11,10 @@ import java.util.List;
 public abstract class SingularPacket implements Packet {
     protected ProtocolManager protocolManager;
 
+    public SingularPacket(ProtocolManager protocolManager) {
+        this.protocolManager = protocolManager;
+    }
+
     public abstract PacketContainer getPacket();
 
     protected boolean sendPacket(Player player, PacketContainer packet){

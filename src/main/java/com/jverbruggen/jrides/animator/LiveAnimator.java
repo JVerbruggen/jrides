@@ -1,4 +1,4 @@
 package com.jverbruggen.jrides.animator;
 
-public class GCRidesAnimator {
+public class LiveAnimator {
 }

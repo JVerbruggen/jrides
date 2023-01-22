@@ -10,35 +10,49 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.packet.raw.*;
 import org.bukkit.util.Vector;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public class PacketSender_1_19_2 implements PacketSender {
     private final ProtocolManager protocolManager;
+    private final Logger logger;
 
-    public PacketSender_1_19_2(ProtocolManager protocolManager) {
+    public PacketSender_1_19_2(Logger logger, ProtocolManager protocolManager) {
+        this.logger = logger;
         this.protocolManager = protocolManager;
     }
 
-    private void sendRotationPacket(Player player, int entityId, int rotationType, Vector3 rotation){
+    private void sendLog(String msg){
+        logger.info(msg);
+    }
+
+    public void sendRotationPacket(Player player, int entityId, int rotationType, Vector3 rotation){
         new ArmorstandRotationPacket(
                 protocolManager, entityId, rotationType, rotation
         ).send(player);
+
+        sendLog("sendRotationPacket");
     }
 
-    private void sendApplyModelPacket(Player player, int entityId, EnumWrappers.ItemSlot itemSlot, TrainModelItem model){
+    public void sendApplyModelPacket(Player player, int entityId, EnumWrappers.ItemSlot itemSlot, TrainModelItem model){
         if(model == null) return;
 
         new EntityEquipmentPacket(
                 protocolManager, entityId, itemSlot, model
         ).send(player);
+
+        sendLog("sendApplyModelPacket");
     }
 
-    private void sendAttachLeashPacket(Player player, int entityId, int leashToEntityId){
+    public void sendAttachLeashPacket(Player player, int entityId, int leashToEntityId){
         if(leashToEntityId == -1) return;
 
         new AttachEntityPacket(
                 protocolManager, entityId, leashToEntityId
         ).send(player);
+
+        sendLog("sendAttachLeashPacket");
     }
 
     @Override
@@ -49,9 +63,12 @@ public class PacketSender_1_19_2 implements PacketSender {
         double locationZ = location.getZ();
         UUID uuid = UUID.randomUUID();
 
+        sendLog("spawnVirtualArmorstand for " + player.getBukkitPlayer().getName() + " at " + location.toString());
+
         new SpawnArmorstandPacket(
                 protocolManager, entityId, entityType, locationX, locationY, locationZ, yawRotation, uuid
         ).send(player);
+
         new EntityMetadataPacket(
                 protocolManager, entityId, invisible
         ).send(player);
@@ -68,6 +85,16 @@ public class PacketSender_1_19_2 implements PacketSender {
         sendRotationPacket(player, entityId, ArmorstandRotationPacket.Type.RIGHT_LEG, rotations.getRightLeg());
 
         sendAttachLeashPacket(player, entityId, leashedToEntity);
+
+    }
+
+    @Override
+    public void spawnVirtualArmorstand(List<Player> players, int entityId, Vector3 location, double yawRotation, ArmorstandRotations rotations, ArmorstandModels models, boolean invisible, int leashedToEntity) {
+        for(Player player : players){
+            spawnVirtualArmorstand(player, entityId, location, yawRotation, rotations, models, invisible, leashedToEntity);
+        }
+
+        sendLog("spawnVirtualArmorstand");
     }
 
     public void moveVirtualArmorstand(Player player, int entityId, Vector3 location, double yawRotation){
@@ -76,15 +103,46 @@ public class PacketSender_1_19_2 implements PacketSender {
         new ArmorstandMovePacket(
                 protocolManager, entityId, location, yawRotation
         ).send(player);
+
+        sendLog("moveVirtualArmorstand");
+    }
+
+    @Override
+    public void moveVirtualArmorstand(List<Player> players, int entityId, Vector3 location, double yawRotation) {
+        new ArmorstandMovePacket(
+                protocolManager, entityId, location, yawRotation
+        ).sendAll(players);
+
+        sendLog("moveVirtualArmorstand " + location.toString());
     }
 
     public void destroyVirtualEntity(Player player, int entityId){
         new EntityDestroyPacket(
                 protocolManager, entityId
         ).send(player);
+
+        sendLog("destroyVirtualEntity");
+    }
+
+    @Override
+    public void destroyVirtualEntity(List<Player> players, int entityId) {
+        new EntityDestroyPacket(
+                protocolManager, entityId
+        ).sendAll(players);
+
+        sendLog("destroyVirtualEntity");
     }
 
     public void teleportVirtualEntity(Player player, int entityId, Vector3 location){
-        new EntityTeleportPacket(entityId, location).send(player);
+        new EntityTeleportPacket(protocolManager, entityId, location).send(player);
+
+        sendLog("teleportVirtualEntity");
+    }
+
+    @Override
+    public void teleportVirtualEntity(List<Player> players, int entityId, Vector3 location) {
+        new EntityTeleportPacket(protocolManager, entityId, location).sendAll(players);
+
+        sendLog("teleportVirtualEntity");
     }
 }

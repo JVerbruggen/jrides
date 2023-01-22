@@ -5,12 +5,11 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.jverbruggen.jrides.packets.Packet;
 import com.jverbruggen.jrides.packets.packet.SingularPacket;
+import org.bukkit.entity.EntityType;
 
 import java.util.UUID;
 
 public class SpawnArmorstandPacket extends SingularPacket implements Packet {
-    private ProtocolManager protocolManager;
-
     private int entityId;
     private int entityType;
     private double locationX;
@@ -20,7 +19,7 @@ public class SpawnArmorstandPacket extends SingularPacket implements Packet {
     private UUID uuid;
 
     public SpawnArmorstandPacket(ProtocolManager protocolManager, int entityId, int entityType, double locationX, double locationY, double locationZ, double yawRotation, UUID uuid) {
-        this.protocolManager = protocolManager;
+        super(protocolManager);
         this.entityId = entityId;
         this.entityType = entityType;
         this.locationX = locationX;
@@ -32,16 +31,17 @@ public class SpawnArmorstandPacket extends SingularPacket implements Packet {
 
     @Override
     public PacketContainer getPacket() {
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY_LIVING);
+        PacketContainer packet = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
         packet.getIntegers()
-                .write(0, entityId)
-                .write(1, entityType);
+                .write(0, entityId);
+        packet.getEntityTypeModifier()
+                .write(0, EntityType.ARMOR_STAND);
         packet.getDoubles()
                 .write(0, locationX)
                 .write(1, locationY)
                 .write(2, locationZ);
         packet.getBytes()
-                .write(0, (byte)yawRotation);
+                .write(1, (byte)yawRotation);
         packet.getUUIDs()
                 .write(0, uuid);
 
