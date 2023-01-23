@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.packet.raw.ArmorstandRotationPacket;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
@@ -18,8 +19,9 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     private boolean invisible;
     private int leashedToEntity;
     private boolean allowsPassengerValue;
+    private Seat partOfSeat;
 
-    public VirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, boolean allowsPassenger, int entityId) {
+    public VirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, int entityId) {
         super(packetSender, viewportManager, location, entityId);
 
         this.passenger = null;
@@ -28,7 +30,8 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         this.models = new ArmorstandModels();
         this.invisible = false;
         this.leashedToEntity = -1;
-        this.allowsPassengerValue = allowsPassenger;
+        this.allowsPassengerValue = false;
+        this.partOfSeat = null;
     }
 
     @Override
@@ -61,6 +64,17 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         if(models.hasHead()){
             this.packetSender.sendApplyModelPacket(viewers, entityId, EnumWrappers.ItemSlot.HEAD, models.getHead());
         }
+    }
+
+    @Override
+    public void setHostSeat(Seat seat) {
+        partOfSeat = seat;
+        allowsPassengerValue = true;
+    }
+
+    @Override
+    public Seat getHostSeat() {
+        return partOfSeat;
     }
 
     public void setHeadpose(Vector3 rotation) {

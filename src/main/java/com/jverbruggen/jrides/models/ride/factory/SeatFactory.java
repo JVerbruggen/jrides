@@ -27,8 +27,10 @@ public class SeatFactory {
             Vector3 relativeSeatLocation = calculateSeatLocationOnMatrix(rotationMatrix, seatOffset);
             Vector3 absoluteSeatLocation = Vector3.add(cartLocation, relativeSeatLocation);
 
-            VirtualArmorstand seatArmorStand = viewportManager.spawnVirtualArmorstand(absoluteSeatLocation, true);
+            VirtualArmorstand seatArmorStand = viewportManager.spawnVirtualArmorstand(absoluteSeatLocation);
             Seat seat = new CoasterSeat(seatArmorStand, seatOffset);
+            seatArmorStand.setHostSeat(seat);
+
             seats.add(seat);
         }
         return seats;

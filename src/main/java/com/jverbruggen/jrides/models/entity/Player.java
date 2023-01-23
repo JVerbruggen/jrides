@@ -1,13 +1,16 @@
 package com.jverbruggen.jrides.models.entity;
 
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.ride.Seat;
 import org.bukkit.Location;
 
 public class Player {
     private org.bukkit.entity.Player bukkitPlayer;
+    private Seat seatedOn;
 
     public Player(org.bukkit.entity.Player bukkitPlayer) {
         this.bukkitPlayer = bukkitPlayer;
+        this.seatedOn = null;
     }
 
     public Vector3 getLocation(){
@@ -26,5 +29,17 @@ public class Player {
 
     public org.bukkit.entity.Player getBukkitPlayer(){
         return bukkitPlayer;
+    }
+
+    public void setSeatedOn(Seat seat){
+        this.seatedOn = seat;
+    }
+
+    public Seat getSeatedOn(){
+        return this.seatedOn;
+    }
+
+    public boolean isSeated(){
+        return this.seatedOn != null;
     }
 }

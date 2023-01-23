@@ -45,7 +45,10 @@ public class ServiceProviderConfigurator {
         TrackFactory trackFactory                   = ServiceProvider.Register(TrackFactory.class, new TrackFactory());
         RideManager rideManager                     = ServiceProvider.Register(RideManager.class, new RideManager(logger, dataFolder, viewportManager, configManager, trainFactory, trackFactory, seatFactory));
         VirtualEntityPacketListener packetListener  = ServiceProvider.Register(VirtualEntityPacketListener.class,
-                new VirtualEntityPacketListener(plugin, ListenerPriority.NORMAL, new PacketType[]{PacketType.Play.Client.USE_ENTITY},
+                new VirtualEntityPacketListener(plugin, ListenerPriority.NORMAL, new PacketType[]{
+                            PacketType.Play.Client.USE_ENTITY,
+                            PacketType.Play.Client.STEER_VEHICLE
+                        },
                         viewportManager, playerManager));
     }
 }

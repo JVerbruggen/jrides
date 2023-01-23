@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.models.ride;
 
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Vector3;
 
 public interface Seat {
@@ -11,5 +12,5 @@ public interface Seat {
     Vector3 getOffset();
     void setLocation(Vector3 location);
 
-
+    VirtualEntity getEntity();
 }

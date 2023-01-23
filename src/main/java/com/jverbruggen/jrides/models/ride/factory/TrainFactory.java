@@ -43,7 +43,7 @@ public class TrainFactory {
             Quaternion orientation = positionRecord.getOrientation();
             Vector3 cartLocation = Cart.calculateLocation(trackLocation, cartOffset, orientation);
 
-            VirtualArmorstand armorStand = viewportManager.spawnVirtualArmorstand(cartLocation, model, false);
+            VirtualArmorstand armorStand = viewportManager.spawnVirtualArmorstand(cartLocation, model);
 
             List<Vector3> seatOffsets = List.of(new Vector3(0.3, -1.4, -1), new Vector3(0.3, -1.4, 1));
             List<Seat> seats = seatFactory.createSeats(seatOffsets, cartLocation, orientation);

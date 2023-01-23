@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.models.entity;
 
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.ride.Seat;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,4 +26,7 @@ public interface VirtualEntity {
     void spawnForAll(List<Player> players);
     void despawnFor(Player player);
     void despawn();
+
+    void setHostSeat(Seat seat);
+    Seat getHostSeat();
 }

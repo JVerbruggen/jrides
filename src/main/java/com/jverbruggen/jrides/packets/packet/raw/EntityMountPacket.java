@@ -20,10 +20,16 @@ public class EntityMountPacket extends SingularPacket implements Packet {
 
     @Override
     public PacketContainer getPacket() {
+        int[] mountingEntity;
+        if(mountedPlayer != null){
+            mountingEntity = new int[]{mountedPlayer.getBukkitPlayer().getEntityId()};
+        }else{
+            mountingEntity = new int[]{};
+        }
+
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.MOUNT);
         packet.getIntegers().write(0, entityId);
-        packet.getIntegerArrays()
-                .write(0, new int[]{mountedPlayer.getBukkitPlayer().getEntityId()});
+        packet.getIntegerArrays().write(0, mountingEntity);
 
         return packet;
     }

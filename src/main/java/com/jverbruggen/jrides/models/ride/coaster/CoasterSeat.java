@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.models.ride.coaster;
 
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -8,8 +9,8 @@ import com.jverbruggen.jrides.models.ride.Seat;
 
 public class CoasterSeat implements Seat {
     private Player passenger;
-    private VirtualArmorstand virtualArmorstand;
-    private Vector3 offset;
+    private final VirtualArmorstand virtualArmorstand;
+    private final Vector3 offset;
 
     public CoasterSeat(VirtualArmorstand virtualArmorstand, Vector3 offset) {
         this.passenger = null;
@@ -24,7 +25,13 @@ public class CoasterSeat implements Seat {
 
     @Override
     public void setPassenger(Player player) {
+        if(passenger != null){ // Overtaking seat
+            passenger.setSeatedOn(null);
+            virtualArmorstand.setPassenger(null);
+        }
 
+        virtualArmorstand.setPassenger(player);
+        player.setSeatedOn(this);
     }
 
     @Override
@@ -40,6 +47,11 @@ public class CoasterSeat implements Seat {
     @Override
     public void setLocation(Vector3 location) {
         virtualArmorstand.setLocation(location);
+    }
+
+    @Override
+    public VirtualEntity getEntity() {
+        return virtualArmorstand;
     }
 
 
