@@ -108,6 +108,13 @@ public class Vector3 {
         return new Vector3F(x, y, z);
     }
 
+    public Vector3 toBlock(){
+        int blockX = this.getBlockX();
+        int blockY = this.getBlockY();
+        int blockZ = this.getBlockZ();
+        return new Vector3(blockX, blockY, blockZ);
+    }
+
     public boolean equals(Vector3 p) {
         return p.x == x && p.y == y && p.z == z;
     }

@@ -10,6 +10,8 @@ import com.jverbruggen.jrides.config.ride.RideConfigObject;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.identifier.RideIdentifier;
 import com.jverbruggen.jrides.models.ride.coaster.*;
+import com.jverbruggen.jrides.models.ride.factory.TrackFactory;
+import com.jverbruggen.jrides.models.ride.factory.TrainFactory;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.World;
 
@@ -24,18 +26,23 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class RideManager {
-    private Logger logger;
+    private final Logger logger;
     private List<GCRideHandle> rideHandles;
-    private File dataFolder;
-    private ConfigManager configManager;
-    private ViewportManager viewportManager;
+    private final File dataFolder;
+    private final ConfigManager configManager;
+    private final ViewportManager viewportManager;
+    private final TrainFactory trainFactory;
+    private final TrackFactory trackFactory;
 
-    public RideManager(Logger logger, File dataFolder, ViewportManager viewportManager, ConfigManager configManager) {
+    public RideManager(Logger logger, File dataFolder, ViewportManager viewportManager, ConfigManager configManager,
+                       TrainFactory trainFactory, TrackFactory trackFactory) {
         this.logger = logger;
         this.rideHandles = new ArrayList<>();
         this.dataFolder = dataFolder;
         this.viewportManager = viewportManager;
         this.configManager = configManager;
+        this.trainFactory = trainFactory;
+        this.trackFactory = trackFactory;
     }
 
     public Ride GetRide(RideIdentifier identifier){
@@ -75,18 +82,17 @@ public class RideManager {
         float offsetY = offset.get(1);
         float offsetZ = offset.get(2);
 
-        int stationIndexOffset = 4000;
+        int startOffset = 4000;
 
-        Track track = loadCoasterTrackFromConfig(world, rideIdentifier, offsetX, offsetY, offsetZ);
+        Track track = loadCoasterTrackFromConfig(world, rideIdentifier, offsetX, offsetY, offsetZ, startOffset);
 
-        Cart cart = new SimpleCart(viewportManager.spawnVirtualArmorstand(track.getRawPositions().get(stationIndexOffset).toVector3()));
-        Train train = new SimpleTrain(List.of(cart));
-        TrainHandle trainHandle = new TrainHandle(train, track, stationIndexOffset);
+        Train train = trainFactory.createEquallyDistributedTrain(track);
+        TrainHandle trainHandle = new TrainHandle(train, track, startOffset);
         GCRideHandle rideHandle = new GCRideHandle(ride, List.of(trainHandle), track, world);
         this.addRideHandle(rideHandle);
     }
 
-    private Track loadCoasterTrackFromConfig(World world, String rideIdentifier, float offsetX, float offsetY, float offsetZ){
+    private Track loadCoasterTrackFromConfig(World world, String rideIdentifier, float offsetX, float offsetY, float offsetZ, int startOffset){
         String configFileName = "coasters/" + rideIdentifier + ".csv";
         File configFile = new File(dataFolder, configFileName);
         Path pathToConfigFile = configFile.toPath();
@@ -106,6 +112,6 @@ public class RideManager {
             ioe.printStackTrace();
         }
 
-        return new SimpleTrack(positions);
+        return trackFactory.createSimpleTrack(positions, startOffset);
     }
 }

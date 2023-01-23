@@ -12,10 +12,14 @@ import java.util.stream.Collectors;
 public class SimpleCart implements Cart {
     private List<Seat> seats;
     private VirtualArmorstand modelArmorstand;
+    private Vector3 trackOffset;
+    private int massMiddleOffset;
 
-    public SimpleCart(VirtualArmorstand modelArmorstand) {
+    public SimpleCart(VirtualArmorstand modelArmorstand, Vector3 trackOffset, int massMiddleOffset) {
         this.seats = new ArrayList<>();
         this.modelArmorstand = modelArmorstand;
+        this.trackOffset = trackOffset;
+        this.massMiddleOffset = massMiddleOffset;
     }
 
     @Override
@@ -29,6 +33,21 @@ public class SimpleCart implements Cart {
                 .filter(Seat::hasPassenger)
                 .map(Seat::getPassenger)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public int getMassMiddleOffset() {
+        return massMiddleOffset;
+    }
+
+    @Override
+    public Vector3 getTrackOffset() {
+        return trackOffset;
+    }
+
+    @Override
+    public void setRotation(Vector3 rotation) {
+        modelArmorstand.setHeadpose(rotation);
     }
 
     @Override

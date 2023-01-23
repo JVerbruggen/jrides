@@ -24,7 +24,7 @@ public class PacketSender_1_19_2 implements PacketSender {
     }
 
     private void sendLog(String msg){
-        logger.info(msg);
+        logger.config(msg);
     }
 
     public void sendRotationPacket(Player player, int entityId, int rotationType, Vector3 rotation){
@@ -35,12 +35,32 @@ public class PacketSender_1_19_2 implements PacketSender {
         sendLog("sendRotationPacket");
     }
 
+    @Override
+    public void sendRotationPacket(List<Player> players, int entityId, int rotationType, Vector3 rotation) {
+        new ArmorstandRotationPacket(
+                protocolManager, entityId, rotationType, rotation
+        ).sendAll(players);
+
+        sendLog("sendRotationPacket");
+    }
+
     public void sendApplyModelPacket(Player player, int entityId, EnumWrappers.ItemSlot itemSlot, TrainModelItem model){
         if(model == null) return;
 
         new EntityEquipmentPacket(
                 protocolManager, entityId, itemSlot, model
         ).send(player);
+
+        sendLog("sendApplyModelPacket");
+    }
+
+    @Override
+    public void sendApplyModelPacket(List<Player> players, int entityId, EnumWrappers.ItemSlot itemSlot, TrainModelItem model) {
+        if(model == null) return;
+
+        new EntityEquipmentPacket(
+                protocolManager, entityId, itemSlot, model
+        ).sendAll(players);
 
         sendLog("sendApplyModelPacket");
     }
@@ -133,15 +153,15 @@ public class PacketSender_1_19_2 implements PacketSender {
         sendLog("destroyVirtualEntity");
     }
 
-    public void teleportVirtualEntity(Player player, int entityId, Vector3 location){
-        new EntityTeleportPacket(protocolManager, entityId, location).send(player);
+    public void teleportVirtualEntity(Player player, int entityId, Vector3 blockLocation){
+        new EntityTeleportPacket(protocolManager, entityId, blockLocation).send(player);
 
         sendLog("teleportVirtualEntity");
     }
 
     @Override
-    public void teleportVirtualEntity(List<Player> players, int entityId, Vector3 location) {
-        new EntityTeleportPacket(protocolManager, entityId, location).sendAll(players);
+    public void teleportVirtualEntity(List<Player> players, int entityId, Vector3 blockLocation) {
+        new EntityTeleportPacket(protocolManager, entityId, blockLocation).sendAll(players);
 
         sendLog("teleportVirtualEntity");
     }

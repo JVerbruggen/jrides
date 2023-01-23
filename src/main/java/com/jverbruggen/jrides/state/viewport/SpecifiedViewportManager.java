@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.state.viewport;
 
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -35,7 +36,7 @@ public class SpecifiedViewportManager implements ViewportManager{
     }
 
     @Override
-    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location) {
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem headModel) {
         return null;
     }
 

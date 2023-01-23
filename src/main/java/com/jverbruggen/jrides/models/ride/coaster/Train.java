@@ -4,4 +4,5 @@ import java.util.List;
 
 public interface Train {
     List<Cart> getCarts();
+    int getCartDistanceFor(int index);
 }

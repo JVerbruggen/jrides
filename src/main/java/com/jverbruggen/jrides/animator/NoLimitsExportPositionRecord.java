@@ -1,21 +1,24 @@
 package com.jverbruggen.jrides.animator;
 
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import org.bukkit.util.Vector;
 
 public class NoLimitsExportPositionRecord {
-    private int index;
-    private float posX;
-    private float posY;
-    private float posZ;
-    private float frontX;
-    private float frontY;
-    private float frontZ;
-    private float leftX;
-    private float leftY;
-    private float leftZ;
-    private float upX;
-    private float upY;
-    private float upZ;
+    private final int index;
+    private final float posX;
+    private final float posY;
+    private final float posZ;
+    private final float frontX;
+    private final float frontY;
+    private final float frontZ;
+    private final float leftX;
+    private final float leftY;
+    private final float leftZ;
+    private final float upX;
+    private final float upY;
+    private final float upZ;
+    private final Quaternion orientation;
 
     public NoLimitsExportPositionRecord(int index, float posX, float posY, float posZ, float frontX, float frontY, float frontZ, float leftX, float leftY, float leftZ, float upX, float upY, float upZ) {
         this.index = index;
@@ -31,6 +34,10 @@ public class NoLimitsExportPositionRecord {
         this.upX = upX;
         this.upY = upY;
         this.upZ = upZ;
+
+        Vector dirVector = new Vector(leftX, leftY, leftZ).multiply(-1);
+        Vector upVector = new Vector(upX, upY, upZ);
+        this.orientation = Quaternion.fromLookDirection(dirVector, upVector);
     }
 
     public int getIndex() {
@@ -85,6 +92,14 @@ public class NoLimitsExportPositionRecord {
         return upZ;
     }
 
+    public Quaternion getOrientation() {
+        return orientation;
+    }
+
+    public Vector3 toVector3(){
+        return new Vector3(posX, posY, posZ);
+    }
+
     public static NoLimitsExportPositionRecord createFromCSVAttributes(String[] attributes, float offsetX, float offsetY, float offsetZ){
         return new NoLimitsExportPositionRecord(
                 Integer.parseInt(attributes[0]),
@@ -105,9 +120,5 @@ public class NoLimitsExportPositionRecord {
 
     public static NoLimitsExportPositionRecord createFromCSVAttributes(String[] attributes){
         return createFromCSVAttributes(attributes, 0, 0, 0);
-    }
-
-    public Vector3 toVector3(){
-        return new Vector3(posX, posY, posZ);
     }
 }

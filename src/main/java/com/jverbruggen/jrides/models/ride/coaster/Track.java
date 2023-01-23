@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface Track {
     List<NoLimitsExportPositionRecord> getRawPositions();
+    List<Section> getSections();
+    Section getNextSpawnSection();
 }

@@ -1,10 +1,13 @@
 package com.jverbruggen.jrides.models.entity.armorstand;
 
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.jverbruggen.jrides.models.entity.BaseVirtualEntity;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.PacketSender;
+import com.jverbruggen.jrides.packets.packet.raw.ArmorstandRotationPacket;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 
 public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntity {
@@ -40,5 +43,18 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     public void spawnFor(Player player) {
         addViewer(player);
         packetSender.spawnVirtualArmorstand(player, entityId, location, yawRotation, rotations, models, invisible, leashedToEntity);
+
+        if(models.hasHead()){
+            this.packetSender.sendApplyModelPacket(viewers, entityId, EnumWrappers.ItemSlot.HEAD, models.getHead());
+        }
+    }
+
+    public void setHeadpose(Vector3 rotation) {
+        packetSender.sendRotationPacket(viewers, entityId, ArmorstandRotationPacket.Type.HEAD, rotation);
+    }
+
+    public void setModel(TrainModelItem model){
+        this.models.setHead(model);
+        this.packetSender.sendApplyModelPacket(viewers, entityId, EnumWrappers.ItemSlot.HEAD, model);
     }
 }

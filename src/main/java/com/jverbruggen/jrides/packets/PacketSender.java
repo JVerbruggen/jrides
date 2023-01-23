@@ -19,12 +19,14 @@ public interface PacketSender {
 
 
     void sendRotationPacket(Player player, int entityId, int rotationType, Vector3 rotation);
+    void sendRotationPacket(List<Player> players, int entityId, int rotationType, Vector3 rotation);
     void sendApplyModelPacket(Player player, int entityId, EnumWrappers.ItemSlot itemSlot, TrainModelItem model);
+    void sendApplyModelPacket(List<Player> players, int entityId, EnumWrappers.ItemSlot itemSlot, TrainModelItem model);
     void sendAttachLeashPacket(Player player, int entityId, int leashToEntityId);
     void moveVirtualArmorstand(Player player, int entityId, Vector3 location, double yawRotation);
     void moveVirtualArmorstand(List<Player> players, int entityId, Vector3 location, double yawRotation);
     void destroyVirtualEntity(Player player, int entityId);
     void destroyVirtualEntity(List<Player> players, int entityId);
-    void teleportVirtualEntity(Player player, int entityId, Vector3 location);
-    void teleportVirtualEntity(List<Player> players, int entityId, Vector3 location);
+    void teleportVirtualEntity(Player player, int entityId, Vector3 blockLocation);
+    void teleportVirtualEntity(List<Player> players, int entityId, Vector3 blockLocation);
 }

@@ -5,6 +5,8 @@ import com.comphenix.protocol.ProtocolManager;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.models.entity.EntityIdFactory;
 import com.jverbruggen.jrides.models.message.MessageFactory;
+import com.jverbruggen.jrides.models.ride.factory.TrackFactory;
+import com.jverbruggen.jrides.models.ride.factory.TrainFactory;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.PacketSender_1_19_2;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -34,7 +36,8 @@ public class ServiceProviderConfigurator {
         PlayerManager playerManager                 = ServiceProvider.Register(PlayerManager.class, new PlayerManager());
         ViewportManagerFactory viewportManagerFactory = new ViewportManagerFactory(packetSender, entityIdFactory);
         ViewportManager viewportManager             = ServiceProvider.Register(ViewportManager.class, viewportManagerFactory.createViewportManager(true));
-        RideManager rideManager                     = ServiceProvider.Register(RideManager.class, new RideManager(logger, dataFolder, viewportManager, configManager));
-
+        TrainFactory trainFactory                   = ServiceProvider.Register(TrainFactory.class, new TrainFactory(viewportManager));
+        TrackFactory trackFactory                   = ServiceProvider.Register(TrackFactory.class, new TrackFactory());
+        RideManager rideManager                     = ServiceProvider.Register(RideManager.class, new RideManager(logger, dataFolder, viewportManager, configManager, trainFactory, trackFactory));
     }
 }

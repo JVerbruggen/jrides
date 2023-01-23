@@ -19,6 +19,8 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     protected Vector3 location;
     protected List<Player> viewers;
 
+    private int teleportSyncCoundownState; // If entity isn't teleported every few frames, it starts drifting due to only relative updates
+
     public BaseVirtualEntity(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, int entityId) {
         this.packetSender = packetSender;
         this.viewportManager = viewportManager;
@@ -27,6 +29,7 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
         this.location = location;
         this.viewers = new ArrayList<>();
         this.spawned = true;
+        this.teleportSyncCoundownState = 0;
     }
 
     @Override
@@ -57,16 +60,24 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     @Override
     public void setLocation(Vector3 newLocation) {
         double distanceSquared = newLocation.distanceSquared(this.location);
-        Vector3 delta = Vector3.subtract(newLocation, this.location);
-        this.location = newLocation;
 
-        viewportManager.updateForEntity(this);
+        if(distanceSquared > 49 || teleportSyncCoundownState > 60) {
+            Vector3 blockLocation = newLocation.toBlock();
+            packetSender.teleportVirtualEntity(this.getViewers(), entityId, blockLocation);
+            teleportSyncCoundownState = 0;
 
-        if(distanceSquared > 49) { // 7^2
-            packetSender.teleportVirtualEntity(this.getViewers(), entityId, newLocation);
-        }else{
+            Vector3 delta = Vector3.subtract(newLocation, newLocation.toBlock());
             packetSender.moveVirtualArmorstand(this.getViewers(), entityId, delta, 0);
         }
+        else{
+            Vector3 delta = Vector3.subtract(newLocation, this.location);
+            packetSender.moveVirtualArmorstand(this.getViewers(), entityId, delta, 0);
+        }
+
+        this.location = newLocation;
+        viewportManager.updateForEntity(this);
+
+        teleportSyncCoundownState++;
     }
 
     @Override

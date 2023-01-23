@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.state.viewport;
 
 import com.jverbruggen.jrides.models.entity.EntityIdFactory;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -30,9 +31,13 @@ public class GlobalViewportManager implements ViewportManager {
     }
 
     @Override
-    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location) {
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem model) {
         int entityId = entityIdFactory.newId();
         VirtualArmorstand virtualArmorstand = new VirtualArmorstand(packetSender, this, location, entityId);
+        if(model != null){
+            virtualArmorstand.setModel(model);
+        }
+
         updateForEntity(virtualArmorstand);
         return virtualArmorstand;
     }

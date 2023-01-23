@@ -6,13 +6,25 @@ import java.util.List;
 
 public class SimpleTrack implements Track {
     private List<NoLimitsExportPositionRecord> positions;
+    private List<Section> sections;
 
-    public SimpleTrack(List<NoLimitsExportPositionRecord> positions) {
+    public SimpleTrack(List<NoLimitsExportPositionRecord> positions, List<Section> sections) {
         this.positions = positions;
+        this.sections = sections;
     }
 
     public List<NoLimitsExportPositionRecord> getRawPositions() {
         return positions;
+    }
+
+    @Override
+    public List<Section> getSections() {
+        return sections;
+    }
+
+    @Override
+    public Section getNextSpawnSection() {
+        return sections.get(0);
     }
 
     public int countPositions(){
