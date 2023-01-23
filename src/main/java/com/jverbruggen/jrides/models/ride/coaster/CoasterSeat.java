@@ -63,6 +63,4 @@ public class CoasterSeat implements Seat {
     public boolean restraintsActive() {
         return true;
     }
-
-
 }
