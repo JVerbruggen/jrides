@@ -113,7 +113,7 @@ public class PacketSender_1_19_2 implements PacketSender {
                 protocolManager, entityId, location, yawRotation
         ).sendAll(players);
 
-        sendLog("moveVirtualArmorstand " + location.toString());
+        sendLog("moveVirtualArmorstand " + location.toString() + " players:" + players.size());
     }
 
     public void destroyVirtualEntity(Player player, int entityId){

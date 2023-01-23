@@ -75,11 +75,13 @@ public class RideManager {
         float offsetY = offset.get(1);
         float offsetZ = offset.get(2);
 
+        int stationIndexOffset = 4000;
+
         Track track = loadCoasterTrackFromConfig(world, rideIdentifier, offsetX, offsetY, offsetZ);
 
-        Cart cart = new SimpleCart(viewportManager.spawnVirtualArmorstand(track.getRawPositions().get(0).toVector3()));
+        Cart cart = new SimpleCart(viewportManager.spawnVirtualArmorstand(track.getRawPositions().get(stationIndexOffset).toVector3()));
         Train train = new SimpleTrain(List.of(cart));
-        TrainHandle trainHandle = new TrainHandle(train, track);
+        TrainHandle trainHandle = new TrainHandle(train, track, stationIndexOffset);
         GCRideHandle rideHandle = new GCRideHandle(ride, List.of(trainHandle), track, world);
         this.addRideHandle(rideHandle);
     }
