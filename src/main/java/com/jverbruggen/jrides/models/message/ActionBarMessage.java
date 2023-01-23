@@ -27,10 +27,6 @@ public class ActionBarMessage implements Message {
         packet.getChatTypes()
                 .write(0, EnumWrappers.ChatType.GAME_INFO);
 
-        try {
-            this.protocolManager.sendServerPacket(player.getBukkitPlayer(), packet);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        this.protocolManager.sendServerPacket(player.getBukkitPlayer(), packet);
     }
 }

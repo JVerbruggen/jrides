@@ -4,12 +4,12 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.jverbruggen.jrides.packets.Packet;
-import com.jverbruggen.jrides.packets.packet.SingularPacket;
+import com.jverbruggen.jrides.packets.packet.SingularServerPacket;
 import org.bukkit.entity.EntityType;
 
 import java.util.UUID;
 
-public class SpawnArmorstandPacket extends SingularPacket implements Packet {
+public class SpawnArmorstandServerPacket extends SingularServerPacket implements Packet {
     private int entityId;
     private int entityType;
     private double locationX;
@@ -18,7 +18,7 @@ public class SpawnArmorstandPacket extends SingularPacket implements Packet {
     private double yawRotation;
     private UUID uuid;
 
-    public SpawnArmorstandPacket(ProtocolManager protocolManager, int entityId, int entityType, double locationX, double locationY, double locationZ, double yawRotation, UUID uuid) {
+    public SpawnArmorstandServerPacket(ProtocolManager protocolManager, int entityId, int entityType, double locationX, double locationY, double locationZ, double yawRotation, UUID uuid) {
         super(protocolManager);
         this.entityId = entityId;
         this.entityType = entityType;

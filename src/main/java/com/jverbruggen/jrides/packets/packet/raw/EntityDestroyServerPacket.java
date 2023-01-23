@@ -3,16 +3,16 @@ package com.jverbruggen.jrides.packets.packet.raw;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
-import com.jverbruggen.jrides.packets.packet.SingularPacket;
+import com.jverbruggen.jrides.packets.packet.SingularServerPacket;
 import com.jverbruggen.jrides.packets.Packet;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityDestroyPacket extends SingularPacket implements Packet {
+public class EntityDestroyServerPacket extends SingularServerPacket implements Packet {
     private int entityId;
 
-    public EntityDestroyPacket(ProtocolManager protocolManager, int entityId) {
+    public EntityDestroyServerPacket(ProtocolManager protocolManager, int entityId) {
         super(protocolManager);
         this.entityId = entityId;
     }

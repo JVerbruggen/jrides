@@ -6,19 +6,19 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.Pair;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
-import com.jverbruggen.jrides.packets.packet.SingularPacket;
+import com.jverbruggen.jrides.packets.packet.SingularServerPacket;
 import com.jverbruggen.jrides.packets.Packet;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityEquipmentPacket extends SingularPacket implements Packet {
+public class EntityEquipmentServerPacket extends SingularServerPacket implements Packet {
     private final int entityId;
     private final EnumWrappers.ItemSlot itemSlot;
     private final TrainModelItem model;
 
-    public EntityEquipmentPacket(ProtocolManager protocolManager, int entityId, EnumWrappers.ItemSlot itemSlot, TrainModelItem model) {
+    public EntityEquipmentServerPacket(ProtocolManager protocolManager, int entityId, EnumWrappers.ItemSlot itemSlot, TrainModelItem model) {
         super(protocolManager);
         this.entityId = entityId;
         this.itemSlot = itemSlot;

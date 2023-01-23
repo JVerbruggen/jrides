@@ -7,6 +7,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.ride.Seat;
+import com.jverbruggen.jrides.permissions.Permissions;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Bukkit;
@@ -82,6 +83,13 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         if(!entity.getPassenger().getBukkitPlayer().getUniqueId().equals(bukkitPlayer.getUniqueId())){
             bukkitPlayer.sendMessage("Not allowed to steer");
             return; // Can only steer vehicle that one is in
+        }
+
+        if(seat.restraintsActive()){
+            if(!bukkitPlayer.hasPermission(Permissions.SEAT_RESTRAINT_OVERRIDE)){
+                bukkitPlayer.sendMessage("The restraints are closed");
+                return;
+            }
         }
 
 //        bukkitPlayer.sendMessage("Exited");

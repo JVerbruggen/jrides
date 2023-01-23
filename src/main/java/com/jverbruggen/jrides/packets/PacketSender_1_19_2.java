@@ -28,7 +28,7 @@ public class PacketSender_1_19_2 implements PacketSender {
     }
 
     public void sendRotationPacket(Player player, int entityId, int rotationType, Vector3 rotation){
-        new ArmorstandRotationPacket(
+        new ArmorstandRotationServerPacket(
                 protocolManager, entityId, rotationType, rotation
         ).send(player);
 
@@ -37,7 +37,7 @@ public class PacketSender_1_19_2 implements PacketSender {
 
     @Override
     public void sendRotationPacket(List<Player> players, int entityId, int rotationType, Vector3 rotation) {
-        new ArmorstandRotationPacket(
+        new ArmorstandRotationServerPacket(
                 protocolManager, entityId, rotationType, rotation
         ).sendAll(players);
 
@@ -47,7 +47,7 @@ public class PacketSender_1_19_2 implements PacketSender {
     public void sendApplyModelPacket(Player player, int entityId, EnumWrappers.ItemSlot itemSlot, TrainModelItem model){
         if(model == null) return;
 
-        new EntityEquipmentPacket(
+        new EntityEquipmentServerPacket(
                 protocolManager, entityId, itemSlot, model
         ).send(player);
 
@@ -58,7 +58,7 @@ public class PacketSender_1_19_2 implements PacketSender {
     public void sendApplyModelPacket(List<Player> players, int entityId, EnumWrappers.ItemSlot itemSlot, TrainModelItem model) {
         if(model == null) return;
 
-        new EntityEquipmentPacket(
+        new EntityEquipmentServerPacket(
                 protocolManager, entityId, itemSlot, model
         ).sendAll(players);
 
@@ -68,7 +68,7 @@ public class PacketSender_1_19_2 implements PacketSender {
     public void sendAttachLeashPacket(Player player, int entityId, int leashToEntityId){
         if(leashToEntityId == -1) return;
 
-        new AttachEntityPacket(
+        new AttachEntityServerPacket(
                 protocolManager, entityId, leashToEntityId
         ).send(player);
 
@@ -85,11 +85,11 @@ public class PacketSender_1_19_2 implements PacketSender {
 
         sendLog("spawnVirtualArmorstand for " + player.getBukkitPlayer().getName() + " at " + location.toString());
 
-        new SpawnArmorstandPacket(
+        new SpawnArmorstandServerPacket(
                 protocolManager, entityId, entityType, locationX, locationY, locationZ, yawRotation, uuid
         ).send(player);
 
-        new EntityMetadataPacket(
+        new EntityMetadataServerPacket(
                 protocolManager, entityId, invisible
         ).send(player);
 
@@ -97,12 +97,12 @@ public class PacketSender_1_19_2 implements PacketSender {
         sendApplyModelPacket(player, entityId, EnumWrappers.ItemSlot.MAINHAND, models.getMainHand());
         sendApplyModelPacket(player, entityId, EnumWrappers.ItemSlot.OFFHAND, models.getOffHand());
 
-        sendRotationPacket(player, entityId, ArmorstandRotationPacket.Type.HEAD, rotations.getHead());
-        sendRotationPacket(player, entityId, ArmorstandRotationPacket.Type.BODY, rotations.getBody());
-        sendRotationPacket(player, entityId, ArmorstandRotationPacket.Type.OFF_HAND, rotations.getOffHand());
-        sendRotationPacket(player, entityId, ArmorstandRotationPacket.Type.MAIN_HAND, rotations.getMainHand());
-        sendRotationPacket(player, entityId, ArmorstandRotationPacket.Type.LEFT_LEG, rotations.getLeftLeg());
-        sendRotationPacket(player, entityId, ArmorstandRotationPacket.Type.RIGHT_LEG, rotations.getRightLeg());
+        sendRotationPacket(player, entityId, ArmorstandRotationServerPacket.Type.HEAD, rotations.getHead());
+        sendRotationPacket(player, entityId, ArmorstandRotationServerPacket.Type.BODY, rotations.getBody());
+        sendRotationPacket(player, entityId, ArmorstandRotationServerPacket.Type.OFF_HAND, rotations.getOffHand());
+        sendRotationPacket(player, entityId, ArmorstandRotationServerPacket.Type.MAIN_HAND, rotations.getMainHand());
+        sendRotationPacket(player, entityId, ArmorstandRotationServerPacket.Type.LEFT_LEG, rotations.getLeftLeg());
+        sendRotationPacket(player, entityId, ArmorstandRotationServerPacket.Type.RIGHT_LEG, rotations.getRightLeg());
 
         sendAttachLeashPacket(player, entityId, leashedToEntity);
 
@@ -120,7 +120,7 @@ public class PacketSender_1_19_2 implements PacketSender {
     public void moveVirtualArmorstand(Player player, int entityId, Vector3 location, double yawRotation){
         Vector vector = location.toBukkitVector();
 
-        new ArmorstandMovePacket(
+        new ArmorstandMoveServerPacket(
                 protocolManager, entityId, location, yawRotation
         ).send(player);
 
@@ -129,7 +129,7 @@ public class PacketSender_1_19_2 implements PacketSender {
 
     @Override
     public void moveVirtualArmorstand(List<Player> players, int entityId, Vector3 location, double yawRotation) {
-        new ArmorstandMovePacket(
+        new ArmorstandMoveServerPacket(
                 protocolManager, entityId, location, yawRotation
         ).sendAll(players);
 
@@ -137,7 +137,7 @@ public class PacketSender_1_19_2 implements PacketSender {
     }
 
     public void destroyVirtualEntity(Player player, int entityId){
-        new EntityDestroyPacket(
+        new EntityDestroyServerPacket(
                 protocolManager, entityId
         ).send(player);
 
@@ -146,7 +146,7 @@ public class PacketSender_1_19_2 implements PacketSender {
 
     @Override
     public void destroyVirtualEntity(List<Player> players, int entityId) {
-        new EntityDestroyPacket(
+        new EntityDestroyServerPacket(
                 protocolManager, entityId
         ).sendAll(players);
 
@@ -154,22 +154,31 @@ public class PacketSender_1_19_2 implements PacketSender {
     }
 
     public void teleportVirtualEntity(Player player, int entityId, Vector3 blockLocation){
-        new EntityTeleportPacket(protocolManager, entityId, blockLocation).send(player);
+        new EntityTeleportServerPacket(protocolManager, entityId, blockLocation).send(player);
 
         sendLog("teleportVirtualEntity");
     }
 
     @Override
     public void teleportVirtualEntity(List<Player> players, int entityId, Vector3 blockLocation) {
-        new EntityTeleportPacket(protocolManager, entityId, blockLocation).sendAll(players);
+        new EntityTeleportServerPacket(protocolManager, entityId, blockLocation).sendAll(players);
 
         sendLog("teleportVirtualEntity");
     }
 
     @Override
     public void sendMountVirtualEntityPacket(List<Player> players, Player mounted, int entityId) {
-        new EntityMountPacket(protocolManager, entityId, mounted).sendAll(players);
+        new EntityMountServerPacket(protocolManager, entityId, mounted).sendAll(players);
 
         sendLog("sendMountVirtualEntityPacket");
+    }
+
+    @Override
+    public void sendClientPositionPacket(Player movedPlayer, Vector3 position) {
+        new PlayerPositionServerPacket(protocolManager, position).send(movedPlayer);
+
+//        movedPlayer.sendMessage("Sent server position packet to " + position.toString());
+
+        sendLog("sendClientPositionPacket");
     }
 }

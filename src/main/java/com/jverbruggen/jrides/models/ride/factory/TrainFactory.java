@@ -30,7 +30,7 @@ public class TrainFactory {
         int distancePerCart = 40;
         int firstCartFromMassMiddleOffset = (amountOfCarts*distancePerCart) / 2;
         int firstCartAbsoluteOffset = indexOffset + firstCartFromMassMiddleOffset;
-        Vector3 cartOffset = new Vector3(0, -1.8, 0);
+        Vector3 cartOffset = new Vector3(0, -1.9, 0);
 
         List<Cart> carts = new ArrayList<>();
         for(int i = 0; i < amountOfCarts; i++){
@@ -45,7 +45,7 @@ public class TrainFactory {
 
             VirtualArmorstand armorStand = viewportManager.spawnVirtualArmorstand(cartLocation, model);
 
-            List<Vector3> seatOffsets = List.of(new Vector3(0.3, -1.4, -1), new Vector3(0.3, -1.4, 1));
+            List<Vector3> seatOffsets = List.of(new Vector3(0.3, -1.2, -1.2), new Vector3(0.3, -1.2, -0.4), new Vector3(0.3, -1.2, 0.4), new Vector3(0.3, -1.2, 1.2));
             List<Seat> seats = seatFactory.createSeats(seatOffsets, cartLocation, orientation);
 
             Cart cart = new SimpleCart(

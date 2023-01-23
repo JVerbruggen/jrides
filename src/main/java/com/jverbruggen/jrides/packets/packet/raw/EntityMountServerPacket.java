@@ -5,13 +5,13 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.packets.Packet;
-import com.jverbruggen.jrides.packets.packet.SingularPacket;
+import com.jverbruggen.jrides.packets.packet.SingularServerPacket;
 
-public class EntityMountPacket extends SingularPacket implements Packet {
+public class EntityMountServerPacket extends SingularServerPacket implements Packet {
     private final int entityId;
     private final Player mountedPlayer;
 
-    public EntityMountPacket(ProtocolManager protocolManager, int entityId, Player mountedPlayer) {
+    public EntityMountServerPacket(ProtocolManager protocolManager, int entityId, Player mountedPlayer) {
         super(protocolManager);
 
         this.entityId = entityId;

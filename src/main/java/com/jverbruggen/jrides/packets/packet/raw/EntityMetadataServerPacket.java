@@ -5,21 +5,21 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.packets.packet.SingularPacket;
+import com.jverbruggen.jrides.packets.packet.SingularServerPacket;
 import com.jverbruggen.jrides.packets.Packet;
 
-public class EntityMetadataPacket extends SingularPacket implements Packet {
+public class EntityMetadataServerPacket extends SingularServerPacket implements Packet {
     private int entityId;
     private boolean invisible;
     private Vector3 headRotation;
 
-    public EntityMetadataPacket(ProtocolManager protocolManager, int entityId, boolean invisible) {
+    public EntityMetadataServerPacket(ProtocolManager protocolManager, int entityId, boolean invisible) {
         super(protocolManager);
         this.entityId = entityId;
         this.invisible = invisible;
     }
 
-    public EntityMetadataPacket(ProtocolManager protocolManager, int entityId, boolean invisible, Vector3 headRotation) {
+    public EntityMetadataServerPacket(ProtocolManager protocolManager, int entityId, boolean invisible, Vector3 headRotation) {
         super(protocolManager);
         this.entityId = entityId;
         this.invisible = invisible;

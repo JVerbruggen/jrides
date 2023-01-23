@@ -17,7 +17,7 @@ public interface VirtualEntity {
     void setPassenger(Player player);
 
     Vector3 getLocation();
-    void setLocation(Vector3 location);
+    void setLocation(Vector3 location, double yawRotation);
     List<Player> getViewers();
     void addViewer(Player player);
     void removeViewer(Player player);

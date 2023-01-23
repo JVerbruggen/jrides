@@ -3,13 +3,12 @@ package com.jverbruggen.jrides.packets.packet.raw;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.Vector3F;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.packets.packet.SingularPacket;
+import com.jverbruggen.jrides.packets.packet.SingularServerPacket;
 import com.jverbruggen.jrides.packets.Packet;
 
-public class ArmorstandRotationPacket extends SingularPacket implements Packet {
+public class ArmorstandRotationServerPacket extends SingularServerPacket implements Packet {
     public static class Type{
         public static final int HEAD = 16;
         public static final int BODY = 17;
@@ -23,7 +22,7 @@ public class ArmorstandRotationPacket extends SingularPacket implements Packet {
     private int rotationType;
     private Vector3 rotation;
 
-    public ArmorstandRotationPacket(ProtocolManager protocolManager, int entityId, int rotationType, Vector3 rotation) {
+    public ArmorstandRotationServerPacket(ProtocolManager protocolManager, int entityId, int rotationType, Vector3 rotation) {
         super(protocolManager);
         this.entityId = entityId;
         this.rotationType = rotationType;

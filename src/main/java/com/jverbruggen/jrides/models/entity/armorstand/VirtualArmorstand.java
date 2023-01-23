@@ -8,7 +8,7 @@ import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.packets.PacketSender;
-import com.jverbruggen.jrides.packets.packet.raw.ArmorstandRotationPacket;
+import com.jverbruggen.jrides.packets.packet.raw.ArmorstandRotationServerPacket;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 
 public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntity {
@@ -21,6 +21,9 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     private boolean allowsPassengerValue;
     private Seat partOfSeat;
 
+    private boolean passengerSyncCounterActive;
+    private int passengerSyncCounter;
+
     public VirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, int entityId) {
         super(packetSender, viewportManager, location, entityId);
 
@@ -32,6 +35,9 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         this.leashedToEntity = -1;
         this.allowsPassengerValue = false;
         this.partOfSeat = null;
+
+        this.passengerSyncCounterActive = false;
+        this.passengerSyncCounter = 0;
     }
 
     @Override
@@ -54,6 +60,13 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         this.passenger = player;
 
         packetSender.sendMountVirtualEntityPacket(viewers, player, entityId);
+
+        if(player != null){
+            this.passengerSyncCounterActive = true;
+            this.passengerSyncCounter = 0;
+        }else{
+            this.passengerSyncCounterActive = false;
+        }
     }
 
     @Override
@@ -78,11 +91,24 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     }
 
     public void setHeadpose(Vector3 rotation) {
-        packetSender.sendRotationPacket(viewers, entityId, ArmorstandRotationPacket.Type.HEAD, rotation);
+        packetSender.sendRotationPacket(viewers, entityId, ArmorstandRotationServerPacket.Type.HEAD, rotation);
     }
 
     public void setModel(TrainModelItem model){
         this.models.setHead(model);
         this.packetSender.sendApplyModelPacket(viewers, entityId, EnumWrappers.ItemSlot.HEAD, model);
+    }
+
+    @Override
+    public void setLocation(Vector3 newLocation, double yawRotation) {
+        super.setLocation(newLocation, yawRotation);
+
+        if(passengerSyncCounterActive){
+            if(passengerSyncCounter > 20){
+                passengerSyncCounter = 0;
+
+                this.passenger.setPositionWithoutTeleport(newLocation);
+            }else passengerSyncCounter++;
+        }
     }
 }

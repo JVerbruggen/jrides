@@ -3,14 +3,14 @@ package com.jverbruggen.jrides.packets.packet.raw;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
-import com.jverbruggen.jrides.packets.packet.SingularPacket;
+import com.jverbruggen.jrides.packets.packet.SingularServerPacket;
 import com.jverbruggen.jrides.packets.Packet;
 
-public class AttachEntityPacket extends SingularPacket implements Packet {
+public class AttachEntityServerPacket extends SingularServerPacket implements Packet {
     private int entityId;
     private int leashedToEntityId;
 
-    public AttachEntityPacket(ProtocolManager protocolManager, int entityId, int leashedToEntityId) {
+    public AttachEntityServerPacket(ProtocolManager protocolManager, int entityId, int leashedToEntityId) {
         super(protocolManager);
         this.entityId = entityId;
         this.leashedToEntityId = leashedToEntityId;

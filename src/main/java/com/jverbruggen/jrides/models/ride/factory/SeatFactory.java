@@ -56,7 +56,7 @@ public class SeatFactory {
             Vector3 relativeSeatLocation = calculateSeatLocationOnMatrix(rotationMatrix, seat.getOffset());
             Vector3 absoluteSeatLocation = Vector3.add(cartLocation, relativeSeatLocation);
 
-            seat.setLocation(absoluteSeatLocation);
+            seat.setLocation(absoluteSeatLocation, orientation);
         }
     }
 }

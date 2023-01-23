@@ -29,6 +29,7 @@ public class Main extends JavaPlugin {
 
         JRidesPlugin.setBukkitPluginHost(this);
         ServiceProviderConfigurator.configure(this);
+        JRidesPlugin.initOtherStatics();
 
         PlayerManager playerManager = ServiceProvider.GetSingleton(PlayerManager.class);
 

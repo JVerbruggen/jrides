@@ -1,6 +1,5 @@
 package com.jverbruggen.jrides.animator;
 
-import com.jverbruggen.jrides.models.math.Matrix4x4;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.coaster.Cart;
@@ -26,6 +25,7 @@ public class TrainHandle {
     public void tick(){
         final double frameIncrementFactor = 3;
         final double dragFactorPerTick = 0.999;
+//        final double gravityAccelerationPerTick = 2;
         final double gravityAccelerationPerTick = 0.3;
 
         int frame = currentMassMiddleFrame;

@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.models.ride;
 
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 
 public interface Seat {
@@ -10,7 +11,8 @@ public interface Seat {
     boolean hasPassenger();
 
     Vector3 getOffset();
-    void setLocation(Vector3 location);
+    void setLocation(Vector3 location, Quaternion orientation);
 
     VirtualEntity getEntity();
+    boolean restraintsActive();
 }

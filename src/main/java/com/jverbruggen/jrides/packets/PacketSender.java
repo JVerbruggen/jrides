@@ -28,4 +28,5 @@ public interface PacketSender {
     void teleportVirtualEntity(Player player, int entityId, Vector3 blockLocation);
     void teleportVirtualEntity(List<Player> players, int entityId, Vector3 blockLocation);
     void sendMountVirtualEntityPacket(List<Player> players, Player mounted, int entityId);
+    void sendClientPositionPacket(Player movedPlayer, Vector3 position);
 }

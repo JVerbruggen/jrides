@@ -5,13 +5,13 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.Packet;
-import com.jverbruggen.jrides.packets.packet.SingularPacket;
+import com.jverbruggen.jrides.packets.packet.SingularServerPacket;
 
-public class EntityTeleportPacket extends SingularPacket implements Packet {
+public class EntityTeleportServerPacket extends SingularServerPacket implements Packet {
     private int entityId;
     private Vector3 location;
 
-    public EntityTeleportPacket(ProtocolManager protocolManager, int entityId, Vector3 location) {
+    public EntityTeleportServerPacket(ProtocolManager protocolManager, int entityId, Vector3 location) {
         super(protocolManager);
         this.entityId = entityId;
         this.location = location;

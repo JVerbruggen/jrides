@@ -28,8 +28,10 @@ public class CoasterSeat implements Seat {
         if(passenger != null){ // Overtaking seat
             passenger.setSeatedOn(null);
             virtualArmorstand.setPassenger(null);
+            passenger.clearSmoothAnimationRotation();
         }
 
+        passenger = player;
         virtualArmorstand.setPassenger(player);
         player.setSeatedOn(this);
     }
@@ -45,13 +47,21 @@ public class CoasterSeat implements Seat {
     }
 
     @Override
-    public void setLocation(Vector3 location) {
-        virtualArmorstand.setLocation(location);
+    public void setLocation(Vector3 location, Quaternion orientation) {
+        double yawRotation = (orientation.getYaw() - 90) * 256/360;
+        virtualArmorstand.setLocation(location, yawRotation);
+
+        if(hasPassenger()) passenger.setSmoothAnimationRotation(orientation);
     }
 
     @Override
     public VirtualEntity getEntity() {
         return virtualArmorstand;
+    }
+
+    @Override
+    public boolean restraintsActive() {
+        return true;
     }
 
 

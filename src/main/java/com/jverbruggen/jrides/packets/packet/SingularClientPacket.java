@@ -8,23 +8,18 @@ import com.jverbruggen.jrides.packets.Packet;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-public abstract class SingularPacket implements Packet {
+public abstract class SingularClientPacket implements Packet {
     protected ProtocolManager protocolManager;
 
-    public SingularPacket(ProtocolManager protocolManager) {
+    public SingularClientPacket(ProtocolManager protocolManager) {
         this.protocolManager = protocolManager;
     }
 
     public abstract PacketContainer getPacket();
 
     protected boolean sendPacket(Player player, PacketContainer packet){
-        try {
-            this.protocolManager.sendServerPacket(player.getBukkitPlayer(), packet);
-            return true;
-        }catch(InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return false;
+        this.protocolManager.receiveClientPacket(player.getBukkitPlayer(), packet);
+        return true;
     }
 
     @Override

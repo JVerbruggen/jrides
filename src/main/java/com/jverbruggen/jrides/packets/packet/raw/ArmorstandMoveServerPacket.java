@@ -4,15 +4,15 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.packets.packet.SingularPacket;
+import com.jverbruggen.jrides.packets.packet.SingularServerPacket;
 import com.jverbruggen.jrides.packets.Packet;
 
-public class ArmorstandMovePacket extends SingularPacket implements Packet {
+public class ArmorstandMoveServerPacket extends SingularServerPacket implements Packet {
     private int entityId;
     private Vector3 location;
     private double yawRotation;
 
-    public ArmorstandMovePacket(ProtocolManager protocolManager, int entityId, Vector3 location, double yawRotation) {
+    public ArmorstandMoveServerPacket(ProtocolManager protocolManager, int entityId, Vector3 location, double yawRotation) {
         super(protocolManager);
         this.entityId = entityId;
         this.location = location;

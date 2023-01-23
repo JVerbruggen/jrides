@@ -8,10 +8,14 @@ import com.jverbruggen.jrides.packets.Packet;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-public abstract class MultiplePacket implements Packet {
+public abstract class SingularServerPacket implements Packet {
     protected ProtocolManager protocolManager;
 
-    public abstract List<PacketContainer> getPackets();
+    public SingularServerPacket(ProtocolManager protocolManager) {
+        this.protocolManager = protocolManager;
+    }
+
+    public abstract PacketContainer getPacket();
 
     protected boolean sendPacket(Player player, PacketContainer packet){
         this.protocolManager.sendServerPacket(player.getBukkitPlayer(), packet);
@@ -20,18 +24,14 @@ public abstract class MultiplePacket implements Packet {
 
     @Override
     public boolean send(Player player) {
-        for(PacketContainer packet : getPackets()){
-            sendPacket(player, packet);
-        }
-        return true;
+        return sendPacket(player, getPacket());
     }
 
     @Override
     public void sendAll(List<Player> players) {
-        for(PacketContainer packet : getPackets()){
-            for(Player player : players){
-                sendPacket(player, packet);
-            }
+        PacketContainer packet = getPacket();
+        for(Player player : players){
+            sendPacket(player, packet);
         }
     }
 }

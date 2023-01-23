@@ -9,7 +9,6 @@ import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
 public class JRidesCommandExecutor implements CommandExecutor {
     private PlayerManager playerManager;
@@ -19,7 +18,7 @@ public class JRidesCommandExecutor implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if(args.length == 0){
             commandSender.sendMessage("/jrides visualize <identifier>");
             return true;
@@ -36,7 +35,7 @@ public class JRidesCommandExecutor implements CommandExecutor {
         return false;
     }
 
-    private boolean commandVisualize(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args){
+    private boolean commandVisualize(CommandSender commandSender, Command command, String s, String[] args){
         if(!(commandSender instanceof org.bukkit.entity.Player)){
             commandSender.sendMessage("Only for players");
             return true;
