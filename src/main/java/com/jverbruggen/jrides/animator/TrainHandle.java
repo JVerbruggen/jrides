@@ -1,6 +1,5 @@
 package com.jverbruggen.jrides.animator;
 
-import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Matrix4x4;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -43,21 +42,12 @@ public class TrainHandle {
 
         for(Cart cart : train.getCarts()){
             int cartFrame = Math.floorMod((frame + cart.getMassMiddleOffset()), frameCount);
-            NoLimitsExportPositionRecord cartPositionTrack = track.getRawPositions().get(cartFrame);
-            Quaternion orientation = cartPositionTrack.getOrientation();
+            NoLimitsExportPositionRecord cartPositionOnTrackRecord = track.getRawPositions().get(cartFrame);
+            Vector3 cartPositionOnTrack = cartPositionOnTrackRecord.toVector3();
+            Quaternion orientation = cartPositionOnTrackRecord.getOrientation();
 
-            Matrix4x4 matrix = new Matrix4x4();
-            matrix.rotate(orientation);
-            matrix.translate(cart.getTrackOffset());
-            Vector3 cartTrackOffsetVector = matrix.toVector3();
-            Vector3 cartPositionVector = cartPositionTrack.toVector3();
-            Vector3 totalVector = Vector3.add(cartPositionVector, cartTrackOffsetVector);
-
-            final Vector3 armorstandHeightCompensationVector = new Vector3(0, -0.8, 0);
-            totalVector = Vector3.add(totalVector, armorstandHeightCompensationVector);
-
-            cart.setPosition(totalVector);
-            cart.setRotation(ArmorStandPose.getArmorStandPose(orientation)); // TODO: expensive
+            Vector3 cartPosition = Cart.calculateLocation(cartPositionOnTrack, cart.getTrackOffset(), orientation);
+            cart.setPosition(cartPosition, orientation);
         }
 
         currentLocation = location;

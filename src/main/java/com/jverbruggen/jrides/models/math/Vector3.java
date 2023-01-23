@@ -70,13 +70,17 @@ public class Vector3 {
         return new Vector3(-x, -y, -z);
     }
 
+    public double length(){
+        return Math.sqrt(x*x+y*y+z*z);
+    }
+
     /**
      * Returns a new normalized vector of this vector (length = 1)
      *
      * @return normalized vector
      */
     public Vector3 normalize() {
-        double len = Math.sqrt(x*x+y*y+z*z);
+        double len = this.length();
         return new Vector3((x/len), (y/len), (z/len));
     }
 
@@ -117,6 +121,16 @@ public class Vector3 {
 
     public boolean equals(Vector3 p) {
         return p.x == x && p.y == y && p.z == z;
+    }
+
+    public Vector3 subtractUpDown( double length){
+        double currentLength = this.length();
+        double multiplyFactor = (currentLength - length)/currentLength;
+        return new Vector3(
+                this.x * multiplyFactor,
+                this.y * multiplyFactor,
+                this.z * multiplyFactor
+        );
     }
 
     /**

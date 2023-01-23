@@ -1,14 +1,18 @@
 package com.jverbruggen.jrides.serviceprovider.configuration;
 
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.ListenerPriority;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.models.entity.EntityIdFactory;
 import com.jverbruggen.jrides.models.message.MessageFactory;
+import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrackFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrainFactory;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.PacketSender_1_19_2;
+import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import com.jverbruggen.jrides.state.viewport.ViewportManagerFactory;
@@ -36,8 +40,12 @@ public class ServiceProviderConfigurator {
         PlayerManager playerManager                 = ServiceProvider.Register(PlayerManager.class, new PlayerManager());
         ViewportManagerFactory viewportManagerFactory = new ViewportManagerFactory(packetSender, entityIdFactory);
         ViewportManager viewportManager             = ServiceProvider.Register(ViewportManager.class, viewportManagerFactory.createViewportManager(true));
-        TrainFactory trainFactory                   = ServiceProvider.Register(TrainFactory.class, new TrainFactory(viewportManager));
+        SeatFactory seatFactory                     = ServiceProvider.Register(SeatFactory.class, new SeatFactory(viewportManager));
+        TrainFactory trainFactory                   = ServiceProvider.Register(TrainFactory.class, new TrainFactory(viewportManager, seatFactory));
         TrackFactory trackFactory                   = ServiceProvider.Register(TrackFactory.class, new TrackFactory());
-        RideManager rideManager                     = ServiceProvider.Register(RideManager.class, new RideManager(logger, dataFolder, viewportManager, configManager, trainFactory, trackFactory));
+        RideManager rideManager                     = ServiceProvider.Register(RideManager.class, new RideManager(logger, dataFolder, viewportManager, configManager, trainFactory, trackFactory, seatFactory));
+        VirtualEntityPacketListener packetListener  = ServiceProvider.Register(VirtualEntityPacketListener.class,
+                new VirtualEntityPacketListener(plugin, ListenerPriority.NORMAL, new PacketType[]{PacketType.Play.Client.USE_ENTITY},
+                        viewportManager, playerManager));
     }
 }

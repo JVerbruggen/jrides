@@ -36,12 +36,22 @@ public class SpecifiedViewportManager implements ViewportManager{
     }
 
     @Override
-    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem headModel) {
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, boolean allowsPassenger) {
+        return null;
+    }
+
+    @Override
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem headModel, boolean allowsPassenger) {
         return null;
     }
 
     @Override
     public void despawnAll() {
 
+    }
+
+    @Override
+    public VirtualEntity getEntity(int entityId) {
+        return null;
     }
 }

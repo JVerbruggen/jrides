@@ -2,10 +2,13 @@ package com.jverbruggen.jrides.models.ride.coaster;
 
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
+import com.jverbruggen.jrides.models.math.ArmorStandPose;
+import com.jverbruggen.jrides.models.math.Matrix4x4;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Seat;
+import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,8 +18,8 @@ public class SimpleCart implements Cart {
     private Vector3 trackOffset;
     private int massMiddleOffset;
 
-    public SimpleCart(VirtualArmorstand modelArmorstand, Vector3 trackOffset, int massMiddleOffset) {
-        this.seats = new ArrayList<>();
+    public SimpleCart(List<Seat> seats, VirtualArmorstand modelArmorstand, Vector3 trackOffset, int massMiddleOffset) {
+        this.seats = seats;
         this.modelArmorstand = modelArmorstand;
         this.trackOffset = trackOffset;
         this.massMiddleOffset = massMiddleOffset;
@@ -46,8 +49,12 @@ public class SimpleCart implements Cart {
     }
 
     @Override
-    public void setRotation(Vector3 rotation) {
-        modelArmorstand.setHeadpose(rotation);
+    public void setPosition(Vector3 position, Quaternion orientation) {
+        setPosition(position);
+
+        modelArmorstand.setHeadpose(ArmorStandPose.getArmorStandPose(orientation)); // TODO: expensive
+
+        SeatFactory.moveSeats(seats, position, orientation);
     }
 
     @Override

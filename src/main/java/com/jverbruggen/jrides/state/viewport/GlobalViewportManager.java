@@ -9,15 +9,32 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.render.GlobalViewport;
 import com.jverbruggen.jrides.packets.PacketSender;
 
+import java.util.HashMap;
+
 public class GlobalViewportManager implements ViewportManager {
     private final GlobalViewport globalViewport;
     private final PacketSender packetSender;
     private final EntityIdFactory entityIdFactory;
 
+    private final HashMap<Integer, VirtualEntity> entities;
+
     public GlobalViewportManager(GlobalViewport globalViewport, PacketSender packetSender, EntityIdFactory entityIdFactory) {
         this.globalViewport = globalViewport;
         this.packetSender = packetSender;
         this.entityIdFactory = entityIdFactory;
+        this.entities = new HashMap<>();
+    }
+
+    private void addEntity(VirtualEntity entity){
+        entities.put(entity.getEntityId(), entity);
+    }
+
+    private void removeEntity(int entityId){
+        entities.remove(entityId);
+    }
+
+    public VirtualEntity getEntity(int entityId){
+        return entities.get(entityId);
     }
 
     @Override
@@ -31,12 +48,19 @@ public class GlobalViewportManager implements ViewportManager {
     }
 
     @Override
-    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem model) {
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, boolean allowsPassenger) {
+        return spawnVirtualArmorstand(location, null, allowsPassenger);
+    }
+
+    @Override
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem model, boolean allowsPassenger) {
         int entityId = entityIdFactory.newId();
-        VirtualArmorstand virtualArmorstand = new VirtualArmorstand(packetSender, this, location, entityId);
+        VirtualArmorstand virtualArmorstand = new VirtualArmorstand(packetSender, this, location, allowsPassenger, entityId);
         if(model != null){
             virtualArmorstand.setModel(model);
         }
+
+        addEntity(virtualArmorstand);
 
         updateForEntity(virtualArmorstand);
         return virtualArmorstand;
@@ -45,6 +69,7 @@ public class GlobalViewportManager implements ViewportManager {
     @Override
     public void despawnAll() {
         for(VirtualEntity virtualEntity : globalViewport.getEntities()){
+            removeEntity(virtualEntity.getEntityId());
             virtualEntity.despawn();
         }
     }

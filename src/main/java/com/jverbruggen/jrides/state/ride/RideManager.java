@@ -10,6 +10,7 @@ import com.jverbruggen.jrides.config.ride.RideConfigObject;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.identifier.RideIdentifier;
 import com.jverbruggen.jrides.models.ride.coaster.*;
+import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrackFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrainFactory;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
@@ -33,9 +34,10 @@ public class RideManager {
     private final ViewportManager viewportManager;
     private final TrainFactory trainFactory;
     private final TrackFactory trackFactory;
+    private final SeatFactory seatFactory;
 
     public RideManager(Logger logger, File dataFolder, ViewportManager viewportManager, ConfigManager configManager,
-                       TrainFactory trainFactory, TrackFactory trackFactory) {
+                       TrainFactory trainFactory, TrackFactory trackFactory, SeatFactory seatFactory) {
         this.logger = logger;
         this.rideHandles = new ArrayList<>();
         this.dataFolder = dataFolder;
@@ -43,6 +45,7 @@ public class RideManager {
         this.configManager = configManager;
         this.trainFactory = trainFactory;
         this.trackFactory = trackFactory;
+        this.seatFactory = seatFactory;
     }
 
     public Ride GetRide(RideIdentifier identifier){

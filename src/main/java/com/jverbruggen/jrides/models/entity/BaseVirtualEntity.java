@@ -91,6 +91,11 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     }
 
     @Override
+    public int getEntityId() {
+        return entityId;
+    }
+
+    @Override
     public void despawn() {
         spawned = false;
         packetSender.destroyVirtualEntity(getViewers(), entityId);

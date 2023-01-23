@@ -165,4 +165,11 @@ public class PacketSender_1_19_2 implements PacketSender {
 
         sendLog("teleportVirtualEntity");
     }
+
+    @Override
+    public void sendMountVirtualEntityPacket(List<Player> players, Player mounted, int entityId) {
+        new EntityMountPacket(protocolManager, entityId, mounted).sendAll(players);
+
+        sendLog("sendMountVirtualEntityPacket");
+    }
 }

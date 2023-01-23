@@ -1,8 +1,10 @@
 package com.jverbruggen.jrides;
 
+import com.comphenix.protocol.ProtocolManager;
 import com.jverbruggen.jrides.command.JRidesCommandExecutor;
 import com.jverbruggen.jrides.config.ride.RideConfig;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.serviceprovider.configuration.ServiceProviderConfigurator;
 import com.jverbruggen.jrides.state.player.PlayerManager;
@@ -49,6 +51,10 @@ public class Main extends JavaPlugin {
             getLogger().info("Initialising jrides for player " + bukkitPlayer.getName());
             viewportManager.updateVisuals(player);
         }
+
+        VirtualEntityPacketListener packetListener = ServiceProvider.GetSingleton(VirtualEntityPacketListener.class);
+        ProtocolManager protocolManager = ServiceProvider.GetSingleton(ProtocolManager.class);
+        protocolManager.addPacketListener(packetListener);
 
         Logger logger = ServiceProvider.GetSingleton(Logger.class);
         logger.warning("JRides enabled");

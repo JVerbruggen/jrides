@@ -1,9 +1,12 @@
 package com.jverbruggen.jrides.models.ride.factory;
 
+import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.*;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Material;
@@ -13,9 +16,11 @@ import java.util.List;
 
 public class TrainFactory {
     private final ViewportManager viewportManager;
+    private final SeatFactory seatFactory;
 
-    public TrainFactory(ViewportManager viewportManager) {
+    public TrainFactory(ViewportManager viewportManager, SeatFactory seatFactory) {
         this.viewportManager = viewportManager;
+        this.seatFactory = seatFactory;
     }
 
     public Train createEquallyDistributedTrain(Track track){
@@ -25,18 +30,28 @@ public class TrainFactory {
         int distancePerCart = 40;
         int firstCartFromMassMiddleOffset = (amountOfCarts*distancePerCart) / 2;
         int firstCartAbsoluteOffset = indexOffset + firstCartFromMassMiddleOffset;
-        Vector3 trackOffset = new Vector3(0, -1.2, 0);
+        Vector3 cartOffset = new Vector3(0, -1.8, 0);
 
         List<Cart> carts = new ArrayList<>();
         for(int i = 0; i < amountOfCarts; i++){
-            int cartOffset = firstCartAbsoluteOffset - (i*distancePerCart);
+            int cartOffsetFrames = firstCartAbsoluteOffset - (i*distancePerCart);
             int cartMassMiddleOffset = firstCartFromMassMiddleOffset - (i*distancePerCart);
             TrainModelItem model = new TrainModelItem(ItemStackFactory.getCoasterStack(Material.DIAMOND_AXE, 22));
-            VirtualArmorstand armorStand = viewportManager.spawnVirtualArmorstand(
-                    track.getRawPositions().get(cartOffset).toVector3(), model);
+
+            NoLimitsExportPositionRecord positionRecord = track.getRawPositions().get(cartOffsetFrames);
+            Vector3 trackLocation = positionRecord.toVector3();
+            Quaternion orientation = positionRecord.getOrientation();
+            Vector3 cartLocation = Cart.calculateLocation(trackLocation, cartOffset, orientation);
+
+            VirtualArmorstand armorStand = viewportManager.spawnVirtualArmorstand(cartLocation, model, false);
+
+            List<Vector3> seatOffsets = List.of(new Vector3(0.3, -1.4, -1), new Vector3(0.3, -1.4, 1));
+            List<Seat> seats = seatFactory.createSeats(seatOffsets, cartLocation, orientation);
+
             Cart cart = new SimpleCart(
+                    seats,
                     armorStand,
-                    trackOffset,
+                    cartOffset,
                     cartMassMiddleOffset);
             carts.add(cart);
         }

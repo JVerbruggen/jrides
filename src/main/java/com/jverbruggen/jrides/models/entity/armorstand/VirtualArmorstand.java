@@ -17,8 +17,9 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     private ArmorstandModels models;
     private boolean invisible;
     private int leashedToEntity;
+    private boolean allowsPassengerValue;
 
-    public VirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, int entityId) {
+    public VirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, boolean allowsPassenger, int entityId) {
         super(packetSender, viewportManager, location, entityId);
 
         this.passenger = null;
@@ -27,6 +28,7 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         this.models = new ArmorstandModels();
         this.invisible = false;
         this.leashedToEntity = -1;
+        this.allowsPassengerValue = allowsPassenger;
     }
 
     @Override
@@ -35,8 +37,20 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     }
 
     @Override
+    public boolean allowsPassenger() {
+        return allowsPassengerValue;
+    }
+
+    @Override
+    public boolean hasPassenger() {
+        return passenger != null;
+    }
+
+    @Override
     public void setPassenger(Player player) {
         this.passenger = player;
+
+        packetSender.sendMountVirtualEntityPacket(viewers, player, entityId);
     }
 
     @Override

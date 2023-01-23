@@ -8,8 +8,13 @@ import java.util.UUID;
 public interface VirtualEntity {
     String getUniqueIdentifier();
     UUID getUUID();
+    int getEntityId();
+
     Player getPassenger();
+    boolean allowsPassenger();
+    boolean hasPassenger();
     void setPassenger(Player player);
+
     Vector3 getLocation();
     void setLocation(Vector3 location);
     List<Player> getViewers();

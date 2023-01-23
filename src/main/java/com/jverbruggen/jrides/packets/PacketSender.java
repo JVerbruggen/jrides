@@ -16,8 +16,6 @@ public interface PacketSender {
     void spawnVirtualArmorstand(List<Player> players, int entityId, Vector3 location, double yawRotation,
                                 ArmorstandRotations rotations, ArmorstandModels models, boolean invisible,
                                 int leashedToEntity);
-
-
     void sendRotationPacket(Player player, int entityId, int rotationType, Vector3 rotation);
     void sendRotationPacket(List<Player> players, int entityId, int rotationType, Vector3 rotation);
     void sendApplyModelPacket(Player player, int entityId, EnumWrappers.ItemSlot itemSlot, TrainModelItem model);
@@ -29,4 +27,5 @@ public interface PacketSender {
     void destroyVirtualEntity(List<Player> players, int entityId);
     void teleportVirtualEntity(Player player, int entityId, Vector3 blockLocation);
     void teleportVirtualEntity(List<Player> players, int entityId, Vector3 blockLocation);
+    void sendMountVirtualEntityPacket(List<Player> players, Player mounted, int entityId);
 }

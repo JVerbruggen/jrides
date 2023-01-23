@@ -9,6 +9,8 @@ import com.jverbruggen.jrides.models.math.Vector3;
 public interface ViewportManager {
     void updateVisuals(Player player);
     void updateForEntity(VirtualEntity virtualEntity);
-    VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem headModel);
+    VirtualArmorstand spawnVirtualArmorstand(Vector3 location, boolean allowsPassenger);
+    VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem headModel, boolean allowsPassenger);
     void despawnAll();
+    VirtualEntity getEntity(int entityId);
 }
