@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.models.ride.section;
 
+import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.Track;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
 import com.jverbruggen.jrides.models.ride.section.exception.SectionNotFoundException;
@@ -13,7 +14,7 @@ public class SectionProvider {
         this.track = track;
     }
 
-    public Section getSectionFor(Train train, int frame){
+    public Section getSectionFor(Train train, Frame frame){
         Section currentSection = train.getCurrentSection();
         if(currentSection.isInSection(frame)) return null;
 

@@ -48,8 +48,7 @@ public class CoasterSeat implements Seat {
 
     @Override
     public void setLocation(Vector3 location, Quaternion orientation) {
-        double yawRotation = (orientation.getYaw() - 90) * 256/360;
-        virtualArmorstand.setLocation(location, yawRotation);
+        virtualArmorstand.setLocation(location, orientation.getEntityYaw());
 
         if(hasPassenger()) passenger.setSmoothAnimationRotation(orientation);
     }

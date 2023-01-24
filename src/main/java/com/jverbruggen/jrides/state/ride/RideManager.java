@@ -92,10 +92,24 @@ public class RideManager {
         Track track = loadCoasterTrackFromConfig(world, rideIdentifier, offsetX, offsetY, offsetZ, startOffset);
         SectionProvider sectionProvider = new SectionProvider(track);
 
-        Train train = trainFactory.createEquallyDistributedTrain(track);
-        TrainHandle trainHandle = new TrainHandle(sectionProvider, train, track, startOffset);
-        GCRideHandle rideHandle = new GCRideHandle(ride, List.of(trainHandle), track, world);
+        List<TrainHandle> trains = createTrains(track, sectionProvider, rideIdentifier, 1);
+
+        GCRideHandle rideHandle = new GCRideHandle(ride, trains, track, world);
         this.addRideHandle(rideHandle);
+    }
+
+    private TrainHandle createTrain(Track track, SectionProvider sectionProvider, String trainIdentifier){
+        Train train = trainFactory.createEquallyDistributedTrain(track, trainIdentifier);
+        return new TrainHandle(sectionProvider, train, track, train.getMassMiddleFrame());
+    }
+
+    private List<TrainHandle> createTrains(Track track, SectionProvider sectionProvider, String rideIdentifier, int count){
+        List<TrainHandle> trains = new ArrayList<>();
+        for(int i = 0; i < count; i++){
+            String trainName = rideIdentifier + ":train_" + (i+1);
+            trains.add(createTrain(track, sectionProvider, trainName));
+        }
+        return trains;
     }
 
     private Track loadCoasterTrackFromConfig(World world, String rideIdentifier, float offsetX, float offsetY, float offsetZ, int startOffset){

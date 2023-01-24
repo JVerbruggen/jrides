@@ -11,12 +11,11 @@ import java.util.List;
 
 public class CartMovementFactory {
 
-    public HashMap<Cart, CartMovement> createOnTrackCartMovement(List<Cart> carts, Track track, int trainMassMiddleFrame){
+    public HashMap<Cart, CartMovement> createOnTrackCartMovement(List<Cart> carts, Track track){
         HashMap<Cart, CartMovement> cartMovements = new HashMap<>();
-        int frameCount = track.getRawPositionsCount();
 
         for(Cart cart : carts){
-            int cartFrame = Math.floorMod((trainMassMiddleFrame + cart.getMassMiddleOffset()), frameCount);
+            int cartFrame = cart.getFrame().getValue();
             NoLimitsExportPositionRecord cartPositionOnTrackRecord = track.getRawPositions().get(cartFrame);
             Vector3 cartPositionOnTrack = cartPositionOnTrackRecord.toVector3();
             Quaternion orientation = cartPositionOnTrackRecord.getOrientation();

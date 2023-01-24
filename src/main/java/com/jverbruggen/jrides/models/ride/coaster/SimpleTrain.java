@@ -1,24 +1,35 @@
 package com.jverbruggen.jrides.models.ride.coaster;
 
+import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.LinkedFrame;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
 import java.util.List;
 
 public class SimpleTrain implements Train {
+    private final String name;
     private List<Cart> carts;
     private final int cartDistance;
-    private final int headOfTrainOffset;
     private final int totalLengthInFrames;
-    private int massMiddleFrame;
+    private Frame massMiddleFrame;
+    private Frame headOfTrainFrame;
     private Section currentSection;
+    private boolean crashed;
 
-    public SimpleTrain(List<Cart> carts, int cartDistance, int headOfTrainOffset, int massMiddleFrame, Section section) {
+    public SimpleTrain(String name, List<Cart> carts, int cartDistance, Frame headOfTrainFrame, LinkedFrame massMiddleFrame, Section section) {
+        this.name = name;
         this.carts = carts;
         this.cartDistance = cartDistance;
-        this.headOfTrainOffset = headOfTrainOffset;
         this.totalLengthInFrames = carts.size()*cartDistance;
+        this.headOfTrainFrame = headOfTrainFrame;
         this.massMiddleFrame = massMiddleFrame;
         this.currentSection = section;
+        this.crashed = false;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -36,10 +47,15 @@ public class SimpleTrain implements Train {
 //        return totalLengthInFrames;
 //    }
 //
-//    @Override
-//    public int getMassMiddleFrame() {
-//        return massMiddleFrame;
-//    }
+    @Override
+    public Frame getMassMiddleFrame() {
+        return massMiddleFrame;
+    }
+
+    @Override
+    public Frame getHeadOfTrainFrame() {
+        return headOfTrainFrame;
+    }
 
     @Override
     public Section getCurrentSection() {
@@ -49,6 +65,16 @@ public class SimpleTrain implements Train {
     @Override
     public void setCurrentSection(Section section) {
         this.currentSection = section;
+    }
+
+    @Override
+    public void setCrashed(boolean crashed) {
+        this.crashed = crashed;
+    }
+
+    @Override
+    public boolean isCrashed() {
+        return crashed;
     }
 
     @Override

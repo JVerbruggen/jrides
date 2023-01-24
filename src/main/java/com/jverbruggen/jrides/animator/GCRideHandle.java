@@ -23,14 +23,14 @@ public class GCRideHandle {
         this.world = world;
         this.visualisationTool = ParticleTrackVisualisationTool.fromTrack(world, track, 20);
 
-        Bukkit.getScheduler().runTaskTimer(JRidesPlugin.getBukkitPlugin(), this::tick, 1l, 1l);
+        Bukkit.getScheduler().runTaskTimer(JRidesPlugin.getBukkitPlugin(), this::tick, 1L, 1L);
     }
 
     public ParticleTrackVisualisationTool getVisualisationTool() {
         return visualisationTool;
     }
 
-    public void tick(){
+    private void tick(){
         for(TrainHandle trainHandle : trains){
             trainHandle.tick();
         }

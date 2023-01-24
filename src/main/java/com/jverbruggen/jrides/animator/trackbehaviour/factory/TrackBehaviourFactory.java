@@ -12,8 +12,8 @@ public class TrackBehaviourFactory {
         this.cartMovementFactory = cartMovementFactory;
     }
 
-    public TrackBehaviour getBrakeBehaviour(){
-        return new FullStopAndGoTrackBehaviour(cartMovementFactory);
+    public TrackBehaviour getBrakeBehaviour(int stopTime){
+        return new FullStopAndGoTrackBehaviour(cartMovementFactory, stopTime);
     }
 
     public TrackBehaviour getTrackBehaviour(){

@@ -41,7 +41,17 @@ public class SpecifiedViewportManager implements ViewportManager{
     }
 
     @Override
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, double yawRotation) {
+        return null;
+    }
+
+    @Override
     public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem headModel) {
+        return null;
+    }
+
+    @Override
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, double yawRotation, TrainModelItem headModel) {
         return null;
     }
 

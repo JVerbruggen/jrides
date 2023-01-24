@@ -53,9 +53,19 @@ public class GlobalViewportManager implements ViewportManager {
     }
 
     @Override
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, double yawRotation) {
+        return spawnVirtualArmorstand(location, yawRotation, null);
+    }
+
+    @Override
     public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem model) {
+        return spawnVirtualArmorstand(location, 0, model);
+    }
+
+    @Override
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, double yawRotation, TrainModelItem model) {
         int entityId = entityIdFactory.newId();
-        VirtualArmorstand virtualArmorstand = new VirtualArmorstand(packetSender, this, location, entityId);
+        VirtualArmorstand virtualArmorstand = new VirtualArmorstand(packetSender, this, location, yawRotation, entityId);
         if(model != null){
             virtualArmorstand.setModel(model);
         }

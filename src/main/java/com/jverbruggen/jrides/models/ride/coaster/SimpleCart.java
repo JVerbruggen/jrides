@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.LinkedFrame;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
 
@@ -16,13 +17,13 @@ public class SimpleCart implements Cart {
     private List<Seat> seats;
     private VirtualArmorstand modelArmorstand;
     private Vector3 trackOffset;
-    private int massMiddleOffset;
+    private LinkedFrame linkedFrame;
 
-    public SimpleCart(List<Seat> seats, VirtualArmorstand modelArmorstand, Vector3 trackOffset, int massMiddleOffset) {
+    public SimpleCart(List<Seat> seats, VirtualArmorstand modelArmorstand, Vector3 trackOffset, LinkedFrame linkedFrame) {
         this.seats = seats;
         this.modelArmorstand = modelArmorstand;
         this.trackOffset = trackOffset;
-        this.massMiddleOffset = massMiddleOffset;
+        this.linkedFrame = linkedFrame;
     }
 
     @Override
@@ -39,8 +40,8 @@ public class SimpleCart implements Cart {
     }
 
     @Override
-    public int getMassMiddleOffset() {
-        return massMiddleOffset;
+    public LinkedFrame getFrame() {
+        return linkedFrame;
     }
 
     @Override

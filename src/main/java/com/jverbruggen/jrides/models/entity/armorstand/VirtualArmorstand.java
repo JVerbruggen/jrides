@@ -24,11 +24,11 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     private boolean passengerSyncCounterActive;
     private int passengerSyncCounter;
 
-    public VirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, int entityId) {
+    public VirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, double yawRotation, int entityId) {
         super(packetSender, viewportManager, location, entityId);
 
         this.passenger = null;
-        this.yawRotation = 0d;
+        this.yawRotation = yawRotation;
         this.rotations = new ArmorstandRotations();
         this.models = new ArmorstandModels();
         this.invisible = false;

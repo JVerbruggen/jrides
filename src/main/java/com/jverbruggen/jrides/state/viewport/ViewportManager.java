@@ -10,7 +10,9 @@ public interface ViewportManager {
     void updateVisuals(Player player);
     void updateForEntity(VirtualEntity virtualEntity);
     VirtualArmorstand spawnVirtualArmorstand(Vector3 location);
+    VirtualArmorstand spawnVirtualArmorstand(Vector3 location, double yawRotation);
     VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem headModel);
+    VirtualArmorstand spawnVirtualArmorstand(Vector3 location, double yawRotation, TrainModelItem headModel);
     void despawnAll();
     VirtualEntity getEntity(int entityId);
 }

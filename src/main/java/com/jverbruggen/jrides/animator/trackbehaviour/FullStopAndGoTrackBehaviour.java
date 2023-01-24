@@ -4,10 +4,10 @@ import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovement;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.Cart;
 import com.jverbruggen.jrides.models.ride.coaster.Track;
-import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,16 +19,16 @@ public class FullStopAndGoTrackBehaviour implements TrackBehaviour{
     private Phase phase;
     private int stopTimeCounter;
 
-    public FullStopAndGoTrackBehaviour(CartMovementFactory cartMovementFactory) {
+    public FullStopAndGoTrackBehaviour(CartMovementFactory cartMovementFactory, int stopTime) {
         this.cartMovementFactory = cartMovementFactory;
 
-        this.stopTime = 50;
+        this.stopTime = stopTime;
         trainExitedAtEnd();
     }
 
     @Override
-    public TrainMovement move(int currentMassMiddleFrame, Speed currentSpeed, Vector3 currentLocation, List<Cart> carts, Track track) {
-        Bukkit.broadcastMessage("Brake " + phase.toString());
+    public TrainMovement move(Frame currentMassMiddleFrame, Speed currentSpeed, Vector3 currentLocation, List<Cart> carts, Track track) {
+//        Bukkit.broadcastMessage("Brake " + phase.toString());
         Speed newSpeed = currentSpeed.clone();
 
         final double deceleration = 0.5;
@@ -48,10 +48,10 @@ public class FullStopAndGoTrackBehaviour implements TrackBehaviour{
                 break;
         }
 
-        int newMassMiddleFrame = currentMassMiddleFrame + currentSpeed.getFrameIncrement();
-        Vector3 newTrainLocation = track.getRawPositions().get(newMassMiddleFrame).toVector3();
+        Frame newMassMiddleFrame = currentMassMiddleFrame.clone().add(currentSpeed.getFrameIncrement());
+        Vector3 newTrainLocation = track.getRawPositions().get(newMassMiddleFrame.getValue()).toVector3();
 
-        HashMap<Cart, CartMovement> cartMovements = cartMovementFactory.createOnTrackCartMovement(carts, track, newMassMiddleFrame);
+        HashMap<Cart, CartMovement> cartMovements = cartMovementFactory.createOnTrackCartMovement(carts, track);
 
         return new TrainMovement(newSpeed, newMassMiddleFrame, newTrainLocation, cartMovements);
     }

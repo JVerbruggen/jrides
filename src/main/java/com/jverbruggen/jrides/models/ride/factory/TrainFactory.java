@@ -1,16 +1,21 @@
 package com.jverbruggen.jrides.models.ride.factory;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
+import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.LinkedFrame;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.*;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.exception.NoSpawnAvailableException;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -25,29 +30,31 @@ public class TrainFactory {
         this.seatFactory = seatFactory;
     }
 
-    public Train createEquallyDistributedTrain(Track track){
-        Section spawnSection = track.getNextSpawnSection();
+    public Train createEquallyDistributedTrain(Track track, String trainIdentifier){
+        final int totalFrames = track.getRawPositionsCount();
+        final Section spawnSection = track.getNextSpawnSection();
         if(spawnSection == null) throw new NoSpawnAvailableException(track);
 
-        int indexOffset = spawnSection.getEndFrame();
-        int amountOfCarts = 10;
-        int distancePerCart = 40;
-        int firstCartFromMassMiddleOffset = (amountOfCarts*distancePerCart) / 2;
-        int firstCartAbsoluteOffset = indexOffset + firstCartFromMassMiddleOffset;
-        Vector3 cartOffset = new Vector3(0, -1.9, 0);
+        final Frame headOfTrainFrame = spawnSection.getEndFrame().clone();
+        final int amountOfCarts = 10;
+        final int cartDistance = 41;
+        final LinkedFrame massMiddleFrame = new LinkedFrame(headOfTrainFrame, -(amountOfCarts*cartDistance) / 2, totalFrames);
+        final int headOfTrainOffset = headOfTrainFrame.getValue();
+        final Vector3 cartOffset = new Vector3(0, -1.9, 0);
 
         List<Cart> carts = new ArrayList<>();
         for(int i = 0; i < amountOfCarts; i++){
-            int cartOffsetFrames = firstCartAbsoluteOffset - (i*distancePerCart);
-            int cartMassMiddleOffset = firstCartFromMassMiddleOffset - (i*distancePerCart);
+            int cartOffsetFrames = i*cartDistance;
+            int cartFrame = Frame.getCyclicFrameValue(headOfTrainOffset - cartOffsetFrames, totalFrames);
             TrainModelItem model = new TrainModelItem(ItemStackFactory.getCoasterStack(Material.DIAMOND_AXE, 22));
 
-            NoLimitsExportPositionRecord positionRecord = track.getRawPositions().get(cartOffsetFrames);
+            NoLimitsExportPositionRecord positionRecord = track.getRawPositions().get(cartFrame);
             Vector3 trackLocation = positionRecord.toVector3();
             Quaternion orientation = positionRecord.getOrientation();
             Vector3 cartLocation = Cart.calculateLocation(trackLocation, cartOffset, orientation);
 
             VirtualArmorstand armorStand = viewportManager.spawnVirtualArmorstand(cartLocation, model);
+            Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> armorStand.setHeadpose(ArmorStandPose.getArmorStandPose(orientation)));
 
             List<Vector3> seatOffsets = List.of(new Vector3(0.3, -1.2, -1.2), new Vector3(0.3, -1.2, -0.4), new Vector3(0.3, -1.2, 0.4), new Vector3(0.3, -1.2, 1.2));
             List<Seat> seats = seatFactory.createSeats(seatOffsets, cartLocation, orientation);
@@ -56,11 +63,11 @@ public class TrainFactory {
                     seats,
                     armorStand,
                     cartOffset,
-                    cartMassMiddleOffset);
+                    new LinkedFrame(headOfTrainFrame, cartOffsetFrames, totalFrames));
             carts.add(cart);
         }
 
-        Train train = new SimpleTrain(carts, distancePerCart, firstCartFromMassMiddleOffset, indexOffset, spawnSection);
+        Train train = new SimpleTrain(trainIdentifier, carts, cartDistance, headOfTrainFrame, massMiddleFrame, spawnSection);
         spawnSection.setOccupation(train);
         return train;
     }
