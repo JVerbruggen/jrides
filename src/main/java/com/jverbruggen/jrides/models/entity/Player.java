@@ -1,23 +1,22 @@
 package com.jverbruggen.jrides.models.entity;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimationSupport;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Seat;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class Player {
     private org.bukkit.entity.Player bukkitPlayer;
     private Seat seatedOn;
-    private boolean smoothAnimationSupport;
+    private SmoothAnimationSupport smoothAnimationSupport;
 
     public Player(org.bukkit.entity.Player bukkitPlayer) {
         this.bukkitPlayer = bukkitPlayer;
         this.seatedOn = null;
-        this.smoothAnimationSupport = false;
+        this.smoothAnimationSupport = SmoothAnimationSupport.UNKNOWN;
     }
 
     public Vector3 getLocation(){
@@ -54,12 +53,18 @@ public class Player {
         JRidesPlugin.getPacketSender().sendClientPositionPacket(this, position);
     }
 
+    public boolean shouldResetSmoothAnimationSupport(){
+        return smoothAnimationSupport.equals(SmoothAnimationSupport.UNKNOWN);
+    }
+
     public boolean hasSmoothAnimationSupport() {
-        return smoothAnimationSupport;
+        return smoothAnimationSupport.equals(SmoothAnimationSupport.AVAILABLE);
     }
 
     public void setSmoothAnimationSupport(boolean smoothAnimationSupport) {
-        this.smoothAnimationSupport = smoothAnimationSupport;
+        if(this.smoothAnimationSupport != SmoothAnimationSupport.UNKNOWN) return; // Cannot reset smooth animation without rejoin
+
+        this.smoothAnimationSupport = (smoothAnimationSupport ? SmoothAnimationSupport.AVAILABLE : SmoothAnimationSupport.UNAVAILABLE);
         Bukkit.broadcastMessage("Smoothcoasters " + (smoothAnimationSupport ? "enabled" : "disabled") + " for player " + this.bukkitPlayer.getName());
     }
 
@@ -73,3 +78,4 @@ public class Player {
         JRidesPlugin.getSmoothAnimation().setRotation(this, orientation);
     }
 }
+

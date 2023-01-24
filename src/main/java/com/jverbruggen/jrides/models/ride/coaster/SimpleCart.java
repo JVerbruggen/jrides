@@ -1,9 +1,9 @@
 package com.jverbruggen.jrides.models.ride.coaster;
 
+import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovement;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.ArmorStandPose;
-import com.jverbruggen.jrides.models.math.Matrix4x4;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Seat;
@@ -60,5 +60,10 @@ public class SimpleCart implements Cart {
     @Override
     public void setPosition(Vector3 position) {
         modelArmorstand.setLocation(position, 0);
+    }
+
+    @Override
+    public void setPosition(CartMovement cartMovement) {
+        setPosition(cartMovement.getLocation(), cartMovement.getOrientation());
     }
 }

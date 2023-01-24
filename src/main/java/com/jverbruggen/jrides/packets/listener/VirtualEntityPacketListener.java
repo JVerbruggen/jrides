@@ -4,13 +4,13 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimation;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.permissions.Permissions;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -18,12 +18,14 @@ import org.bukkit.plugin.Plugin;
 public class VirtualEntityPacketListener extends PacketAdapter implements Listener {
     private final ViewportManager viewportManager;
     private final PlayerManager playerManager;
+    private final SmoothAnimation smoothAnimation;
 
     public VirtualEntityPacketListener(Plugin plugin, ListenerPriority listenerPriority, PacketType[] types,
-                                       ViewportManager viewportManager, PlayerManager playerManager) {
+                                       ViewportManager viewportManager, PlayerManager playerManager, SmoothAnimation smoothAnimation) {
         super(plugin, listenerPriority, types);
         this.viewportManager = viewportManager;
         this.playerManager = playerManager;
+        this.smoothAnimation = smoothAnimation;
     }
 
     @Override
@@ -61,9 +63,9 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
 
         Seat seat = entity.getHostSeat();
         Player player = playerManager.getPlayer(bukkitPlayer);
-        seat.setPassenger(player);
 
-//        bukkitPlayer.sendMessage("Entered");
+        player.setSmoothAnimationSupport(smoothAnimation.isEnabled(player));
+        seat.setPassenger(player);
     }
 
     private void onSteerVehicle(PacketEvent event) {
@@ -91,8 +93,6 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
                 return;
             }
         }
-
-//        bukkitPlayer.sendMessage("Exited");
         seat.setPassenger(null);
     }
 }

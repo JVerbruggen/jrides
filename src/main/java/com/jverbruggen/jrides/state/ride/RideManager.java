@@ -13,6 +13,8 @@ import com.jverbruggen.jrides.models.ride.coaster.*;
 import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrackFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrainFactory;
+import com.jverbruggen.jrides.models.ride.section.Section;
+import com.jverbruggen.jrides.models.ride.section.SectionProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.World;
 
@@ -88,9 +90,10 @@ public class RideManager {
         int startOffset = 4000;
 
         Track track = loadCoasterTrackFromConfig(world, rideIdentifier, offsetX, offsetY, offsetZ, startOffset);
+        SectionProvider sectionProvider = new SectionProvider(track);
 
         Train train = trainFactory.createEquallyDistributedTrain(track);
-        TrainHandle trainHandle = new TrainHandle(train, track, startOffset);
+        TrainHandle trainHandle = new TrainHandle(sectionProvider, train, track, startOffset);
         GCRideHandle rideHandle = new GCRideHandle(ride, List.of(trainHandle), track, world);
         this.addRideHandle(rideHandle);
     }

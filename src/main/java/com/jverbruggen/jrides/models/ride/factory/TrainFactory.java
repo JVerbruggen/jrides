@@ -8,6 +8,8 @@ import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.*;
+import com.jverbruggen.jrides.models.ride.section.Section;
+import com.jverbruggen.jrides.models.ride.section.exception.NoSpawnAvailableException;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Material;
 
@@ -25,6 +27,8 @@ public class TrainFactory {
 
     public Train createEquallyDistributedTrain(Track track){
         Section spawnSection = track.getNextSpawnSection();
+        if(spawnSection == null) throw new NoSpawnAvailableException(track);
+
         int indexOffset = spawnSection.getEndFrame();
         int amountOfCarts = 10;
         int distancePerCart = 40;
@@ -56,6 +60,8 @@ public class TrainFactory {
             carts.add(cart);
         }
 
-        return new SimpleTrain(carts, distancePerCart, firstCartFromMassMiddleOffset);
+        Train train = new SimpleTrain(carts, distancePerCart, firstCartFromMassMiddleOffset, indexOffset, spawnSection);
+        spawnSection.setOccupation(train);
+        return train;
     }
 }

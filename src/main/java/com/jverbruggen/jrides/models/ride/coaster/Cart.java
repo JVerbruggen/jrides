@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.models.ride.coaster;
 
+import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovement;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Matrix4x4;
 import com.jverbruggen.jrides.models.math.Quaternion;
@@ -15,6 +16,7 @@ public interface Cart {
     Vector3 getTrackOffset();
     void setPosition(Vector3 position, Quaternion orientation);
     void setPosition(Vector3 position);
+    void setPosition(CartMovement cartMovement);
 
     static Vector3 calculateLocation(Vector3 trackLocation, Vector3 cartOffset, Quaternion orientation){
         Matrix4x4 matrix = new Matrix4x4();
