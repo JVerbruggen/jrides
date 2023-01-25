@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.config.coaster.objects.section.SectionConfig;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.properties.factory.FrameFactory;
+import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.coaster.SimpleTrack;
 import com.jverbruggen.jrides.models.ride.coaster.Track;
 import com.jverbruggen.jrides.models.ride.section.Section;
@@ -27,7 +28,7 @@ public class ConfigTrackFactory implements TrackFactory {
     }
 
     @Override
-    public Track createSimpleTrack(CoasterConfig coasterConfig, List<NoLimitsExportPositionRecord> positions, int startOffset){
+    public Track createSimpleTrack(Ride ride, CoasterConfig coasterConfig, List<NoLimitsExportPositionRecord> positions, int startOffset){
         SectionBuilder sectionBuilder = new SectionBuilder();
         int totalFrames = positions.size();
         int globalOffset = coasterConfig.getTrack().getOffset();
@@ -58,7 +59,7 @@ public class ConfigTrackFactory implements TrackFactory {
                 endFrame = new SimpleFrame(sectionConfig.getUpperRange() + globalOffset);
             }
 
-            TrackBehaviour trackBehaviour = trackBehaviourFactory.getTrackBehaviourFor(trackConfig, sectionConfig, totalFrames);
+            TrackBehaviour trackBehaviour = trackBehaviourFactory.getTrackBehaviourFor(ride, trackConfig, sectionConfig, totalFrames);
 
             sectionBuilder.add(new SimpleSection(startFrame, endFrame, trackBehaviour));
 

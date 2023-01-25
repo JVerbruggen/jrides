@@ -9,12 +9,14 @@ public class SectionConfig {
     private final int upperRange;
     private final String type;
     private final BlockSectionSpecConfig blockSectionSpec;
+    private final StationSpecConfig stationSectionSpec;
 
-    public SectionConfig(int lowerRange, int upperRange, String type, BlockSectionSpecConfig blockSectionSpec) {
+    public SectionConfig(int lowerRange, int upperRange, String type, BlockSectionSpecConfig blockSectionSpec, StationSpecConfig stationSectionSpec) {
         this.lowerRange = lowerRange;
         this.upperRange = upperRange;
         this.type = type;
         this.blockSectionSpec = blockSectionSpec;
+        this.stationSectionSpec = stationSectionSpec;
     }
 
     public int getLowerRange() {
@@ -33,6 +35,10 @@ public class SectionConfig {
         return blockSectionSpec;
     }
 
+    public StationSpecConfig getStationSectionSpec() {
+        return stationSectionSpec;
+    }
+
     public static SectionConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         List<Integer> range = configurationSection.getIntegerList("range");
         int lowerRange = range.get(0);
@@ -43,6 +49,10 @@ public class SectionConfig {
         if(configurationSection.contains("blockSectionSpec"))
             blockSectionSpec = BlockSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("blockSectionSpec"));
 
-        return new SectionConfig(lowerRange, upperRange, type, blockSectionSpec);
+        StationSpecConfig stationSectionSpec = null;
+        if(configurationSection.contains("stationSectionSpec"))
+            stationSectionSpec = StationSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("stationSectionSpec"));
+
+        return new SectionConfig(lowerRange, upperRange, type, blockSectionSpec, stationSectionSpec);
     }
 }

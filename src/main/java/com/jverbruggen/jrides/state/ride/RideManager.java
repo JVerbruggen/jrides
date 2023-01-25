@@ -89,7 +89,7 @@ public class RideManager {
 
         int startOffset = 4000;
 
-        Track track = loadCoasterTrackFromConfig(rideIdentifier, coasterConfig, offsetX, offsetY, offsetZ, startOffset);
+        Track track = loadCoasterTrackFromConfig(ride, coasterConfig, offsetX, offsetY, offsetZ, startOffset);
         SectionProvider sectionProvider = new SectionProvider(track);
 
         List<TrainHandle> trains = createTrains(track, coasterConfig, sectionProvider, rideIdentifier, 2);
@@ -112,8 +112,8 @@ public class RideManager {
         return trains;
     }
 
-    private Track loadCoasterTrackFromConfig(String rideIdentifier, CoasterConfig coasterConfig, float offsetX, float offsetY, float offsetZ, int startOffset){
-        String configFileName = "coasters/" + rideIdentifier + ".csv";
+    private Track loadCoasterTrackFromConfig(Ride ride, CoasterConfig coasterConfig, float offsetX, float offsetY, float offsetZ, int startOffset){
+        String configFileName = "coasters/" + ride.getIdentifier() + ".csv";
         File configFile = new File(dataFolder, configFileName);
         Path pathToConfigFile = configFile.toPath();
         List<NoLimitsExportPositionRecord> positions = new ArrayList<>();
@@ -134,6 +134,6 @@ public class RideManager {
             ioe.printStackTrace();
         }
 
-        return trackFactory.createSimpleTrack(coasterConfig, positions, startOffset);
+        return trackFactory.createSimpleTrack(ride, coasterConfig, positions, startOffset);
     }
 }
