@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.CyclicFrame;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.LinkedFrame;
 import com.jverbruggen.jrides.models.ride.Seat;
@@ -35,12 +36,13 @@ public class TrainFactory {
         final Section spawnSection = track.getNextSpawnSection();
         if(spawnSection == null) throw new NoSpawnAvailableException(track);
 
-        final Frame headOfTrainFrame = spawnSection.getEndFrame().clone();
+        final Frame headOfTrainFrame = CyclicFrame.fromFrame(spawnSection.getEndFrame(), totalFrames);
         final int amountOfCarts = 10;
         final int cartDistance = 41;
         final LinkedFrame massMiddleFrame = new LinkedFrame(headOfTrainFrame, -(amountOfCarts*cartDistance) / 2, totalFrames);
         final int headOfTrainOffset = headOfTrainFrame.getValue();
         final Vector3 cartOffset = new Vector3(0, -1.9, 0);
+        final LinkedFrame tailOfTrainFrame = new LinkedFrame(headOfTrainFrame, -(amountOfCarts*cartDistance), totalFrames);
 
         List<Cart> carts = new ArrayList<>();
         for(int i = 0; i < amountOfCarts; i++){
@@ -63,12 +65,13 @@ public class TrainFactory {
                     seats,
                     armorStand,
                     cartOffset,
-                    new LinkedFrame(headOfTrainFrame, cartOffsetFrames, totalFrames));
+                    new LinkedFrame(headOfTrainFrame, -cartOffsetFrames, totalFrames));
             carts.add(cart);
         }
 
-        Train train = new SimpleTrain(trainIdentifier, carts, cartDistance, headOfTrainFrame, massMiddleFrame, spawnSection);
-        spawnSection.setOccupation(train);
+        Vector3 location = track.getRawPositions().get(massMiddleFrame.getValue()).toVector3();
+        Train train = new SimpleTrain(trainIdentifier, carts, cartDistance, headOfTrainFrame, massMiddleFrame, tailOfTrainFrame, location, spawnSection);
+        spawnSection.addOccupation(train);
         return train;
     }
 }

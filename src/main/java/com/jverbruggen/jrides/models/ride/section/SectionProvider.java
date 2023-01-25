@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.Track;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
 import com.jverbruggen.jrides.models.ride.section.exception.SectionNotFoundException;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
 
@@ -14,10 +15,7 @@ public class SectionProvider {
         this.track = track;
     }
 
-    public Section getSectionFor(Train train, Frame frame){
-        Section currentSection = train.getCurrentSection();
-        if(currentSection.isInSection(frame)) return null;
-
+    public @NonNull Section getSectionFor(Train train, Frame frame){
         List<Section> sections = track.getSections();
         // TODO: currentSection.next() (or something similar) would be more efficient to find next section
 

@@ -9,8 +9,10 @@ import com.jverbruggen.jrides.animator.smoothanimation.SmoothCoastersSmoothAnima
 import com.jverbruggen.jrides.animator.trackbehaviour.factory.TrackBehaviourFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.config.ConfigManager;
+import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.entity.EntityIdFactory;
 import com.jverbruggen.jrides.models.message.MessageFactory;
+import com.jverbruggen.jrides.models.properties.factory.FrameFactory;
 import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrackFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrainFactory;
@@ -37,6 +39,8 @@ public class ServiceProviderConfigurator {
         logger.setLevel(Level.CONFIG);
         ServiceProvider.Register(Logger.class, logger);
 
+        JRidesLogger jRidesLogger                   = ServiceProvider.Register(JRidesLogger.class, new JRidesLogger(logger, true));
+        FrameFactory frameFactory                   = ServiceProvider.Register(FrameFactory.class, new FrameFactory());
         SmoothAnimation smoothAnimation             = ServiceProvider.Register(SmoothAnimation.class, new SmoothCoastersSmoothAnimation(new SmoothCoastersAPI(plugin)));
         ConfigManager configManager                 = ServiceProvider.Register(ConfigManager.class, new ConfigManager(plugin));
         ProtocolManager protocolManager             = ServiceProvider.Register(ProtocolManager.class, ProtocolLibrary.getProtocolManager());
@@ -50,7 +54,7 @@ public class ServiceProviderConfigurator {
         TrainFactory trainFactory                   = ServiceProvider.Register(TrainFactory.class, new TrainFactory(viewportManager, seatFactory));
         CartMovementFactory cartMovementFactory     = ServiceProvider.Register(CartMovementFactory.class, new CartMovementFactory());
         TrackBehaviourFactory trackBehaviourFactory = ServiceProvider.Register(TrackBehaviourFactory.class, new TrackBehaviourFactory(cartMovementFactory));
-        TrackFactory trackFactory                   = ServiceProvider.Register(TrackFactory.class, new TrackFactory(trackBehaviourFactory));
+        TrackFactory trackFactory                   = ServiceProvider.Register(TrackFactory.class, new TrackFactory(trackBehaviourFactory, frameFactory));
         RideManager rideManager                     = ServiceProvider.Register(RideManager.class, new RideManager(logger, dataFolder, viewportManager, configManager, trainFactory, trackFactory, seatFactory));
         VirtualEntityPacketListener packetListener  = ServiceProvider.Register(VirtualEntityPacketListener.class,
                 new VirtualEntityPacketListener(plugin, ListenerPriority.NORMAL, new PacketType[]{

@@ -1,30 +1,36 @@
 package com.jverbruggen.jrides.models.ride.coaster;
 
+import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
-import com.jverbruggen.jrides.models.properties.LinkedFrame;
+import com.jverbruggen.jrides.models.properties.TrainEnd;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleTrain implements Train {
     private final String name;
     private List<Cart> carts;
-    private final int cartDistance;
-    private final int totalLengthInFrames;
     private Frame massMiddleFrame;
     private Frame headOfTrainFrame;
-    private Section currentSection;
+    private Frame tailOfTrainFrame;
+    private List<Section> currentSections;
     private boolean crashed;
+    private Vector3 location;
 
-    public SimpleTrain(String name, List<Cart> carts, int cartDistance, Frame headOfTrainFrame, LinkedFrame massMiddleFrame, Section section) {
+    public SimpleTrain(String name, List<Cart> carts, int cartDistance, Frame headOfTrainFrame, Frame massMiddleFrame, Frame tailOfTrainFrame, Vector3 location, Section section) {
         this.name = name;
         this.carts = carts;
-        this.cartDistance = cartDistance;
-        this.totalLengthInFrames = carts.size()*cartDistance;
+//        this.cartDistance = cartDistance;
+//        this.totalLengthInFrames = carts.size()*cartDistance;
         this.headOfTrainFrame = headOfTrainFrame;
         this.massMiddleFrame = massMiddleFrame;
-        this.currentSection = section;
+        this.tailOfTrainFrame = tailOfTrainFrame;
         this.crashed = false;
+
+        this.currentSections = new ArrayList<>();
+        this.currentSections.add(section);
+        this.location = location;
     }
 
     @Override
@@ -37,16 +43,6 @@ public class SimpleTrain implements Train {
         return carts;
     }
 
-//    @Override
-//    public int getCartDistanceFor(int index) {
-//        return cartDistance*index;
-//    }
-//
-//    @Override
-//    public int getTotalLengthInFrames() {
-//        return totalLengthInFrames;
-//    }
-//
     @Override
     public Frame getMassMiddleFrame() {
         return massMiddleFrame;
@@ -58,13 +54,54 @@ public class SimpleTrain implements Train {
     }
 
     @Override
-    public Section getCurrentSection() {
-        return currentSection;
+    public Frame getTailOfTrainFrame() {
+        return tailOfTrainFrame;
     }
 
     @Override
-    public void setCurrentSection(Section section) {
-        this.currentSection = section;
+    public Vector3 getCurrentLocation() {
+        return location;
+    }
+
+    @Override
+    public void setCurrentLocation(Vector3 newLocation) {
+        location = newLocation;
+    }
+
+    @Override
+    public List<Section> getCurrentSections() {
+        return currentSections;
+    }
+
+    @Override
+    public Section getHeadSection() {
+        if(currentSections.size() == 0) throw new RuntimeException("Train occupies 0 sections");
+        return currentSections.get(0);
+    }
+
+    @Override
+    public Section getTailSection() {
+        if(currentSections.size() == 0) throw new RuntimeException("Train occupies 0 sections");
+        return currentSections.get(currentSections.size()-1);
+    }
+
+    @Override
+    public void addCurrentSection(Section section) {
+        addCurrentSection(section, TrainEnd.HEAD);
+    }
+
+    @Override
+    public void addCurrentSection(Section section, TrainEnd trainEnd) {
+        if(trainEnd.equals(TrainEnd.HEAD))
+            currentSections.add(0, section);
+        else
+            currentSections.add(section);
+    }
+
+    @Override
+    public void removeCurrentSection(Section section) {
+        if(!this.currentSections.contains(section)) throw new RuntimeException("Section removal mismatch");
+        this.currentSections.remove(section);
     }
 
     @Override
@@ -79,6 +116,6 @@ public class SimpleTrain implements Train {
 
     @Override
     public String toString() {
-        return "<Train at position " + massMiddleFrame + ">";
+        return "<Train " + getName() + " at position " + getHeadOfTrainFrame() + ">";
     }
 }

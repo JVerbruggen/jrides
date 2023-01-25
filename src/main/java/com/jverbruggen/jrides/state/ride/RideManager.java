@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.ride.RideConfig;
 import com.jverbruggen.jrides.config.ride.RideConfigObject;
+import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.identifier.RideIdentifier;
 import com.jverbruggen.jrides.models.ride.coaster.*;
@@ -92,7 +93,7 @@ public class RideManager {
         Track track = loadCoasterTrackFromConfig(world, rideIdentifier, offsetX, offsetY, offsetZ, startOffset);
         SectionProvider sectionProvider = new SectionProvider(track);
 
-        List<TrainHandle> trains = createTrains(track, sectionProvider, rideIdentifier, 1);
+        List<TrainHandle> trains = createTrains(track, sectionProvider, rideIdentifier, 2);
 
         GCRideHandle rideHandle = new GCRideHandle(ride, trains, track, world);
         this.addRideHandle(rideHandle);

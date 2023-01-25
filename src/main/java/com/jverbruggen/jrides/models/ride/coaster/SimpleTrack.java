@@ -33,7 +33,7 @@ public class SimpleTrack implements Track {
     @Override
     public Section getNextSpawnSection() {
         for(Section section : sections){
-            if(!section.isOccupied()) return section;
+            if(!section.isOccupied() && section.canTrainSpawnOn()) return section;
         }
         return null;
     }

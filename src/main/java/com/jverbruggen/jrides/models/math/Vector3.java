@@ -1,6 +1,8 @@
 package com.jverbruggen.jrides.models.math;
 
 import com.comphenix.protocol.wrappers.Vector3F;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.util.Vector;
 
 public class Vector3 {
@@ -103,6 +105,10 @@ public class Vector3 {
 
     public Vector toBukkitVector(){
         return new Vector(x, y, z);
+    }
+
+    public Location toBukkitLocation(World world) {
+        return new Location(world, x, y, z);
     }
 
     public Vector3F toVector3F(){

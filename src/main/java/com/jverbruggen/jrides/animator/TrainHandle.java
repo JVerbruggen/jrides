@@ -1,8 +1,10 @@
 package com.jverbruggen.jrides.animator;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovement;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
+import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
@@ -12,12 +14,15 @@ import com.jverbruggen.jrides.models.ride.coaster.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionProvider;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Particle;
+import org.bukkit.World;
 
 import java.util.Map;
+import java.util.Set;
 
 public class TrainHandle {
     private Train train;
-    private Vector3 currentLocation;
     private Frame currentMassMiddleFrame;
     private Track track;
     private Speed speedBPS;
@@ -29,45 +34,64 @@ public class TrainHandle {
         this.train = train;
         this.currentMassMiddleFrame = startOffsetFrame;
         this.track = track;
-        this.currentLocation = track.getRawPositions().get(currentMassMiddleFrame.getValue()).toVector3();
-        this.trackBehaviour = train.getCurrentSection().getTrackBehaviour();
+        this.trackBehaviour = train.getHeadSection().getTrackBehaviour();
         this.speedBPS = new Speed(0);
     }
 
     public void tick(){
         if(train.isCrashed()) return;
+//
+//        if(train.getName().equalsIgnoreCase("black_mamba:train_2")){
+//            Bukkit.broadcastMessage(ChatColor.RED + "Current frame: " + train.getHeadOfTrainFrame());
+//        }
 
-        Bukkit.broadcastMessage("Tick " + train.getName() + " on " + train.getHeadOfTrainFrame());
+//        Bukkit.broadcastMessage("Tick " + train.getName() + " on " + train.getHeadOfTrainFrame());
 
         Section newSection = sectionProvider.getSectionFor(train, train.getHeadOfTrainFrame());
-        if(newSection != null){
+        if(newSection != train.getHeadSection()){
             if(newSection.isOccupied()){
                 train.setCrashed(true);
-                Bukkit.broadcastMessage("Train " + train.getName() + " has crashed!");
-                Bukkit.broadcastMessage(train.getCurrentSection().toString());
-                Bukkit.broadcastMessage(newSection.toString());
+                JRidesPlugin.getLogger().warning("Train " + train + " has crashed!");
+                JRidesPlugin.getLogger().warning(train.getHeadSection().toString());
+                JRidesPlugin.getLogger().warning(newSection.toString());
                 return;
             }
 
-            Section currentSection = train.getCurrentSection();
-            currentSection.setOccupation(null);
-            currentSection.getTrackBehaviour().trainExitedAtEnd();
-
-            newSection.setOccupation(train);
-            train.setCurrentSection(newSection);
+            // TODO: If moving forward this is only true
+            newSection.addOccupation(train);
+            train.addCurrentSection(newSection);
             trackBehaviour = newSection.getTrackBehaviour();
         }
 
-        TrainMovement result = trackBehaviour.move(currentMassMiddleFrame, speedBPS, currentLocation, train.getCarts(), track);
-        speedBPS = result.getNewSpeed();
-        currentMassMiddleFrame.updateTo(result.getNewMassMiddleFrame());
-
-        for(Map.Entry<Cart, CartMovement> cartMovement : result.getCartMovements()){
-            Cart cart = cartMovement.getKey();
-            CartMovement movement = cartMovement.getValue();
-            cart.setPosition(movement);
+        Section tailSection = sectionProvider.getSectionFor(train, train.getTailOfTrainFrame());
+        if(tailSection != train.getTailSection()){
+            Section oldTailSection = train.getTailSection();
+            // TODO: If moving forward this is only true
+            oldTailSection.removeOccupation(train);
+            train.removeCurrentSection(oldTailSection);
+            oldTailSection.getTrackBehaviour().trainExitedAtEnd();
         }
 
-        currentLocation = result.getNewTrainLocation();
+        TrainMovement result = trackBehaviour.move(speedBPS, train.getCurrentLocation(), train, track);
+        speedBPS = result.getNewSpeed();
+        train.getHeadOfTrainFrame().updateTo(result.getNewHeadOfTrainFrame());
+//        if(train.getName().equalsIgnoreCase("black_mamba:train_2")){
+//            Bukkit.broadcastMessage("New frame: " +result.getNewHeadOfTrainFrame().getValue());
+//        }
+
+        Set<Map.Entry<Cart, CartMovement>> cartMovements = result.getCartMovements();
+        if(cartMovements != null){
+            for(Map.Entry<Cart, CartMovement> cartMovement : cartMovements){
+                Cart cart = cartMovement.getKey();
+                CartMovement movement = cartMovement.getValue();
+                cart.setPosition(movement);
+            }
+        }
+
+        Vector3 newLocation = result.getNewTrainLocation();
+        train.setCurrentLocation(newLocation);
+        World world = Bukkit.getWorld("world");
+        world.spawnParticle(Particle.DRIP_LAVA, newLocation.toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
+        world.spawnParticle(Particle.DRIP_WATER, track.getRawPositions().get(train.getHeadOfTrainFrame().getValue()).toVector3().toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
     }
 }

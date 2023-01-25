@@ -24,6 +24,14 @@ public class Speed {
         if(this.speedPerTick > until) this.speedPerTick = until;
     }
 
+    public void approach(double acceleration, double deceleration, double approachSpeed){
+        if(this.speedPerTick > approachSpeed){
+            minus(deceleration, approachSpeed);
+        }else if(this.speedPerTick < approachSpeed){
+            add(acceleration, approachSpeed);
+        }
+    }
+
     public void minus(double speed){
         this.speedPerTick -= speed;
     }
@@ -48,5 +56,10 @@ public class Speed {
 
     public boolean is(double speed){
         return this.speedPerTick == speed;
+    }
+
+    @Override
+    public String toString() {
+        return speedPerTick + "b/t";
     }
 }

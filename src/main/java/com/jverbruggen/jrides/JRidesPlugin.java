@@ -1,11 +1,15 @@
 package com.jverbruggen.jrides;
 
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimation;
+import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Logger;
+
 public class JRidesPlugin {
+    private static JRidesLogger logger;
     private static JavaPlugin plugin;
     private static PacketSender packetSender;
     private static SmoothAnimation smoothAnimation;
@@ -29,6 +33,7 @@ public class JRidesPlugin {
     public static void initOtherStatics(){
         packetSender = ServiceProvider.GetSingleton(PacketSender.class);
         smoothAnimation = ServiceProvider.GetSingleton(SmoothAnimation.class);
+        logger = ServiceProvider.GetSingleton(JRidesLogger.class);
     }
 
     public static PacketSender getPacketSender() {
@@ -37,5 +42,9 @@ public class JRidesPlugin {
 
     public static SmoothAnimation getSmoothAnimation() {
         return smoothAnimation;
+    }
+
+    public static JRidesLogger getLogger() {
+        return logger;
     }
 }

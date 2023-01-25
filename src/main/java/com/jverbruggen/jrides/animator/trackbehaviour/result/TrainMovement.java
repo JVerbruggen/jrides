@@ -5,19 +5,20 @@ import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.Cart;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public final class TrainMovement {
     private final Speed newSpeed;
-    private final Frame newMassMiddleFrame;
+    private final Frame newHeadOfTrainFrame;
     private final Vector3 newTrainLocation;
     private final HashMap<Cart, CartMovement> cartMovements;
 
-    public TrainMovement(Speed newSpeed, Frame newMassMiddleFrame, Vector3 newTrainLocation, HashMap<Cart, CartMovement> cartMovements) {
+    public TrainMovement(Speed newSpeed, Frame newHeadOfTrainFrame, Vector3 newTrainLocation, HashMap<Cart, CartMovement> cartMovements) {
         this.newSpeed = newSpeed;
-        this.newMassMiddleFrame = newMassMiddleFrame;
+        this.newHeadOfTrainFrame = newHeadOfTrainFrame;
         this.newTrainLocation = newTrainLocation;
         this.cartMovements = cartMovements;
     }
@@ -26,15 +27,16 @@ public final class TrainMovement {
         return newSpeed;
     }
 
-    public Frame getNewMassMiddleFrame() {
-        return newMassMiddleFrame;
+    public Frame getNewHeadOfTrainFrame() {
+        return newHeadOfTrainFrame;
     }
 
     public Vector3 getNewTrainLocation() {
         return newTrainLocation;
     }
 
-    public Set<Map.Entry<Cart, CartMovement>> getCartMovements() {
+    public @Nullable Set<Map.Entry<Cart, CartMovement>> getCartMovements() {
+        if(cartMovements == null) return null;
         return cartMovements.entrySet();
     }
 }
