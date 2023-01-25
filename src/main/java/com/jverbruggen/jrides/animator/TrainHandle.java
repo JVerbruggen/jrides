@@ -4,7 +4,7 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovement;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
-import com.jverbruggen.jrides.logging.JRidesLogger;
+import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
@@ -13,26 +13,20 @@ import com.jverbruggen.jrides.models.ride.coaster.Track;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionProvider;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Particle;
-import org.bukkit.World;
 
 import java.util.Map;
 import java.util.Set;
 
 public class TrainHandle {
     private Train train;
-    private Frame currentMassMiddleFrame;
     private Track track;
     private Speed speedBPS;
     private TrackBehaviour trackBehaviour;
     private final SectionProvider sectionProvider;
 
-    public TrainHandle(SectionProvider sectionProvider, Train train, Track track, Frame startOffsetFrame) {
+    public TrainHandle(SectionProvider sectionProvider, Train train, Track track) {
         this.sectionProvider = sectionProvider;
         this.train = train;
-        this.currentMassMiddleFrame = startOffsetFrame;
         this.track = track;
         this.trackBehaviour = train.getHeadSection().getTrackBehaviour();
         this.speedBPS = new Speed(0);
@@ -40,20 +34,14 @@ public class TrainHandle {
 
     public void tick(){
         if(train.isCrashed()) return;
-//
-//        if(train.getName().equalsIgnoreCase("black_mamba:train_2")){
-//            Bukkit.broadcastMessage(ChatColor.RED + "Current frame: " + train.getHeadOfTrainFrame());
-//        }
-
-//        Bukkit.broadcastMessage("Tick " + train.getName() + " on " + train.getHeadOfTrainFrame());
 
         Section newSection = sectionProvider.getSectionFor(train, train.getHeadOfTrainFrame());
         if(newSection != train.getHeadSection()){
             if(newSection.isOccupied()){
                 train.setCrashed(true);
-                JRidesPlugin.getLogger().warning("Train " + train + " has crashed!");
-                JRidesPlugin.getLogger().warning(train.getHeadSection().toString());
-                JRidesPlugin.getLogger().warning(newSection.toString());
+                JRidesPlugin.getLogger().warning(LogType.CRASH, "Train " + train + " has crashed!");
+                JRidesPlugin.getLogger().warning(LogType.CRASH, train.getHeadSection().toString());
+                JRidesPlugin.getLogger().warning(LogType.CRASH, newSection.toString());
                 return;
             }
 
@@ -75,9 +63,6 @@ public class TrainHandle {
         TrainMovement result = trackBehaviour.move(speedBPS, train.getCurrentLocation(), train, track);
         speedBPS = result.getNewSpeed();
         train.getHeadOfTrainFrame().updateTo(result.getNewHeadOfTrainFrame());
-//        if(train.getName().equalsIgnoreCase("black_mamba:train_2")){
-//            Bukkit.broadcastMessage("New frame: " +result.getNewHeadOfTrainFrame().getValue());
-//        }
 
         Set<Map.Entry<Cart, CartMovement>> cartMovements = result.getCartMovements();
         if(cartMovements != null){
@@ -90,8 +75,9 @@ public class TrainHandle {
 
         Vector3 newLocation = result.getNewTrainLocation();
         train.setCurrentLocation(newLocation);
-        World world = Bukkit.getWorld("world");
-        world.spawnParticle(Particle.DRIP_LAVA, newLocation.toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
-        world.spawnParticle(Particle.DRIP_WATER, track.getRawPositions().get(train.getHeadOfTrainFrame().getValue()).toVector3().toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
+
+//        World world = Bukkit.getWorld("world");
+//        world.spawnParticle(Particle.DRIP_LAVA, newLocation.toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
+//        world.spawnParticle(Particle.DRIP_WATER, track.getRawPositions().get(train.getHeadOfTrainFrame().getValue()).toVector3().toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
     }
 }

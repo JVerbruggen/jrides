@@ -100,9 +100,9 @@ public class NoLimitsExportPositionRecord {
         return new Vector3(posX, posY, posZ);
     }
 
-    public static NoLimitsExportPositionRecord createFromCSVAttributes(String[] attributes, float offsetX, float offsetY, float offsetZ){
+    public static NoLimitsExportPositionRecord createFromCSVAttributes(String[] attributes, int index,float offsetX, float offsetY, float offsetZ){
         return new NoLimitsExportPositionRecord(
-                Integer.parseInt(attributes[0]),
+                index,
                 Float.parseFloat(attributes[1]) + offsetX,
                 Float.parseFloat(attributes[2]) + offsetY,
                 Float.parseFloat(attributes[3]) + offsetZ,
@@ -116,9 +116,5 @@ public class NoLimitsExportPositionRecord {
                 Float.parseFloat(attributes[11]),
                 Float.parseFloat(attributes[12])
         );
-    }
-
-    public static NoLimitsExportPositionRecord createFromCSVAttributes(String[] attributes){
-        return createFromCSVAttributes(attributes, 0, 0, 0);
     }
 }

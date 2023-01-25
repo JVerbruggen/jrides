@@ -101,7 +101,7 @@ public class RideManager {
 
     private TrainHandle createTrain(Track track, SectionProvider sectionProvider, String trainIdentifier){
         Train train = trainFactory.createEquallyDistributedTrain(track, trainIdentifier);
-        return new TrainHandle(sectionProvider, train, track, train.getMassMiddleFrame());
+        return new TrainHandle(sectionProvider, train, track);
     }
 
     private List<TrainHandle> createTrains(Track track, SectionProvider sectionProvider, String rideIdentifier, int count){
@@ -122,12 +122,14 @@ public class RideManager {
         try(BufferedReader br = Files.newBufferedReader(pathToConfigFile, StandardCharsets.UTF_8)){
             String line = br.readLine(); // Skip header line
             line = br.readLine();
+            int index = 0;
             while(line != null){
                 String[] attributes = line.split("\t");
-                NoLimitsExportPositionRecord record = NoLimitsExportPositionRecord.createFromCSVAttributes(attributes, offsetX, offsetY, offsetZ);
+                NoLimitsExportPositionRecord record = NoLimitsExportPositionRecord.createFromCSVAttributes(attributes, index, offsetX, offsetY, offsetZ);
                 positions.add(record);
 
                 line = br.readLine();
+                index++;
             }
         } catch (IOException ioe) {
             ioe.printStackTrace();

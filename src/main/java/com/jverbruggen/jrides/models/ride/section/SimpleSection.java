@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.models.ride.section;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
+import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -78,7 +79,7 @@ public class SimpleSection implements Section {
                 + train.toString() + " trying to enter section with " + occupiedBy.toString());
         occupiedBy = train;
 
-        JRidesPlugin.getLogger().info("Section " + this.toString() + " occupied by " + train);
+        JRidesPlugin.getLogger().info(LogType.SECTIONS,"Section " + this.toString() + " occupied by " + train);
     }
 
     @Override
@@ -89,7 +90,7 @@ public class SimpleSection implements Section {
         }
 
         occupiedBy = null;
-        JRidesPlugin.getLogger().info("Section " + this.toString() + " has been exited");
+        JRidesPlugin.getLogger().info(LogType.SECTIONS, "Section " + this.toString() + " has been exited");
     }
 
     @Override
