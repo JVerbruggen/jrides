@@ -35,7 +35,7 @@ public class TrackFactory {
         SectionBuilder sectionBuilder = new SectionBuilder();
         List<Section> sections = sectionBuilder
                 .add(new SimpleSection(stationBegin, stationEnd, trackBehaviourFactory.getBlockBrakeBehaviour(stationBlockEngage), true))
-                .add(new SimpleSection(stationEnd, liftEnd, trackBehaviourFactory.getBlockBrakeBehaviour(liftBlockEngage), false))
+                .add(new SimpleSection(stationEnd, liftEnd, trackBehaviourFactory.getBlockBrakeBehaviour(liftBlockEngage), true))
                 .add(new SimpleSection(liftEnd, blockBrakeBegin, trackBehaviourFactory.getTrackBehaviour(), false))
                 .add(new SimpleSection(blockBrakeBegin, stationBegin, trackBehaviourFactory.getBlockBrakeBehaviour(blockBlackEngage), true))
                 .collect();

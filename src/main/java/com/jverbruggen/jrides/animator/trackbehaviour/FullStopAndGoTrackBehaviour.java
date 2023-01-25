@@ -2,7 +2,6 @@ package com.jverbruggen.jrides.animator.trackbehaviour;
 
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
-import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.Track;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
@@ -21,7 +20,7 @@ public class FullStopAndGoTrackBehaviour extends BaseTrackBehaviour implements T
     }
 
     @Override
-    public TrainMovement move(Speed currentSpeed, Vector3 currentLocation, Train train, Track track) {
+    public TrainMovement move(Speed currentSpeed, Train train, Track track) {
 //        Bukkit.broadcastMessage("Brake " + phase.toString());
         Speed newSpeed = currentSpeed.clone();
 
@@ -43,13 +42,6 @@ public class FullStopAndGoTrackBehaviour extends BaseTrackBehaviour implements T
         }
 
         return calculateTrainMovement(train, track, newSpeed);
-//
-//        Frame newHeadOfTrainFrame = train.getHeadOfTrainFrame().clone().add(currentSpeed.getFrameIncrement());
-//        Vector3 newTrainLocation = track.getRawPositions().get(train.getMassMiddleFrame().getValue()).toVector3();
-//
-//        HashMap<Cart, CartMovement> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getCarts(), track);
-//
-//        return new TrainMovement(newSpeed, newHeadOfTrainFrame, newTrainLocation, cartMovements);
     }
 
     @Override

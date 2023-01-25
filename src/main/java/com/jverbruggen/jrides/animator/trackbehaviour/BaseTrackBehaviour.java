@@ -21,15 +21,16 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
 
     protected TrainMovement calculateTrainMovement(Train train, Track track, Speed speed){
         if(speed.is(0)){
-            return new TrainMovement(speed, train.getHeadOfTrainFrame(), train.getCurrentLocation(), null);
+            return new TrainMovement(speed, train.getHeadOfTrainFrame(), train.getTailOfTrainFrame(), train.getCurrentLocation(), null);
         }
 
         Frame newHeadOfTrainFrame = train.getHeadOfTrainFrame().clone().add(speed.getFrameIncrement());
-        Vector3 newTrainLocation = track.getRawPositions().get(train.getMassMiddleFrame().getValue()).toVector3();
+        Frame newTailOfTrainFrame = train.getTailOfTrainFrame().clone().add(speed.getFrameIncrement());
+        Vector3 newTrainLocation = track.getRawPositions().get(train.getMiddleOfTrainFrame().getValue()).toVector3();
 
         HashMap<Cart, CartMovement> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getCarts(), track);
 
-        return new TrainMovement(speed, newHeadOfTrainFrame, newTrainLocation, cartMovements);
+        return new TrainMovement(speed, newHeadOfTrainFrame, newTailOfTrainFrame, newTrainLocation, cartMovements);
     }
 
 }

@@ -16,13 +16,13 @@ public class SimpleTrain implements Train {
     private Frame tailOfTrainFrame;
     private List<Section> currentSections;
     private boolean crashed;
-    private Vector3 location;
+    private Vector3 headLocation;
+    private Vector3 middleLocation;
+    private Vector3 tailLocation;
 
-    public SimpleTrain(String name, List<Cart> carts, int cartDistance, Frame headOfTrainFrame, Frame massMiddleFrame, Frame tailOfTrainFrame, Vector3 location, Section section) {
+    public SimpleTrain(String name, List<Cart> carts, Frame headOfTrainFrame, Frame massMiddleFrame, Frame tailOfTrainFrame, Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation, Section section) {
         this.name = name;
         this.carts = carts;
-//        this.cartDistance = cartDistance;
-//        this.totalLengthInFrames = carts.size()*cartDistance;
         this.headOfTrainFrame = headOfTrainFrame;
         this.massMiddleFrame = massMiddleFrame;
         this.tailOfTrainFrame = tailOfTrainFrame;
@@ -30,7 +30,9 @@ public class SimpleTrain implements Train {
 
         this.currentSections = new ArrayList<>();
         this.currentSections.add(section);
-        this.location = location;
+        this.headLocation = headLocation;
+        this.middleLocation = middleLocation;
+        this.tailLocation = tailLocation;
     }
 
     @Override
@@ -44,7 +46,7 @@ public class SimpleTrain implements Train {
     }
 
     @Override
-    public Frame getMassMiddleFrame() {
+    public Frame getMiddleOfTrainFrame() {
         return massMiddleFrame;
     }
 
@@ -60,12 +62,19 @@ public class SimpleTrain implements Train {
 
     @Override
     public Vector3 getCurrentLocation() {
-        return location;
+        return middleLocation;
     }
 
     @Override
-    public void setCurrentLocation(Vector3 newLocation) {
-        location = newLocation;
+    public void setCurrentLocation(Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation) {
+        this.headLocation = headLocation;
+        this.middleLocation = middleLocation;
+        this.tailLocation = tailLocation;
+    }
+
+    @Override
+    public Vector3 getMassMiddlePoint() {
+        return Vector3.average(headLocation, middleLocation, tailLocation);
     }
 
     @Override

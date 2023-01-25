@@ -13,12 +13,14 @@ import java.util.Set;
 public final class TrainMovement {
     private final Speed newSpeed;
     private final Frame newHeadOfTrainFrame;
+    private final Frame newTailOfTrainFrame;
     private final Vector3 newTrainLocation;
     private final HashMap<Cart, CartMovement> cartMovements;
 
-    public TrainMovement(Speed newSpeed, Frame newHeadOfTrainFrame, Vector3 newTrainLocation, HashMap<Cart, CartMovement> cartMovements) {
+    public TrainMovement(Speed newSpeed, Frame newHeadOfTrainFrame, Frame newTailOfTrainFrame, Vector3 newTrainLocation, HashMap<Cart, CartMovement> cartMovements) {
         this.newSpeed = newSpeed;
         this.newHeadOfTrainFrame = newHeadOfTrainFrame;
+        this.newTailOfTrainFrame = newTailOfTrainFrame;
         this.newTrainLocation = newTrainLocation;
         this.cartMovements = cartMovements;
     }
@@ -29,6 +31,10 @@ public final class TrainMovement {
 
     public Frame getNewHeadOfTrainFrame() {
         return newHeadOfTrainFrame;
+    }
+
+    public Frame getNewTailOfTrainFrame() {
+        return newTailOfTrainFrame;
     }
 
     public Vector3 getNewTrainLocation() {

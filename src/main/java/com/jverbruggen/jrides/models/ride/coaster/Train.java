@@ -11,11 +11,12 @@ public interface Train {
     String getName();
     List<Cart> getCarts();
 
-    Frame getMassMiddleFrame();
+    Frame getMiddleOfTrainFrame();
     Frame getHeadOfTrainFrame();
     Frame getTailOfTrainFrame();
     Vector3 getCurrentLocation();
-    void setCurrentLocation(Vector3 newLocation);
+    void setCurrentLocation(Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation);
+    Vector3 getMassMiddlePoint();
 
     List<Section> getCurrentSections();
     Section getHeadSection();

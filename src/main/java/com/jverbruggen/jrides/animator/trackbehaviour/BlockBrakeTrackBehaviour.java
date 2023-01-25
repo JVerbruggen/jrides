@@ -32,7 +32,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
     }
 
     @Override
-    public TrainMovement move(Speed currentSpeed, Vector3 currentLocation, Train train, Track track) {
+    public TrainMovement move(Speed currentSpeed, Train train, Track track) {
         Speed newSpeed = currentSpeed.clone();
 
         boolean goIntoSwitch = true;

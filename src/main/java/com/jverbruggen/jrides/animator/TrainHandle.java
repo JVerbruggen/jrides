@@ -60,7 +60,7 @@ public class TrainHandle {
             oldTailSection.getTrackBehaviour().trainExitedAtEnd();
         }
 
-        TrainMovement result = trackBehaviour.move(speedBPS, train.getCurrentLocation(), train, track);
+        TrainMovement result = trackBehaviour.move(speedBPS, train, track);
         speedBPS = result.getNewSpeed();
         train.getHeadOfTrainFrame().updateTo(result.getNewHeadOfTrainFrame());
 
@@ -73,8 +73,10 @@ public class TrainHandle {
             }
         }
 
-        Vector3 newLocation = result.getNewTrainLocation();
-        train.setCurrentLocation(newLocation);
+        Vector3 headLocation = track.getRawPositions().get(result.getNewHeadOfTrainFrame().getValue()).toVector3();
+        Vector3 middleLocation = result.getNewTrainLocation();
+        Vector3 tailLocation = track.getRawPositions().get(result.getNewTailOfTrainFrame().getValue()).toVector3();
+        train.setCurrentLocation(headLocation, middleLocation, tailLocation);
 
 //        World world = Bukkit.getWorld("world");
 //        world.spawnParticle(Particle.DRIP_LAVA, newLocation.toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);

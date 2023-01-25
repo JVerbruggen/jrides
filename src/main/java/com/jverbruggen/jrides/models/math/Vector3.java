@@ -129,16 +129,6 @@ public class Vector3 {
         return p.x == x && p.y == y && p.z == z;
     }
 
-    public Vector3 subtractUpDown( double length){
-        double currentLength = this.length();
-        double multiplyFactor = (currentLength - length)/currentLength;
-        return new Vector3(
-                this.x * multiplyFactor,
-                this.y * multiplyFactor,
-                this.z * multiplyFactor
-        );
-    }
-
     /**
      * Returns the cross product of two vectors
      *
@@ -189,6 +179,21 @@ public class Vector3 {
                 (v1.x + v2.x) / 2.0f,
                 (v1.y + v2.y) / 2.0f,
                 (v1.z + v2.z) / 2.0f
+        );
+    }
+
+    /**
+     * Returns the vector average of three vectors ((v1 + v2 + v3) / 3)
+     *
+     * @param v1
+     * @param v2
+     * @return average vector
+     */
+    public static Vector3 average(Vector3 v1, Vector3 v2, Vector3 v3) {
+        return new Vector3(
+                (v1.x + v2.x + v3.x) / 3.0f,
+                (v1.y + v2.y + v3.y) / 3.0f,
+                (v1.z + v2.z + v3.z) / 3.0f
         );
     }
 
