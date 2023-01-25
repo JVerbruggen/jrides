@@ -74,7 +74,7 @@ public class SimpleTrain implements Train {
 
     @Override
     public Vector3 getMassMiddlePoint() {
-        return Vector3.average(headLocation, middleLocation, tailLocation);
+        return Train.calculateMassMiddlePoint(headLocation, middleLocation, tailLocation);
     }
 
     @Override

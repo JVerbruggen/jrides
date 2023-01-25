@@ -6,8 +6,6 @@ import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.logging.Logger;
-
 public class JRidesPlugin {
     private static JRidesLogger logger;
     private static JavaPlugin plugin;
@@ -34,6 +32,8 @@ public class JRidesPlugin {
         packetSender = ServiceProvider.GetSingleton(PacketSender.class);
         smoothAnimation = ServiceProvider.GetSingleton(SmoothAnimation.class);
         logger = ServiceProvider.GetSingleton(JRidesLogger.class);
+
+//        logger.enableLogType(LogType.SECTIONS);
     }
 
     public static PacketSender getPacketSender() {

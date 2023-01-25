@@ -8,22 +8,21 @@ import com.jverbruggen.jrides.models.ride.coaster.Track;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
 
 public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
+
     public FreeMovementTrackBehaviour(CartMovementFactory cartMovementFactory) {
         super(cartMovementFactory);
     }
 
     public TrainMovement move(Speed currentSpeed, Train train, Track track) {
-//        Bukkit.broadcastMessage("Free");
-
         // --- Constants
         final double dragFactorPerTick = 0.9992;
-        final double gravityAccelerationPerTick = 0.9;
+        final double gravityAccelerationPerTick = 0.6;
 
         // --- New mass middle calculation
         Vector3 newHeadOfTrainLocation = track.getRawPositions().get(train.getHeadOfTrainFrame().getValue()).toVector3();
         Vector3 newMiddleLocation = track.getRawPositions().get(train.getMiddleOfTrainFrame().getValue()).toVector3();
         Vector3 newTailOfTrainLocation = track.getRawPositions().get(train.getTailOfTrainFrame().getValue()).toVector3();
-        Vector3 newMassMiddle = Vector3.average(newHeadOfTrainLocation, newMiddleLocation, newTailOfTrainLocation);
+        Vector3 newMassMiddle = Train.calculateMassMiddlePoint(newHeadOfTrainLocation, newMiddleLocation, newTailOfTrainLocation);
 
         // --- Gravity speed calculation
         Speed newSpeed = currentSpeed.clone();

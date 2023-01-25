@@ -187,6 +187,7 @@ public class Vector3 {
      *
      * @param v1
      * @param v2
+     * @param v3
      * @return average vector
      */
     public static Vector3 average(Vector3 v1, Vector3 v2, Vector3 v3) {
@@ -194,6 +195,23 @@ public class Vector3 {
                 (v1.x + v2.x + v3.x) / 3.0f,
                 (v1.y + v2.y + v3.y) / 3.0f,
                 (v1.z + v2.z + v3.z) / 3.0f
+        );
+    }
+
+    /**
+     * Returns the vector average of four vectors ((v1 + v2 + v3 + v4) / 4)
+     *
+     * @param v1
+     * @param v2
+     * @param v3
+     * @param v4
+     * @return average vector
+     */
+    public static Vector3 average(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4) {
+        return new Vector3(
+                (v1.x + v2.x + v3.x + v4.x) / 4.0f,
+                (v1.y + v2.y + v3.y + v4.y) / 4.0f,
+                (v1.z + v2.z + v3.z + v4.z) / 4.0f
         );
     }
 

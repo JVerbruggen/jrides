@@ -27,4 +27,8 @@ public interface Train {
 
     void setCrashed(boolean crashed);
     boolean isCrashed();
+
+    static Vector3 calculateMassMiddlePoint(Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation){
+        return Vector3.average(headLocation, middleLocation, middleLocation, tailLocation); // Middle is twice as heavy as sides
+    }
 }
