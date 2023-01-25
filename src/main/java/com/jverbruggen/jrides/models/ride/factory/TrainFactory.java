@@ -2,6 +2,10 @@ package com.jverbruggen.jrides.models.ride.factory;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
+import com.jverbruggen.jrides.config.coaster.CoasterConfig;
+import com.jverbruggen.jrides.config.coaster.objects.VehiclesConfig;
+import com.jverbruggen.jrides.config.coaster.objects.cart.CartModelItemConfig;
+import com.jverbruggen.jrides.config.coaster.objects.cart.CartTypeSpecConfig;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
@@ -31,24 +35,33 @@ public class TrainFactory {
         this.seatFactory = seatFactory;
     }
 
-    public Train createEquallyDistributedTrain(Track track, String trainIdentifier){
+    public Train createEquallyDistributedTrain(Track track, CoasterConfig coasterConfig, String trainIdentifier){
         final int totalFrames = track.getRawPositionsCount();
         final Section spawnSection = track.getNextSpawnSection();
         if(spawnSection == null) throw new NoSpawnAvailableException(track);
 
+        VehiclesConfig vehiclesConfig = coasterConfig.getVehicles();
+
         final Frame headOfTrainFrame = CyclicFrame.fromFrame(spawnSection.getSpawnFrame(), totalFrames);
-        final int amountOfCarts = 10;
-        final int cartDistance = 41;
+        final int amountOfCarts = vehiclesConfig.getCarts();
+        final int cartDistance = vehiclesConfig.getCartDistance();
         final LinkedFrame massMiddleFrame = new LinkedFrame(headOfTrainFrame, -(amountOfCarts*cartDistance) / 2, totalFrames);
         final int headOfTrainOffset = headOfTrainFrame.getValue();
-        final Vector3 cartOffset = new Vector3(0, -1.9, 0);
+        final Vector3 cartOffset = coasterConfig.getCartSpec().getDefault().getModel().getPosition();
         final LinkedFrame tailOfTrainFrame = new LinkedFrame(headOfTrainFrame, -(amountOfCarts*cartDistance), totalFrames);
 
         List<Cart> carts = new ArrayList<>();
         for(int i = 0; i < amountOfCarts; i++){
             int cartOffsetFrames = i*cartDistance;
             int cartFrame = Frame.getCyclicFrameValue(headOfTrainOffset - cartOffsetFrames, totalFrames);
-            TrainModelItem model = new TrainModelItem(ItemStackFactory.getCoasterStack(Material.DIAMOND_AXE, 22));
+
+            CartTypeSpecConfig cartTypeSpecConfig = coasterConfig.getCartSpec().getDefault();
+            CartModelItemConfig cartModelItemConfig = cartTypeSpecConfig.getModel().getItem();
+
+            Material modelMaterial = cartModelItemConfig.getMaterial();
+            int modelDamage = cartModelItemConfig.getDamage();
+            boolean unbreakable = cartModelItemConfig.isUnbreakable();
+            TrainModelItem model = new TrainModelItem(ItemStackFactory.getCoasterStack(modelMaterial, modelDamage, unbreakable));
 
             NoLimitsExportPositionRecord positionRecord = track.getRawPositions().get(cartFrame);
             Vector3 trackLocation = positionRecord.toVector3();
@@ -58,7 +71,7 @@ public class TrainFactory {
             VirtualArmorstand armorStand = viewportManager.spawnVirtualArmorstand(cartLocation, model);
             Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> armorStand.setHeadpose(ArmorStandPose.getArmorStandPose(orientation)));
 
-            List<Vector3> seatOffsets = List.of(new Vector3(0.3, -1.2, -1.2), new Vector3(0.3, -1.2, -0.4), new Vector3(0.3, -1.2, 0.4), new Vector3(0.3, -1.2, 1.2));
+            List<Vector3> seatOffsets = cartTypeSpecConfig.getSeats().getPositions();
             List<Seat> seats = seatFactory.createSeats(seatOffsets, cartLocation, orientation);
 
             Cart cart = new SimpleCart(

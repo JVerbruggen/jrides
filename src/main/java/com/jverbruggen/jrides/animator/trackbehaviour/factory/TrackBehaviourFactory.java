@@ -5,7 +5,6 @@ import com.jverbruggen.jrides.animator.trackbehaviour.FullStopAndGoTrackBehaviou
 import com.jverbruggen.jrides.animator.trackbehaviour.FreeMovementTrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
-import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.BlockSectionSpecConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.SectionConfig;

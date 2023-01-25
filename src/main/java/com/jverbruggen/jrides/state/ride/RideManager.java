@@ -92,22 +92,22 @@ public class RideManager {
         Track track = loadCoasterTrackFromConfig(rideIdentifier, coasterConfig, offsetX, offsetY, offsetZ, startOffset);
         SectionProvider sectionProvider = new SectionProvider(track);
 
-        List<TrainHandle> trains = createTrains(track, sectionProvider, rideIdentifier, 2);
+        List<TrainHandle> trains = createTrains(track, coasterConfig, sectionProvider, rideIdentifier, 2);
 
         GCRideHandle rideHandle = new GCRideHandle(ride, trains, track, world);
         this.addRideHandle(rideHandle);
     }
 
-    private TrainHandle createTrain(Track track, SectionProvider sectionProvider, String trainIdentifier){
-        Train train = trainFactory.createEquallyDistributedTrain(track, trainIdentifier);
+    private TrainHandle createTrain(Track track, CoasterConfig coasterConfig, SectionProvider sectionProvider, String trainIdentifier){
+        Train train = trainFactory.createEquallyDistributedTrain(track, coasterConfig, trainIdentifier);
         return new TrainHandle(sectionProvider, train, track);
     }
 
-    private List<TrainHandle> createTrains(Track track, SectionProvider sectionProvider, String rideIdentifier, int count){
+    private List<TrainHandle> createTrains(Track track, CoasterConfig coasterConfig, SectionProvider sectionProvider, String rideIdentifier, int count){
         List<TrainHandle> trains = new ArrayList<>();
         for(int i = 0; i < count; i++){
             String trainName = rideIdentifier + ":train_" + (i+1);
-            trains.add(createTrain(track, sectionProvider, trainName));
+            trains.add(createTrain(track, coasterConfig, sectionProvider, trainName));
         }
         return trains;
     }
