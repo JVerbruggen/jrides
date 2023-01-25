@@ -7,14 +7,13 @@ import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.ride.RideConfig;
 import com.jverbruggen.jrides.config.ride.RideConfigObject;
-import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.identifier.RideIdentifier;
 import com.jverbruggen.jrides.models.ride.coaster.*;
+import com.jverbruggen.jrides.models.ride.factory.HardcodedBMTrackFactory;
 import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrackFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrainFactory;
-import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.World;
@@ -90,7 +89,7 @@ public class RideManager {
 
         int startOffset = 4000;
 
-        Track track = loadCoasterTrackFromConfig(world, rideIdentifier, offsetX, offsetY, offsetZ, startOffset);
+        Track track = loadCoasterTrackFromConfig(rideIdentifier, coasterConfig, offsetX, offsetY, offsetZ, startOffset);
         SectionProvider sectionProvider = new SectionProvider(track);
 
         List<TrainHandle> trains = createTrains(track, sectionProvider, rideIdentifier, 2);
@@ -113,7 +112,7 @@ public class RideManager {
         return trains;
     }
 
-    private Track loadCoasterTrackFromConfig(World world, String rideIdentifier, float offsetX, float offsetY, float offsetZ, int startOffset){
+    private Track loadCoasterTrackFromConfig(String rideIdentifier, CoasterConfig coasterConfig, float offsetX, float offsetY, float offsetZ, int startOffset){
         String configFileName = "coasters/" + rideIdentifier + ".csv";
         File configFile = new File(dataFolder, configFileName);
         Path pathToConfigFile = configFile.toPath();
@@ -135,6 +134,6 @@ public class RideManager {
             ioe.printStackTrace();
         }
 
-        return trackFactory.createSimpleTrack(positions, startOffset);
+        return trackFactory.createSimpleTrack(coasterConfig, positions, startOffset);
     }
 }

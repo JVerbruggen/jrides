@@ -7,6 +7,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 public interface Section {
     Frame getStartFrame();
+    Frame getSpawnFrame();
     Frame getEndFrame();
     boolean isInSection(Frame frame);
     TrackBehaviour getTrackBehaviour();

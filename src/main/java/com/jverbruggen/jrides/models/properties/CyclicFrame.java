@@ -1,5 +1,7 @@
 package com.jverbruggen.jrides.models.properties;
 
+import org.bukkit.Bukkit;
+
 public class CyclicFrame implements Frame {
     private int frame;
     private final int cycle;
@@ -41,6 +43,7 @@ public class CyclicFrame implements Frame {
     }
 
     public static CyclicFrame fromFrame(Frame frame, int cycle){
-        return new CyclicFrame(frame.getValue(), cycle);
+        int value = Frame.getCyclicFrameValue(frame.getValue(), cycle);
+        return new CyclicFrame(value, cycle);
     }
 }

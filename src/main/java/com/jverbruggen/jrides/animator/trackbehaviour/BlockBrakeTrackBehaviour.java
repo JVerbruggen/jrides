@@ -18,8 +18,9 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
 
     private BlockBrakePhase phase;
     private final Frame stopFrame;
+    private final boolean canSpawn;
 
-    public BlockBrakeTrackBehaviour(CartMovementFactory cartMovementFactory, Frame stopFrame) {
+    public BlockBrakeTrackBehaviour(CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn) {
         super(cartMovementFactory);
         this.passThroughSpeed = 1.0;
         this.deceleration = 0.2;
@@ -27,6 +28,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
         this.driverSpeed = 1.0;
         this.phase = BlockBrakePhase.IDLE;
         this.stopFrame = stopFrame;
+        this.canSpawn = canSpawn;
 
         trainExitedAtEnd();
     }
@@ -101,6 +103,16 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
     @Override
     public boolean canBlock() {
         return true;
+    }
+
+    @Override
+    public boolean canSpawnOn() {
+        return canSpawn;
+    }
+
+    @Override
+    public Frame getSpawnFrame() {
+        return stopFrame;
     }
 }
 

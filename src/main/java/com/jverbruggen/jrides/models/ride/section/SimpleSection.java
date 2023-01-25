@@ -14,21 +14,27 @@ public class SimpleSection implements Section {
     private Train occupiedBy;
     private Section previousSection;
     private Section nextSection;
-    private final boolean canTrainSpawnOnValue;
 
-    public SimpleSection(Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour, boolean canTrainSpawnOnValue) {
+    public SimpleSection(Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour) {
         this.startFrame = startFrame.clone();
         this.endFrame = endFrame.clone().add(-1);
         this.trackBehaviour = trackBehaviour;
         this.occupiedBy = null;
         this.previousSection = null;
         this.nextSection = null;
-        this.canTrainSpawnOnValue = canTrainSpawnOnValue;
     }
 
     @Override
     public Frame getStartFrame() {
         return startFrame;
+    }
+
+    @Override
+    public Frame getSpawnFrame() {
+        Frame behaviourDefinedSpawnFrame = trackBehaviour.getSpawnFrame();
+        if(behaviourDefinedSpawnFrame == null)
+            return getEndFrame();
+        return behaviourDefinedSpawnFrame;
     }
 
     @Override
@@ -95,7 +101,7 @@ public class SimpleSection implements Section {
 
     @Override
     public boolean canTrainSpawnOn() {
-        return canTrainSpawnOnValue;
+        return trackBehaviour.canSpawnOn();
     }
 
     @Override

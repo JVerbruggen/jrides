@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.animator.tool;
 
 import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.Track;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -25,9 +26,10 @@ public class ParticleTrackVisualisationTool extends ParticleVisualisationTool {
     public static ParticleTrackVisualisationTool fromTrack(World world, Track track, int takeOneInX){
         List<NoLimitsExportPositionRecord> positions = track.getRawPositions();
 
+        int totalFrames = positions.size();
 
         List<Location> sectionSplitLocations = track.getSections().stream()
-                .map(s -> positions.get(s.getEndFrame().getValue()).toVector3().toBukkitLocation(world))
+                .map(s -> positions.get(Frame.getCyclicFrameValue(s.getEndFrame().getValue(), totalFrames)).toVector3().toBukkitLocation(world))
                 .collect(Collectors.toList());
 
         List<Location> locations = positions.stream()

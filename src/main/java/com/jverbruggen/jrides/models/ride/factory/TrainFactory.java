@@ -36,7 +36,7 @@ public class TrainFactory {
         final Section spawnSection = track.getNextSpawnSection();
         if(spawnSection == null) throw new NoSpawnAvailableException(track);
 
-        final Frame headOfTrainFrame = CyclicFrame.fromFrame(spawnSection.getEndFrame(), totalFrames);
+        final Frame headOfTrainFrame = CyclicFrame.fromFrame(spawnSection.getSpawnFrame(), totalFrames);
         final int amountOfCarts = 10;
         final int cartDistance = 41;
         final LinkedFrame massMiddleFrame = new LinkedFrame(headOfTrainFrame, -(amountOfCarts*cartDistance) / 2, totalFrames);
