@@ -8,6 +8,8 @@ import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.ride.RideConfig;
 import com.jverbruggen.jrides.config.ride.RideConfigObject;
 import com.jverbruggen.jrides.control.RideController;
+import com.jverbruggen.jrides.control.controlmode.AutomaticMode;
+import com.jverbruggen.jrides.control.controlmode.ControlMode;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.identifier.RideIdentifier;
@@ -103,10 +105,8 @@ public class RideManager {
         float offsetY = offset.get(1);
         float offsetZ = offset.get(2);
 
-        RideController rideController = new RideController();
-
         int startOffset = coasterConfig.getTrack().getOffset();
-        CoasterHandle coasterHandle = new CoasterHandle(ride, rideController, world);
+        CoasterHandle coasterHandle = new CoasterHandle(ride, world);
 
         Track track = loadCoasterTrackFromConfig(coasterHandle, coasterConfig, offsetX, offsetY, offsetZ, startOffset);
         SectionProvider sectionProvider = new SectionProvider(track);
@@ -115,9 +115,18 @@ public class RideManager {
         List<TrainHandle> trainHandles = createTrains(track, coasterConfig, sectionProvider, rideIdentifier, 2);
         coasterHandle.setTrains(trainHandles);
 
-        rideController.setRideHandle(coasterHandle);
-        coasterHandle.start();
+        int minimumDispatchInterval = 28;
+        int maximumDispatchInterval = 40;
+        ControlMode controlMode = new AutomaticMode(
+                coasterHandle.getDispatchTrigger().getDispatchLockCollection(),
+                minimumDispatchInterval,
+                maximumDispatchInterval);
 
+        RideController rideController = new RideController(controlMode);
+        coasterHandle.setRideController(rideController);
+        rideController.setRideHandle(coasterHandle);
+
+        coasterHandle.start();
         this.addRideHandle(coasterHandle);
     }
 

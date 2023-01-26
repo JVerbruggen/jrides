@@ -1,7 +1,9 @@
 package com.jverbruggen.jrides.state.viewport;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.state.player.PlayerManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,6 +36,10 @@ public class ViewportListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
         Player player = playerManager.getPlayer(event.getPlayer());
-        viewportManager.updateVisuals(player);
+
+        Bukkit.getScheduler().runTaskLater(
+                JRidesPlugin.getBukkitPlugin(),
+                () -> viewportManager.updateVisuals(player),
+                5L);
     }
 }

@@ -42,8 +42,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
             goIntoSwitch = false;
             switch (phase){
                 case IDLE:
-                    Section nextSection = train.getHeadSection().next();
-                    if(nextSection.isBlockSectionSafe())
+                    if(train.getHeadSection().next().isBlockSectionSafe())
                         phase = BlockBrakePhase.PASSING_THROUGH;
                     else
                         phase = BlockBrakePhase.DRIVING_UNTIL_STOP;
@@ -60,7 +59,11 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
                     break;
                 case DRIVING_UNTIL_STOP:
                     if(train.getHeadSection().hasPassed(stopFrame, train.getHeadOfTrainFrame())){
-                        phase = BlockBrakePhase.STOPPING;
+                        if(train.getHeadSection().next().isBlockSectionSafe()){
+                            phase = BlockBrakePhase.DRIVING;
+                        }else{
+                            phase = BlockBrakePhase.STOPPING;
+                        }
                         goIntoSwitch = true;
                     }else{
                         newSpeed.approach(acceleration, deceleration, 1.0);

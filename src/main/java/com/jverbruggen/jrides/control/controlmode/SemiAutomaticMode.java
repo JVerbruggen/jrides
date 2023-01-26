@@ -1,11 +1,10 @@
 package com.jverbruggen.jrides.control.controlmode;
 
-import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.control.ControlAction;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.ride.Seat;
-import org.bukkit.Bukkit;
+import com.jverbruggen.jrides.models.ride.coaster.Train;
 
 public class SemiAutomaticMode implements ControlMode {
 
@@ -19,6 +18,16 @@ public class SemiAutomaticMode implements ControlMode {
 
     @Override
     public void setTriggerContext(TriggerContext triggerContext) {
+
+    }
+
+    @Override
+    public void onTrainArrive(Train train) {
+
+    }
+
+    @Override
+    public void onTrainDepart(Train train) {
 
     }
 

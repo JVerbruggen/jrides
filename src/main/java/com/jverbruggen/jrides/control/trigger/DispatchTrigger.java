@@ -30,4 +30,8 @@ public class DispatchTrigger {
     public boolean isActive(){
         return active;
     }
+
+    public DispatchLockCollection getDispatchLockCollection() {
+        return dispatchLockCollection;
+    }
 }

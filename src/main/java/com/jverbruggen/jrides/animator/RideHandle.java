@@ -11,5 +11,7 @@ public interface RideHandle {
 
     RideController getRideController();
 
+    void setRideController(RideController rideController);
+
     DispatchTrigger getDispatchTrigger();
 }

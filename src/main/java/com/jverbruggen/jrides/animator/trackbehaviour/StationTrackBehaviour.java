@@ -1,6 +1,8 @@
 package com.jverbruggen.jrides.animator.trackbehaviour;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.animator.CoasterHandle;
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.control.DispatchLock;
@@ -18,6 +20,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
     private final double acceleration;
     private final double driverSpeed;
 
+    private final CoasterHandle coasterHandle;
     private final JRidesLogger logger;
     private Train handlingTrain;
     private StationPhase phase;
@@ -28,9 +31,10 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
     private final DispatchLock trainInStationDispatchLock;
     private final DispatchLock blockSectionOccupiedDispatchLock;
 
-    public StationTrackBehaviour(CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, DispatchTrigger dispatchTrigger,
+    public StationTrackBehaviour(CoasterHandle coasterHandle, CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, DispatchTrigger dispatchTrigger,
                                  StationHandle stationHandle, DispatchLock trainInStationDispatchLock, DispatchLock blockSectionOccupiedDispatchLock) {
         super(cartMovementFactory);
+        this.coasterHandle = coasterHandle;
         this.logger = JRidesPlugin.getLogger();
         this.passThroughSpeed = 1.0;
         this.deceleration = 0.2;
@@ -79,6 +83,8 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                     if(newSpeed.is(0)) {
                         phase = StationPhase.STATIONARY;
                         stationHandle.setStationaryTrain(train);
+                        // TODO: on train arrive
+                        coasterHandle.getRideController().onTrainArrive(train);
                         trainInStationDispatchLock.unlock();
                         goIntoSwitch = true;
                     }else
@@ -101,11 +107,12 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                 case WAITING:
                     if(train.getHeadSection().next().isBlockSectionSafe()){
                         phase = StationPhase.DEPARTING;
+                        blockSectionOccupiedDispatchLock.lock();
+                        coasterHandle.getRideController().onTrainDepart(train);
                         goIntoSwitch = true;
                     }
                     break;
                 case DEPARTING:
-                    blockSectionOccupiedDispatchLock.lock();
                     newSpeed.add(acceleration, 1.0);
                     break;
             }

@@ -22,11 +22,10 @@ public class CoasterHandle implements RideHandle {
     private List<StationHandle> stationHandles;
     private List<TrainHandle> trains;
 
-
-    public CoasterHandle(Ride ride, RideController rideController, World world) {
+    public CoasterHandle(Ride ride, World world) {
         this.ride = ride;
-        this.rideController = rideController;
         this.world = world;
+        this.rideController = null;
 
         this.trains = new ArrayList<>();
         this.stationHandles = new ArrayList<>();
@@ -37,6 +36,7 @@ public class CoasterHandle implements RideHandle {
     @Override
     public void start(){
         Bukkit.getScheduler().runTaskTimer(JRidesPlugin.getBukkitPlugin(), this::tick, 1L, 1L);
+        rideController.start();
     }
 
     public void setTrains(List<TrainHandle> trains) {
@@ -60,6 +60,11 @@ public class CoasterHandle implements RideHandle {
     @Override
     public RideController getRideController() {
         return rideController;
+    }
+
+    @Override
+    public void setRideController(RideController rideController) {
+        this.rideController = rideController;
     }
 
     @Override

@@ -13,7 +13,6 @@ import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.FrameRange;
 import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.properties.factory.FrameFactory;
-import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 
@@ -52,7 +51,7 @@ public class TrackBehaviourFactory {
         coasterHandle.addStationHandle(stationHandle);
         DispatchTrigger dispatchTrigger = stationHandle.getDispatchTrigger();
 
-        return new StationTrackBehaviour(cartMovementFactory, blockBrakeEngageFrame, true, dispatchTrigger,
+        return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, true, dispatchTrigger,
                 stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock);
     }
 

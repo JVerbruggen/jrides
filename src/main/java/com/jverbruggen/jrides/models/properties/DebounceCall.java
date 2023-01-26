@@ -9,13 +9,15 @@ public class DebounceCall {
     }
 
     public boolean run(Runnable runnable){
+        if(callState == 0) runnable.run();
+
         if(callState < allowEveryXCalls){
             callState++;
             return false;
+        }else{
+            reset();
+            return true;
         }
-        runnable.run();
-        reset();
-        return true;
     }
 
     public boolean hasDebounceProgress(){
