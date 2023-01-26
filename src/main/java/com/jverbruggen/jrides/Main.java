@@ -1,8 +1,7 @@
 package com.jverbruggen.jrides;
 
 import com.comphenix.protocol.ProtocolManager;
-import com.jverbruggen.jrides.command.JRidesCommandExecutor;
-import com.jverbruggen.jrides.config.ride.RideConfig;
+import com.jverbruggen.jrides.command.MainCommandExecutor;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -17,7 +16,6 @@ import org.bukkit.World;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Main extends JavaPlugin {
@@ -40,7 +38,7 @@ public class Main extends JavaPlugin {
                 playerManager), this);
 
         getServer().getPluginCommand("jrides").setExecutor(
-                new JRidesCommandExecutor(playerManager));
+                new MainCommandExecutor(playerManager));
 
         RideManager rideManager = ServiceProvider.GetSingleton(RideManager.class);
         rideManager.initAllRides(world);

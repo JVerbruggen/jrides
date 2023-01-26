@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.models.ride.factory;
 
+import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.factory.TrackBehaviourFactory;
@@ -15,6 +16,7 @@ import com.jverbruggen.jrides.models.ride.coaster.Track;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionBuilder;
 import com.jverbruggen.jrides.models.ride.section.SimpleSection;
+import org.bukkit.Bukkit;
 
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class ConfigTrackFactory implements TrackFactory {
     }
 
     @Override
-    public Track createSimpleTrack(Ride ride, CoasterConfig coasterConfig, List<NoLimitsExportPositionRecord> positions, int startOffset){
+    public Track createSimpleTrack(CoasterHandle coasterHandle, CoasterConfig coasterConfig, List<NoLimitsExportPositionRecord> positions, int startOffset){
         SectionBuilder sectionBuilder = new SectionBuilder();
         int totalFrames = positions.size();
         int globalOffset = coasterConfig.getTrack().getOffset();
@@ -59,7 +61,7 @@ public class ConfigTrackFactory implements TrackFactory {
                 endFrame = new SimpleFrame(sectionConfig.getUpperRange() + globalOffset);
             }
 
-            TrackBehaviour trackBehaviour = trackBehaviourFactory.getTrackBehaviourFor(ride, trackConfig, sectionConfig, totalFrames);
+            TrackBehaviour trackBehaviour = trackBehaviourFactory.getTrackBehaviourFor(coasterHandle, trackConfig, sectionConfig, totalFrames);
 
             sectionBuilder.add(new SimpleSection(startFrame, endFrame, trackBehaviour));
 

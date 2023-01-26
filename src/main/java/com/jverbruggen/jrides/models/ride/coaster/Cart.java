@@ -19,6 +19,8 @@ public interface Cart {
     void setPosition(Vector3 position);
     void setPosition(CartMovement cartMovement);
 
+    void setRestraint(boolean locked);
+
     static Vector3 calculateLocation(Vector3 trackLocation, Vector3 cartOffset, Quaternion orientation){
         Matrix4x4 matrix = new Matrix4x4();
         matrix.rotate(orientation);

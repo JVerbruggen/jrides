@@ -1,16 +1,17 @@
 package com.jverbruggen.jrides.state.ride;
 
-import com.jverbruggen.jrides.animator.GCRideHandle;
+import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.ride.RideConfig;
 import com.jverbruggen.jrides.config.ride.RideConfigObject;
+import com.jverbruggen.jrides.control.RideController;
+import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.identifier.RideIdentifier;
 import com.jverbruggen.jrides.models.ride.coaster.*;
-import com.jverbruggen.jrides.models.ride.factory.HardcodedBMTrackFactory;
 import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrackFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrainFactory;
@@ -30,36 +31,42 @@ import java.util.logging.Logger;
 
 public class RideManager {
     private final Logger logger;
-    private List<GCRideHandle> rideHandles;
+    private List<CoasterHandle> coasterHandles;
     private final File dataFolder;
     private final ConfigManager configManager;
     private final ViewportManager viewportManager;
     private final TrainFactory trainFactory;
     private final TrackFactory trackFactory;
     private final SeatFactory seatFactory;
+    private List<String> rideIdentifiers;
 
     public RideManager(Logger logger, File dataFolder, ViewportManager viewportManager, ConfigManager configManager,
                        TrainFactory trainFactory, TrackFactory trackFactory, SeatFactory seatFactory) {
         this.logger = logger;
-        this.rideHandles = new ArrayList<>();
+        this.coasterHandles = new ArrayList<>();
         this.dataFolder = dataFolder;
         this.viewportManager = viewportManager;
         this.configManager = configManager;
         this.trainFactory = trainFactory;
         this.trackFactory = trackFactory;
         this.seatFactory = seatFactory;
+        this.rideIdentifiers = new ArrayList<>();
     }
 
     public Ride GetRide(RideIdentifier identifier){
         return null;
     }
 
-    public void addRideHandle(GCRideHandle rideHandle){
-        rideHandles.add(rideHandle);
+    public void addRideHandle(CoasterHandle coasterHandle){
+        coasterHandles.add(coasterHandle);
     }
 
-    public GCRideHandle getRideHandle(String identifier){
-        return this.rideHandles.get(0);
+    public List<String> getRideIdentifiers() {
+        return rideIdentifiers;
+    }
+
+    public CoasterHandle getRideHandle(String identifier){
+        return this.coasterHandles.stream().filter(ch -> ch.getRide().getIdentifier().equalsIgnoreCase(identifier)).findFirst().orElseThrow();
     }
 
     public void initAllRides(World world){
@@ -69,6 +76,9 @@ public class RideManager {
         for (RideConfigObject rideConfigObject : rideConfigObjects) {
             String rideIdentifier = rideConfigObject.getIdentifier();
             String rideType = rideConfigObject.getType();
+
+            if(rideIdentifiers.contains(rideIdentifier)) throw new RuntimeException("Ride " + rideIdentifier + " identifier already exists!");
+            rideIdentifiers.add(rideIdentifier);
 
             logger.info("Initialising ride " + rideIdentifier + " with type " + rideType);
 
@@ -81,21 +91,30 @@ public class RideManager {
     private void loadCoaster(World world, String rideIdentifier){
         CoasterConfig coasterConfig = configManager.getCoasterConfig(rideIdentifier);
 
-        Ride ride = null;
+        String displayName = coasterConfig.getDisplayName();
+        Vector3 warpLocation = coasterConfig.getWarpLocation();
+        Ride ride = new SimpleCoaster(rideIdentifier, displayName, warpLocation);
         List<Float> offset = coasterConfig.getTrack().getPosition();
         float offsetX = offset.get(0);
         float offsetY = offset.get(1);
         float offsetZ = offset.get(2);
 
-        int startOffset = 4000;
+        RideController rideController = new RideController();
 
-        Track track = loadCoasterTrackFromConfig(ride, coasterConfig, offsetX, offsetY, offsetZ, startOffset);
+        int startOffset = coasterConfig.getTrack().getOffset();
+        CoasterHandle coasterHandle = new CoasterHandle(ride, rideController, world);
+
+        Track track = loadCoasterTrackFromConfig(coasterHandle, coasterConfig, offsetX, offsetY, offsetZ, startOffset);
         SectionProvider sectionProvider = new SectionProvider(track);
+        coasterHandle.setTrack(track);
 
-        List<TrainHandle> trains = createTrains(track, coasterConfig, sectionProvider, rideIdentifier, 2);
+        List<TrainHandle> trainHandles = createTrains(track, coasterConfig, sectionProvider, rideIdentifier, 2);
+        coasterHandle.setTrains(trainHandles);
 
-        GCRideHandle rideHandle = new GCRideHandle(ride, trains, track, world);
-        this.addRideHandle(rideHandle);
+        rideController.setRideHandle(coasterHandle);
+        coasterHandle.start();
+
+        this.addRideHandle(coasterHandle);
     }
 
     private TrainHandle createTrain(Track track, CoasterConfig coasterConfig, SectionProvider sectionProvider, String trainIdentifier){
@@ -112,7 +131,8 @@ public class RideManager {
         return trains;
     }
 
-    private Track loadCoasterTrackFromConfig(Ride ride, CoasterConfig coasterConfig, float offsetX, float offsetY, float offsetZ, int startOffset){
+    private Track loadCoasterTrackFromConfig(CoasterHandle coasterHandle, CoasterConfig coasterConfig, float offsetX, float offsetY, float offsetZ, int startOffset){
+        Ride ride = coasterHandle.getRide();
         String configFileName = "coasters/" + ride.getIdentifier() + ".csv";
         File configFile = new File(dataFolder, configFileName);
         Path pathToConfigFile = configFile.toPath();
@@ -134,6 +154,6 @@ public class RideManager {
             ioe.printStackTrace();
         }
 
-        return trackFactory.createSimpleTrack(ride, coasterConfig, positions, startOffset);
+        return trackFactory.createSimpleTrack(coasterHandle, coasterConfig, positions, startOffset);
     }
 }

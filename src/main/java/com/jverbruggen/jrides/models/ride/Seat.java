@@ -14,5 +14,6 @@ public interface Seat {
     void setLocation(Vector3 location, Quaternion orientation);
 
     VirtualEntity getEntity();
+    void setRestraint(boolean locked);
     boolean restraintsActive();
 }

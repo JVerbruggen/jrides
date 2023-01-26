@@ -13,7 +13,10 @@ public class HashMapServiceProvider implements ServiceProvider {
 
     @Override
     public <T> T getSingleton(Class<T> type) {
-        return (T) instances.get(type);
+        if(!instances.containsKey(type)) throw new RuntimeException("Type " + type.getTypeName() + " was not registered to the ServiceProvider");
+
+        Object object = instances.get(type);
+        return (T) object;
     }
 
     @Override

@@ -1,11 +1,13 @@
 package com.jverbruggen.jrides.models.ride.factory;
 
+import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.animator.trackbehaviour.factory.TrackBehaviourFactory;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.properties.factory.FrameFactory;
+import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionBuilder;
 import com.jverbruggen.jrides.models.ride.section.SimpleSection;
@@ -24,7 +26,7 @@ public class HardcodedBMTrackFactory implements TrackFactory {
     }
 
     @Override
-    public Track createSimpleTrack(CoasterConfig coasterConfig, List<NoLimitsExportPositionRecord> positions, int startOffset){
+    public Track createSimpleTrack(CoasterHandle coasterHandle, CoasterConfig coasterConfig, List<NoLimitsExportPositionRecord> positions, int startOffset) {
         Frame stationBegin = new SimpleFrame(startOffset - 1700);
         Frame stationEnd = new SimpleFrame(startOffset - 1100);
         Frame blockBrakeBegin = new SimpleFrame(startOffset - 2200);

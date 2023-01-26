@@ -114,6 +114,13 @@ public class SimpleTrain implements Train {
     }
 
     @Override
+    public void setRestraintForAll(boolean locked) {
+        for(Cart cart : getCarts()){
+            cart.setRestraint(locked);
+        }
+    }
+
+    @Override
     public void setCrashed(boolean crashed) {
         this.crashed = crashed;
     }
@@ -121,6 +128,11 @@ public class SimpleTrain implements Train {
     @Override
     public boolean isCrashed() {
         return crashed;
+    }
+
+    @Override
+    public boolean equals(Train other) {
+        return this.getName().equalsIgnoreCase(other.getName());
     }
 
     @Override

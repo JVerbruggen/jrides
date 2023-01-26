@@ -67,4 +67,11 @@ public class SimpleCart implements Cart {
     public void setPosition(CartMovement cartMovement) {
         setPosition(cartMovement.getLocation(), cartMovement.getOrientation());
     }
+
+    @Override
+    public void setRestraint(boolean locked) {
+        for(Seat seat : getSeats()){
+            seat.setRestraint(locked);
+        }
+    }
 }

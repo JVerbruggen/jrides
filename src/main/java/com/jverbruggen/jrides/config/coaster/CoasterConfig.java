@@ -3,21 +3,24 @@ package com.jverbruggen.jrides.config.coaster;
 import com.jverbruggen.jrides.config.coaster.objects.CartSpecConfig;
 import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
 import com.jverbruggen.jrides.config.coaster.objects.VehiclesConfig;
+import com.jverbruggen.jrides.models.math.Vector3;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class CoasterConfig {
     private String manifestVersion;
     private String identifier;
     private String displayName;
+    private Vector3 warpLocation;
     private TrackConfig track;
     private VehiclesConfig vehicles;
     private CartSpecConfig cartSpec;
 
-    public CoasterConfig(String manifestVersion, String identifier, String displayName, TrackConfig track,
+    public CoasterConfig(String manifestVersion, String identifier, String displayName, Vector3 warpLocation, TrackConfig track,
                          VehiclesConfig vehicles, CartSpecConfig cartSpec) {
         this.manifestVersion = manifestVersion;
         this.identifier = identifier;
         this.displayName = displayName;
+        this.warpLocation = warpLocation;
         this.track = track;
         this.vehicles = vehicles;
         this.cartSpec = cartSpec;
@@ -33,6 +36,10 @@ public class CoasterConfig {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public Vector3 getWarpLocation() {
+        return warpLocation;
     }
 
     public TrackConfig getTrack() {
@@ -51,10 +58,11 @@ public class CoasterConfig {
         String manifestVersion = configurationSection.getString("manifestVersion");
         String identifier = configurationSection.getString("identifier");
         String displayName = configurationSection.getString("displayName");
+        Vector3 warpLocation = Vector3.fromDoubleList(configurationSection.getDoubleList("warpLocation"));
         TrackConfig track = TrackConfig.fromConfigurationSection(configurationSection.getConfigurationSection("track"));
         VehiclesConfig vehicles = VehiclesConfig.fromConfigurationSection(configurationSection.getConfigurationSection("vehicles"));
         CartSpecConfig cartSpec = CartSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("cartSpec"));
 
-        return new CoasterConfig(manifestVersion, identifier, displayName, track, vehicles, cartSpec);
+        return new CoasterConfig(manifestVersion, identifier, displayName, warpLocation, track, vehicles, cartSpec);
     }
 }

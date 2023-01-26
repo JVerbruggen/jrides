@@ -3,7 +3,6 @@ package com.jverbruggen.jrides.logging;
 public class LogType {
     private final String name;
 
-
     public LogType(String name) {
         this.name = name;
     }
@@ -20,4 +19,5 @@ public class LogType {
 
     public static final LogType SECTIONS = new LogType("SECTIONS");
     public static final LogType CRASH = new LogType("CRASH");
+    public static final LogType DISPATCH = new LogType("DISPATCH");
 }

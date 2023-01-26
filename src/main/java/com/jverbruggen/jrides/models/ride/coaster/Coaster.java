@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface Coaster extends Ride {
     List<Train> getTrains();
+    void addTrain(Train train);
 }

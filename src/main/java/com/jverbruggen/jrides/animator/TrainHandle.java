@@ -61,25 +61,23 @@ public class TrainHandle {
         }
 
         TrainMovement result = trackBehaviour.move(speedBPS, train, track);
-        speedBPS = result.getNewSpeed();
-        train.getHeadOfTrainFrame().updateTo(result.getNewHeadOfTrainFrame());
+        if(result != null){
+            speedBPS = result.getNewSpeed();
+            train.getHeadOfTrainFrame().updateTo(result.getNewHeadOfTrainFrame());
 
-        Set<Map.Entry<Cart, CartMovement>> cartMovements = result.getCartMovements();
-        if(cartMovements != null){
-            for(Map.Entry<Cart, CartMovement> cartMovement : cartMovements){
-                Cart cart = cartMovement.getKey();
-                CartMovement movement = cartMovement.getValue();
-                cart.setPosition(movement);
+            Set<Map.Entry<Cart, CartMovement>> cartMovements = result.getCartMovements();
+            if(cartMovements != null){
+                for(Map.Entry<Cart, CartMovement> cartMovement : cartMovements){
+                    Cart cart = cartMovement.getKey();
+                    CartMovement movement = cartMovement.getValue();
+                    cart.setPosition(movement);
+                }
             }
+
+            Vector3 headLocation = track.getRawPositions().get(result.getNewHeadOfTrainFrame().getValue()).toVector3();
+            Vector3 middleLocation = result.getNewTrainLocation();
+            Vector3 tailLocation = track.getRawPositions().get(result.getNewTailOfTrainFrame().getValue()).toVector3();
+            train.setCurrentLocation(headLocation, middleLocation, tailLocation);
         }
-
-        Vector3 headLocation = track.getRawPositions().get(result.getNewHeadOfTrainFrame().getValue()).toVector3();
-        Vector3 middleLocation = result.getNewTrainLocation();
-        Vector3 tailLocation = track.getRawPositions().get(result.getNewTailOfTrainFrame().getValue()).toVector3();
-        train.setCurrentLocation(headLocation, middleLocation, tailLocation);
-
-//        World world = Bukkit.getWorld("world");
-//        world.spawnParticle(Particle.DRIP_LAVA, newLocation.toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
-//        world.spawnParticle(Particle.DRIP_WATER, track.getRawPositions().get(train.getHeadOfTrainFrame().getValue()).toVector3().toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
     }
 }

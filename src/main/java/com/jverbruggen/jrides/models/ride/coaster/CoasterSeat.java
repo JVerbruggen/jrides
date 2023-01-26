@@ -11,11 +11,13 @@ public class CoasterSeat implements Seat {
     private Player passenger;
     private final VirtualArmorstand virtualArmorstand;
     private final Vector3 offset;
+    private boolean restraintLocked;
 
     public CoasterSeat(VirtualArmorstand virtualArmorstand, Vector3 offset) {
         this.passenger = null;
         this.virtualArmorstand = virtualArmorstand;
         this.offset = offset;
+        this.restraintLocked = true;
     }
 
     @Override
@@ -59,7 +61,12 @@ public class CoasterSeat implements Seat {
     }
 
     @Override
+    public void setRestraint(boolean locked) {
+        restraintLocked = locked;
+    }
+
+    @Override
     public boolean restraintsActive() {
-        return true;
+        return restraintLocked;
     }
 }
