@@ -33,7 +33,7 @@ public class VisualizeCommandExecutor implements JRidesCommandExecutor {
             return true;
         }
 
-        String identifier = args[0];
+        String identifier = args[1];
 
         CoasterHandle coasterHandle = ServiceProvider.GetSingleton(RideManager.class).getRideHandle(identifier);
         ParticleTrackVisualisationTool tool = coasterHandle.getVisualisationTool();

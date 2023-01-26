@@ -66,7 +66,11 @@ public class RideManager {
     }
 
     public CoasterHandle getRideHandle(String identifier){
-        return this.coasterHandles.stream().filter(ch -> ch.getRide().getIdentifier().equalsIgnoreCase(identifier)).findFirst().orElseThrow();
+        return this.coasterHandles
+                .stream()
+                .filter(ch -> ch.getRide().getIdentifier().equalsIgnoreCase(identifier))
+                .findFirst()
+                .orElseThrow();
     }
 
     public void initAllRides(World world){

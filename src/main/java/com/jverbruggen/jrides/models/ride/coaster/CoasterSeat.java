@@ -35,7 +35,9 @@ public class CoasterSeat implements Seat {
 
         passenger = player;
         virtualArmorstand.setPassenger(player);
-        player.setSeatedOn(this);
+        if(player != null){
+            player.setSeatedOn(this);
+        }
     }
 
     @Override

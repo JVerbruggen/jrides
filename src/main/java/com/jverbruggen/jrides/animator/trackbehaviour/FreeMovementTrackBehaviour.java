@@ -30,7 +30,7 @@ public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements Tr
         double dy = train.getMassMiddlePoint().getY() - newMassMiddle.getY(); // negative if going up
         newSpeed.add(dy*gravityAccelerationPerTick);
         newSpeed.multiply(dragFactorPerTick);
-        if(newSpeed.getSpeedPerTick() < 1) newSpeed.setSpeedPerTick(1);
+        if(newSpeed.getSpeedPerTick() < 0) newSpeed.setSpeedPerTick(0);
 
         return calculateTrainMovement(train, track, newSpeed);
     }
