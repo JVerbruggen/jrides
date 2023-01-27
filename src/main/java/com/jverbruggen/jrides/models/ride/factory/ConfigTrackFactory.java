@@ -61,7 +61,7 @@ public class ConfigTrackFactory implements TrackFactory {
                 endFrame = new SimpleFrame(sectionConfig.getUpperRange() + globalOffset);
             }
 
-            TrackBehaviour trackBehaviour = trackBehaviourFactory.getTrackBehaviourFor(coasterHandle, trackConfig, sectionConfig, totalFrames);
+            TrackBehaviour trackBehaviour = trackBehaviourFactory.getTrackBehaviourFor(coasterHandle, coasterConfig, sectionConfig, totalFrames);
 
             sectionBuilder.add(new SimpleSection(startFrame, endFrame, trackBehaviour));
 

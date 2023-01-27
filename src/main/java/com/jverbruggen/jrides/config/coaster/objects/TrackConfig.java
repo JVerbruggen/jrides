@@ -48,7 +48,7 @@ public class TrackConfig {
             ConfigurationSection sectionSpec = configurationSectionSections.getConfigurationSection(sectionKey);
 
             assert sectionSpec != null;
-            sections.add(SectionConfig.fromConfigurationSection(sectionSpec));
+            sections.add(SectionConfig.fromConfigurationSection(sectionSpec, sectionKey));
         }
 
         return new TrackConfig(mode, position, offset, sections);

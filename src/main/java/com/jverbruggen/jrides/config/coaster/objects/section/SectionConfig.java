@@ -39,7 +39,7 @@ public class SectionConfig {
         return stationSectionSpec;
     }
 
-    public static SectionConfig fromConfigurationSection(ConfigurationSection configurationSection) {
+    public static SectionConfig fromConfigurationSection(ConfigurationSection configurationSection, String sectionIdentifier) {
         List<Integer> range = configurationSection.getIntegerList("range");
         int lowerRange = range.get(0);
         int upperRange = range.get(1);
@@ -47,11 +47,11 @@ public class SectionConfig {
 
         BlockSectionSpecConfig blockSectionSpec = null;
         if(configurationSection.contains("blockSectionSpec"))
-            blockSectionSpec = BlockSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("blockSectionSpec"));
+            blockSectionSpec = BlockSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("blockSectionSpec"), sectionIdentifier);
 
         StationSpecConfig stationSectionSpec = null;
         if(configurationSection.contains("stationSectionSpec"))
-            stationSectionSpec = StationSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("stationSectionSpec"));
+            stationSectionSpec = StationSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("stationSectionSpec"), sectionIdentifier);
 
         return new SectionConfig(lowerRange, upperRange, type, blockSectionSpec, stationSectionSpec);
     }

@@ -3,13 +3,14 @@ package com.jverbruggen.jrides.control.controlmode;
 import com.jverbruggen.jrides.control.ControlAction;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
 
 public class SemiAutomaticMode implements ControlMode {
 
     public SemiAutomaticMode() {
-//        Bukkit.getScheduler().runTaskTimer(JRidesPlugin.getBukkitPlugin(), this::tick, 5L, 5L);
+        
     }
 
     public void tick(){
@@ -59,5 +60,10 @@ public class SemiAutomaticMode implements ControlMode {
     @Override
     public boolean allowsAction(ControlAction action) {
         return true;
+    }
+
+    @Override
+    public MinMaxWaitingTimer getWaitingTimer() {
+        return null;
     }
 }

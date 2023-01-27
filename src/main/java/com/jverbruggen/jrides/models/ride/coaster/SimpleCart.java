@@ -18,12 +18,16 @@ public class SimpleCart implements Cart {
     private VirtualArmorstand modelArmorstand;
     private Vector3 trackOffset;
     private LinkedFrame linkedFrame;
+    private Train parentTrain;
 
     public SimpleCart(List<Seat> seats, VirtualArmorstand modelArmorstand, Vector3 trackOffset, LinkedFrame linkedFrame) {
         this.seats = seats;
         this.modelArmorstand = modelArmorstand;
         this.trackOffset = trackOffset;
         this.linkedFrame = linkedFrame;
+        this.parentTrain = null;
+
+        seats.forEach(s -> s.setParentCart(this));
     }
 
     @Override
@@ -73,5 +77,15 @@ public class SimpleCart implements Cart {
         for(Seat seat : getSeats()){
             seat.setRestraint(locked);
         }
+    }
+
+    @Override
+    public void setParentTrain(Train train) {
+        parentTrain = train;
+    }
+
+    @Override
+    public Train getParentTrain() {
+        return parentTrain;
     }
 }

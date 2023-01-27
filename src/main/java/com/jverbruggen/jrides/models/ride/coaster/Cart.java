@@ -18,8 +18,9 @@ public interface Cart {
     void setPosition(Vector3 position, Quaternion orientation);
     void setPosition(Vector3 position);
     void setPosition(CartMovement cartMovement);
-
     void setRestraint(boolean locked);
+    void setParentTrain(Train train);
+    Train getParentTrain();
 
     static Vector3 calculateLocation(Vector3 trackLocation, Vector3 cartOffset, Quaternion orientation){
         Matrix4x4 matrix = new Matrix4x4();

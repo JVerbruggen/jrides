@@ -2,10 +2,10 @@ package com.jverbruggen.jrides.animator.trackbehaviour;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.CoasterHandle;
-import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.control.DispatchLock;
+import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
@@ -26,12 +26,12 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
     private StationPhase phase;
     private final Frame stopFrame;
     private final boolean canSpawn;
-    private DispatchTrigger dispatchTrigger;
+    private TriggerContext triggerContext;
     private final StationHandle stationHandle;
     private final DispatchLock trainInStationDispatchLock;
     private final DispatchLock blockSectionOccupiedDispatchLock;
 
-    public StationTrackBehaviour(CoasterHandle coasterHandle, CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, DispatchTrigger dispatchTrigger,
+    public StationTrackBehaviour(CoasterHandle coasterHandle, CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, TriggerContext triggerContext,
                                  StationHandle stationHandle, DispatchLock trainInStationDispatchLock, DispatchLock blockSectionOccupiedDispatchLock) {
         super(cartMovementFactory);
         this.coasterHandle = coasterHandle;
@@ -44,7 +44,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
         this.phase = StationPhase.IDLE;
         this.stopFrame = stopFrame;
         this.canSpawn = canSpawn;
-        this.dispatchTrigger = dispatchTrigger;
+        this.triggerContext = triggerContext;
         this.stationHandle = stationHandle;
 
         this.trainInStationDispatchLock = trainInStationDispatchLock;
@@ -97,6 +97,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                         blockSectionOccupiedDispatchLock.lock();
                     }
 
+                    DispatchTrigger dispatchTrigger = triggerContext.getDispatchTrigger();
                     if(dispatchTrigger.isActive()){
                         phase = StationPhase.WAITING;
                         dispatchTrigger.reset();
@@ -109,6 +110,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                         phase = StationPhase.DEPARTING;
                         blockSectionOccupiedDispatchLock.lock();
                         coasterHandle.getRideController().onTrainDepart(train);
+                        stationHandle.setStationaryTrain(null);
                         goIntoSwitch = true;
                     }
                     break;

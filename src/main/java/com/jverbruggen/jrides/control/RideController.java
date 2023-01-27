@@ -54,4 +54,8 @@ public class RideController {
     public void onTrainDepart(Train train) {
         controlMode.onTrainDepart(train);
     }
+
+    public ControlMode getControlMode() {
+        return controlMode;
+    }
 }

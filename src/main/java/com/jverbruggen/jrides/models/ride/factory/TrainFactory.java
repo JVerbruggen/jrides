@@ -85,8 +85,10 @@ public class TrainFactory {
         Vector3 headLocation = track.getRawPositions().get(headOfTrainFrame.getValue()).toVector3();
         Vector3 middleLocation = track.getRawPositions().get(massMiddleFrame.getValue()).toVector3();
         Vector3 tailLocation = track.getRawPositions().get(tailOfTrainFrame.getValue()).toVector3();
+
         Train train = new SimpleTrain(trainIdentifier, carts, headOfTrainFrame, massMiddleFrame, tailOfTrainFrame, headLocation, middleLocation, tailLocation, spawnSection);
         spawnSection.addOccupation(train);
+
         return train;
     }
 }

@@ -1,5 +1,7 @@
 package com.jverbruggen.jrides.control.trigger;
 
+import com.jverbruggen.jrides.control.DispatchLockCollection;
+
 public class TriggerContext {
     private final DispatchTrigger dispatchTrigger;
     private final GateTrigger gateTrigger;
@@ -9,6 +11,12 @@ public class TriggerContext {
         this.dispatchTrigger = dispatchTrigger;
         this.gateTrigger = gateTrigger;
         this.restraintTrigger = restraintTrigger;
+    }
+
+    public TriggerContext(DispatchLockCollection dispatchLockCollection) {
+        this.dispatchTrigger = new DispatchTrigger(dispatchLockCollection);
+        this.gateTrigger = null;
+        this.restraintTrigger = null;
     }
 
     public DispatchTrigger getDispatchTrigger() {

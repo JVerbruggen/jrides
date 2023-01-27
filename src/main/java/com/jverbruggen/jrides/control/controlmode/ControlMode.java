@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.control.controlmode;
 import com.jverbruggen.jrides.control.ControlAction;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
 
@@ -17,4 +18,6 @@ public interface ControlMode {
     void stopOperating();
     void onDispatch();
     boolean allowsAction(ControlAction action);
+
+    MinMaxWaitingTimer getWaitingTimer();
 }

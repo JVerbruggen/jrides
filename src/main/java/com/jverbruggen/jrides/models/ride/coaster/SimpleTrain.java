@@ -1,8 +1,10 @@
 package com.jverbruggen.jrides.models.ride.coaster;
 
+import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.TrainEnd;
+import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
 import java.util.ArrayList;
@@ -19,6 +21,9 @@ public class SimpleTrain implements Train {
     private Vector3 headLocation;
     private Vector3 middleLocation;
     private Vector3 tailLocation;
+    private List<Player> passengers;
+
+    private StationHandle onStation;
 
     public SimpleTrain(String name, List<Cart> carts, Frame headOfTrainFrame, Frame massMiddleFrame, Frame tailOfTrainFrame, Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation, Section section) {
         this.name = name;
@@ -33,6 +38,11 @@ public class SimpleTrain implements Train {
         this.headLocation = headLocation;
         this.middleLocation = middleLocation;
         this.tailLocation = tailLocation;
+
+        this.passengers = new ArrayList<>();
+        this.onStation = null;
+
+        getCarts().forEach(c -> c.setParentTrain(this));
     }
 
     @Override
@@ -133,6 +143,35 @@ public class SimpleTrain implements Train {
     @Override
     public boolean equals(Train other) {
         return this.getName().equalsIgnoreCase(other.getName());
+    }
+
+    @Override
+    public void onPlayerEnter(Player player) {
+        passengers.add(player);
+
+        if(!isStationary()) return;
+
+        onStation.onPlayerEnter(player);
+    }
+
+    @Override
+    public void onPlayerExit(Player player) {
+        passengers.remove(player);
+    }
+
+    @Override
+    public List<Player> getPassengers() {
+        return passengers;
+    }
+
+    @Override
+    public void setStationaryAt(StationHandle stationaryAt) {
+        this.onStation = stationaryAt;
+    }
+
+    @Override
+    public boolean isStationary() {
+        return onStation != null;
     }
 
     @Override

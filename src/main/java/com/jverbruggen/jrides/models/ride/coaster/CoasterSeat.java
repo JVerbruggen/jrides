@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Seat;
+import org.bukkit.Bukkit;
 
 public class CoasterSeat implements Seat {
     private Player passenger;
@@ -13,11 +14,14 @@ public class CoasterSeat implements Seat {
     private final Vector3 offset;
     private boolean restraintLocked;
 
+    private Cart parentCart;
+
     public CoasterSeat(VirtualArmorstand virtualArmorstand, Vector3 offset) {
         this.passenger = null;
         this.virtualArmorstand = virtualArmorstand;
         this.offset = offset;
         this.restraintLocked = true;
+        this.parentCart = null;
     }
 
     @Override
@@ -31,12 +35,14 @@ public class CoasterSeat implements Seat {
             passenger.setSeatedOn(null);
             virtualArmorstand.setPassenger(null);
             passenger.clearSmoothAnimationRotation();
+            parentCart.getParentTrain().onPlayerExit(passenger);
         }
 
         passenger = player;
         virtualArmorstand.setPassenger(player);
         if(player != null){
             player.setSeatedOn(this);
+            parentCart.getParentTrain().onPlayerEnter(player);
         }
     }
 
@@ -70,5 +76,10 @@ public class CoasterSeat implements Seat {
     @Override
     public boolean restraintsActive() {
         return restraintLocked;
+    }
+
+    @Override
+    public void setParentCart(Cart cart) {
+        this.parentCart = cart;
     }
 }

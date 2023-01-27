@@ -7,12 +7,15 @@ import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.ride.RideConfig;
 import com.jverbruggen.jrides.config.ride.RideConfigObject;
+import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.RideController;
 import com.jverbruggen.jrides.control.controlmode.AutomaticMode;
 import com.jverbruggen.jrides.control.controlmode.ControlMode;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.identifier.RideIdentifier;
+import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.*;
 import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrackFactory;
@@ -115,12 +118,16 @@ public class RideManager {
         List<TrainHandle> trainHandles = createTrains(track, coasterConfig, sectionProvider, rideIdentifier, 2);
         coasterHandle.setTrains(trainHandles);
 
-        int minimumDispatchInterval = 28;
-        int maximumDispatchInterval = 40;
+        StationHandle stationHandle = coasterHandle.getStationHandle(null);
+
+        DispatchLock minimumWaitTimeDispatchLock = new DispatchLock("Waiting time has not passed yet");
+        MinMaxWaitingTimer waitingTimer = new MinMaxWaitingTimer(28, 40, minimumWaitTimeDispatchLock);
+        coasterHandle.getDispatchTrigger().getDispatchLockCollection().addDispatchLock(minimumWaitTimeDispatchLock);
+
         ControlMode controlMode = new AutomaticMode(
+                stationHandle,
                 coasterHandle.getDispatchTrigger().getDispatchLockCollection(),
-                minimumDispatchInterval,
-                maximumDispatchInterval);
+                waitingTimer);
 
         RideController rideController = new RideController(controlMode);
         coasterHandle.setRideController(rideController);

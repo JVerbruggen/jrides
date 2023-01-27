@@ -5,6 +5,8 @@ import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimationSupport;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Seat;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -31,6 +33,10 @@ public class Player {
 
     public void sendMessage(String message){
         bukkitPlayer.sendMessage(message);
+    }
+
+    public void sendActionbarMessage(String message){
+        bukkitPlayer.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
     }
 
     public org.bukkit.entity.Player getBukkitPlayer(){

@@ -6,32 +6,32 @@ import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.DebounceCall;
+import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.Seat;
+import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
 import org.bukkit.Bukkit;
 
 public class AutomaticMode implements ControlMode{
     private TriggerContext triggerContext;
+    private final StationHandle stationHandle;
 
     private final long tickInterval;
-    private final int minimumDispatchIntervalTicks;
-    private final int maximumDispatchIntervalTicks;
-    private int dispatchIntervalState;
+    private final MinMaxWaitingTimer waitingTimer;
     private boolean dispatchIntervalActive;
     private boolean started;
 
     private DispatchLockCollection dispatchLockCollection;
     private DebounceCall dispatchDebounce;
 
-    public AutomaticMode(DispatchLockCollection dispatchLockCollection, int minimumDispatchInterval, int maximumDispatchInterval) {
+    public AutomaticMode(StationHandle stationHandle, DispatchLockCollection dispatchLockCollection, MinMaxWaitingTimer waitingTimer) {
+        this.stationHandle = stationHandle;
         this.dispatchDebounce = new DebounceCall(20);
         this.dispatchLockCollection = dispatchLockCollection;
         this.started = false;
         this.tickInterval = 5L;
 
-        this.minimumDispatchIntervalTicks = (int) ((20/tickInterval) * minimumDispatchInterval);
-        this.maximumDispatchIntervalTicks = (int) ((20/tickInterval) * maximumDispatchInterval);
-        this.dispatchIntervalState = 0;
+        this.waitingTimer = waitingTimer;
         this.dispatchIntervalActive = false;
     }
 
@@ -40,7 +40,11 @@ public class AutomaticMode implements ControlMode{
     }
 
     private void stationTick(){
-        if(dispatchIntervalActive) dispatchIntervalState++;
+        if(dispatchIntervalActive) waitingTimer.increment(tickInterval);
+
+        Train stationaryTrain = stationHandle.getStationaryTrain();
+        if(stationaryTrain != null)
+            waitingTimer.sendTimeWaitingNotification(stationaryTrain.getPassengers());
 
         if(!dispatchIntervalReached()) return;
         if(!dispatchLockCollection.allUnlocked()) return;
@@ -49,7 +53,7 @@ public class AutomaticMode implements ControlMode{
     }
 
     private boolean dispatchIntervalReached(){
-        return minimumDispatchIntervalTicks <= dispatchIntervalState;
+        return waitingTimer.reachedPreferred();
     }
 
     @Override
@@ -60,15 +64,17 @@ public class AutomaticMode implements ControlMode{
     @Override
     public void onTrainArrive(Train train) {
         dispatchIntervalActive = true;
-        dispatchIntervalState = 0;
+        waitingTimer.reset();
         dispatchDebounce.reset();
+        stationHandle.openEntryGates();
     }
 
     @Override
     public void onTrainDepart(Train train) {
         dispatchIntervalActive = false;
-        dispatchIntervalState = 0;
+        waitingTimer.reset();
         dispatchDebounce.reset();
+        stationHandle.closeEntryGates();
     }
 
     @Override
@@ -102,5 +108,10 @@ public class AutomaticMode implements ControlMode{
     @Override
     public boolean allowsAction(ControlAction action) {
         return false;
+    }
+
+    @Override
+    public MinMaxWaitingTimer getWaitingTimer() {
+        return waitingTimer;
     }
 }
