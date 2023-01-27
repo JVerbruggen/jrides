@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
 
 public interface ControlMode {
+    void tick();
     void setTriggerContext(TriggerContext triggerContext);
 
     void onTrainArrive(Train train);

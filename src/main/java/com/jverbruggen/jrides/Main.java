@@ -2,6 +2,7 @@ package com.jverbruggen.jrides;
 
 import com.comphenix.protocol.ProtocolManager;
 import com.jverbruggen.jrides.command.MainCommandExecutor;
+import com.jverbruggen.jrides.control.uiinterface.menu.event.ButtonClickEventListener;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -36,6 +37,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new ViewportListener(
                 ServiceProvider.GetSingleton(ViewportManager.class),
                 playerManager), this);
+        pluginManager.registerEvents(new ButtonClickEventListener(), this);
 
         getServer().getPluginCommand("jrides").setExecutor(
                 new MainCommandExecutor(playerManager));

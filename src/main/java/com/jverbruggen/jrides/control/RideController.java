@@ -8,7 +8,6 @@ import com.jverbruggen.jrides.models.ride.coaster.Train;
 
 public class RideController {
     private RideHandle rideHandle;
-    private TriggerContext triggerContext;
     private ControlMode controlMode;
 
     public RideController(ControlMode controlMode) {
@@ -17,25 +16,19 @@ public class RideController {
 
     public void setRideHandle(RideHandle rideHandle) {
         this.rideHandle = rideHandle;
-
-        this.triggerContext = new TriggerContext(
-                rideHandle.getDispatchTrigger(),
-                null,
-                null);
-
-        if(controlMode != null){
-            controlMode.setTriggerContext(triggerContext);
-        }
+        this.controlMode.setTriggerContext(getTriggerContext());
     }
 
     public TriggerContext getTriggerContext() {
-        return triggerContext;
+        return rideHandle.getTriggerContext(null);
     }
 
     public void changeMode(ControlMode newControlMode){
         if(controlMode != null) controlMode.stopOperating();
 
-        newControlMode.setTriggerContext(triggerContext);
+        if(rideHandle != null){
+            newControlMode.setTriggerContext(getTriggerContext());
+        }
         controlMode = newControlMode;
     }
 

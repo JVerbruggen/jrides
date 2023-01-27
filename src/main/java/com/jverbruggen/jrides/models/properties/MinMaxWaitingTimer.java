@@ -77,19 +77,21 @@ public class MinMaxWaitingTimer {
         return maximumWaitingTime;
     }
 
-    public int getVisualDispatchTime(){
-        double timeUntil = timeUntilPreferredWaitingTime();
+    public int getVisualDispatchTime(double timeUntil){
         if(timeUntil < 0) timeUntil = 0;
         return (int) Math.ceil(timeUntil);
     }
 
-    public void sendTimeWaitingNotification(List<Player> players){
-        int visualDispatchTime = getVisualDispatchTime();
+    public void sendTimeWaitingNotification(List<Player> players, int visualDispatchTime){
         if(visualDispatchTime <= 0){
             players.forEach(p -> p.sendActionbarMessage(""));
             return;
         }
 
         players.forEach(p -> p.sendActionbarMessage(ChatColor.GOLD + "Waiting time: " + visualDispatchTime + " seconds"));
+    }
+
+    public void sendGenericWaitingNotification(List<Player> players){
+        players.forEach(p -> p.sendActionbarMessage(ChatColor.GOLD + "Please wait until the ride is dispatched"));
     }
 }

@@ -5,9 +5,12 @@ import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.control.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
+import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
+import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.Track;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
@@ -16,6 +19,7 @@ import java.util.List;
 
 public class CoasterHandle implements RideHandle {
     private Ride ride;
+    private RideControlMenu rideControlMenu;
     private RideController rideController;
     private Track track;
     private World world;
@@ -66,6 +70,8 @@ public class CoasterHandle implements RideHandle {
     @Override
     public void setRideController(RideController rideController) {
         this.rideController = rideController;
+        this.rideControlMenu = ServiceProvider.GetSingleton(RideControlMenuFactory.class)
+                .getControlMenu(rideController);
     }
 
     @Override
@@ -88,6 +94,11 @@ public class CoasterHandle implements RideHandle {
 
     public StationHandle getStationHandle(String identifier){
         return getStationHandles().get(0); // TODO: actually implement this
+    }
+
+    @Override
+    public RideControlMenu getRideControlMenu() {
+        return rideControlMenu;
     }
 
     private void tick(){

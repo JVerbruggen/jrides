@@ -51,23 +51,20 @@ public class TrackBehaviourFactory {
         int stationNr = coasterHandle.getStationHandles().size() + 1;
         String stationName = coasterHandle.getRide().getIdentifier() + "_station_" + stationNr;
 
-        DispatchLock trainInStationDispatchLock = new DispatchLock("Train present in station");
-        DispatchLock blockSectionOccupiedDispatchLock = new DispatchLock("Next block section is occupied");
-        DispatchLock minimumWaitTimeDispatchLock = new DispatchLock("Waiting time has not passed yet");
-
         DispatchLockCollection dispatchLockCollection = new DispatchLockCollection();
-        dispatchLockCollection.addDispatchLock(trainInStationDispatchLock);
-        dispatchLockCollection.addDispatchLock(blockSectionOccupiedDispatchLock);
-        dispatchLockCollection.addDispatchLock(minimumWaitTimeDispatchLock);
+
+        DispatchLock trainInStationDispatchLock = new DispatchLock(dispatchLockCollection, "Train present in station");
+        DispatchLock blockSectionOccupiedDispatchLock = new DispatchLock(dispatchLockCollection, "Next block section is occupied");
+        DispatchLock minimumWaitTimeDispatchLock = new DispatchLock(dispatchLockCollection, "Waiting time has not passed yet");
 
         List<Gate> gates = new ArrayList<>();
-        List<GateConfig> gateConfigs = gateSpec.getGateSpecConfigEntry().getGates();
-        for(int i = 0; i < gateConfigs.size(); i++){
-            GateConfig gateConfig = gateConfigs.get(i);
-            String gateName = stationName + "_gate_" + i;
-            Vector3 location = gateConfig.getLocation();
-            gates.add(new FenceGate(gateName, new DispatchLock("Gate " + gateName + " is open"), location));
-        }
+//        List<GateConfig> gateConfigs = gateSpec.getGateSpecConfigEntry().getGates();
+//        for(int i = 0; i < gateConfigs.size(); i++){
+//            GateConfig gateConfig = gateConfigs.get(i);
+//            String gateName = stationName + "_gate_" + i;
+//            Vector3 location = gateConfig.getLocation();
+//            gates.add(new FenceGate(gateName, new DispatchLock(dispatchLockCollection, "Gate " + gateName + " is open"), location));
+//        }
 
         TriggerContext triggerContext = new TriggerContext(dispatchLockCollection);
 

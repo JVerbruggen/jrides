@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.animator.smoothanimation.SmoothCoastersSmoothAnima
 import com.jverbruggen.jrides.animator.trackbehaviour.factory.TrackBehaviourFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.config.ConfigManager;
+import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.entity.EntityIdFactory;
 import com.jverbruggen.jrides.models.message.MessageFactory;
@@ -55,6 +56,7 @@ public class ServiceProviderConfigurator {
         TrackFactory trackFactory                   = ServiceProvider.Register(TrackFactory.class, new ConfigTrackFactory(trackBehaviourFactory, frameFactory));
 //        TrackFactory trackFactory                   = ServiceProvider.Register(HardcodedBMTrackFactory.class, new HardcodedBMTrackFactory(trackBehaviourFactory, frameFactory));
         RideManager rideManager                     = ServiceProvider.Register(RideManager.class, new RideManager(logger, dataFolder, viewportManager, configManager, trainFactory, trackFactory, seatFactory));
+        RideControlMenuFactory rideControlMenuFact  = ServiceProvider.Register(RideControlMenuFactory.class, new RideControlMenuFactory());
         VirtualEntityPacketListener packetListener  = ServiceProvider.Register(VirtualEntityPacketListener.class,
                 new VirtualEntityPacketListener(plugin, ListenerPriority.NORMAL, new PacketType[]{
                             PacketType.Play.Client.USE_ENTITY,

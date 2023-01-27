@@ -1,77 +1,57 @@
 package com.jverbruggen.jrides.control.controlmode;
 
-import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.control.ControlAction;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
-import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.DebounceCall;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
-import org.bukkit.Bukkit;
 
-public class AutomaticMode implements ControlMode{
-    private TriggerContext triggerContext;
-    private final StationHandle stationHandle;
-
-    private final long tickInterval;
-    private boolean dispatchIntervalActive;
-    private boolean started;
-
-    private DispatchLockCollection dispatchLockCollection;
+public class AutomaticMode extends BaseControlMode implements ControlMode{
     private DebounceCall dispatchDebounce;
 
     public AutomaticMode(StationHandle stationHandle, DispatchLockCollection dispatchLockCollection) {
-        this.stationHandle = stationHandle;
-        this.dispatchDebounce = new DebounceCall(20);
-        this.dispatchLockCollection = dispatchLockCollection;
-        this.started = false;
-        this.tickInterval = 5L;
+        super(stationHandle, dispatchLockCollection);
 
-        this.dispatchIntervalActive = false;
+        this.dispatchDebounce = new DebounceCall(20);
     }
 
+    @Override
     public void tick() {
+        super.tick();
+
         stationTick();
     }
 
     private void stationTick(){
         MinMaxWaitingTimer waitingTimer = getWaitingTimer();
-        if(dispatchIntervalActive) waitingTimer.increment(tickInterval);
 
         Train stationaryTrain = stationHandle.getStationaryTrain();
-        if(stationaryTrain != null)
-            waitingTimer.sendTimeWaitingNotification(stationaryTrain.getPassengers());
+        if(stationaryTrain != null){
+            int visualTime = waitingTimer.getVisualDispatchTime(waitingTimer.timeUntilPreferredWaitingTime());
+            waitingTimer.sendTimeWaitingNotification(stationaryTrain.getPassengers(), visualTime);
+        }
 
-        if(!dispatchIntervalReached()) return;
+        if(!waitingTimer.reachedPreferred()) return;
         if(!dispatchLockCollection.allUnlocked()) return;
 
         dispatchDebounce.run(() -> triggerContext.getDispatchTrigger().dispatch());
     }
 
-    private boolean dispatchIntervalReached(){
-        return getWaitingTimer().reachedPreferred();
-    }
-
-    @Override
-    public void setTriggerContext(TriggerContext triggerContext) {
-        this.triggerContext = triggerContext;
-    }
-
     @Override
     public void onTrainArrive(Train train) {
-        dispatchIntervalActive = true;
-        getWaitingTimer().reset();
+        super.onTrainArrive(train);
+
         dispatchDebounce.reset();
         stationHandle.openEntryGates();
     }
 
     @Override
     public void onTrainDepart(Train train) {
-        dispatchIntervalActive = false;
-        getWaitingTimer().reset();
+        super.onTrainDepart(train);
+
         dispatchDebounce.reset();
         stationHandle.closeEntryGates();
     }
@@ -87,14 +67,6 @@ public class AutomaticMode implements ControlMode{
     }
 
     @Override
-    public void startOperating() {
-        if(started) throw new RuntimeException("Mode already started");
-
-        Bukkit.getScheduler().runTaskTimer(JRidesPlugin.getBukkitPlugin(), this::tick, this.tickInterval, this.tickInterval);
-        started = true;
-    }
-
-    @Override
     public void stopOperating() {
 
     }
@@ -107,10 +79,5 @@ public class AutomaticMode implements ControlMode{
     @Override
     public boolean allowsAction(ControlAction action) {
         return false;
-    }
-
-    @Override
-    public MinMaxWaitingTimer getWaitingTimer() {
-        return stationHandle.getWaitingTimer();
     }
 }

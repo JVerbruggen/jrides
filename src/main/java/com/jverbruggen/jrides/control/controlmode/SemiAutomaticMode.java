@@ -1,35 +1,29 @@
 package com.jverbruggen.jrides.control.controlmode;
 
 import com.jverbruggen.jrides.control.ControlAction;
-import com.jverbruggen.jrides.control.trigger.TriggerContext;
+import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.Seat;
+import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
 
-public class SemiAutomaticMode implements ControlMode {
+public class SemiAutomaticMode extends BaseControlMode implements ControlMode {
 
-    public SemiAutomaticMode() {
-        
-    }
-
-    public void tick(){
-
+    public SemiAutomaticMode(StationHandle stationHandle, DispatchLockCollection dispatchLockCollection) {
+        super(stationHandle, dispatchLockCollection);
     }
 
     @Override
-    public void setTriggerContext(TriggerContext triggerContext) {
+    public void tick() {
+        super.tick();
 
-    }
+        MinMaxWaitingTimer waitingTimer = getWaitingTimer();
 
-    @Override
-    public void onTrainArrive(Train train) {
-
-    }
-
-    @Override
-    public void onTrainDepart(Train train) {
-
+        Train stationaryTrain = stationHandle.getStationaryTrain();
+        if(stationaryTrain != null){
+            waitingTimer.sendGenericWaitingNotification(stationaryTrain.getPassengers());
+        }
     }
 
     @Override
@@ -39,11 +33,6 @@ public class SemiAutomaticMode implements ControlMode {
 
     @Override
     public void onPlayerExit(Seat seat, Player player) {
-
-    }
-
-    @Override
-    public void startOperating() {
 
     }
 
@@ -60,10 +49,5 @@ public class SemiAutomaticMode implements ControlMode {
     @Override
     public boolean allowsAction(ControlAction action) {
         return true;
-    }
-
-    @Override
-    public MinMaxWaitingTimer getWaitingTimer() {
-        return null;
     }
 }

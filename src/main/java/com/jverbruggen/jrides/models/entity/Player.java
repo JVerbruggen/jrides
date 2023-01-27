@@ -83,5 +83,9 @@ public class Player {
         if(!hasSmoothAnimationSupport()) return;
         JRidesPlugin.getSmoothAnimation().setRotation(this, orientation);
     }
+
+    public String getName() {
+        return bukkitPlayer.getName();
+    }
 }
 
