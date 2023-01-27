@@ -3,9 +3,9 @@ package com.jverbruggen.jrides.models.ride;
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
-import org.bukkit.Bukkit;
 
 import java.util.List;
 
@@ -15,11 +15,13 @@ public class StationHandle {
     private String name;
     private final List<Gate> entryGates;
     private CoasterHandle coasterHandle;
+    private final MinMaxWaitingTimer waitingTimer;
 
-    public StationHandle(CoasterHandle coasterHandle, String name, TriggerContext triggerContext, List<Gate> entryGates){
+    public StationHandle(CoasterHandle coasterHandle, String name, TriggerContext triggerContext, List<Gate> entryGates, MinMaxWaitingTimer waitingTimer){
         this.coasterHandle = coasterHandle;
         this.triggerContext = triggerContext;
         this.entryGates = entryGates;
+        this.waitingTimer = waitingTimer;
         this.stationaryTrain = null;
         this.name = name;
 
@@ -79,4 +81,7 @@ public class StationHandle {
         }
     }
 
+    public MinMaxWaitingTimer getWaitingTimer() {
+        return waitingTimer;
+    }
 }

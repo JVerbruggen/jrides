@@ -120,14 +120,9 @@ public class RideManager {
 
         StationHandle stationHandle = coasterHandle.getStationHandle(null);
 
-        DispatchLock minimumWaitTimeDispatchLock = new DispatchLock("Waiting time has not passed yet");
-        MinMaxWaitingTimer waitingTimer = new MinMaxWaitingTimer(28, 40, minimumWaitTimeDispatchLock);
-        coasterHandle.getDispatchTrigger().getDispatchLockCollection().addDispatchLock(minimumWaitTimeDispatchLock);
-
         ControlMode controlMode = new AutomaticMode(
                 stationHandle,
-                coasterHandle.getDispatchTrigger().getDispatchLockCollection(),
-                waitingTimer);
+                coasterHandle.getDispatchTrigger().getDispatchLockCollection());
 
         RideController rideController = new RideController(controlMode);
         coasterHandle.setRideController(rideController);

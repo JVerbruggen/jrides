@@ -17,21 +17,19 @@ public class AutomaticMode implements ControlMode{
     private final StationHandle stationHandle;
 
     private final long tickInterval;
-    private final MinMaxWaitingTimer waitingTimer;
     private boolean dispatchIntervalActive;
     private boolean started;
 
     private DispatchLockCollection dispatchLockCollection;
     private DebounceCall dispatchDebounce;
 
-    public AutomaticMode(StationHandle stationHandle, DispatchLockCollection dispatchLockCollection, MinMaxWaitingTimer waitingTimer) {
+    public AutomaticMode(StationHandle stationHandle, DispatchLockCollection dispatchLockCollection) {
         this.stationHandle = stationHandle;
         this.dispatchDebounce = new DebounceCall(20);
         this.dispatchLockCollection = dispatchLockCollection;
         this.started = false;
         this.tickInterval = 5L;
 
-        this.waitingTimer = waitingTimer;
         this.dispatchIntervalActive = false;
     }
 
@@ -40,6 +38,7 @@ public class AutomaticMode implements ControlMode{
     }
 
     private void stationTick(){
+        MinMaxWaitingTimer waitingTimer = getWaitingTimer();
         if(dispatchIntervalActive) waitingTimer.increment(tickInterval);
 
         Train stationaryTrain = stationHandle.getStationaryTrain();
@@ -53,7 +52,7 @@ public class AutomaticMode implements ControlMode{
     }
 
     private boolean dispatchIntervalReached(){
-        return waitingTimer.reachedPreferred();
+        return getWaitingTimer().reachedPreferred();
     }
 
     @Override
@@ -64,7 +63,7 @@ public class AutomaticMode implements ControlMode{
     @Override
     public void onTrainArrive(Train train) {
         dispatchIntervalActive = true;
-        waitingTimer.reset();
+        getWaitingTimer().reset();
         dispatchDebounce.reset();
         stationHandle.openEntryGates();
     }
@@ -72,7 +71,7 @@ public class AutomaticMode implements ControlMode{
     @Override
     public void onTrainDepart(Train train) {
         dispatchIntervalActive = false;
-        waitingTimer.reset();
+        getWaitingTimer().reset();
         dispatchDebounce.reset();
         stationHandle.closeEntryGates();
     }
@@ -112,6 +111,6 @@ public class AutomaticMode implements ControlMode{
 
     @Override
     public MinMaxWaitingTimer getWaitingTimer() {
-        return waitingTimer;
+        return stationHandle.getWaitingTimer();
     }
 }

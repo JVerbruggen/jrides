@@ -16,9 +16,9 @@ import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.FrameRange;
+import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.properties.factory.FrameFactory;
-import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.gate.FenceGate;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
@@ -47,16 +47,18 @@ public class TrackBehaviourFactory {
         return new BlockBrakeTrackBehaviour(cartMovementFactory, blockBrakeEngageFrame, canSpawn);
     }
 
-    public TrackBehaviour getStationBehaviour(Frame blockBrakeEngageFrame, CoasterHandle coasterHandle, GateOwnerConfigSpec gateSpec){
+    public TrackBehaviour getStationBehaviour(Frame blockBrakeEngageFrame, CoasterHandle coasterHandle, SectionConfig sectionConfig, GateOwnerConfigSpec gateSpec){
         int stationNr = coasterHandle.getStationHandles().size() + 1;
         String stationName = coasterHandle.getRide().getIdentifier() + "_station_" + stationNr;
 
         DispatchLock trainInStationDispatchLock = new DispatchLock("Train present in station");
         DispatchLock blockSectionOccupiedDispatchLock = new DispatchLock("Next block section is occupied");
+        DispatchLock minimumWaitTimeDispatchLock = new DispatchLock("Waiting time has not passed yet");
 
         DispatchLockCollection dispatchLockCollection = new DispatchLockCollection();
         dispatchLockCollection.addDispatchLock(trainInStationDispatchLock);
         dispatchLockCollection.addDispatchLock(blockSectionOccupiedDispatchLock);
+        dispatchLockCollection.addDispatchLock(minimumWaitTimeDispatchLock);
 
         List<Gate> gates = new ArrayList<>();
         List<GateConfig> gateConfigs = gateSpec.getGateSpecConfigEntry().getGates();
@@ -69,7 +71,12 @@ public class TrackBehaviourFactory {
 
         TriggerContext triggerContext = new TriggerContext(dispatchLockCollection);
 
-        StationHandle stationHandle = new StationHandle(coasterHandle, stationName, triggerContext, gates);
+        StationSpecConfig stationSpecConfig = sectionConfig.getStationSectionSpec();
+        int minimumWaitingTime = stationSpecConfig.getMinimumWaitIntervalSeconds();
+        int maximumWaitingTime = stationSpecConfig.getMaximumWaitIntervalSeconds();
+        MinMaxWaitingTimer waitingTimer = new MinMaxWaitingTimer(minimumWaitingTime, maximumWaitingTime, minimumWaitTimeDispatchLock);
+
+        StationHandle stationHandle = new StationHandle(coasterHandle, stationName, triggerContext, gates, waitingTimer);
 
         return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, true, triggerContext,
                 stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock);
@@ -102,7 +109,7 @@ public class TrackBehaviourFactory {
             Frame upperRange = new SimpleFrame(sectionConfig.getUpperRange() + globalOffset);
 
             Frame blockBrakeEngageFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
-            return getStationBehaviour(blockBrakeEngageFrame, coasterHandle, gateSpec);
+            return getStationBehaviour(blockBrakeEngageFrame, coasterHandle, sectionConfig, gateSpec);
         }
 
         throw new RuntimeException("Unknown section type " + type);
