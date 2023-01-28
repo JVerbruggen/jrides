@@ -53,10 +53,10 @@ public class TrackBehaviourFactory {
 
         DispatchLockCollection dispatchLockCollection = new DispatchLockCollection("Main locks");
 
-        DispatchLock trainInStationDispatchLock = new SimpleDispatchLock(dispatchLockCollection, "No train present in station");
-        DispatchLock blockSectionOccupiedDispatchLock = new SimpleDispatchLock(dispatchLockCollection, "Next block section is occupied");
-        DispatchLock minimumWaitTimeDispatchLock = new SimpleDispatchLock(dispatchLockCollection, "Waiting time has not passed yet");
-        DispatchLock restraintLock = new SimpleDispatchLock(dispatchLockCollection, "Restraints are not closed");
+        DispatchLock trainInStationDispatchLock = new SimpleDispatchLock(dispatchLockCollection, "No train present in station", true);
+        DispatchLock blockSectionOccupiedDispatchLock = new SimpleDispatchLock(dispatchLockCollection, "Next block section is occupied", true);
+        DispatchLock minimumWaitTimeDispatchLock = new SimpleDispatchLock(dispatchLockCollection, "Waiting time has not passed yet", true);
+        DispatchLock restraintLock = new SimpleDispatchLock(dispatchLockCollection, "Restraints are not closed", true);
 
         List<Gate> gates = new ArrayList<>();
 //        List<GateConfig> gateConfigs = gateSpec.getGateSpecConfigEntry().getGates();
@@ -81,7 +81,7 @@ public class TrackBehaviourFactory {
         StationHandle stationHandle = new StationHandle(coasterHandle, stationName, triggerContext, gates, waitingTimer);
 
         return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, true, triggerContext,
-                stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock);
+                stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock, restraintLock);
     }
 
     public TrackBehaviour getTrackBehaviourFor(CoasterHandle coasterHandle, CoasterConfig coasterConfig, SectionConfig sectionConfig, int totalFrames){

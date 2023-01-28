@@ -24,6 +24,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
     private final PlayerManager playerManager;
     private final SmoothAnimation smoothAnimation;
     private final List<UUID> shiftPressedDebounce;
+    private final boolean canExitDuringRide;
 
     public VirtualEntityPacketListener(Plugin plugin, ListenerPriority listenerPriority, PacketType[] types,
                                        ViewportManager viewportManager, PlayerManager playerManager, SmoothAnimation smoothAnimation) {
@@ -32,6 +33,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         this.playerManager = playerManager;
         this.smoothAnimation = smoothAnimation;
         this.shiftPressedDebounce = new ArrayList<>();
+        this.canExitDuringRide = true;
     }
 
     @Override
@@ -99,15 +101,17 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         shiftPressedDebounce.add(uuid);
 
         if(seat.restraintsActive()){
-//            if(bukkitPlayer.hasPermission(Permissions.SEAT_RESTRAINT_OVERRIDE)){
-//                bukkitPlayer.sendMessage("You just exited the ride while the restraints were closed");
-//                seat.setPassenger(null);
-//                return;
-//            }
+            if(bukkitPlayer.hasPermission(Permissions.SEAT_RESTRAINT_OVERRIDE)){
+                boolean ejected = seat.ejectPassengerSoft();
 
-            boolean ejected = seat.ejectPassengerSoft();
+                if(ejected) bukkitPlayer.sendMessage("You just exited the ride while the restraints were closed");
+                return;
+            }else if(canExitDuringRide){
+                seat.ejectPassengerSoft();
+                return;
+            }
 
-//            bukkitPlayer.sendMessage("The restraints are closed");
+            bukkitPlayer.sendMessage("The restraints are closed");
             return;
         }
         seat.setPassenger(null);

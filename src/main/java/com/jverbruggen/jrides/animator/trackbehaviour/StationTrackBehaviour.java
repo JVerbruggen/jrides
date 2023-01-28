@@ -30,9 +30,11 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
     private final StationHandle stationHandle;
     private final DispatchLock trainInStationDispatchLock;
     private final DispatchLock blockSectionOccupiedDispatchLock;
+    private final DispatchLock restraintsLock;
 
     public StationTrackBehaviour(CoasterHandle coasterHandle, CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, TriggerContext triggerContext,
-                                 StationHandle stationHandle, DispatchLock trainInStationDispatchLock, DispatchLock blockSectionOccupiedDispatchLock) {
+                                 StationHandle stationHandle, DispatchLock trainInStationDispatchLock, DispatchLock blockSectionOccupiedDispatchLock,
+                                 DispatchLock restraintsLock) {
         super(cartMovementFactory);
         this.coasterHandle = coasterHandle;
         this.logger = JRidesPlugin.getLogger();
@@ -49,6 +51,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
 
         this.trainInStationDispatchLock = trainInStationDispatchLock;
         this.blockSectionOccupiedDispatchLock = blockSectionOccupiedDispatchLock;
+        this.restraintsLock = restraintsLock;
 
         trainExitedAtEnd();
     }
@@ -86,6 +89,8 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                         // TODO: on train arrive
                         coasterHandle.getRideController().onTrainArrive(train);
                         trainInStationDispatchLock.unlock();
+                        restraintsLock.setLocked(!train.getRestraintState());
+
                         goIntoSwitch = true;
                     }else
                         newSpeed.minus(deceleration, 0);

@@ -5,10 +5,10 @@ public class SimpleDispatchLock implements DispatchLock {
     private boolean locked;
     private String description;
 
-    public SimpleDispatchLock(DispatchLockCollection parentCollection, String description) {
+    public SimpleDispatchLock(DispatchLockCollection parentCollection, String description, boolean initLocked) {
         this.parentCollection = parentCollection;
         this.description = description;
-        this.locked = true;
+        this.locked = initLocked;
 
         this.parentCollection.addDispatchLock(this);
     }
