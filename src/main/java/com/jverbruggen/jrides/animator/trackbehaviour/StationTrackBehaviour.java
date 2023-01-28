@@ -33,6 +33,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
     private final DispatchLock trainInStationDispatchLock;
     private final DispatchLock blockSectionOccupiedDispatchLock;
     private final DispatchLock restraintsLock;
+    private boolean stopping;
     private boolean dispatching;
 
     public StationTrackBehaviour(CoasterHandle coasterHandle, CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, TriggerContext triggerContext,
@@ -52,6 +53,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
         this.triggerContext = triggerContext;
         this.stationHandle = stationHandle;
         this.dispatching = false;
+        this.stopping = false;
 
         this.trainInStationDispatchLock = trainInStationDispatchLock;
         this.blockSectionOccupiedDispatchLock = blockSectionOccupiedDispatchLock;
@@ -89,6 +91,11 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                     break;
                 case STOPPING:
                     if(newSpeed.is(0)) {
+                        if(!stopping) stationHandle.runEntryEffectTriggers(train);
+                        stopping = true;
+
+                        if(!stationHandle.entryEffectTriggersDone()) break;
+
                         phase = StationPhase.STATIONARY;
                         stationHandle.setStationaryTrain(train);
 
@@ -102,6 +109,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                         if(stationHandle.shouldEject())
                             train.ejectPassengers();
 
+                        stopping = false;
                         goIntoSwitch = true;
                     }else
                         newSpeed.minus(deceleration, 0);
@@ -117,15 +125,16 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                     if(dispatching || dispatchTrigger.isActive()){
                         trainInStationDispatchLock.lock();
                         dispatchTrigger.reset();
-                        if(!dispatching) stationHandle.runExitEffectTriggers(train);
 
+                        if(!dispatching) stationHandle.runExitEffectTriggers(train);
                         dispatching = true;
+
                         if(!stationHandle.exitEffectTriggersDone()) break;
-                        dispatching = false;
 
                         trainHandle.resetEffects();
 
                         phase = StationPhase.WAITING;
+                        dispatching = false;
                         goIntoSwitch = true;
                     }
                     break;
