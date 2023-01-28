@@ -41,6 +41,8 @@ public class TrainHandle {
 
         this.nextEffect = null;
         this.hasEffects = false;
+
+        this.train.setHandle(this);
     }
 
     public void resetEffects(){

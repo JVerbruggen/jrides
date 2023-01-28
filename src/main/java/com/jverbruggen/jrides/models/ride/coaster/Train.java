@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.models.ride.coaster;
 
+import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
@@ -40,6 +41,9 @@ public interface Train {
 
     void setStationaryAt(StationHandle stationaryAt);
     boolean isStationary();
+
+    void setHandle(TrainHandle trainHandle);
+    TrainHandle getHandle();
 
     static Vector3 calculateMassMiddlePoint(Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation){
         return Vector3.average(headLocation, middleLocation, middleLocation, tailLocation); // Middle is twice as heavy as sides

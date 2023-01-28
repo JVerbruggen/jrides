@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.models.ride.coaster;
 
+import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
@@ -24,6 +25,7 @@ public class SimpleTrain implements Train {
     private List<Player> passengers;
 
     private StationHandle onStation;
+    private TrainHandle trainHandle;
 
     public SimpleTrain(String name, List<Cart> carts, Frame headOfTrainFrame, Frame massMiddleFrame, Frame tailOfTrainFrame, Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation, Section section) {
         this.name = name;
@@ -41,6 +43,7 @@ public class SimpleTrain implements Train {
 
         this.passengers = new ArrayList<>();
         this.onStation = null;
+        this.trainHandle = null;
 
         getCarts().forEach(c -> c.setParentTrain(this));
     }
@@ -177,6 +180,16 @@ public class SimpleTrain implements Train {
     @Override
     public boolean isStationary() {
         return onStation != null;
+    }
+
+    @Override
+    public void setHandle(TrainHandle trainHandle) {
+        this.trainHandle = trainHandle;
+    }
+
+    @Override
+    public TrainHandle getHandle() {
+        return trainHandle;
     }
 
     @Override

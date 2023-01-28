@@ -1,5 +1,7 @@
 package com.jverbruggen.jrides.models.ride.coaster;
 
+import com.jverbruggen.jrides.event.player.PlayerSitDownEvent;
+import com.jverbruggen.jrides.event.player.PlayerStandUpEvent;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
@@ -36,6 +38,7 @@ public class CoasterSeat implements Seat {
             virtualArmorstand.setPassenger(null);
             passenger.clearSmoothAnimationRotation();
             parentCart.getParentTrain().onPlayerExit(passenger);
+            PlayerStandUpEvent.send(passenger, parentCart.getParentTrain().getHandle().getCoasterHandle().getRide());
         }
 
         passenger = player;
@@ -43,6 +46,7 @@ public class CoasterSeat implements Seat {
         if(player != null){
             player.setSeatedOn(this);
             parentCart.getParentTrain().onPlayerEnter(player);
+            PlayerSitDownEvent.send(passenger, parentCart.getParentTrain().getHandle().getCoasterHandle().getRide());
         }
     }
 

@@ -15,15 +15,11 @@ public class MultiArmorstandMovementEffectTrigger implements EffectTrigger {
 
     @Override
     public void execute(Train train) {
-        Bukkit.broadcastMessage("Platform normal direction");
-
         armorstandMovements.forEach(a -> a.execute(train));
     }
 
     @Override
     public void executeReversed(Train train) {
-        Bukkit.broadcastMessage("Platform reversed direction");
-
         armorstandMovements.forEach(a -> a.executeReversed(train));
     }
 

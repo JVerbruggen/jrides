@@ -25,9 +25,6 @@ public class TriggerConfigFactory {
             case MULTI_ARMORSTAND_MOVEMENT:
                 triggerConfig = MultiArmorstandMovementConfig.fromConfigurationSection(configurationSection);
                 break;
-//            case MOVING_FALLING_BLOCK_PLATFORM:
-//                triggerConfig = MovingFallingBlockPlatformConfig.fromConfigurationSection(configurationSection);
-//                break;
             default:
                 throw new RuntimeException("Trigger type " + type + " is not supported");
         }

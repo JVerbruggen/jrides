@@ -1,6 +1,8 @@
 package com.jverbruggen.jrides.state.viewport;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.event.player.PlayerSitDownEvent;
+import com.jverbruggen.jrides.event.player.PlayerStandUpEvent;
 import com.jverbruggen.jrides.event.ride.OnrideMusicTriggerEvent;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.state.player.PlayerManager;
