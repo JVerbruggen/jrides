@@ -11,6 +11,7 @@ public interface Seat {
     Player getPassenger();
     void setPassenger(Player player);
     boolean hasPassenger();
+    boolean ejectPassengerSoft();
 
     Vector3 getOffset();
     void setLocation(Vector3 location, Quaternion orientation);

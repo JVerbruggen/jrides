@@ -6,14 +6,14 @@ import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Seat;
-import org.bukkit.Bukkit;
+import com.jverbruggen.jrides.state.ride.SoftEjector;
+import org.bukkit.ChatColor;
 
 public class CoasterSeat implements Seat {
     private Player passenger;
     private final VirtualArmorstand virtualArmorstand;
     private final Vector3 offset;
     private boolean restraintLocked;
-
     private Cart parentCart;
 
     public CoasterSeat(VirtualArmorstand virtualArmorstand, Vector3 offset) {
@@ -52,6 +52,22 @@ public class CoasterSeat implements Seat {
     }
 
     @Override
+    public boolean ejectPassengerSoft() {
+        if(!hasPassenger()) return false;
+        Player passenger = getPassenger();
+
+        if(SoftEjector.hasTimer(passenger)){
+            SoftEjector.removeTimer(passenger);
+            setPassenger(null);
+            return true;
+        }else{
+            SoftEjector.addTimer(passenger);
+            passenger.sendMessage(ChatColor.YELLOW + "" + ChatColor.ITALIC + "Press shift again within 2 seconds to confirm exiting the ride");
+            return false;
+        }
+    }
+
+    @Override
     public Vector3 getOffset() {
         return offset;
     }
@@ -60,7 +76,9 @@ public class CoasterSeat implements Seat {
     public void setLocation(Vector3 location, Quaternion orientation) {
         virtualArmorstand.setLocation(location, orientation.getEntityYaw());
 
-        if(hasPassenger()) passenger.setSmoothAnimationRotation(orientation);
+        if(hasPassenger()){
+            passenger.setSmoothAnimationRotation(orientation);
+        }
     }
 
     @Override

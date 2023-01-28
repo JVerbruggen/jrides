@@ -10,6 +10,7 @@ import com.jverbruggen.jrides.serviceprovider.configuration.ServiceProviderConfi
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.player.PlayerManagerListener;
 import com.jverbruggen.jrides.state.ride.RideManager;
+import com.jverbruggen.jrides.state.ride.SoftEjector;
 import com.jverbruggen.jrides.state.viewport.ViewportListener;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Bukkit;
@@ -56,6 +57,8 @@ public class Main extends JavaPlugin {
         VirtualEntityPacketListener packetListener = ServiceProvider.GetSingleton(VirtualEntityPacketListener.class);
         ProtocolManager protocolManager = ServiceProvider.GetSingleton(ProtocolManager.class);
         protocolManager.addPacketListener(packetListener);
+
+        SoftEjector.startClock(this);
 
         Logger logger = ServiceProvider.GetSingleton(Logger.class);
         logger.warning("JRides enabled");

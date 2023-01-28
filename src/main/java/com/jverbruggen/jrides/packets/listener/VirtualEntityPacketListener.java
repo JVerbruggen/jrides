@@ -15,10 +15,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 public class VirtualEntityPacketListener extends PacketAdapter implements Listener {
     private final ViewportManager viewportManager;
     private final PlayerManager playerManager;
     private final SmoothAnimation smoothAnimation;
+    private final List<UUID> shiftPressedDebounce;
 
     public VirtualEntityPacketListener(Plugin plugin, ListenerPriority listenerPriority, PacketType[] types,
                                        ViewportManager viewportManager, PlayerManager playerManager, SmoothAnimation smoothAnimation) {
@@ -26,6 +31,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         this.viewportManager = viewportManager;
         this.playerManager = playerManager;
         this.smoothAnimation = smoothAnimation;
+        this.shiftPressedDebounce = new ArrayList<>();
     }
 
     @Override
@@ -52,7 +58,6 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         }
 
         if (!entity.allowsPassenger()) {
-            bukkitPlayer.sendMessage("Cannot sit");
             return;
         }
 
@@ -70,13 +75,15 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
 
     private void onSteerVehicle(PacketEvent event) {
         boolean dismountVehicle = event.getPacket().getBooleans().read(1);
-        if(!dismountVehicle) return;
+        if(!dismountVehicle){
+            if(shiftPressedDebounce.size() > 0) shiftPressedDebounce.remove(event.getPlayer().getUniqueId());
+            return;
+        }
 
         org.bukkit.entity.Player bukkitPlayer = event.getPlayer();
         Player player = playerManager.getPlayer(bukkitPlayer);
         Seat seat = player.getSeatedOn();
         if(seat == null){
-            bukkitPlayer.sendMessage("No seat registered");
             return;
         }
 
@@ -87,12 +94,21 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
             return; // Can only steer vehicle that one is in
         }
 
+        UUID uuid = bukkitPlayer.getUniqueId();
+        if(shiftPressedDebounce.contains(uuid)) return;
+        shiftPressedDebounce.add(uuid);
+
         if(seat.restraintsActive()){
-            if(!bukkitPlayer.hasPermission(Permissions.SEAT_RESTRAINT_OVERRIDE)){
-                bukkitPlayer.sendMessage("The restraints are closed");
-                return;
-            }
-            bukkitPlayer.sendMessage("You just exited the ride while the restraints were closed");
+//            if(bukkitPlayer.hasPermission(Permissions.SEAT_RESTRAINT_OVERRIDE)){
+//                bukkitPlayer.sendMessage("You just exited the ride while the restraints were closed");
+//                seat.setPassenger(null);
+//                return;
+//            }
+
+            boolean ejected = seat.ejectPassengerSoft();
+
+//            bukkitPlayer.sendMessage("The restraints are closed");
+            return;
         }
         seat.setPassenger(null);
     }
