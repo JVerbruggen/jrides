@@ -3,23 +3,23 @@ package com.jverbruggen.jrides.serviceprovider;
 import java.util.function.Function;
 
 public interface ServiceProvider {
-    <T> T getSingleton(Class<T> type);
+    <T> T _getSingleton(Class<T> type);
 
-    void register(Class type, Object instance);
-    <T extends ServiceProvider, R> void register(Class<R> type, Function<T, R> function);
+    void _register(Class type, Object instance);
+    <T extends ServiceProvider, R> void _register(Class<R> type, Function<T, R> function);
 
     ServiceProvider instance = new HashMapServiceProvider();
 
-    static <T> T GetSingleton(Class<T> type){
-        return instance.getSingleton(type);
+    static <T> T getSingleton(Class<T> type){
+        return instance._getSingleton(type);
     }
 
-    static <R> R Register(Class<R> type, R o){
-        instance.register(type, o);
+    static <R> R register(Class<R> type, R o){
+        instance._register(type, o);
         return o;
     }
 
-    static <T extends ServiceProvider, R> void RegisterWith(Class<R> type, Function<T, R> function){
-        instance.register(type, function);
+    static <T extends ServiceProvider, R> void registerWith(Class<R> type, Function<T, R> function){
+        instance._register(type, function);
     }
 }

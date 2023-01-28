@@ -93,4 +93,9 @@ public class SimpleCart implements Cart {
     public Train getParentTrain() {
         return parentTrain;
     }
+
+    @Override
+    public void ejectPassengers() {
+        seats.forEach(s -> s.setPassenger(null));
+    }
 }

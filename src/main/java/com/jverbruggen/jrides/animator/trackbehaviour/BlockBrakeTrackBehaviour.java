@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.animator.trackbehaviour;
 
+import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -34,8 +35,9 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
     }
 
     @Override
-    public TrainMovement move(Speed currentSpeed, Train train, Track track) {
+    public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Track track) {
         Speed newSpeed = currentSpeed.clone();
+        Train train = trainHandle.getTrain();
 
         boolean goIntoSwitch = true;
         while(goIntoSwitch){

@@ -2,7 +2,6 @@ package com.jverbruggen.jrides.packets;
 
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.entity.Player;
@@ -16,15 +15,14 @@ import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public class PacketSender_1_19_2 implements PacketSender {
     private final ProtocolManager protocolManager;
     private final JRidesLogger logger;
 
-    public PacketSender_1_19_2(ProtocolManager protocolManager) {
-        this.logger = ServiceProvider.GetSingleton(JRidesLogger.class);
-        this.protocolManager = protocolManager;
+    public PacketSender_1_19_2() {
+        this.logger = ServiceProvider.getSingleton(JRidesLogger.class);
+        this.protocolManager = ServiceProvider.getSingleton(ProtocolManager.class);
     }
 
     private void sendLog(String msg){

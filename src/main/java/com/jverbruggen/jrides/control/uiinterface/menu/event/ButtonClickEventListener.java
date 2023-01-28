@@ -25,9 +25,9 @@ public class ButtonClickEventListener implements Listener {
     private final PlayerManager playerManager;
 
     public ButtonClickEventListener() {
-        this.rideControlMenuFactory = ServiceProvider.GetSingleton(RideControlMenuFactory.class);
-        this.rideManager = ServiceProvider.GetSingleton(RideManager.class);
-        this.playerManager = ServiceProvider.GetSingleton(PlayerManager.class);
+        this.rideControlMenuFactory = ServiceProvider.getSingleton(RideControlMenuFactory.class);
+        this.rideManager = ServiceProvider.getSingleton(RideManager.class);
+        this.playerManager = ServiceProvider.getSingleton(PlayerManager.class);
     }
 
     @EventHandler

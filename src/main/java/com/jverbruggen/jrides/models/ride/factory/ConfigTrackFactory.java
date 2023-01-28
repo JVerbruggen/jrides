@@ -16,6 +16,7 @@ import com.jverbruggen.jrides.models.ride.coaster.Track;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionBuilder;
 import com.jverbruggen.jrides.models.ride.section.SimpleSection;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.Bukkit;
 
 import java.util.List;
@@ -24,9 +25,9 @@ public class ConfigTrackFactory implements TrackFactory {
     private final TrackBehaviourFactory trackBehaviourFactory;
     private final FrameFactory frameFactory;
 
-    public ConfigTrackFactory(TrackBehaviourFactory trackBehaviourFactory, FrameFactory frameFactory) {
-        this.trackBehaviourFactory = trackBehaviourFactory;
-        this.frameFactory = frameFactory;
+    public ConfigTrackFactory() {
+        this.trackBehaviourFactory = ServiceProvider.getSingleton(TrackBehaviourFactory.class);
+        this.frameFactory = ServiceProvider.getSingleton(FrameFactory.class);
     }
 
     @Override

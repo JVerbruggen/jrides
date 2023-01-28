@@ -35,7 +35,7 @@ public class VisualizeCommandExecutor implements JRidesCommandExecutor {
 
         String identifier = args[1];
 
-        CoasterHandle coasterHandle = ServiceProvider.GetSingleton(RideManager.class).getRideHandle(identifier);
+        CoasterHandle coasterHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
         ParticleTrackVisualisationTool tool = coasterHandle.getVisualisationTool();
 
         Player player = playerManager.getPlayer((org.bukkit.entity.Player) commandSender);

@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.animator.trackbehaviour;
 
+import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -14,12 +15,13 @@ public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements Tr
         super(cartMovementFactory);
     }
 
-    public TrainMovement move(Speed currentSpeed, Train train, Track track) {
+    public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Track track) {
         // --- Constants
         final double dragFactorPerTick = 0.9992;
         final double gravityAccelerationPerTick = 0.6;
 
         // --- New mass middle calculation
+        Train train = trainHandle.getTrain();
         Vector3 newHeadOfTrainLocation = track.getRawPositions().get(train.getHeadOfTrainFrame().getValue()).toVector3();
         Vector3 newMiddleLocation = track.getRawPositions().get(train.getMiddleOfTrainFrame().getValue()).toVector3();
         Vector3 newTailOfTrainLocation = track.getRawPositions().get(train.getTailOfTrainFrame().getValue()).toVector3();

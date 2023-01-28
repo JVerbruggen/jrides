@@ -37,4 +37,14 @@ public class SimpleFrame implements Frame {
     public String toString() {
         return "<Frame: " + getValue() + ">";
     }
+
+    public boolean equals(Frame other) {
+        return this.getValue() == other.getValue();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Frame) return equals((Frame) obj);
+        return super.equals(obj);
+    }
 }

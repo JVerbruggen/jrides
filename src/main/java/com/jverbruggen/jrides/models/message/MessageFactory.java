@@ -1,12 +1,13 @@
 package com.jverbruggen.jrides.models.message;
 
 import com.comphenix.protocol.ProtocolManager;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 
 public class MessageFactory {
     private ProtocolManager protocolManager;
 
-    public MessageFactory(ProtocolManager protocolManager) {
-        this.protocolManager = protocolManager;
+    public MessageFactory() {
+        this.protocolManager = ServiceProvider.getSingleton(ProtocolManager.class);
     }
 
     public Message getChatMessage(String contents){

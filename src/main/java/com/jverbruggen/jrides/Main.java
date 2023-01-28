@@ -31,22 +31,22 @@ public class Main extends JavaPlugin {
         ServiceProviderConfigurator.configure(this);
         JRidesPlugin.initOtherStatics();
 
-        PlayerManager playerManager = ServiceProvider.GetSingleton(PlayerManager.class);
+        PlayerManager playerManager = ServiceProvider.getSingleton(PlayerManager.class);
 
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new PlayerManagerListener(playerManager), this);
         pluginManager.registerEvents(new ViewportListener(
-                ServiceProvider.GetSingleton(ViewportManager.class),
+                ServiceProvider.getSingleton(ViewportManager.class),
                 playerManager), this);
         pluginManager.registerEvents(new ButtonClickEventListener(), this);
 
         getServer().getPluginCommand("jrides").setExecutor(
                 new MainCommandExecutor(playerManager));
 
-        RideManager rideManager = ServiceProvider.GetSingleton(RideManager.class);
+        RideManager rideManager = ServiceProvider.getSingleton(RideManager.class);
         rideManager.initAllRides(world);
 
-        ViewportManager viewportManager = ServiceProvider.GetSingleton(ViewportManager.class);
+        ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
         for(org.bukkit.entity.Player bukkitPlayer : world.getPlayers()){
             Player player = playerManager.getPlayer(bukkitPlayer);
@@ -54,24 +54,24 @@ public class Main extends JavaPlugin {
             viewportManager.updateVisuals(player);
         }
 
-        VirtualEntityPacketListener packetListener = ServiceProvider.GetSingleton(VirtualEntityPacketListener.class);
-        ProtocolManager protocolManager = ServiceProvider.GetSingleton(ProtocolManager.class);
+        VirtualEntityPacketListener packetListener = ServiceProvider.getSingleton(VirtualEntityPacketListener.class);
+        ProtocolManager protocolManager = ServiceProvider.getSingleton(ProtocolManager.class);
         protocolManager.addPacketListener(packetListener);
 
         SoftEjector.startClock(this);
 
-        Logger logger = ServiceProvider.GetSingleton(Logger.class);
+        Logger logger = ServiceProvider.getSingleton(Logger.class);
         logger.warning("JRides enabled");
     }
 
     @Override
     public void onDisable() {
-        PlayerManager playerManager = ServiceProvider.GetSingleton(PlayerManager.class);
-        ViewportManager viewportManager = ServiceProvider.GetSingleton(ViewportManager.class);
+        PlayerManager playerManager = ServiceProvider.getSingleton(PlayerManager.class);
+        ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
         viewportManager.despawnAll();
 
-        Logger logger = ServiceProvider.GetSingleton(Logger.class);
+        Logger logger = ServiceProvider.getSingleton(Logger.class);
         logger.warning("JRides disabled");
     }
 }

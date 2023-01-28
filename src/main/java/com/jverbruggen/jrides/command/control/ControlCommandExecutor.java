@@ -22,9 +22,9 @@ public class ControlCommandExecutor implements JRidesCommandExecutor {
     private final RideControlMenuFactory rideControlMenuFactory;
 
     public ControlCommandExecutor() {
-        rideManager = ServiceProvider.GetSingleton(RideManager.class);
-        playerManager = ServiceProvider.GetSingleton(PlayerManager.class);
-        rideControlMenuFactory = ServiceProvider.GetSingleton(RideControlMenuFactory.class);
+        rideManager = ServiceProvider.getSingleton(RideManager.class);
+        playerManager = ServiceProvider.getSingleton(PlayerManager.class);
+        rideControlMenuFactory = ServiceProvider.getSingleton(RideControlMenuFactory.class);
     }
 
     @Override

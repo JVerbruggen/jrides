@@ -180,6 +180,11 @@ public class SimpleTrain implements Train {
     }
 
     @Override
+    public void ejectPassengers() {
+        carts.forEach(Cart::ejectPassengers);
+    }
+
+    @Override
     public String toString() {
         return "<Train " + getName() + " at position " + getHeadOfTrainFrame() + ">";
     }

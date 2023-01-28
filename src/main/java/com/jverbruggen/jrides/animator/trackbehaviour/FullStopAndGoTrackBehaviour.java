@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.animator.trackbehaviour;
 
+import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.models.properties.Frame;
@@ -21,9 +22,10 @@ public class FullStopAndGoTrackBehaviour extends BaseTrackBehaviour implements T
     }
 
     @Override
-    public TrainMovement move(Speed currentSpeed, Train train, Track track) {
+    public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Track track) {
 //        Bukkit.broadcastMessage("Brake " + phase.toString());
         Speed newSpeed = currentSpeed.clone();
+        Train train = trainHandle.getTrain();
 
         final double deceleration = 0.5;
         final double acceleration = 0.1;

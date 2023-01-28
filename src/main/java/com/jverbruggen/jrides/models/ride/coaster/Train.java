@@ -44,4 +44,6 @@ public interface Train {
     static Vector3 calculateMassMiddlePoint(Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation){
         return Vector3.average(headLocation, middleLocation, middleLocation, tailLocation); // Middle is twice as heavy as sides
     }
+
+    void ejectPassengers();
 }

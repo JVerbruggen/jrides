@@ -46,12 +46,12 @@ public class SectionConfig {
         String type = configurationSection.getString("type");
 
         BlockSectionSpecConfig blockSectionSpec = null;
-        if(configurationSection.contains("blockSectionSpec"))
-            blockSectionSpec = BlockSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("blockSectionSpec"), sectionIdentifier);
+        if(configurationSection.contains("blockSection"))
+            blockSectionSpec = BlockSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("blockSection"), sectionIdentifier);
 
         StationSpecConfig stationSectionSpec = null;
-        if(configurationSection.contains("stationSectionSpec"))
-            stationSectionSpec = StationSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("stationSectionSpec"), sectionIdentifier);
+        if(configurationSection.contains("stationSection"))
+            stationSectionSpec = StationSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("stationSection"), sectionIdentifier);
 
         return new SectionConfig(lowerRange, upperRange, type, blockSectionSpec, stationSectionSpec);
     }

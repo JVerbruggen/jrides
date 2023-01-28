@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
+import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.Track;
@@ -26,8 +27,9 @@ public class CoasterHandle implements RideHandle {
     private ParticleTrackVisualisationTool visualisationTool;
     private List<StationHandle> stationHandles;
     private List<TrainHandle> trains;
+    private EffectTriggerCollection effectTriggerCollection;
 
-    public CoasterHandle(Ride ride, World world) {
+    public CoasterHandle(Ride ride, World world, EffectTriggerCollection effectTriggerCollection) {
         this.ride = ride;
         this.world = world;
         this.rideController = null;
@@ -36,6 +38,7 @@ public class CoasterHandle implements RideHandle {
         this.stationHandles = new ArrayList<>();
         this.visualisationTool = null;
         this.track = null;
+        this.effectTriggerCollection = effectTriggerCollection;
     }
 
     @Override
@@ -46,6 +49,7 @@ public class CoasterHandle implements RideHandle {
 
     public void setTrains(List<TrainHandle> trains) {
         this.trains = trains;
+        trains.forEach(t -> t.setCoasterHandle(this));
         this.visualisationTool = ParticleTrackVisualisationTool.fromTrack(world, track, 20);
     }
 
@@ -70,7 +74,7 @@ public class CoasterHandle implements RideHandle {
     @Override
     public void setRideController(RideController rideController) {
         this.rideController = rideController;
-        this.rideControlMenu = ServiceProvider.GetSingleton(RideControlMenuFactory.class)
+        this.rideControlMenu = ServiceProvider.getSingleton(RideControlMenuFactory.class)
                 .getControlMenu(rideController);
     }
 
@@ -107,4 +111,7 @@ public class CoasterHandle implements RideHandle {
         }
     }
 
+    public EffectTriggerCollection getEffectTriggerCollection() {
+        return effectTriggerCollection;
+    }
 }

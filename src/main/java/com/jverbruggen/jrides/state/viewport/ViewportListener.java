@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.state.viewport;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.event.ride.OnrideMusicTriggerEvent;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import org.bukkit.Bukkit;
@@ -9,7 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 
 public class ViewportListener implements Listener {
     private final int chunkSize = 8;
@@ -42,5 +42,10 @@ public class ViewportListener implements Listener {
                 JRidesPlugin.getBukkitPlugin(),
                 () -> viewportManager.updateVisuals(player),
                 5L);
+    }
+
+    @EventHandler
+    public void onTest(OnrideMusicTriggerEvent event){
+        Bukkit.broadcastMessage("Playing " + event.getMusicResource());
     }
 }

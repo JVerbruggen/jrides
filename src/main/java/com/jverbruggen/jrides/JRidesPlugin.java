@@ -29,9 +29,9 @@ public class JRidesPlugin {
     }
 
     public static void initOtherStatics(){
-        packetSender = ServiceProvider.GetSingleton(PacketSender.class);
-        smoothAnimation = ServiceProvider.GetSingleton(SmoothAnimation.class);
-        logger = ServiceProvider.GetSingleton(JRidesLogger.class);
+        packetSender = ServiceProvider.getSingleton(PacketSender.class);
+        smoothAnimation = ServiceProvider.getSingleton(SmoothAnimation.class);
+        logger = ServiceProvider.getSingleton(JRidesLogger.class);
 
 //        logger.enableLogType(LogType.SECTIONS);
     }

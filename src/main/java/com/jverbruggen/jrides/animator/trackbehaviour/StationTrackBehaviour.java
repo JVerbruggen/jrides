@@ -2,10 +2,12 @@ package com.jverbruggen.jrides.animator.trackbehaviour;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.CoasterHandle;
+import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
+import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
@@ -31,6 +33,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
     private final DispatchLock trainInStationDispatchLock;
     private final DispatchLock blockSectionOccupiedDispatchLock;
     private final DispatchLock restraintsLock;
+    private boolean dispatching;
 
     public StationTrackBehaviour(CoasterHandle coasterHandle, CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, TriggerContext triggerContext,
                                  StationHandle stationHandle, DispatchLock trainInStationDispatchLock, DispatchLock blockSectionOccupiedDispatchLock,
@@ -48,6 +51,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
         this.canSpawn = canSpawn;
         this.triggerContext = triggerContext;
         this.stationHandle = stationHandle;
+        this.dispatching = false;
 
         this.trainInStationDispatchLock = trainInStationDispatchLock;
         this.blockSectionOccupiedDispatchLock = blockSectionOccupiedDispatchLock;
@@ -57,8 +61,9 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
     }
 
     @Override
-    public TrainMovement move(Speed currentSpeed, Train train, Track track) {
+    public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Track track) {
         Speed newSpeed = currentSpeed.clone();
+        Train train = trainHandle.getTrain();
 
         if(handlingTrain != null && !train.equals(handlingTrain)){
             logger.warning("Train " + train.getName() + " has entered station, train is blocked");
@@ -86,10 +91,16 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                     if(newSpeed.is(0)) {
                         phase = StationPhase.STATIONARY;
                         stationHandle.setStationaryTrain(train);
-                        // TODO: on train arrive
+
+                        if(stationHandle.isExit())
+                            PlayerFinishedRideEvent.sendFinishedRideEvent(train.getPassengers(), coasterHandle.getRide());
+
                         coasterHandle.getRideController().onTrainArrive(train);
                         trainInStationDispatchLock.unlock();
                         restraintsLock.setLocked(!train.getRestraintState());
+
+                        if(stationHandle.shouldEject())
+                            train.ejectPassengers();
 
                         goIntoSwitch = true;
                     }else
@@ -103,10 +114,18 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                     }
 
                     DispatchTrigger dispatchTrigger = triggerContext.getDispatchTrigger();
-                    if(dispatchTrigger.isActive()){
-                        phase = StationPhase.WAITING;
-                        dispatchTrigger.reset();
+                    if(dispatching || dispatchTrigger.isActive()){
                         trainInStationDispatchLock.lock();
+                        dispatchTrigger.reset();
+                        if(!dispatching) stationHandle.runExitEffectTriggers(train);
+
+                        dispatching = true;
+                        if(!stationHandle.exitEffectTriggersDone()) break;
+                        dispatching = false;
+
+                        trainHandle.resetEffects();
+
+                        phase = StationPhase.WAITING;
                         goIntoSwitch = true;
                     }
                     break;

@@ -19,6 +19,7 @@ import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.*;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.exception.NoSpawnAvailableException;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -30,9 +31,9 @@ public class TrainFactory {
     private final ViewportManager viewportManager;
     private final SeatFactory seatFactory;
 
-    public TrainFactory(ViewportManager viewportManager, SeatFactory seatFactory) {
-        this.viewportManager = viewportManager;
-        this.seatFactory = seatFactory;
+    public TrainFactory() {
+        this.viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
+        this.seatFactory = ServiceProvider.getSingleton(SeatFactory.class);
     }
 
     public Train createEquallyDistributedTrain(Track track, CoasterConfig coasterConfig, String trainIdentifier){

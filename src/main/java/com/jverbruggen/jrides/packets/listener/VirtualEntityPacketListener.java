@@ -4,11 +4,13 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimation;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.permissions.Permissions;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.ChatColor;
@@ -26,12 +28,13 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
     private final List<UUID> shiftPressedDebounce;
     private final boolean canExitDuringRide;
 
-    public VirtualEntityPacketListener(Plugin plugin, ListenerPriority listenerPriority, PacketType[] types,
-                                       ViewportManager viewportManager, PlayerManager playerManager, SmoothAnimation smoothAnimation) {
-        super(plugin, listenerPriority, types);
-        this.viewportManager = viewportManager;
-        this.playerManager = playerManager;
-        this.smoothAnimation = smoothAnimation;
+    public VirtualEntityPacketListener() {
+        super(JRidesPlugin.getBukkitPlugin(), ListenerPriority.NORMAL,
+                PacketType.Play.Client.USE_ENTITY,
+                PacketType.Play.Client.STEER_VEHICLE);
+        this.viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
+        this.playerManager = ServiceProvider.getSingleton(PlayerManager.class);
+        this.smoothAnimation = ServiceProvider.getSingleton(SmoothAnimation.class);
         this.shiftPressedDebounce = new ArrayList<>();
         this.canExitDuringRide = true;
     }
@@ -104,7 +107,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
             if(bukkitPlayer.hasPermission(Permissions.SEAT_RESTRAINT_OVERRIDE)){
                 boolean ejected = seat.ejectPassengerSoft();
 
-                if(ejected) bukkitPlayer.sendMessage("You just exited the ride while the restraints were closed");
+                if(ejected) bukkitPlayer.sendMessage(ChatColor.GRAY + "You just exited the ride while the restraints were closed");
                 return;
             }else if(canExitDuringRide){
                 seat.ejectPassengerSoft();

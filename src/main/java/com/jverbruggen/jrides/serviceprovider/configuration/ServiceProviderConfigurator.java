@@ -1,15 +1,16 @@
 package com.jverbruggen.jrides.serviceprovider.configuration;
 
-import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.ListenerPriority;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimation;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothCoastersSmoothAnimation;
 import com.jverbruggen.jrides.animator.trackbehaviour.factory.TrackBehaviourFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.config.ConfigManager;
+import com.jverbruggen.jrides.config.trigger.TriggerConfigFactory;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
+import com.jverbruggen.jrides.effect.EffectTriggerFactory;
+import com.jverbruggen.jrides.effect.music.MusicEffectTriggerFactory;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.entity.EntityIdFactory;
 import com.jverbruggen.jrides.models.message.MessageFactory;
@@ -24,6 +25,8 @@ import com.jverbruggen.jrides.state.viewport.ViewportManagerFactory;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import me.m56738.smoothcoasters.api.SmoothCoastersAPI;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -36,32 +39,29 @@ public class ServiceProviderConfigurator {
 
         Logger logger = plugin.getLogger();
         logger.setLevel(Level.CONFIG);
-        ServiceProvider.Register(Logger.class, logger);
+        ServiceProvider.register(Logger.class, logger);
 
-        JRidesLogger jRidesLogger                   = ServiceProvider.Register(JRidesLogger.class, new JRidesLogger(logger, true));
-        FrameFactory frameFactory                   = ServiceProvider.Register(FrameFactory.class, new FrameFactory());
-        SmoothAnimation smoothAnimation             = ServiceProvider.Register(SmoothAnimation.class, new SmoothCoastersSmoothAnimation(new SmoothCoastersAPI(plugin)));
-        ConfigManager configManager                 = ServiceProvider.Register(ConfigManager.class, new ConfigManager(plugin));
-        ProtocolManager protocolManager             = ServiceProvider.Register(ProtocolManager.class, ProtocolLibrary.getProtocolManager());
-        PacketSender packetSender                   = ServiceProvider.Register(PacketSender.class, new PacketSender_1_19_2(protocolManager));
-        EntityIdFactory entityIdFactory             = ServiceProvider.Register(EntityIdFactory.class, new EntityIdFactory(1_500_000, Integer.MAX_VALUE));
-        MessageFactory messageFactory               = ServiceProvider.Register(MessageFactory.class, new MessageFactory(protocolManager));
-        PlayerManager playerManager                 = ServiceProvider.Register(PlayerManager.class, new PlayerManager());
-        ViewportManagerFactory viewportManagerFactory = new ViewportManagerFactory(packetSender, entityIdFactory);
-        ViewportManager viewportManager             = ServiceProvider.Register(ViewportManager.class, viewportManagerFactory.createViewportManager(true));
-        SeatFactory seatFactory                     = ServiceProvider.Register(SeatFactory.class, new SeatFactory(viewportManager));
-        TrainFactory trainFactory                   = ServiceProvider.Register(TrainFactory.class, new TrainFactory(viewportManager, seatFactory));
-        CartMovementFactory cartMovementFactory     = ServiceProvider.Register(CartMovementFactory.class, new CartMovementFactory());
-        TrackBehaviourFactory trackBehaviourFactory = ServiceProvider.Register(TrackBehaviourFactory.class, new TrackBehaviourFactory(cartMovementFactory, frameFactory));
-        TrackFactory trackFactory                   = ServiceProvider.Register(TrackFactory.class, new ConfigTrackFactory(trackBehaviourFactory, frameFactory));
-//        TrackFactory trackFactory                   = ServiceProvider.Register(HardcodedBMTrackFactory.class, new HardcodedBMTrackFactory(trackBehaviourFactory, frameFactory));
-        RideManager rideManager                     = ServiceProvider.Register(RideManager.class, new RideManager(logger, dataFolder, viewportManager, configManager, trainFactory, trackFactory, seatFactory));
-        RideControlMenuFactory rideControlMenuFact  = ServiceProvider.Register(RideControlMenuFactory.class, new RideControlMenuFactory());
-        VirtualEntityPacketListener packetListener  = ServiceProvider.Register(VirtualEntityPacketListener.class,
-                new VirtualEntityPacketListener(plugin, ListenerPriority.NORMAL, new PacketType[]{
-                            PacketType.Play.Client.USE_ENTITY,
-                            PacketType.Play.Client.STEER_VEHICLE
-                        },
-                        viewportManager, playerManager, smoothAnimation));
+        ServiceProvider.register(PluginManager.class, Bukkit.getPluginManager());
+        ServiceProvider.register(JRidesLogger.class, new JRidesLogger(logger, true));
+        ServiceProvider.register(FrameFactory.class, new FrameFactory());
+        ServiceProvider.register(SmoothAnimation.class, new SmoothCoastersSmoothAnimation(new SmoothCoastersAPI(plugin)));
+        ServiceProvider.register(TriggerConfigFactory.class, new TriggerConfigFactory());
+        ServiceProvider.register(MusicEffectTriggerFactory.class, new MusicEffectTriggerFactory());
+        ServiceProvider.register(ConfigManager.class, new ConfigManager(plugin));
+        ServiceProvider.register(EffectTriggerFactory.class, new EffectTriggerFactory());
+        ServiceProvider.register(ProtocolManager.class, ProtocolLibrary.getProtocolManager());
+        ServiceProvider.register(PacketSender.class, new PacketSender_1_19_2());
+        ServiceProvider.register(EntityIdFactory.class, new EntityIdFactory(1_500_000, Integer.MAX_VALUE));
+        ServiceProvider.register(MessageFactory.class, new MessageFactory());
+        ServiceProvider.register(PlayerManager.class, new PlayerManager());
+        ServiceProvider.register(ViewportManager.class, new ViewportManagerFactory().createViewportManager(true));
+        ServiceProvider.register(SeatFactory.class, new SeatFactory());
+        ServiceProvider.register(TrainFactory.class, new TrainFactory());
+        ServiceProvider.register(CartMovementFactory.class, new CartMovementFactory());
+        ServiceProvider.register(TrackBehaviourFactory.class, new TrackBehaviourFactory());
+        ServiceProvider.register(TrackFactory.class, new ConfigTrackFactory());
+        ServiceProvider.register(RideManager.class, new RideManager(dataFolder));
+        ServiceProvider.register(RideControlMenuFactory.class, new RideControlMenuFactory());
+        ServiceProvider.register(VirtualEntityPacketListener.class, new VirtualEntityPacketListener());
     }
 }

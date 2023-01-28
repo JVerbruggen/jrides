@@ -7,13 +7,13 @@ import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.ride.RideConfig;
 import com.jverbruggen.jrides.config.ride.RideConfigObject;
-import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.RideController;
-import com.jverbruggen.jrides.control.controlmode.AutomaticMode;
 import com.jverbruggen.jrides.control.controlmode.ControlMode;
 import com.jverbruggen.jrides.control.controlmode.SemiAutomaticMode;
+import com.jverbruggen.jrides.effect.EffectTriggerCollection;
+import com.jverbruggen.jrides.effect.EffectTriggerFactory;
+import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.identifier.RideIdentifier;
 import com.jverbruggen.jrides.models.ride.StationHandle;
@@ -22,6 +22,7 @@ import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrackFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrainFactory;
 import com.jverbruggen.jrides.models.ride.section.SectionProvider;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.World;
 
@@ -33,10 +34,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class RideManager {
-    private final Logger logger;
+    private final JRidesLogger logger;
     private List<CoasterHandle> coasterHandles;
     private final File dataFolder;
     private final ConfigManager configManager;
@@ -44,18 +44,19 @@ public class RideManager {
     private final TrainFactory trainFactory;
     private final TrackFactory trackFactory;
     private final SeatFactory seatFactory;
+    private final EffectTriggerFactory effectTriggerFactory;
     private List<String> rideIdentifiers;
 
-    public RideManager(Logger logger, File dataFolder, ViewportManager viewportManager, ConfigManager configManager,
-                       TrainFactory trainFactory, TrackFactory trackFactory, SeatFactory seatFactory) {
-        this.logger = logger;
+    public RideManager(File dataFolder) {
+        this.logger = ServiceProvider.getSingleton(JRidesLogger.class);
         this.coasterHandles = new ArrayList<>();
         this.dataFolder = dataFolder;
-        this.viewportManager = viewportManager;
-        this.configManager = configManager;
-        this.trainFactory = trainFactory;
-        this.trackFactory = trackFactory;
-        this.seatFactory = seatFactory;
+        this.viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
+        this.configManager = ServiceProvider.getSingleton(ConfigManager.class);
+        this.trainFactory = ServiceProvider.getSingleton(TrainFactory.class);
+        this.trackFactory = ServiceProvider.getSingleton(TrackFactory.class);
+        this.seatFactory = ServiceProvider.getSingleton(SeatFactory.class);
+        this.effectTriggerFactory = ServiceProvider.getSingleton(EffectTriggerFactory.class);
         this.rideIdentifiers = new ArrayList<>();
     }
 
@@ -110,13 +111,15 @@ public class RideManager {
         float offsetZ = offset.get(2);
 
         int startOffset = coasterConfig.getTrack().getOffset();
-        CoasterHandle coasterHandle = new CoasterHandle(ride, world);
+        EffectTriggerCollection effectTriggerCollection = effectTriggerFactory.getEffectTriggers(rideIdentifier, startOffset);
+        CoasterHandle coasterHandle = new CoasterHandle(ride, world, effectTriggerCollection);
 
         Track track = loadCoasterTrackFromConfig(coasterHandle, coasterConfig, offsetX, offsetY, offsetZ, startOffset);
         SectionProvider sectionProvider = new SectionProvider(track);
         coasterHandle.setTrack(track);
 
-        List<TrainHandle> trainHandles = createTrains(track, coasterConfig, sectionProvider, rideIdentifier, 2);
+        int trainCount = coasterConfig.getVehicles().getTrains();
+        List<TrainHandle> trainHandles = createTrains(track, coasterConfig, sectionProvider, rideIdentifier, trainCount);
         coasterHandle.setTrains(trainHandles);
 
         StationHandle stationHandle = coasterHandle.getStationHandle(null);
@@ -153,7 +156,8 @@ public class RideManager {
 
     private Track loadCoasterTrackFromConfig(CoasterHandle coasterHandle, CoasterConfig coasterConfig, float offsetX, float offsetY, float offsetZ, int startOffset){
         Ride ride = coasterHandle.getRide();
-        String configFileName = "coasters/" + ride.getIdentifier() + ".csv";
+        String rideIdentifier = ride.getIdentifier();
+        String configFileName = configManager.getFolder(rideIdentifier) + "/" + rideIdentifier + ".csv";
         File configFile = new File(dataFolder, configFileName);
         Path pathToConfigFile = configFile.toPath();
         List<NoLimitsExportPositionRecord> positions = new ArrayList<>();

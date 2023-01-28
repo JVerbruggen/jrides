@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.BlockSectionSpecConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.SectionConfig;
+import com.jverbruggen.jrides.config.coaster.objects.section.StationEffectsConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.StationSpecConfig;
 import com.jverbruggen.jrides.config.gates.GateOwnerConfigSpec;
 import com.jverbruggen.jrides.control.DispatchLock;
@@ -15,6 +16,8 @@ import com.jverbruggen.jrides.control.SimpleDispatchLock;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.RestraintTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
+import com.jverbruggen.jrides.effect.EffectTrigger;
+import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.FrameRange;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
@@ -22,6 +25,7 @@ import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.properties.factory.FrameFactory;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +33,12 @@ import java.util.List;
 public class TrackBehaviourFactory {
     private final CartMovementFactory cartMovementFactory;
     private final FrameFactory frameFactory;
+    private final EffectTriggerFactory effectTriggerFactory;
 
-    public TrackBehaviourFactory(CartMovementFactory cartMovementFactory, FrameFactory frameFactory) {
-        this.cartMovementFactory = cartMovementFactory;
-        this.frameFactory = frameFactory;
+    public TrackBehaviourFactory() {
+        this.cartMovementFactory = ServiceProvider.getSingleton(CartMovementFactory.class);
+        this.frameFactory = ServiceProvider.getSingleton(FrameFactory.class);
+        this.effectTriggerFactory = ServiceProvider.getSingleton(EffectTriggerFactory.class);
     }
 
     public TrackBehaviour getBrakeBehaviour(int stopTime){
@@ -49,7 +55,8 @@ public class TrackBehaviourFactory {
 
     public TrackBehaviour getStationBehaviour(Frame blockBrakeEngageFrame, CoasterHandle coasterHandle, SectionConfig sectionConfig, GateOwnerConfigSpec gateSpec){
         int stationNr = coasterHandle.getStationHandles().size() + 1;
-        String stationName = coasterHandle.getRide().getIdentifier() + "_station_" + stationNr;
+        String rideIdentifier = coasterHandle.getRide().getIdentifier();
+        String stationName = rideIdentifier + "_station_" + stationNr;
 
         DispatchLockCollection dispatchLockCollection = new DispatchLockCollection("Main locks");
 
@@ -76,9 +83,15 @@ public class TrackBehaviourFactory {
         StationSpecConfig stationSpecConfig = sectionConfig.getStationSectionSpec();
         int minimumWaitingTime = stationSpecConfig.getMinimumWaitIntervalSeconds();
         int maximumWaitingTime = stationSpecConfig.getMaximumWaitIntervalSeconds();
+
+        StationEffectsConfig stationEffectsConfig = stationSpecConfig.getStationEffectsConfig();
+        List<EffectTrigger> entryEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, stationEffectsConfig.getEntryEffects());
+        List<EffectTrigger> exitEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, stationEffectsConfig.getExitEffects());
+
         MinMaxWaitingTimer waitingTimer = new MinMaxWaitingTimer(minimumWaitingTime, maximumWaitingTime, minimumWaitTimeDispatchLock);
 
-        StationHandle stationHandle = new StationHandle(coasterHandle, stationName, triggerContext, gates, waitingTimer);
+        StationHandle stationHandle = new StationHandle(coasterHandle, stationName, triggerContext, gates, waitingTimer,
+                entryEffectTriggers, exitEffectTriggers);
 
         return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, true, triggerContext,
                 stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock, restraintLock);

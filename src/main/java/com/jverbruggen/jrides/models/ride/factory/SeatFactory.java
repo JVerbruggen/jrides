@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.CoasterSeat;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 
 import java.util.ArrayList;
@@ -14,8 +15,8 @@ import java.util.List;
 public class SeatFactory {
     private final ViewportManager viewportManager;
 
-    public SeatFactory(ViewportManager viewportManager) {
-        this.viewportManager = viewportManager;
+    public SeatFactory() {
+        this.viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
     }
 
     public List<Seat> createSeats(List<Vector3> seatOffsets, Vector3 cartLocation, Quaternion orientation){

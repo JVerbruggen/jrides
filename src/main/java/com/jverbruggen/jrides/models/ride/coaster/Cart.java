@@ -22,6 +22,7 @@ public interface Cart {
     boolean getRestraintState();
     void setParentTrain(Train train);
     Train getParentTrain();
+    void ejectPassengers();
 
     static Vector3 calculateLocation(Vector3 trackLocation, Vector3 cartOffset, Quaternion orientation){
         Matrix4x4 matrix = new Matrix4x4();
@@ -35,4 +36,5 @@ public interface Cart {
 
         return totalVector;
     }
+
 }
