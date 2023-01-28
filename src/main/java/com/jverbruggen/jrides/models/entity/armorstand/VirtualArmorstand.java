@@ -79,13 +79,11 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         }
     }
 
-    @Override
     public void setHostSeat(Seat seat) {
         partOfSeat = seat;
         allowsPassengerValue = true;
     }
 
-    @Override
     public Seat getHostSeat() {
         return partOfSeat;
     }
@@ -111,6 +109,16 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
                 this.passenger.setPositionWithoutTeleport(Vector3.add(newLocation, getHeadOffset()));
             }else passengerSyncCounter++;
         }
+    }
+
+    @Override
+    protected void moveEntity(Vector3 delta, double yawRotation) {
+        packetSender.moveVirtualArmorstand(this.getViewers(), entityId, delta, yawRotation);
+    }
+
+    @Override
+    protected void teleportEntity(Vector3 newLocation) {
+        packetSender.teleportVirtualEntity(this.getViewers(), entityId, newLocation);
     }
 
     public static final Vector3 getHeadOffset(){

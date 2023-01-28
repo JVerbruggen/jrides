@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovement;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.effect.EffectTrigger;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
+import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
 import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
@@ -28,7 +29,7 @@ public class TrainHandle {
     private CoasterHandle coasterHandle;
 
     private boolean hasEffects;
-    private EffectTrigger nextEffect;
+    private EffectTriggerHandle nextEffect;
 
     public TrainHandle(SectionProvider sectionProvider, Train train, Track track) {
         this.sectionProvider = sectionProvider;

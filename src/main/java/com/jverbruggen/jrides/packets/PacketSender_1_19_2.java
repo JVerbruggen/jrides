@@ -119,6 +119,12 @@ public class PacketSender_1_19_2 implements PacketSender {
         sendLog("spawnVirtualArmorstand");
     }
 
+    @Override
+    public void spawnVirtualFallingBlock(Player player, int entityId, Vector3 location) {
+        throw new RuntimeException("Not implemented");
+//        sendLog("spawnVirtualFallingBlock");
+    }
+
     public void moveVirtualArmorstand(Player player, int entityId, Vector3 location, double yawRotation){
         Vector vector = location.toBukkitVector();
 

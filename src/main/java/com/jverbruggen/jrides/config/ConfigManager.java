@@ -56,7 +56,7 @@ public class ConfigManager {
     public TriggerConfig getTriggerConfig(String rideIdentifier, String effectName){
         String fileName = getTriggerFolder(rideIdentifier) + "/" + effectName + ".yml";
         YamlConfiguration yamlConfiguration = getYamlConfiguration(fileName);
-        return triggerConfigFactory.fromConfigurationSection(yamlConfiguration.getConfigurationSection("trigger"));
+        return triggerConfigFactory.fromConfigurationSection(effectName, yamlConfiguration.getConfigurationSection("trigger"));
     }
 
     public CoasterConfig getCoasterConfig(String rideIdentifier){

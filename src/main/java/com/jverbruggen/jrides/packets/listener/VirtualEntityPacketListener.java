@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimation;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
+import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.permissions.Permissions;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -58,20 +59,21 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         org.bukkit.entity.Player bukkitPlayer = event.getPlayer();
 
         if (entity == null) {
-            bukkitPlayer.sendMessage("Not found");
             return;
         }
-
+        if(!(entity instanceof VirtualArmorstand)){
+            return;
+        }
         if (!entity.allowsPassenger()) {
             return;
         }
-
         if (bukkitPlayer.getLocation().toVector().distanceSquared(entity.getLocation().toBukkitVector()) > 49) {
             bukkitPlayer.sendMessage(ChatColor.DARK_RED + "Stand closer to the vehicle to enter");
             return;
         }
 
-        Seat seat = entity.getHostSeat();
+        VirtualArmorstand virtualArmorstand = (VirtualArmorstand) entity;
+        Seat seat = virtualArmorstand.getHostSeat();
         Player player = playerManager.getPlayer(bukkitPlayer);
 
         player.setSmoothAnimationSupport(smoothAnimation.isEnabled(player));

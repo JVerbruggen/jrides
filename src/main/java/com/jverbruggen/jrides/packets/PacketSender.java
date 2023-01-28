@@ -16,6 +16,7 @@ public interface PacketSender {
     void spawnVirtualArmorstand(List<Player> players, int entityId, Vector3 location, double yawRotation,
                                 ArmorstandRotations rotations, ArmorstandModels models, boolean invisible,
                                 int leashedToEntity);
+    void spawnVirtualFallingBlock(Player player, int entityId, Vector3 location);
     void sendRotationPacket(Player player, int entityId, int rotationType, Vector3 rotation);
     void sendRotationPacket(List<Player> players, int entityId, int rotationType, Vector3 rotation);
     void sendApplyModelPacket(Player player, int entityId, EnumWrappers.ItemSlot itemSlot, TrainModelItem model);

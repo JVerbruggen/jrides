@@ -132,6 +132,14 @@ public class Vector3 {
         return p.x == x && p.y == y && p.z == z;
     }
 
+    public static Vector3 multiply(Vector3 v, double multiplication){
+        return new Vector3(
+                v.x * multiplication,
+                v.y * multiplication,
+                v.z * multiplication
+        );
+    }
+
     /**
      * Returns the cross product of two vectors
      *

@@ -26,7 +26,4 @@ public interface VirtualEntity {
     void spawnForAll(List<Player> players);
     void despawnFor(Player player);
     void despawn();
-
-    void setHostSeat(Seat seat);
-    Seat getHostSeat();
 }

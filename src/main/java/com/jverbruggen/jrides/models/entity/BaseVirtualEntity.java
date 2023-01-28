@@ -63,15 +63,15 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
 
         if(distanceSquared > 49 || teleportSyncCoundownState > 60) {
             Vector3 blockLocation = newLocation.toBlock();
-            packetSender.teleportVirtualEntity(this.getViewers(), entityId, blockLocation);
+            teleportEntity(blockLocation);
             teleportSyncCoundownState = 0;
 
             Vector3 delta = Vector3.subtract(newLocation, newLocation.toBlock());
-            packetSender.moveVirtualArmorstand(this.getViewers(), entityId, delta, yawRotation);
+            moveEntity(delta, yawRotation);
         }
         else{
             Vector3 delta = Vector3.subtract(newLocation, this.location);
-            packetSender.moveVirtualArmorstand(this.getViewers(), entityId, delta, yawRotation);
+            moveEntity(delta, yawRotation);
         }
 
         this.location = newLocation;
@@ -79,6 +79,10 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
 
         teleportSyncCoundownState++;
     }
+
+    protected abstract void moveEntity(Vector3 delta, double yawRotation);
+
+    protected abstract void teleportEntity(Vector3 newLocation);
 
     @Override
     public String getUniqueIdentifier() {

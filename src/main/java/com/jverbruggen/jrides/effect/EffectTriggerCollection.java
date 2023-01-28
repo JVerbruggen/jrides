@@ -1,11 +1,13 @@
 package com.jverbruggen.jrides.effect;
 
+import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
+
 import java.util.List;
 
 public class EffectTriggerCollection {
-    private final List<EffectTrigger> effectTriggers;
+    private final List<EffectTriggerHandle> effectTriggers;
 
-    public EffectTriggerCollection(List<EffectTrigger> effectTriggers) {
+    public EffectTriggerCollection(List<EffectTriggerHandle> effectTriggers) {
         this.effectTriggers = effectTriggers;
     }
 
@@ -13,7 +15,7 @@ public class EffectTriggerCollection {
         return effectTriggers.size();
     }
 
-    public EffectTrigger first(){
+    public EffectTriggerHandle first(){
         return effectTriggers.get(0);
     }
 }

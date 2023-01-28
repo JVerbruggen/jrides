@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.models.ride;
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.effect.EffectTrigger;
+import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
@@ -17,10 +18,10 @@ public class StationHandle {
     private final List<Gate> entryGates;
     private CoasterHandle coasterHandle;
     private final MinMaxWaitingTimer waitingTimer;
-    private final List<EffectTrigger> entryEffectTriggers;
-    private final List<EffectTrigger> exitEffectTriggers;
+    private final List<EffectTriggerHandle> entryEffectTriggers;
+    private final List<EffectTriggerHandle> exitEffectTriggers;
 
-    public StationHandle(CoasterHandle coasterHandle, String name, TriggerContext triggerContext, List<Gate> entryGates, MinMaxWaitingTimer waitingTimer, List<EffectTrigger> entryEffectTriggers, List<EffectTrigger> exitEffectTriggers){
+    public StationHandle(CoasterHandle coasterHandle, String name, TriggerContext triggerContext, List<Gate> entryGates, MinMaxWaitingTimer waitingTimer, List<EffectTriggerHandle> entryEffectTriggers, List<EffectTriggerHandle> exitEffectTriggers){
         this.coasterHandle = coasterHandle;
         this.triggerContext = triggerContext;
         this.entryGates = entryGates;
@@ -67,11 +68,11 @@ public class StationHandle {
     }
 
     public boolean entryEffectTriggersDone(){
-        return entryEffectTriggers.stream().allMatch(EffectTrigger::finishedPlaying);
+        return entryEffectTriggers.stream().allMatch(t -> t.getEffectTrigger().finishedPlaying());
     }
 
     public boolean exitEffectTriggersDone(){
-        return exitEffectTriggers.stream().allMatch(EffectTrigger::finishedPlaying);
+        return exitEffectTriggers.stream().allMatch(t -> t.getEffectTrigger().finishedPlaying());
     }
 
     public void setStationaryTrain(Train train) {
