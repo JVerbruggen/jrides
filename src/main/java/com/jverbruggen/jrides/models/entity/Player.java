@@ -10,7 +10,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-public class Player {
+public class Player implements MessageReceiver {
     private org.bukkit.entity.Player bukkitPlayer;
     private Seat seatedOn;
     private SmoothAnimationSupport smoothAnimationSupport;
@@ -31,6 +31,7 @@ public class Player {
         return new Vector3(x, y, z);
     }
 
+    @Override
     public void sendMessage(String message){
         bukkitPlayer.sendMessage(message);
     }

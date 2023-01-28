@@ -8,19 +8,19 @@ import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.BlockSectionSpecConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.SectionConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.StationSpecConfig;
-import com.jverbruggen.jrides.config.gates.GateConfig;
 import com.jverbruggen.jrides.config.gates.GateOwnerConfigSpec;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
+import com.jverbruggen.jrides.control.SimpleDispatchLock;
+import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
+import com.jverbruggen.jrides.control.trigger.RestraintTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
-import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.FrameRange;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.properties.factory.FrameFactory;
 import com.jverbruggen.jrides.models.ride.StationHandle;
-import com.jverbruggen.jrides.models.ride.gate.FenceGate;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
 
 import java.util.ArrayList;
@@ -51,11 +51,12 @@ public class TrackBehaviourFactory {
         int stationNr = coasterHandle.getStationHandles().size() + 1;
         String stationName = coasterHandle.getRide().getIdentifier() + "_station_" + stationNr;
 
-        DispatchLockCollection dispatchLockCollection = new DispatchLockCollection();
+        DispatchLockCollection dispatchLockCollection = new DispatchLockCollection("Main locks");
 
-        DispatchLock trainInStationDispatchLock = new DispatchLock(dispatchLockCollection, "Train present in station");
-        DispatchLock blockSectionOccupiedDispatchLock = new DispatchLock(dispatchLockCollection, "Next block section is occupied");
-        DispatchLock minimumWaitTimeDispatchLock = new DispatchLock(dispatchLockCollection, "Waiting time has not passed yet");
+        DispatchLock trainInStationDispatchLock = new SimpleDispatchLock(dispatchLockCollection, "No train present in station");
+        DispatchLock blockSectionOccupiedDispatchLock = new SimpleDispatchLock(dispatchLockCollection, "Next block section is occupied");
+        DispatchLock minimumWaitTimeDispatchLock = new SimpleDispatchLock(dispatchLockCollection, "Waiting time has not passed yet");
+        DispatchLock restraintLock = new SimpleDispatchLock(dispatchLockCollection, "Restraints are not closed");
 
         List<Gate> gates = new ArrayList<>();
 //        List<GateConfig> gateConfigs = gateSpec.getGateSpecConfigEntry().getGates();
@@ -66,7 +67,11 @@ public class TrackBehaviourFactory {
 //            gates.add(new FenceGate(gateName, new DispatchLock(dispatchLockCollection, "Gate " + gateName + " is open"), location));
 //        }
 
-        TriggerContext triggerContext = new TriggerContext(dispatchLockCollection);
+        TriggerContext triggerContext = new TriggerContext(
+                dispatchLockCollection,
+                new DispatchTrigger(dispatchLockCollection),
+                null,
+                new RestraintTrigger(restraintLock));
 
         StationSpecConfig stationSpecConfig = sectionConfig.getStationSectionSpec();
         int minimumWaitingTime = stationSpecConfig.getMinimumWaitIntervalSeconds();

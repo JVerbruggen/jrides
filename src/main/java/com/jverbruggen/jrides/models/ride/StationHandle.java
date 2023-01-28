@@ -25,6 +25,7 @@ public class StationHandle {
         this.stationaryTrain = null;
         this.name = name;
 
+        triggerContext.getRestraintTrigger().setStationHandle(this);
         coasterHandle.addStationHandle(this);
     }
 

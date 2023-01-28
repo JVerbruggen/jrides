@@ -28,6 +28,7 @@ public interface Train {
     void removeCurrentSection(Section section);
 
     void setRestraintForAll(boolean locked);
+    boolean getRestraintState();
 
     void setCrashed(boolean crashed);
     boolean isCrashed();

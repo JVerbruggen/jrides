@@ -32,7 +32,7 @@ public class SimpleCart implements Cart {
 
     @Override
     public List<Seat> getSeats() {
-        return null;
+        return seats;
     }
 
     @Override
@@ -77,6 +77,11 @@ public class SimpleCart implements Cart {
         for(Seat seat : getSeats()){
             seat.setRestraint(locked);
         }
+    }
+
+    @Override
+    public boolean getRestraintState() {
+        return getSeats().stream().allMatch(Seat::restraintsActive);
     }
 
     @Override

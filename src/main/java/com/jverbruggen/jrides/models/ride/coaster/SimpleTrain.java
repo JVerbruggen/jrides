@@ -131,6 +131,11 @@ public class SimpleTrain implements Train {
     }
 
     @Override
+    public boolean getRestraintState() {
+        return carts.stream().allMatch(Cart::getRestraintState);
+    }
+
+    @Override
     public void setCrashed(boolean crashed) {
         this.crashed = crashed;
     }

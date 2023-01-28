@@ -91,6 +91,7 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     }
 
     public void setHeadpose(Vector3 rotation) {
+        rotations.setHead(rotation);
         packetSender.sendRotationPacket(viewers, entityId, ArmorstandRotationServerPacket.Type.HEAD, rotation);
     }
 
@@ -107,8 +108,12 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
             if(passengerSyncCounter > 20){
                 passengerSyncCounter = 0;
 
-                this.passenger.setPositionWithoutTeleport(newLocation);
+                this.passenger.setPositionWithoutTeleport(Vector3.add(newLocation, getHeadOffset()));
             }else passengerSyncCounter++;
         }
+    }
+
+    public static final Vector3 getHeadOffset(){
+        return new Vector3(0, 1.8, 0);
     }
 }

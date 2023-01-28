@@ -3,12 +3,12 @@ package com.jverbruggen.jrides.control.uiinterface.menu.event;
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlButton;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
+import com.jverbruggen.jrides.control.uiinterface.menu.SimpleRideControlButton;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import de.tr7zw.nbtapi.NBTItem;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -45,11 +45,11 @@ public class ButtonClickEventListener implements Listener {
 
         NBTItem nbtItem = new NBTItem(item);
 
-        if(!nbtItem.hasTag(RideControlButton.BUTTON_RIDE_IDENTIFIER_KEY)) return;
-        if(!nbtItem.hasTag(RideControlButton.BUTTON_UUID_KEY)) return;
+        if(!nbtItem.hasTag(SimpleRideControlButton.BUTTON_RIDE_IDENTIFIER_KEY)) return;
+        if(!nbtItem.hasTag(SimpleRideControlButton.BUTTON_UUID_KEY)) return;
 
-        String buttonRideIdentifierString = nbtItem.getString(RideControlButton.BUTTON_RIDE_IDENTIFIER_KEY);
-        String buttonUUIDString = nbtItem.getString(RideControlButton.BUTTON_UUID_KEY);
+        String buttonRideIdentifierString = nbtItem.getString(SimpleRideControlButton.BUTTON_RIDE_IDENTIFIER_KEY);
+        String buttonUUIDString = nbtItem.getString(SimpleRideControlButton.BUTTON_UUID_KEY);
         UUID buttonUUID = UUID.fromString(buttonUUIDString);
 
         RideHandle rideHandle = rideManager.getRideHandle(buttonRideIdentifierString);

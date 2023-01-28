@@ -6,7 +6,9 @@ import com.jverbruggen.jrides.control.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
+import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.SimpleMessageReceiver;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.ride.RideManager;
@@ -32,6 +34,8 @@ public class ControlCommandExecutor implements JRidesCommandExecutor {
             return true;
         }
 
+        MessageReceiver messageReceiver = SimpleMessageReceiver.from(commandSender);
+
         String identifier = args[1];
         String subCommand = args[2];
         CoasterHandle rideHandle = rideManager.getRideHandle(identifier);
@@ -40,13 +44,13 @@ public class ControlCommandExecutor implements JRidesCommandExecutor {
         if(subCommand.equalsIgnoreCase("dispatch")){
             DispatchTrigger dispatchTrigger = rideController.getTriggerContext().getDispatchTrigger();
 
-            boolean dispatched = dispatchTrigger.dispatch();
-            if(dispatched) commandSender.sendMessage("Ride " + identifier + " was dispatched!");
+            boolean dispatched = dispatchTrigger.execute(messageReceiver);
+            if(dispatched) messageReceiver.sendMessage("Ride " + identifier + " was dispatched!");
 
             return true;
         }else if(subCommand.equalsIgnoreCase("menu")){
             if(!(commandSender instanceof org.bukkit.entity.Player)){
-                commandSender.sendMessage("Player command only");
+                messageReceiver.sendMessage("Player command only");
                 return true;
             }
             Player player = playerManager.getPlayer((org.bukkit.entity.Player) commandSender);
@@ -56,14 +60,16 @@ public class ControlCommandExecutor implements JRidesCommandExecutor {
 
             rideControlMenuFactory.addOpenRideControlMenu(player, rideControlMenu, inventory);
             player.getBukkitPlayer().openInventory(inventory);
+            return true;
         }
 
-        commandSender.sendMessage(getHelpMessage());
+        messageReceiver.sendMessage(getHelpMessage());
         return true;
     }
 
     private String getHelpMessage(){
-        return "/jrides control <identifier> dispatch";
+        return "/jrides control <identifier> dispatch\n" +
+                "/jrides control <identifier> menu";
     }
 
     @Override

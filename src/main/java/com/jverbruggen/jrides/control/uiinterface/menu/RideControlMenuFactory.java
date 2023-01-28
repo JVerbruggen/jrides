@@ -1,20 +1,17 @@
 package com.jverbruggen.jrides.control.uiinterface.menu;
 
-import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.uiinterface.menu.action.RunnableButtonAction;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.models.entity.Player;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 public class RideControlMenuFactory {
     private final Map<Player, RideControlMenu> openRideControlMenus;
@@ -25,40 +22,49 @@ public class RideControlMenuFactory {
 
     public RideControlMenu getControlMenu(RideController rideController){
         DispatchLockCollection dispatchLockCollection = rideController.getTriggerContext().getDispatchLockCollection();
+        String rideIdentifier = rideController.getRide().getIdentifier();
 
-        RideControlButton dispatchButton = new RideControlButton(
-                rideController.getRide().getIdentifier(),
-                getItemStack(Material.RED_CONCRETE, ChatColor.RED + "Dispatch"),
-                0,
-                new RunnableButtonAction(p -> {
-                    DispatchTrigger dispatchTrigger = rideController.getTriggerContext().getDispatchTrigger();
-                    dispatchTrigger.dispatch();
-                    p.sendMessage(ChatColor.GOLD + "Dispatched");
-                }));
+        RideControlButton claimOperatingButton = new SimpleRideControlButton(
+                rideIdentifier,
+                getItemStack(Material.RED_CONCRETE_POWDER, ChatColor.RED + "Claim operating cabin"),
+                4, null);
 
-        RideControlButton problemList = new RideControlButton(
-                rideController.getRide().getIdentifier(),
+        RideDispatchButton dispatchButton = new RideDispatchButton(rideController, 10);
+
+        RideControlButton problemList = new SimpleRideControlButton(
+                rideIdentifier,
                 getItemStack(Material.ITEM_FRAME, ChatColor.RED + "Problems", dispatchLockCollection.getProblems()),
-                8,
-                new RunnableButtonAction(p -> {}));
+                11, null);
 
-        Consumer<DispatchLock> consumer = lock -> {
+        RideControlButton gateButton = new SimpleRideControlButton(
+                rideIdentifier,
+                getItemStack(Material.RED_CONCRETE, ChatColor.RED + "Gates"),
+                15, null);
+        RideControlButton restraintButton = new SimpleRideControlButton(
+                rideIdentifier,
+                getItemStack(Material.RED_CONCRETE, ChatColor.RED + "Restraints"),
+                16, new RunnableButtonAction(p -> rideController.getTriggerContext().getRestraintTrigger().execute(p)));
+
+        dispatchLockCollection.addEventListener(lock -> {
             List<String> problems = dispatchLockCollection.getProblems();
             if(problems.size() == 0){
                 problemList.setVisible(false);
+                dispatchButton.setReadyForDispatch();
             }else{
                 problemList.setVisible(true);
                 problemList.changeLore(problems);
+                dispatchButton.setNoDispatch();
             }
 
             problemList.sendUpdate();
-        };
-        dispatchLockCollection.addLockEventListener(consumer);
-        dispatchLockCollection.addUnlockEventListener(consumer);
+        });
 
         RideControlMenu rideControlMenu = new RideControlMenu(rideController);
+        rideControlMenu.addButton(claimOperatingButton);
         rideControlMenu.addButton(dispatchButton);
         rideControlMenu.addButton(problemList);
+        rideControlMenu.addButton(gateButton);
+        rideControlMenu.addButton(restraintButton);
 
         return rideControlMenu;
     }

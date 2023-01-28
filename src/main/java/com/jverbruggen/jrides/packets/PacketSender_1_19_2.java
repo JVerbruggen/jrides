@@ -2,12 +2,16 @@ package com.jverbruggen.jrides.packets;
 
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.logging.JRidesLogger;
+import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandRotations;
 import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandModels;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.packet.raw.*;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.util.Vector;
 
 import java.util.List;
@@ -16,15 +20,15 @@ import java.util.logging.Logger;
 
 public class PacketSender_1_19_2 implements PacketSender {
     private final ProtocolManager protocolManager;
-    private final Logger logger;
+    private final JRidesLogger logger;
 
-    public PacketSender_1_19_2(Logger logger, ProtocolManager protocolManager) {
-        this.logger = logger;
+    public PacketSender_1_19_2(ProtocolManager protocolManager) {
+        this.logger = ServiceProvider.GetSingleton(JRidesLogger.class);
         this.protocolManager = protocolManager;
     }
 
     private void sendLog(String msg){
-        logger.config(msg);
+        logger.info(LogType.PACKET, msg);
     }
 
     public void sendRotationPacket(Player player, int entityId, int rotationType, Vector3 rotation){

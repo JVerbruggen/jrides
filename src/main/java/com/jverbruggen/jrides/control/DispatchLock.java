@@ -1,35 +1,13 @@
 package com.jverbruggen.jrides.control;
 
-public class DispatchLock {
-    private DispatchLockCollection parentCollection;
-    private boolean locked;
-    private String description;
+public interface DispatchLock {
+    String getDescription();
 
-    public DispatchLock(DispatchLockCollection parentCollection, String description) {
-        this.parentCollection = parentCollection;
-        this.description = description;
-        this.locked = true;
+    void lock();
 
-        this.parentCollection.addDispatchLock(this);
-    }
+    void unlock();
 
-    public String getDescription() {
-        return description;
-    }
+    boolean isUnlocked();
 
-    public void lock(){
-        if(locked) return;
-        locked = true;
-        parentCollection.onLock(this);
-    }
-
-    public void unlock(){
-        if(!locked) return;
-        locked = false;
-        parentCollection.onUnlock(this);
-    }
-
-    public boolean isUnlocked(){
-        return !locked;
-    }
+    void setLocked(boolean locked);
 }

@@ -19,5 +19,5 @@ public class LogType {
 
     public static final LogType SECTIONS = new LogType("SECTIONS");
     public static final LogType CRASH = new LogType("CRASH");
-    public static final LogType DISPATCH = new LogType("DISPATCH");
+    public static final LogType PACKET = new LogType("PACKET");
 }

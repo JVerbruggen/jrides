@@ -8,18 +8,11 @@ public class TriggerContext {
     private final GateTrigger gateTrigger;
     private final RestraintTrigger restraintTrigger;
 
-    public TriggerContext(DispatchTrigger dispatchTrigger, GateTrigger gateTrigger, RestraintTrigger restraintTrigger) {
-        this.dispatchLockCollection = null;
+    public TriggerContext(DispatchLockCollection dispatchLockCollection, DispatchTrigger dispatchTrigger, GateTrigger gateTrigger, RestraintTrigger restraintTrigger) {
+        this.dispatchLockCollection = dispatchLockCollection;
         this.dispatchTrigger = dispatchTrigger;
         this.gateTrigger = gateTrigger;
         this.restraintTrigger = restraintTrigger;
-    }
-
-    public TriggerContext(DispatchLockCollection dispatchLockCollection) {
-        this.dispatchLockCollection = dispatchLockCollection;
-        this.dispatchTrigger = new DispatchTrigger(dispatchLockCollection);
-        this.gateTrigger = null;
-        this.restraintTrigger = null;
     }
 
     public DispatchTrigger getDispatchTrigger() {

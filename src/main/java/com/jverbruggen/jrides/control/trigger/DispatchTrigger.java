@@ -1,9 +1,10 @@
 package com.jverbruggen.jrides.control.trigger;
 
 import com.jverbruggen.jrides.control.DispatchLockCollection;
-import org.bukkit.Bukkit;
+import com.jverbruggen.jrides.models.entity.MessageReceiver;
+import org.bukkit.ChatColor;
 
-public class DispatchTrigger {
+public class DispatchTrigger implements Trigger {
     private boolean active;
     private DispatchLockCollection dispatchLockCollection;
 
@@ -12,10 +13,13 @@ public class DispatchTrigger {
         this.dispatchLockCollection = dispatchLockCollection;
     }
 
-    public boolean dispatch(){
+    @Override
+    public boolean execute(MessageReceiver messageReceiver){
         if(!dispatchLockCollection.allUnlocked()){
-            Bukkit.broadcastMessage("Cannot dispatch due to the following problems:");
-            dispatchLockCollection.getProblems().forEach(Bukkit::broadcastMessage);
+            if(messageReceiver != null){
+                messageReceiver.sendMessage(ChatColor.RED + "\nCannot dispatch due to the following problems:");
+                dispatchLockCollection.getProblems().forEach(messageReceiver::sendMessage);
+            }
             return false;
         }
         active = true;

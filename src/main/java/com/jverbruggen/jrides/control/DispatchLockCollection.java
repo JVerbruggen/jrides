@@ -7,12 +7,14 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class DispatchLockCollection {
+public class DispatchLockCollection implements DispatchLock {
+    private final String description;
     private final List<DispatchLock> locks;
     private final List<Consumer<DispatchLock>> lockEventListeners;
     private final List<Consumer<DispatchLock>> unlockEventListeners;
 
-    public DispatchLockCollection() {
+    public DispatchLockCollection(String description) {
+        this.description = description;
         this.locks = new ArrayList<>();
         this.lockEventListeners = new ArrayList<>();
         this.unlockEventListeners = new ArrayList<>();
@@ -24,6 +26,11 @@ public class DispatchLockCollection {
 
     public void addUnlockEventListener(Consumer<DispatchLock> unlockEventListener){
         unlockEventListeners.add(unlockEventListener);
+    }
+
+    public void addEventListener(Consumer<DispatchLock> eventListener){
+        addLockEventListener(eventListener);
+        addUnlockEventListener(eventListener);
     }
 
     public void addDispatchLock(DispatchLock dispatchLock){
@@ -57,5 +64,30 @@ public class DispatchLockCollection {
 
     public void onUnlock(DispatchLock lock){
         unlockEventListeners.forEach(l -> l.accept(lock));
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public void lock() {
+        locks.forEach(DispatchLock::lock);
+    }
+
+    @Override
+    public void unlock() {
+        locks.forEach(DispatchLock::unlock);
+    }
+
+    @Override
+    public boolean isUnlocked() {
+        return locks.stream().allMatch(DispatchLock::isUnlocked);
+    }
+
+    @Override
+    public void setLocked(boolean locked) {
+        locks.forEach(l -> l.setLocked(locked));
     }
 }

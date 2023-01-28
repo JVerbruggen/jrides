@@ -37,7 +37,7 @@ public class AutomaticMode extends BaseControlMode implements ControlMode{
         if(!waitingTimer.reachedPreferred()) return;
         if(!dispatchLockCollection.allUnlocked()) return;
 
-        dispatchDebounce.run(() -> triggerContext.getDispatchTrigger().dispatch());
+        dispatchDebounce.run(() -> triggerContext.getDispatchTrigger().execute(null));
     }
 
     @Override

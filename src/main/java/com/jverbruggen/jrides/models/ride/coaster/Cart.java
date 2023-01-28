@@ -19,6 +19,7 @@ public interface Cart {
     void setPosition(Vector3 position);
     void setPosition(CartMovement cartMovement);
     void setRestraint(boolean locked);
+    boolean getRestraintState();
     void setParentTrain(Train train);
     Train getParentTrain();
 

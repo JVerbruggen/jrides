@@ -92,6 +92,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
                 bukkitPlayer.sendMessage("The restraints are closed");
                 return;
             }
+            bukkitPlayer.sendMessage("You just exited the ride while the restraints were closed");
         }
         seat.setPassenger(null);
     }
