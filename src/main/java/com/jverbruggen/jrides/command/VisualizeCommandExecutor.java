@@ -2,20 +2,14 @@ package com.jverbruggen.jrides.command;
 
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
+import com.jverbruggen.jrides.language.StringReplacementBuilder;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-public class VisualizeCommandExecutor implements JRidesCommandExecutor {
-    private final PlayerManager playerManager;
-
-    public VisualizeCommandExecutor(PlayerManager playerManager) {
-        this.playerManager = playerManager;
-    }
-
+public class VisualizeCommandExecutor extends BaseCommandExecutor {
     @Override
     public String getGenericHelpMessage() {
         return "/jrides visualize <identifier>";
@@ -24,12 +18,12 @@ public class VisualizeCommandExecutor implements JRidesCommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String arg, String[] args) {
         if(!(commandSender instanceof org.bukkit.entity.Player)){
-            commandSender.sendMessage("Only for players");
+            languageFile.sendMessage(commandSender, languageFile.errorPlayerCommandOnlyMessage);
             return true;
         }
 
         if(args.length != 2){
-            commandSender.sendMessage("/jrides visualize <identifier>");
+            languageFile.sendMessage(commandSender, getGenericHelpMessage());
             return true;
         }
 
@@ -38,13 +32,18 @@ public class VisualizeCommandExecutor implements JRidesCommandExecutor {
         CoasterHandle coasterHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
         ParticleTrackVisualisationTool tool = coasterHandle.getVisualisationTool();
 
+        String actualIdentifier = coasterHandle.getRide().getIdentifier();
         Player player = playerManager.getPlayer((org.bukkit.entity.Player) commandSender);
         if(tool.isViewer(player)){
             tool.removeViewer(player);
-            player.sendMessage("Removed from viewing ride");
+
+            languageFile.sendMessage(player, languageFile.commandVisualizeRemovedViewer,
+                    new StringReplacementBuilder().add("RIDE_IDENTIFIER", actualIdentifier).collect());
         }else{
             tool.addViewer(player);
-            player.sendMessage("Added to viewing ride");
+
+            languageFile.sendMessage(player, languageFile.commandVisualizeAddedViewer,
+                    new StringReplacementBuilder().add("RIDE_IDENTIFIER", actualIdentifier).collect());
         }
 
         return true;

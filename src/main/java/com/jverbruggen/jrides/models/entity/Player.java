@@ -2,9 +2,12 @@ package com.jverbruggen.jrides.models.entity;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimationSupport;
+import com.jverbruggen.jrides.language.FeedbackType;
+import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Seat;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -14,11 +17,13 @@ public class Player implements MessageReceiver {
     private org.bukkit.entity.Player bukkitPlayer;
     private Seat seatedOn;
     private SmoothAnimationSupport smoothAnimationSupport;
+    private LanguageFile languageFile;
 
     public Player(org.bukkit.entity.Player bukkitPlayer) {
         this.bukkitPlayer = bukkitPlayer;
         this.seatedOn = null;
         this.smoothAnimationSupport = SmoothAnimationSupport.UNKNOWN;
+        this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
     }
 
     public Vector3 getLocation(){
@@ -33,7 +38,7 @@ public class Player implements MessageReceiver {
 
     @Override
     public void sendMessage(String message){
-        bukkitPlayer.sendMessage(message);
+        languageFile.sendMessage(bukkitPlayer, message);
     }
 
     public void sendActionbarMessage(String message){
@@ -72,7 +77,9 @@ public class Player implements MessageReceiver {
         if(this.smoothAnimationSupport != SmoothAnimationSupport.UNKNOWN) return; // Cannot reset smooth animation without rejoin
 
         this.smoothAnimationSupport = (smoothAnimationSupport ? SmoothAnimationSupport.AVAILABLE : SmoothAnimationSupport.UNAVAILABLE);
-        Bukkit.broadcastMessage("Smoothcoasters " + (smoothAnimationSupport ? "enabled" : "disabled") + " for player " + this.bukkitPlayer.getName());
+        if(!smoothAnimationSupport){
+            languageFile.sendMessage(bukkitPlayer, languageFile.errorSmoothCoastersDisabled, FeedbackType.WARNING);
+        }
     }
 
     public void clearSmoothAnimationRotation(){

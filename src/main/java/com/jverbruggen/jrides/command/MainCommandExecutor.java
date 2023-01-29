@@ -1,25 +1,22 @@
 package com.jverbruggen.jrides.command;
 
 import com.jverbruggen.jrides.command.control.ControlCommandExecutor;
-import com.jverbruggen.jrides.state.player.PlayerManager;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class MainCommandExecutor implements CommandExecutor {
+public class MainCommandExecutor extends BaseCommandExecutor {
     private VisualizeCommandExecutor visualizeCommandExecutor;
     private ControlCommandExecutor controlCommandExecutor;
 
-    public MainCommandExecutor(PlayerManager playerManager) {
-        this.visualizeCommandExecutor = new VisualizeCommandExecutor(playerManager);
+    public MainCommandExecutor() {
+        this.visualizeCommandExecutor = new VisualizeCommandExecutor();
         this.controlCommandExecutor = new ControlCommandExecutor();
     }
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if(args.length == 0){
-            commandSender.sendMessage(visualizeCommandExecutor.getGenericHelpMessage());
-            commandSender.sendMessage(controlCommandExecutor.getGenericHelpMessage());
+            languageFile.sendMultilineMessage(commandSender, getGenericHelpMessage());
             return true;
         }
 
@@ -31,8 +28,14 @@ public class MainCommandExecutor implements CommandExecutor {
                 return controlCommandExecutor.onCommand(commandSender, command, s, args);
         }
 
-        commandSender.sendMessage("Unknown jrides command. Type /jrides for help");
+        languageFile.sendMessage(commandSender, languageFile.errorUnknownCommandMessage);
 
         return false;
+    }
+
+    @Override
+    public String getGenericHelpMessage() {
+        return visualizeCommandExecutor.getGenericHelpMessage() + "\n" +
+                controlCommandExecutor.getGenericHelpMessage();
     }
 }

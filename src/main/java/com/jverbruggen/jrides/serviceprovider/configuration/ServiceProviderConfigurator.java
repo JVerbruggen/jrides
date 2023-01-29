@@ -12,6 +12,7 @@ import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.effect.music.MusicEffectTriggerFactory;
 import com.jverbruggen.jrides.effect.platform.MultiArmorstandMovementEffectTriggerFactory;
+import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.entity.EntityIdFactory;
 import com.jverbruggen.jrides.models.message.MessageFactory;
@@ -43,6 +44,7 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(Logger.class, logger);
 
         ServiceProvider.register(PluginManager.class, Bukkit.getPluginManager());
+        ServiceProvider.register(LanguageFile.class, new LanguageFile());
         ServiceProvider.register(ProtocolManager.class, ProtocolLibrary.getProtocolManager());
         ServiceProvider.register(EntityIdFactory.class, new EntityIdFactory(1_500_000, Integer.MAX_VALUE));
         ServiceProvider.register(JRidesLogger.class, new JRidesLogger(logger, true));

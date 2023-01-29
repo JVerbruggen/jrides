@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides;
 
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimation;
+import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -11,6 +12,7 @@ public class JRidesPlugin {
     private static JavaPlugin plugin;
     private static PacketSender packetSender;
     private static SmoothAnimation smoothAnimation;
+    private static LanguageFile languageFile;
 
     public static ServiceProvider getServiceProvider(){
         return ServiceProvider.instance;
@@ -32,6 +34,7 @@ public class JRidesPlugin {
         packetSender = ServiceProvider.getSingleton(PacketSender.class);
         smoothAnimation = ServiceProvider.getSingleton(SmoothAnimation.class);
         logger = ServiceProvider.getSingleton(JRidesLogger.class);
+        languageFile = ServiceProvider.getSingleton(LanguageFile.class);
 
 //        logger.enableLogType(LogType.SECTIONS);
     }
@@ -46,5 +49,9 @@ public class JRidesPlugin {
 
     public static JRidesLogger getLogger() {
         return logger;
+    }
+
+    public static LanguageFile getLanguageFile() {
+        return languageFile;
     }
 }
