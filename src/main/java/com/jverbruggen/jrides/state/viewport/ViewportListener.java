@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.event.player.PlayerSitDownEvent;
 import com.jverbruggen.jrides.event.player.PlayerStandUpEvent;
 import com.jverbruggen.jrides.event.ride.OnrideMusicTriggerEvent;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -12,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class ViewportListener implements Listener {
     private final int chunkSize = 8;
@@ -25,15 +27,16 @@ public class ViewportListener implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event){
-        Location fromLocation = event.getFrom();
-        Location toLocation = event.getTo();
-        boolean xModRotated = (int)(toLocation.getX() / chunkSize) != (int)(fromLocation.getX() / chunkSize);
-        boolean zModRotated = (int)(toLocation.getZ() / chunkSize) != (int)(fromLocation.getZ() / chunkSize);
-
-        if(xModRotated || zModRotated){
+        if(Vector3.chunkRotated(event.getFrom(), event.getTo(), 8)){
             Player player = playerManager.getPlayer(event.getPlayer());
             viewportManager.updateVisuals(player);
         }
+    }
+
+    @EventHandler
+    public void onTeleport(PlayerTeleportEvent event){
+        Player player = playerManager.getPlayer(event.getPlayer());
+        viewportManager.updateVisuals(player);
     }
 
     @EventHandler

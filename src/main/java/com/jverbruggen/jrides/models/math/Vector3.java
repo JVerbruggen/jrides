@@ -242,4 +242,20 @@ public class Vector3 {
         return new Vector3(doubleList.get(0), doubleList.get(1), doubleList.get(2));
     }
 
+    public static boolean chunkRotated(Vector3 v1, Vector3 v2, int chunkSize){
+        boolean xModRotated = (int)(v2.getX() / chunkSize) != (int)(v1.getX() / chunkSize);
+        boolean yModRotated = (int)(v2.getY() / chunkSize) != (int)(v1.getY() / chunkSize);
+        boolean zModRotated = (int)(v2.getZ() / chunkSize) != (int)(v1.getZ() / chunkSize);
+
+        return xModRotated || yModRotated || zModRotated;
+    }
+
+    public static boolean chunkRotated(Location l1, Location l2, int chunkSize){
+        boolean xModRotated = (int)(l2.getX() / chunkSize) != (int)(l1.getX() / chunkSize);
+        boolean yModRotated = (int)(l2.getY() / chunkSize) != (int)(l1.getY() / chunkSize);
+        boolean zModRotated = (int)(l2.getZ() / chunkSize) != (int)(l1.getZ() / chunkSize);
+
+        return xModRotated || yModRotated || zModRotated;
+    }
+
 }

@@ -6,8 +6,8 @@ public class BoxViewport extends VirtualEntityViewport implements Viewport {
     protected Vector3 lowerCorner;
     protected Vector3 upperCorner;
 
-    public BoxViewport(Vector3 lowerCorner, Vector3 upperCorner) {
-        super();
+    public BoxViewport(int maxRenderDistance, Vector3 lowerCorner, Vector3 upperCorner) {
+        super(maxRenderDistance);
         this.lowerCorner = lowerCorner;
         this.upperCorner = upperCorner;
     }

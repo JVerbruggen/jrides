@@ -15,4 +15,6 @@ public interface ViewportManager {
     VirtualArmorstand spawnVirtualArmorstand(Vector3 location, double yawRotation, TrainModelItem headModel);
     void despawnAll();
     VirtualEntity getEntity(int entityId);
+    int getRenderChunkSize();
+    int getRenderDistance();
 }

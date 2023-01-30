@@ -10,12 +10,12 @@ import java.util.List;
 public abstract class VirtualEntityViewport implements Viewport{
     protected List<VirtualEntity> virtualEntities;
     protected List<Player> viewers;
-    private final int maxRenderDistance = 140;
+    private final int maxRenderDistance;
 
-
-    public VirtualEntityViewport() {
+    public VirtualEntityViewport(int maxRenderDistance) {
         this.virtualEntities = new ArrayList<>();
         this.viewers = new ArrayList<>();
+        this.maxRenderDistance = maxRenderDistance;
     }
 
     @Override

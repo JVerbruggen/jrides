@@ -15,14 +15,20 @@ public class GlobalViewportManager implements ViewportManager {
     private final GlobalViewport globalViewport;
     private final PacketSender packetSender;
     private final EntityIdFactory entityIdFactory;
-
     private final HashMap<Integer, VirtualEntity> entities;
 
-    public GlobalViewportManager(GlobalViewport globalViewport, PacketSender packetSender, EntityIdFactory entityIdFactory) {
+    private final int renderDistance;
+    private final int renderChunkSize;
+
+    public GlobalViewportManager(GlobalViewport globalViewport, PacketSender packetSender, EntityIdFactory entityIdFactory,
+                                 int renderDistance, int renderChunkSize) {
         this.globalViewport = globalViewport;
         this.packetSender = packetSender;
         this.entityIdFactory = entityIdFactory;
         this.entities = new HashMap<>();
+
+        this.renderDistance = renderDistance;
+        this.renderChunkSize = renderChunkSize;
     }
 
     private void addEntity(VirtualEntity entity){
@@ -35,6 +41,16 @@ public class GlobalViewportManager implements ViewportManager {
 
     public VirtualEntity getEntity(int entityId){
         return entities.get(entityId);
+    }
+
+    @Override
+    public int getRenderChunkSize() {
+        return renderChunkSize;
+    }
+
+    @Override
+    public int getRenderDistance() {
+        return renderDistance;
     }
 
     @Override

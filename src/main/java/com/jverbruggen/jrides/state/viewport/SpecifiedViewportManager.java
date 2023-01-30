@@ -12,9 +12,13 @@ import java.util.List;
 
 public class SpecifiedViewportManager implements ViewportManager{
     private List<Viewport> viewports;
+    private final int renderDistance;
+    private final int renderChunkSize;
 
-    public SpecifiedViewportManager() {
-        viewports = new ArrayList<>();
+    public SpecifiedViewportManager(int renderDistance, int renderChunkSize) {
+        this.viewports = new ArrayList<>();
+        this.renderDistance = renderDistance;
+        this.renderChunkSize = renderChunkSize;
     }
 
     public void updateVisuals(Player player){
@@ -63,5 +67,15 @@ public class SpecifiedViewportManager implements ViewportManager{
     @Override
     public VirtualEntity getEntity(int entityId) {
         return null;
+    }
+
+    @Override
+    public int getRenderChunkSize() {
+        return renderChunkSize;
+    }
+
+    @Override
+    public int getRenderDistance() {
+        return renderDistance;
     }
 }

@@ -6,8 +6,8 @@ public class RangeViewport extends VirtualEntityViewport implements Viewport {
     private Vector3 middle;
     private double range;
 
-    public RangeViewport(Vector3 middle, double range) {
-        super();
+    public RangeViewport(int maxRenderDistance, Vector3 middle, double range) {
+        super(maxRenderDistance);
         this.middle = middle;
         this.range = range;
     }

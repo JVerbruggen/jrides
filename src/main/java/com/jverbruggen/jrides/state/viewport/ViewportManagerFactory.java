@@ -15,10 +15,13 @@ public class ViewportManagerFactory {
     }
 
     public ViewportManager createViewportManager(boolean globalMode){
+        int renderDistance = 100;
+        int renderChunkSize = 8;
+
         if(globalMode){
-            return new GlobalViewportManager(new GlobalViewport(), packetSender, entityIdFactory);
+            return new GlobalViewportManager(new GlobalViewport(renderDistance), packetSender, entityIdFactory, renderDistance, renderChunkSize);
         }else{
-            return new SpecifiedViewportManager();
+            return new SpecifiedViewportManager(renderDistance, renderChunkSize);
         }
     }
 }

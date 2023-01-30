@@ -58,12 +58,9 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
 
     @Override
     public void setLocation(Vector3 newLocation, double yawRotation) {
-        final int chunkSize = 8;
-        Vector3 fromLocation = location;
-        Vector3 toLocation = newLocation;
-        boolean xModRotated = (int)(toLocation.getX() / chunkSize) != (int)(fromLocation.getX() / chunkSize);
-        boolean zModRotated = (int)(toLocation.getZ() / chunkSize) != (int)(fromLocation.getZ() / chunkSize);
-        if(xModRotated || zModRotated){
+        final int chunkSize = viewportManager.getRenderChunkSize();
+
+        if(Vector3.chunkRotated(location, newLocation, chunkSize)){
             viewportManager.updateForEntity(this);
         }
 
