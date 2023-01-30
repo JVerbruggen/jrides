@@ -46,8 +46,4 @@ public class ViewportListener implements Listener {
                 5L);
     }
 
-    @EventHandler
-    public void onTest(OnrideMusicTriggerEvent event){
-        Bukkit.broadcastMessage("Playing " + event.getMusicResource());
-    }
 }

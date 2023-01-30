@@ -3,7 +3,15 @@ package com.jverbruggen.jrides.control.uiinterface.menu;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
-import com.jverbruggen.jrides.control.uiinterface.menu.action.RunnableButtonAction;
+import com.jverbruggen.jrides.control.trigger.StationTrigger;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.LockResembledControlButton;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.SimpleRideControlButton;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.action.RunnableButtonAction;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.action.RunnableButtonWithContextAction;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.common.BlinkingButtonVisual;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.common.CabinOccupationVisual;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.common.StaticButtonVisual;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.models.entity.Player;
 import org.bukkit.ChatColor;
@@ -24,36 +32,63 @@ public class RideControlMenuFactory {
         DispatchLockCollection dispatchLockCollection = rideController.getTriggerContext().getDispatchLockCollection();
         String rideIdentifier = rideController.getRide().getIdentifier();
 
+        DispatchTrigger dispatchTrigger = rideController.getTriggerContext().getDispatchTrigger();
+        StationTrigger gateTrigger = rideController.getTriggerContext().getGateTrigger();
+        StationTrigger restraintTrigger = rideController.getTriggerContext().getRestraintTrigger();
+
         RideControlButton claimOperatingButton = new SimpleRideControlButton(
                 rideIdentifier,
-                getItemStack(Material.RED_CONCRETE_POWDER, ChatColor.RED + "Claim operating cabin"),
-                4, null);
+                new CabinOccupationVisual(rideController, new StaticButtonVisual(Material.BLACK_CONCRETE_POWDER, ChatColor.GOLD, "Claim operating cabin")),
+                4, new RunnableButtonWithContextAction((p, b) -> {
+                    if(p.equals(rideController.getOperator())){
+                        p.setOperating(null);
+                        p.sendMessage("You are no longer controlling " + rideIdentifier);
+                    }else{
+                        boolean set = p.setOperating(rideController);
+                        if(set)
+                            p.sendMessage("You are now controlling " + rideIdentifier);
+                    }
+        }));
 
-        RideDispatchButton dispatchButton = new RideDispatchButton(rideController, 10);
+        RideControlButton dispatchButton = new LockResembledControlButton(
+                rideIdentifier,
+                new StaticButtonVisual(Material.GREEN_CONCRETE, ChatColor.DARK_GREEN, "Dispatch", List.of(ChatColor.GRAY + "Not allowed")),
+                new BlinkingButtonVisual(
+                        new StaticButtonVisual(Material.LIME_CONCRETE, ChatColor.GREEN, "Dispatch"),
+                        new StaticButtonVisual(Material.GREEN_CONCRETE, ChatColor.DARK_GREEN, "Dispatch")
+                ),
+                10, dispatchTrigger.getDispatchLockCollection(), new RunnableButtonAction(dispatchTrigger::execute));
 
         RideControlButton problemList = new SimpleRideControlButton(
                 rideIdentifier,
-                getItemStack(Material.ITEM_FRAME, ChatColor.RED + "Problems", dispatchLockCollection.getProblems()),
+                new StaticButtonVisual(Material.ITEM_FRAME, ChatColor.RED, "Problems"),
                 11, null);
+        problemList.changeLore(dispatchLockCollection.getProblems(1));
 
-        RideControlButton gateButton = new SimpleRideControlButton(
+        RideControlButton gateButton = new LockResembledControlButton(
                 rideIdentifier,
-                getItemStack(Material.RED_CONCRETE, ChatColor.RED + "Gates"),
-                15, null);
-        RideControlButton restraintButton = new SimpleRideControlButton(
+                new BlinkingButtonVisual(
+                        new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, "Gates are open"),
+                        new StaticButtonVisual(Material.LIGHT_GRAY_CONCRETE, ChatColor.GRAY, "Gates are open")
+                ),
+                new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, "Gates are closed"),
+                15, gateTrigger.getLock(), new RunnableButtonAction(gateTrigger::execute));
+        RideControlButton restraintButton = new LockResembledControlButton(
                 rideIdentifier,
-                getItemStack(Material.RED_CONCRETE, ChatColor.RED + "Restraints"),
-                16, new RunnableButtonAction(p -> rideController.getTriggerContext().getRestraintTrigger().execute(p)));
+                new BlinkingButtonVisual(
+                        new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, "Restraints are open"),
+                        new StaticButtonVisual(Material.LIGHT_GRAY_CONCRETE, ChatColor.GRAY, "Restraints are open")
+                ),
+                new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, "Restraints are closed"),
+                16, restraintTrigger.getLock(), new RunnableButtonAction(restraintTrigger::execute));
 
         dispatchLockCollection.addEventListener(lock -> {
-            List<String> problems = dispatchLockCollection.getProblems();
+            List<String> problems = dispatchLockCollection.getProblems(1);
             if(problems.size() == 0){
                 problemList.setVisible(false);
-                dispatchButton.setReadyForDispatch();
             }else{
                 problemList.setVisible(true);
                 problemList.changeLore(problems);
-                dispatchButton.setNoDispatch();
             }
 
             problemList.sendUpdate();

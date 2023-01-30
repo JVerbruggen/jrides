@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.control;
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.control.controlmode.ControlMode;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
+import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
 
@@ -50,5 +51,13 @@ public class RideController {
 
     public ControlMode getControlMode() {
         return controlMode;
+    }
+
+    public boolean setOperator(Player player){
+        return this.getControlMode().setOperator(player);
+    }
+
+    public Player getOperator(){
+        return this.getControlMode().getOperator();
     }
 }

@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.animator.trackbehaviour.factory;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.trackbehaviour.*;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
@@ -9,24 +10,29 @@ import com.jverbruggen.jrides.config.coaster.objects.section.BlockSectionSpecCon
 import com.jverbruggen.jrides.config.coaster.objects.section.SectionConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.StationEffectsConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.StationSpecConfig;
+import com.jverbruggen.jrides.config.gates.GateConfig;
 import com.jverbruggen.jrides.config.gates.GateOwnerConfigSpec;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.SimpleDispatchLock;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
+import com.jverbruggen.jrides.control.trigger.GateTrigger;
 import com.jverbruggen.jrides.control.trigger.RestraintTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.effect.EffectTrigger;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
+import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.FrameRange;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.properties.factory.FrameFactory;
 import com.jverbruggen.jrides.models.ride.StationHandle;
+import com.jverbruggen.jrides.models.ride.gate.FenceGate;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import org.bukkit.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +64,7 @@ public class TrackBehaviourFactory {
         int stationNr = coasterHandle.getStationHandles().size() + 1;
         String rideIdentifier = coasterHandle.getRide().getIdentifier();
         String stationName = rideIdentifier + "_station_" + stationNr;
+        World world = JRidesPlugin.getWorld();
 
         DispatchLockCollection dispatchLockCollection = new DispatchLockCollection("Main locks");
 
@@ -65,20 +72,23 @@ public class TrackBehaviourFactory {
         DispatchLock blockSectionOccupiedDispatchLock = new SimpleDispatchLock(dispatchLockCollection, "Next block section is occupied", true);
         DispatchLock minimumWaitTimeDispatchLock = new SimpleDispatchLock(dispatchLockCollection, "Waiting time has not passed yet", true);
         DispatchLock restraintLock = new SimpleDispatchLock(dispatchLockCollection, "Restraints are not closed", true);
+        DispatchLockCollection gatesGenericLock = new DispatchLockCollection("Not all gates are closed", dispatchLockCollection);
 
         List<Gate> gates = new ArrayList<>();
-//        List<GateConfig> gateConfigs = gateSpec.getGateSpecConfigEntry().getGates();
-//        for(int i = 0; i < gateConfigs.size(); i++){
-//            GateConfig gateConfig = gateConfigs.get(i);
-//            String gateName = stationName + "_gate_" + i;
-//            Vector3 location = gateConfig.getLocation();
-//            gates.add(new FenceGate(gateName, new DispatchLock(dispatchLockCollection, "Gate " + gateName + " is open"), location));
-//        }
+        List<GateConfig> gateConfigs = gateSpec.getGateSpecConfigEntry().getGates();
+        for(int i = 0; i < gateConfigs.size(); i++){
+            GateConfig gateConfig = gateConfigs.get(i);
+            String gateName = stationName + "_gate_" + i;
+            Vector3 location = gateConfig.getLocation();
+            gates.add(new FenceGate(gateName,
+                    new SimpleDispatchLock(gatesGenericLock, "Gate " + gateName + " is not closed", false),
+                    location.toBukkitLocation(world).getBlock()));
+        }
 
         TriggerContext triggerContext = new TriggerContext(
                 dispatchLockCollection,
                 new DispatchTrigger(dispatchLockCollection),
-                null,
+                new GateTrigger(gatesGenericLock),
                 new RestraintTrigger(restraintLock));
 
         StationSpecConfig stationSpecConfig = sectionConfig.getStationSectionSpec();

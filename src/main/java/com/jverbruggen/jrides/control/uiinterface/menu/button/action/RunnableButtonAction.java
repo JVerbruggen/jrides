@@ -1,6 +1,6 @@
-package com.jverbruggen.jrides.control.uiinterface.menu.action;
+package com.jverbruggen.jrides.control.uiinterface.menu.button.action;
 
-import com.jverbruggen.jrides.control.uiinterface.menu.RideControlButtonAction;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
 import com.jverbruggen.jrides.models.entity.Player;
 
 import java.util.function.Consumer;
@@ -13,7 +13,7 @@ public class RunnableButtonAction implements RideControlButtonAction {
     }
 
     @Override
-    public void run(Player player) {
+    public void run(Player player, RideControlButton button) {
         consumerFunction.accept(player);
     }
 }

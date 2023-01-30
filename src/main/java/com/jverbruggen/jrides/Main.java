@@ -2,7 +2,9 @@ package com.jverbruggen.jrides;
 
 import com.comphenix.protocol.ProtocolManager;
 import com.jverbruggen.jrides.command.MainCommandExecutor;
-import com.jverbruggen.jrides.control.uiinterface.menu.event.ButtonClickEventListener;
+import com.jverbruggen.jrides.common.startup.StartMessage;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.event.ButtonClickEventListener;
+import com.jverbruggen.jrides.control.uiinterface.menu.open.SignMenuListener;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -18,14 +20,13 @@ import org.bukkit.World;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.logging.Logger;
-
 public class Main extends JavaPlugin {
     private World world;
 
     @Override
     public void onEnable() {
         world = Bukkit.getWorld("world");
+        JRidesPlugin.setWorld(Bukkit.getWorld("world"));
 
         JRidesPlugin.setBukkitPluginHost(this);
         ServiceProviderConfigurator.configure(this);
@@ -39,6 +40,7 @@ public class Main extends JavaPlugin {
                 ServiceProvider.getSingleton(ViewportManager.class),
                 playerManager), this);
         pluginManager.registerEvents(new ButtonClickEventListener(), this);
+        pluginManager.registerEvents(new SignMenuListener("Click me!"), this);
 
         getServer().getPluginCommand("jrides").setExecutor(new MainCommandExecutor());
 
@@ -59,8 +61,7 @@ public class Main extends JavaPlugin {
 
         SoftEjector.startClock(this);
 
-        Logger logger = ServiceProvider.getSingleton(Logger.class);
-        logger.warning("JRides enabled");
+        StartMessage.sendEnabledMessage("1.0.0");
     }
 
     @Override
@@ -70,7 +71,6 @@ public class Main extends JavaPlugin {
 
         viewportManager.despawnAll();
 
-        Logger logger = ServiceProvider.getSingleton(Logger.class);
-        logger.warning("JRides disabled");
+        StartMessage.sendDisabledMessage("1.0.0");
     }
 }

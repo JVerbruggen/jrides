@@ -20,6 +20,11 @@ public class RestraintTrigger implements StationTrigger {
     }
 
     @Override
+    public DispatchLock getLock() {
+        return restraintLock;
+    }
+
+    @Override
     public boolean execute(MessageReceiver messageReceiver) {
         if(stationHandle == null) throw new RuntimeException("No station handle set for restraint trigger");
 

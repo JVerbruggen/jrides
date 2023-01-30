@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.models.render;
 
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.List;
 public abstract class VirtualEntityViewport implements Viewport{
     protected List<VirtualEntity> virtualEntities;
     protected List<Player> viewers;
+    private final int maxRenderDistance = 140;
+
 
     public VirtualEntityViewport() {
         this.virtualEntities = new ArrayList<>();
@@ -29,11 +32,6 @@ public abstract class VirtualEntityViewport implements Viewport{
     public void addViewer(Player player) {
         if(hasViewer(player)) return;
         viewers.add(player);
-
-        for(VirtualEntity virtualEntity : virtualEntities){
-            if(virtualEntity.isViewer(player)) continue;
-            virtualEntity.spawnFor(player);
-        }
     }
 
     @Override
@@ -57,7 +55,8 @@ public abstract class VirtualEntityViewport implements Viewport{
         if(hasEntity(virtualEntity)) return;
 
         virtualEntities.add(virtualEntity);
-        virtualEntity.spawnForAll(viewers);
+        updateEntityViewers(virtualEntity);
+//        virtualEntity.spawnForAll(viewers);
     }
 
     @Override
@@ -71,5 +70,40 @@ public abstract class VirtualEntityViewport implements Viewport{
     @Override
     public boolean hasEntity(VirtualEntity virtualEntity) {
         return virtualEntities.contains(virtualEntity);
+    }
+
+    @Override
+    public void updateFor(Player player) {
+        if(!hasViewer(player)) addViewer(player);
+
+        for(VirtualEntity virtualEntity : virtualEntities){
+            renderLogic(virtualEntity, player);
+        }
+    }
+
+    @Override
+    public void updateEntityViewers(VirtualEntity virtualEntity) {
+        if(!hasEntity(virtualEntity)) addEntity(virtualEntity);
+
+        for(Player player : viewers){
+            renderLogic(virtualEntity, player);
+        }
+    }
+
+    private void renderLogic(VirtualEntity virtualEntity, Player player){
+        double distanceSquared = virtualEntity.getLocation().distanceSquared(player.getLocation());
+        if(player.isViewing(virtualEntity)){
+            if(distanceSquared > maxRenderDistance*maxRenderDistance){
+
+                virtualEntity.despawnFor(player);
+                player.removeViewing(virtualEntity);
+            }
+        }
+        else{
+            if(distanceSquared <= maxRenderDistance*maxRenderDistance){
+                virtualEntity.spawnFor(player);
+                player.addViewing(virtualEntity);
+            }
+        }
     }
 }

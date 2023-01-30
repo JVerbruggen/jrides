@@ -104,7 +104,8 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
 
                         coasterHandle.getRideController().onTrainArrive(train);
                         trainInStationDispatchLock.unlock();
-                        restraintsLock.setLocked(!train.getRestraintState());
+                        restraintsLock.setLocked(true);
+                        train.setRestraintForAll(false);
 
                         if(stationHandle.shouldEject())
                             train.ejectPassengers();

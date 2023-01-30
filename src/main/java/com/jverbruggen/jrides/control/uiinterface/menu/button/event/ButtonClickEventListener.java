@@ -1,9 +1,9 @@
-package com.jverbruggen.jrides.control.uiinterface.menu.event;
+package com.jverbruggen.jrides.control.uiinterface.menu.button.event;
 
 import com.jverbruggen.jrides.animator.RideHandle;
-import com.jverbruggen.jrides.control.uiinterface.menu.RideControlButton;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
-import com.jverbruggen.jrides.control.uiinterface.menu.SimpleRideControlButton;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.SimpleRideControlButton;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.player.PlayerManager;

@@ -2,17 +2,23 @@ package com.jverbruggen.jrides.models.ride.gate;
 
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.models.math.Vector3;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Openable;
 
 public class FenceGate implements Gate {
     private final String name;
     private final DispatchLock dispatchLock;
-    private final Vector3 location;
+    private final Block block;
     private boolean isOpen;
 
-    public FenceGate(String name, DispatchLock dispatchLock, Vector3 location) {
+    public FenceGate(String name, DispatchLock dispatchLock, Block block) {
         this.name = name;
         this.dispatchLock = dispatchLock;
-        this.location = location;
+        this.block = block;
         this.isOpen = false;
     }
 
@@ -22,18 +28,37 @@ public class FenceGate implements Gate {
 
     @Override
     public void open() {
+        if(isOpen) return;
+
         isOpen = true;
         dispatchLock.lock();
+        setBukkitGateState(true);
     }
 
     @Override
     public void close() {
+        if(!isOpen) return;
+
         isOpen = false;
         dispatchLock.unlock();
+        setBukkitGateState(false);
     }
 
     @Override
     public boolean isOpen() {
         return this.isOpen;
+    }
+
+    private void setBukkitGateState(boolean open){
+        BlockData blockData = block.getBlockData();
+        if(!(blockData instanceof org.bukkit.block.data.type.Gate))
+            throw new RuntimeException("Fence gate ride gate not positioned over actual fence gate block (location: " + block.getLocation().toString() + ")");
+
+        Openable bukkitGate = (Openable) blockData;
+        bukkitGate.setOpen(open);
+        block.setBlockData(bukkitGate);
+
+        Sound sound = open ? Sound.BLOCK_FENCE_GATE_OPEN : Sound.BLOCK_FENCE_GATE_CLOSE;
+        block.getWorld().playSound(block.getLocation(), sound, 1, 1);
     }
 }

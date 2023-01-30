@@ -17,8 +17,8 @@ public class DispatchTrigger implements Trigger {
     public boolean execute(MessageReceiver messageReceiver){
         if(!dispatchLockCollection.allUnlocked()){
             if(messageReceiver != null){
-                messageReceiver.sendMessage(ChatColor.RED + "\nCannot dispatch due to the following problems:");
-                dispatchLockCollection.getProblems().forEach(messageReceiver::sendMessage);
+                messageReceiver.sendMessage(ChatColor.RED + "Cannot dispatch due to the following problems:");
+                dispatchLockCollection.getProblems(Integer.MAX_VALUE).forEach(messageReceiver::sendMessage);
             }
             return false;
         }

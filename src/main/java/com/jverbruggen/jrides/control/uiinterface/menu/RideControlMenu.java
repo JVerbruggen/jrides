@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.control.uiinterface.menu;
 
 import com.jverbruggen.jrides.control.RideController;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
 import com.jverbruggen.jrides.models.entity.Player;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;

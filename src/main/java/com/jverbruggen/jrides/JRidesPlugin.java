@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class JRidesPlugin {
@@ -13,6 +14,7 @@ public class JRidesPlugin {
     private static PacketSender packetSender;
     private static SmoothAnimation smoothAnimation;
     private static LanguageFile languageFile;
+    private static World world;
 
     public static ServiceProvider getServiceProvider(){
         return ServiceProvider.instance;
@@ -53,5 +55,13 @@ public class JRidesPlugin {
 
     public static LanguageFile getLanguageFile() {
         return languageFile;
+    }
+
+    public static void setWorld(World world) {
+        JRidesPlugin.world = world;
+    }
+
+    public static World getWorld() {
+        return world;
     }
 }

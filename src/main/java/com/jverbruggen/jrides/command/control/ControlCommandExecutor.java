@@ -10,7 +10,7 @@ import com.jverbruggen.jrides.language.StringReplacementBuilder;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.SimpleMessageReceiver;
-import com.jverbruggen.jrides.permissions.Permissions;
+import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.command.Command;

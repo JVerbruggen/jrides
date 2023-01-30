@@ -3,7 +3,6 @@ package com.jverbruggen.jrides.models.entity;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
-import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +58,15 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
 
     @Override
     public void setLocation(Vector3 newLocation, double yawRotation) {
+        final int chunkSize = 8;
+        Vector3 fromLocation = location;
+        Vector3 toLocation = newLocation;
+        boolean xModRotated = (int)(toLocation.getX() / chunkSize) != (int)(fromLocation.getX() / chunkSize);
+        boolean zModRotated = (int)(toLocation.getZ() / chunkSize) != (int)(fromLocation.getZ() / chunkSize);
+        if(xModRotated || zModRotated){
+            viewportManager.updateForEntity(this);
+        }
+
         double distanceSquared = newLocation.distanceSquared(this.location);
 
         if(distanceSquared > 49 || teleportSyncCoundownState > 60) {
@@ -75,7 +83,6 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
         }
 
         this.location = newLocation;
-        viewportManager.updateForEntity(this);
 
         teleportSyncCoundownState++;
     }
@@ -107,6 +114,7 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
 
     @Override
     public void despawnFor(Player player) {
+        removeViewer(player);
         packetSender.destroyVirtualEntity(player, entityId);
     }
 

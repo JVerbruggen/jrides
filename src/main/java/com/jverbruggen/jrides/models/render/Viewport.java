@@ -12,8 +12,10 @@ public interface Viewport {
     boolean isInViewport(Vector3 location);
     void addViewer(Player player);
     void removeViewer(Player player);
+    void updateFor(Player player);
     boolean hasViewer(Player player);
     void addEntity(VirtualEntity virtualEntity);
     void removeEntity(VirtualEntity virtualEntity);
+    void updateEntityViewers(VirtualEntity virtualEntity);
     boolean hasEntity(VirtualEntity virtualEntity);
 }

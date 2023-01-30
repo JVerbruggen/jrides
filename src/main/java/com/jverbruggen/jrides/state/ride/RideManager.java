@@ -125,13 +125,12 @@ public class RideManager {
 
         StationHandle stationHandle = coasterHandle.getStationHandle(null);
 
-        ControlMode controlMode = new AutomaticMode(
+//        ControlMode controlMode = new AutomaticMode(
+//                stationHandle,
+//                coasterHandle.getDispatchTrigger().getDispatchLockCollection());
+        ControlMode controlMode = new SemiAutomaticMode(
                 stationHandle,
                 coasterHandle.getDispatchTrigger().getDispatchLockCollection());
-//        ControlMode controlMode = new SemiAutomaticMode(
-//                stationHandle,
-//                coasterHandle.getDispatchTrigger().getDispatchLockCollection()
-//        );
 
         RideController rideController = new RideController(controlMode);
         rideController.setRideHandle(coasterHandle);

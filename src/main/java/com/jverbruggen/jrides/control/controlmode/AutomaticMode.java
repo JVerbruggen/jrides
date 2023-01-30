@@ -35,6 +35,8 @@ public class AutomaticMode extends BaseControlMode implements ControlMode{
         }
 
         if(!waitingTimer.reachedPreferred()) return;
+        stationHandle.closeEntryGates();
+
         if(!dispatchLockCollection.allUnlocked()) return;
 
         dispatchDebounce.run(() -> triggerContext.getDispatchTrigger().execute(null));
@@ -77,7 +79,17 @@ public class AutomaticMode extends BaseControlMode implements ControlMode{
     }
 
     @Override
-    public boolean allowsAction(ControlAction action) {
+    public boolean setOperator(Player player) {
         return false;
+    }
+
+    @Override
+    public boolean allowsAction(ControlAction action, Player player) {
+        return false;
+    }
+
+    @Override
+    public Player getOperator() {
+        return null;
     }
 }

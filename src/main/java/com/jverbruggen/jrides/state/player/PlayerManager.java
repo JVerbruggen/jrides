@@ -2,14 +2,18 @@ package com.jverbruggen.jrides.state.player;
 
 import com.jverbruggen.jrides.models.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerManager {
     private final HashMap<UUID, Player> players;
+    private final List<Player> operators;
 
     public PlayerManager(){
         players = new HashMap<>();
+        operators = new ArrayList<>();
     }
 
     public Player registerPlayer(org.bukkit.entity.Player bukkitPlayer){
@@ -33,6 +37,23 @@ public class PlayerManager {
         if(!players.containsKey(uuid)){
             return;
         }
-        players.remove(uuid);
+        Player player = players.remove(uuid);
+        if(isOperator(player)) unregisterOperator(player);
+    }
+
+    public void registerOperator(Player player){
+        operators.add(player);
+    }
+
+    public void unregisterOperator(Player player){
+        operators.remove(player);
+    }
+
+    public boolean isOperator(Player player){
+        return operators.contains(player);
+    }
+
+    public List<Player> getOperators(){
+        return operators;
     }
 }

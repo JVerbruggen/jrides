@@ -18,7 +18,9 @@ public interface ControlMode {
     void startOperating();
     void stopOperating();
     void onDispatch();
-    boolean allowsAction(ControlAction action);
+    boolean setOperator(Player player);
+    boolean allowsAction(ControlAction action, Player player);
 
     MinMaxWaitingTimer getWaitingTimer();
+    Player getOperator();
 }

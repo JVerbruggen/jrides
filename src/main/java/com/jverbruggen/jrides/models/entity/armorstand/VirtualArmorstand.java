@@ -11,6 +11,8 @@ import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.packet.raw.ArmorstandRotationServerPacket;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 
+import java.util.List;
+
 public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntity {
     private Player passenger;
     private double yawRotation;
@@ -77,6 +79,15 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         if(models.hasHead()){
             this.packetSender.sendApplyModelPacket(viewers, entityId, EnumWrappers.ItemSlot.HEAD, models.getHead());
         }
+
+        if(passenger != null){
+            packetSender.sendMountVirtualEntityPacket(List.of(player), passenger, entityId);
+        }
+    }
+
+    @Override
+    public boolean shouldRenderFor(Player player) {
+        return false;
     }
 
     public void setHostSeat(Seat seat) {

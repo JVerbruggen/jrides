@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.language;
 
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
+import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.SimpleMessageReceiver;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -10,20 +11,23 @@ import java.util.Map;
 public class LanguageFile {
     private FeedbackType defaultFeedbackType = FeedbackType.INFO;
 
-    public String chatFeedbackPrefix = "[jrides]";
+    public String chatFeedbackPrefix = "[jrides] ";
     public String chatFeedbackInfoColor = ChatColor.GRAY + "";
     public String chatFeedbackWarningColor = ChatColor.YELLOW + "";
     public String chatFeedbackSevereColor = ChatColor.RED + "";
 
-    public String commandRideDispatchedMessage = "Ride %RIDE_IDENTIFIER% was dispatched!";
+    public String commandRideDispatchedMessage = "Ride %" + LanguageFileTags.rideIdentifier + "% was dispatched!";
 
-    public String commandVisualizeAddedViewer = "You are now viewing %RIDE_IDENTIFIER% in visualize mode";
-    public String commandVisualizeRemovedViewer = "You are no longer viewing %RIDE_IDENTIFIER% in visualize mode";
+    public String commandVisualizeAddedViewer = "You are now viewing %" + LanguageFileTags.rideIdentifier + "% in visualize mode";
+    public String commandVisualizeRemovedViewer = "You are no longer viewing %" + LanguageFileTags.rideIdentifier + "% in visualize mode";
+
+    public String elevatedOperatorOverrideVictimMessage = "Player %" + LanguageFileTags.player + "% took over control of the operating cabin";
 
     public String errorSmoothCoastersDisabled = "Smoother ride experience is disabled, please install SmoothCoasters.";
     public String errorGeneralNoPermissionMessage = "You do not have permissions to execute this action";
     public String errorPlayerCommandOnlyMessage = "Only players can execute this command";
     public String errorUnknownCommandMessage = "Unknown jrides command. Type /jrides for help";
+    public String errorOperatingCabinOccupied = "You can not take this operating cabin since it is already in use by another operator";
 
     public void sendMessage(MessageReceiver messageReceiver, String content){
         sendMessage(messageReceiver, content, defaultFeedbackType, null);
@@ -31,6 +35,10 @@ public class LanguageFile {
 
     public void sendMessage(MessageReceiver messageReceiver, String content, Map<String, String> replacements){
         sendMessage(messageReceiver, content, defaultFeedbackType, replacements);
+    }
+
+    public void sendMessage(MessageReceiver messageReceiver, String content, FeedbackType feedbackType) {
+        sendMessage(messageReceiver, content, feedbackType, null);
     }
 
     public void sendMessage(MessageReceiver messageReceiver, String content, FeedbackType feedbackType, Map<String, String> replacements){
@@ -79,7 +87,7 @@ public class LanguageFile {
         if(replacements != null && replacements.size() > 0){
             for(Map.Entry<String, String> replacement : replacements.entrySet()){
                 String tag = replacement.getKey();
-                content = content.replaceAll("%\\%" + tag + "\\%%gm", replacement.getValue());
+                content = content.replaceAll(("%\\%" + tag + "\\%%g"), replacement.getValue());
             }
         }
         messageReceiver.sendMessage(prefix + content);
@@ -90,6 +98,7 @@ public class LanguageFile {
         if(feedbackType.equals(FeedbackType.INFO)) chatFeedbackColor = chatFeedbackInfoColor;
         else if(feedbackType.equals(FeedbackType.WARNING)) chatFeedbackColor = chatFeedbackWarningColor;
         else if(feedbackType.equals(FeedbackType.SEVERE)) chatFeedbackColor = chatFeedbackSevereColor;
+        else if(feedbackType.equals(FeedbackType.CONFLICT)) chatFeedbackColor = chatFeedbackWarningColor;
         else throw new RuntimeException("Unsupported feedback type");
 
         return chatFeedbackColor;

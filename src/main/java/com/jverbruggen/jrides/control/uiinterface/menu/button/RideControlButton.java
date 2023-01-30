@@ -1,5 +1,7 @@
-package com.jverbruggen.jrides.control.uiinterface.menu;
+package com.jverbruggen.jrides.control.uiinterface.menu.button;
 
+import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.common.ButtonVisual;
 import com.jverbruggen.jrides.models.entity.Player;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -34,4 +36,7 @@ public interface RideControlButton {
     int getSlot();
 
     void press(Player player);
+
+    ButtonVisual getActiveVisual();
+    void updateVisual();
 }

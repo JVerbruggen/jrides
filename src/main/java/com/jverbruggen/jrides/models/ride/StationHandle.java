@@ -32,6 +32,7 @@ public class StationHandle {
         this.name = name;
 
         triggerContext.getRestraintTrigger().setStationHandle(this);
+        triggerContext.getGateTrigger().setStationHandle(this);
         coasterHandle.addStationHandle(this);
     }
 
@@ -95,6 +96,10 @@ public class StationHandle {
     public void closeEntryGates(){
         entryGates.forEach(Gate::close);
         // TODO: teleport everyone awae
+    }
+
+    public boolean areEntryGatesClosed(){
+        return entryGates.stream().noneMatch(Gate::isOpen);
     }
 
     public void onPlayerEnter(Player player){

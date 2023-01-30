@@ -43,4 +43,9 @@ public class VirtualFallingBlock extends BaseVirtualEntity implements VirtualEnt
     public void spawnFor(Player player) {
 
     }
+
+    @Override
+    public boolean shouldRenderFor(Player player) {
+        return false;
+    }
 }

@@ -12,12 +12,26 @@ public class DispatchLockCollection implements DispatchLock {
     private final List<DispatchLock> locks;
     private final List<Consumer<DispatchLock>> lockEventListeners;
     private final List<Consumer<DispatchLock>> unlockEventListeners;
+    private DispatchLockCollection parentCollection;
+    private boolean noticeSelfAsProblem;
 
     public DispatchLockCollection(String description) {
         this.description = description;
         this.locks = new ArrayList<>();
         this.lockEventListeners = new ArrayList<>();
         this.unlockEventListeners = new ArrayList<>();
+        this.parentCollection = null;
+        this.noticeSelfAsProblem = false;
+    }
+
+    public DispatchLockCollection(String description, DispatchLockCollection parentCollection) {
+        this.description = description;
+        this.locks = new ArrayList<>();
+        this.lockEventListeners = new ArrayList<>();
+        this.unlockEventListeners = new ArrayList<>();
+        this.noticeSelfAsProblem = true;
+
+        this.setParentCollection(parentCollection);
     }
 
     public void addLockEventListener(Consumer<DispatchLock> lockEventListener){
@@ -26,6 +40,16 @@ public class DispatchLockCollection implements DispatchLock {
 
     public void addUnlockEventListener(Consumer<DispatchLock> unlockEventListener){
         unlockEventListeners.add(unlockEventListener);
+    }
+
+    public void setParentCollection(DispatchLockCollection parentCollection) {
+        this.parentCollection = parentCollection;
+
+        this.parentCollection.addDispatchLock(this);
+    }
+
+    public DispatchLockCollection getParentCollection() {
+        return parentCollection;
     }
 
     public void addEventListener(Consumer<DispatchLock> eventListener){
@@ -41,18 +65,27 @@ public class DispatchLockCollection implements DispatchLock {
         return locks.stream().allMatch(DispatchLock::isUnlocked);
     }
 
-    public List<String> getProblems(){
+    @Override
+    public List<String> getProblems(int detailLevel){
         List<String> problems = new ArrayList<>();
+        if(noticeSelfAsProblem && !this.isUnlocked())
+            problems.add(ChatColor.GRAY + "- " + this.getDescription());
+
+        if(detailLevel <= 1 && noticeSelfAsProblem) return problems;
+        int newDetailLevel = detailLevel;
+        if(noticeSelfAsProblem) newDetailLevel--;
+
         for(DispatchLock lock : locks){
             if(!lock.isUnlocked()){
-                problems.add(ChatColor.GRAY + "- " + lock.getDescription());
+                problems.addAll(lock.getProblems(newDetailLevel));
             }
         }
+
         return problems;
     }
 
     public String getProblemString(){
-        List<String> problems = getProblems();
+        List<String> problems = getProblems(Integer.MAX_VALUE);
         return problems.stream()
                 .map(p -> ChatColor.YELLOW + p)
                 .collect(Collectors.joining("\n"));
@@ -60,10 +93,12 @@ public class DispatchLockCollection implements DispatchLock {
 
     public void onLock(DispatchLock lock){
         lockEventListeners.forEach(l -> l.accept(lock));
+        if(parentCollection != null) parentCollection.onLock(lock);
     }
 
     public void onUnlock(DispatchLock lock){
         unlockEventListeners.forEach(l -> l.accept(lock));
+        if(parentCollection != null) parentCollection.onUnlock(lock);
     }
 
     @Override
@@ -83,7 +118,7 @@ public class DispatchLockCollection implements DispatchLock {
 
     @Override
     public boolean isUnlocked() {
-        return locks.stream().allMatch(DispatchLock::isUnlocked);
+        return allUnlocked();
     }
 
     @Override

@@ -1,5 +1,9 @@
-package com.jverbruggen.jrides.control.uiinterface.menu;
+package com.jverbruggen.jrides.control.uiinterface.menu.button;
 
+import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.action.RideControlButtonAction;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.common.ButtonVisual;
 import com.jverbruggen.jrides.models.entity.Player;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.ChatColor;
@@ -10,8 +14,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 import java.util.UUID;
 
-public class SimpleRideControlButton implements RideControlButton {
+public class SimpleRideControlButton extends BaseRideControlButton implements RideControlButton {
     private final String rideIdentifier;
+    private final ButtonVisual buttonVisual;
     private ItemStack itemStack;
     private int slot;
     private UUID uuid;
@@ -20,26 +25,31 @@ public class SimpleRideControlButton implements RideControlButton {
     private boolean visible;
     private boolean hasUpdate;
 
-    public SimpleRideControlButton(String rideIdentifier, ItemStack itemStack, int slot, RideControlButtonAction action) {
+    public SimpleRideControlButton(String rideIdentifier, ButtonVisual visual, int slot, RideControlButtonAction action) {
         this.rideIdentifier = rideIdentifier;
         this.slot = slot;
         this.action = action;
         this.visible = true;
         this.hasUpdate = false;
+        this.buttonVisual = visual;
 
         this.uuid = UUID.randomUUID();
-        setItemStack(itemStack);
+        setItemStack(visual.toItemStack());
     }
 
     @Override
     public void sendUpdate(){
-        if(!hasUpdate) return;
+        if(buttonVisual.hasUpdate()){
+            setButtonVisual(buttonVisual);
+        }
 
-        hasUpdate = false;
+        if(hasUpdate){
+            hasUpdate = false;
 
-        getParentMenu().getSessions().forEach((player, inventory) -> {
-            inventory.setItem(slot, getItemStack());
-        });
+            getParentMenu().getSessions().forEach((player, inventory) -> {
+                inventory.setItem(slot, getItemStack());
+            });
+        }
     }
 
     @Override
@@ -136,7 +146,18 @@ public class SimpleRideControlButton implements RideControlButton {
     @Override
     public void press(Player player){
         if(action == null) return;
-        action.run(player);
+        action.run(player, this);
+        sendUpdate();
+    }
+
+    @Override
+    public ButtonVisual getActiveVisual() {
+        return buttonVisual;
+    }
+
+    @Override
+    public void updateVisual() {
+        setItemStack(buttonVisual.toItemStack());
     }
 
     public static String BUTTON_UUID_KEY = "jrides-button-uuid";

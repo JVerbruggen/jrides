@@ -1,10 +1,12 @@
 package com.jverbruggen.jrides.items;
 
+import com.jverbruggen.jrides.models.entity.Player;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.List;
 
@@ -33,6 +35,15 @@ public class ItemStackFactory {
         meta.setDisplayName(displayName);
         if(lores != null) meta.setLore(lores);
         stack.setItemMeta(meta);
+        return stack;
+    }
+
+    public static ItemStack getPlayerHead(Player player, String displayName){
+        ItemStack stack = new ItemStack(Material.PLAYER_HEAD, 1);
+        SkullMeta skullMeta = (SkullMeta) stack.getItemMeta();
+        skullMeta.setOwningPlayer(player.getBukkitPlayer());
+        skullMeta.setDisplayName(displayName);
+        stack.setItemMeta(skullMeta);
         return stack;
     }
 }

@@ -39,12 +39,12 @@ public class GlobalViewportManager implements ViewportManager {
 
     @Override
     public void updateVisuals(Player player) {
-        globalViewport.addViewer(player);
+        globalViewport.updateFor(player);
     }
 
     @Override
     public void updateForEntity(VirtualEntity virtualEntity) {
-        globalViewport.addEntity(virtualEntity);
+        globalViewport.updateEntityViewers(virtualEntity);
     }
 
     @Override
