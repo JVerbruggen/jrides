@@ -11,9 +11,11 @@ import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.common.permissions.Permissions;
+import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.Listener;
 
@@ -27,14 +29,17 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
     private final SmoothAnimation smoothAnimation;
     private final List<UUID> shiftPressedDebounce;
     private final boolean canExitDuringRide;
+    private final PacketSender packetSender;
 
     public VirtualEntityPacketListener() {
         super(JRidesPlugin.getBukkitPlugin(), ListenerPriority.NORMAL,
                 PacketType.Play.Client.USE_ENTITY,
-                PacketType.Play.Client.STEER_VEHICLE);
+                PacketType.Play.Client.STEER_VEHICLE,
+                PacketType.Play.Server.NAMED_ENTITY_SPAWN);
         this.viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
         this.playerManager = ServiceProvider.getSingleton(PlayerManager.class);
         this.smoothAnimation = ServiceProvider.getSingleton(SmoothAnimation.class);
+        this.packetSender = ServiceProvider.getSingleton(PacketSender.class);
         this.shiftPressedDebounce = new ArrayList<>();
         this.canExitDuringRide = true;
     }
@@ -44,11 +49,19 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         PacketType packetType = event.getPacketType();
         if (packetType.equals(PacketType.Play.Client.USE_ENTITY)) {
             onUseEntity(event);
-        } else if(packetType.equals(PacketType.Play.Client.STEER_VEHICLE)) {
+        } else if (packetType.equals(PacketType.Play.Client.STEER_VEHICLE)) {
             onSteerVehicle(event);
         } else {
             org.bukkit.entity.Player bukkitPlayer = event.getPlayer();
             if (bukkitPlayer != null) bukkitPlayer.sendMessage("Not implemented yet");
+        }
+    }
+
+    @Override
+    public void onPacketSending(PacketEvent event) {
+        PacketType packetType = event.getPacketType();
+        if(packetType.equals(PacketType.Play.Server.NAMED_ENTITY_SPAWN)){
+            onSendingSpawnPlayerPacket(event);
         }
     }
 
@@ -119,5 +132,19 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
             return;
         }
         seat.setPassenger(null);
+    }
+
+    private void onSendingSpawnPlayerPacket(PacketEvent event){
+        UUID uuid = event.getPacket().getUUIDs().read(0);
+
+        org.bukkit.entity.Player bukkitPlayer = Bukkit.getPlayer(uuid);
+        if(bukkitPlayer == null) return;
+        Player player = playerManager.getPlayer(bukkitPlayer);
+        if(!player.isSeated()) return;
+
+        Player receiver = playerManager.getPlayer(event.getPlayer());
+
+        Bukkit.getScheduler().runTaskLater(JRidesPlugin.getBukkitPlugin(),
+                () -> packetSender.sendMountVirtualEntityPacket(List.of(receiver), player, player.getSeatedOn().getEntity().getEntityId()), 1L);
     }
 }

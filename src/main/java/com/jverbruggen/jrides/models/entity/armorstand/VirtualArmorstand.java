@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.models.entity.armorstand;
 
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.models.entity.BaseVirtualEntity;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
@@ -10,6 +11,7 @@ import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.packet.raw.ArmorstandRotationServerPacket;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
+import org.bukkit.Bukkit;
 
 import java.util.List;
 
@@ -81,7 +83,8 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         }
 
         if(passenger != null){
-            packetSender.sendMountVirtualEntityPacket(List.of(player), passenger, entityId);
+            Bukkit.getScheduler().runTaskLater(JRidesPlugin.getBukkitPlugin(),
+                    () -> packetSender.sendMountVirtualEntityPacket(List.of(player), passenger, entityId), 1L);
         }
     }
 
