@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.models.ride.coaster;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -7,6 +8,7 @@ import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.TrainEnd;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import org.bukkit.SoundCategory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,6 +133,9 @@ public class SimpleTrain implements Train {
         for(Cart cart : getCarts()){
             cart.setRestraint(locked);
         }
+
+        if(locked) playRestraintCloseSound();
+        else playRestraintOpenSound();
     }
 
     @Override
@@ -195,6 +200,28 @@ public class SimpleTrain implements Train {
     @Override
     public void ejectPassengers() {
         carts.forEach(Cart::ejectPassengers);
+    }
+
+    @Override
+    public void playRestraintOpenSound() {
+        playSound("lapbar_open");
+    }
+
+    @Override
+    public void playRestraintCloseSound() {
+        playSound("lapbar_close");
+
+    }
+
+    @Override
+    public void playDispatchSound() {
+        playSound("dispatch");
+
+    }
+
+    private void playSound(String soundName){
+        JRidesPlugin.getWorld().playSound(this.getCurrentLocation().toBukkitLocation(JRidesPlugin.getWorld()), soundName, SoundCategory.MASTER, 0.1f, 1f);
+
     }
 
     @Override

@@ -50,4 +50,8 @@ public interface Train {
     }
 
     void ejectPassengers();
+
+    void playRestraintOpenSound();
+    void playRestraintCloseSound();
+    void playDispatchSound();
 }

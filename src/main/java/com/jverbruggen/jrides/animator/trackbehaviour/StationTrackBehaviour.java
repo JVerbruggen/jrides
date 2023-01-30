@@ -15,6 +15,7 @@ import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.Track;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
+import org.bukkit.SoundCategory;
 
 public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour{
     private final double passThroughSpeed;
@@ -145,6 +146,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                         blockSectionOccupiedDispatchLock.lock();
                         coasterHandle.getRideController().onTrainDepart(train);
                         stationHandle.setStationaryTrain(null);
+                        train.playDispatchSound();
                         goIntoSwitch = true;
                     }
                     break;

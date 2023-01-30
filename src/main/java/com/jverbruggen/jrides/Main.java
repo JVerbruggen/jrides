@@ -21,12 +21,10 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
-    private World world;
-
     @Override
     public void onEnable() {
-        world = Bukkit.getWorld("world");
-        JRidesPlugin.setWorld(Bukkit.getWorld("world"));
+        World world = Bukkit.getWorld("Lobby");
+        JRidesPlugin.setWorld(world);
 
         JRidesPlugin.setBukkitPluginHost(this);
         ServiceProviderConfigurator.configure(this);
