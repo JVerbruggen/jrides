@@ -17,7 +17,9 @@ public interface Train {
     Frame getMiddleOfTrainFrame();
     Frame getHeadOfTrainFrame();
     Frame getTailOfTrainFrame();
+    Vector3 getCurrentHeadLocation();
     Vector3 getCurrentLocation();
+    Vector3 getCurrentTailLocation();
     void setCurrentLocation(Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation);
     Vector3 getMassMiddlePoint();
 
@@ -34,6 +36,7 @@ public interface Train {
     void setCrashed(boolean crashed);
     boolean isCrashed();
     boolean equals(Train other);
+    boolean isFacingForwards();
 
     void onPlayerEnter(Player player);
     void onPlayerExit(Player player);

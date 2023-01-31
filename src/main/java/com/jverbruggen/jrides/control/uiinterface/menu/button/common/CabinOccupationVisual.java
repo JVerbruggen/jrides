@@ -14,10 +14,12 @@ public class CabinOccupationVisual implements ButtonVisual {
     private final ButtonVisual noOccupationVisual;
     private Player operator;
     private boolean hasUpdate;
+    private final String operatedString;
 
-    public CabinOccupationVisual(RideController rideController, ButtonVisual noOccupationVisual) {
+    public CabinOccupationVisual(RideController rideController, ButtonVisual noOccupationVisual, String operatedString) {
         this.rideController = rideController;
         this.noOccupationVisual = noOccupationVisual;
+        this.operatedString = operatedString;
         this.operator = null;
         this.hasUpdate = false;
     }
@@ -55,7 +57,7 @@ public class CabinOccupationVisual implements ButtonVisual {
 
     @Override
     public String getValue() {
-        if(operator == null) return getButtonDisplayNameColor() + "Claim operating cabin";
+        if(operator == null) return getButtonDisplayNameColor() + noOccupationVisual.getValue();
         throw new RuntimeException("Should be updated through toItemStack");
     }
 
@@ -65,7 +67,7 @@ public class CabinOccupationVisual implements ButtonVisual {
             return ItemStackFactory.getRideControlButtonStack(getButtonMaterial(), getValue());
         }
 
-        return ItemStackFactory.getPlayerHead(operator, ChatColor.GOLD + "Operated by: " + rideController.getOperator().getName());
+        return ItemStackFactory.getPlayerHead(operator, ChatColor.GOLD + operatedString);
     }
 
     @Override

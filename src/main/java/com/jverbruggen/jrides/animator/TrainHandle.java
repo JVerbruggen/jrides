@@ -4,18 +4,19 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovement;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
-import com.jverbruggen.jrides.effect.EffectTrigger;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
 import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
+import com.jverbruggen.jrides.models.properties.TrainEnd;
 import com.jverbruggen.jrides.models.ride.coaster.Cart;
 import com.jverbruggen.jrides.models.ride.coaster.Track;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionProvider;
+import org.bukkit.Bukkit;
 
 import java.util.Map;
 import java.util.Set;
@@ -51,60 +52,88 @@ public class TrainHandle {
         nextEffect = coasterHandle.getEffectTriggerCollection().first();
     }
 
-    public void tick(){
-        if(train.isCrashed()) return;
-
-        Section newSection = sectionProvider.getSectionFor(train, train.getHeadOfTrainFrame());
-        if(newSection != train.getHeadSection()){
-            if(newSection.isOccupied()){
+    private void sectionLogic(Section fromSection, Section toSection, boolean goingForward, boolean applyNewBehaviour){
+        // If the section it is entering is occupied by some train
+        if(toSection.isOccupied()){
+            // If that train is a different train
+            if(!toSection.getOccupiedBy().equals(this.train)){
+                // .. crash
                 train.setCrashed(true);
                 JRidesPlugin.getLogger().warning(LogType.CRASH, "Train " + train + " has crashed!");
                 JRidesPlugin.getLogger().warning(LogType.CRASH, train.getHeadSection().toString());
-                JRidesPlugin.getLogger().warning(LogType.CRASH, newSection.toString());
-                return;
-            }
-
-            // TODO: If moving forward this is only true
-            newSection.addOccupation(train);
-            train.addCurrentSection(newSection);
-            trackBehaviour = newSection.getTrackBehaviour();
-        }
-
-        Section tailSection = sectionProvider.getSectionFor(train, train.getTailOfTrainFrame());
-        if(tailSection != train.getTailSection()){
-            Section oldTailSection = train.getTailSection();
-            // TODO: If moving forward this is only true
-            oldTailSection.removeOccupation(train);
-            train.removeCurrentSection(oldTailSection);
-            oldTailSection.getTrackBehaviour().trainExitedAtEnd();
-        }
-
-        TrainMovement result = trackBehaviour.move(speedBPS, this, track);
-        if(result != null){
-            while(nextEffect != null){
-                Frame nextEffectFrame = nextEffect.getFrame();
-                boolean activateEffect = train.getHeadSection().hasPassed(nextEffectFrame, result.getNewHeadOfTrainFrame());
-                if(!activateEffect) break;
-                nextEffect.execute(train);
-                nextEffect = nextEffect.next();
-            }
-
-            speedBPS = result.getNewSpeed();
-            train.getHeadOfTrainFrame().updateTo(result.getNewHeadOfTrainFrame());
-
-            Set<Map.Entry<Cart, CartMovement>> cartMovements = result.getCartMovements();
-            if(cartMovements != null){
-                for(Map.Entry<Cart, CartMovement> cartMovement : cartMovements){
-                    Cart cart = cartMovement.getKey();
-                    CartMovement movement = cartMovement.getValue();
-                    cart.setPosition(movement);
+                JRidesPlugin.getLogger().warning(LogType.CRASH, toSection.toString());
+                // else if that train is self
+            }else{
+                if(applyNewBehaviour) trackBehaviour = toSection.getTrackBehaviour();
+                if(!fromSection.spansOver(train)){
+                    fromSection.removeOccupation(train);
+                    train.removeCurrentSection(fromSection);
+                    fromSection.getTrackBehaviour().trainExitedAtEnd();
                 }
             }
+        // else if the section is free
+        }else{
+            // .. occupy it
+            TrainEnd trainEnd = goingForward ? TrainEnd.HEAD : TrainEnd.TAIL;
+            toSection.addOccupation(train);
+            train.addCurrentSection(toSection, trainEnd);
+            if(applyNewBehaviour){
+                trackBehaviour = toSection.getTrackBehaviour();
+            }
+        }
+    }
 
-            Vector3 headLocation = track.getRawPositions().get(result.getNewHeadOfTrainFrame().getValue()).toVector3();
-            Vector3 middleLocation = result.getNewTrainLocation();
-            Vector3 tailLocation = track.getRawPositions().get(result.getNewTailOfTrainFrame().getValue()).toVector3();
-            train.setCurrentLocation(headLocation, middleLocation, tailLocation);
+    public void tick(){
+        if(train.isCrashed()) return;
+
+        // --- Fetch current/old sections (before move operation)
+        Section fromHeadSection = train.getHeadSection();
+        Section fromTailSection = train.getTailSection();
+
+        // --- Calculate movement that should be applied to the train
+        TrainMovement result = trackBehaviour.move(speedBPS, this, track);
+        if(result == null) return;
+
+        // --- Apply movement: new head frame and speed
+        speedBPS = result.getNewSpeed();
+        train.getHeadOfTrainFrame().updateTo(result.getNewHeadOfTrainFrame());
+
+        // --- Move carts according to instructions
+        Set<Map.Entry<Cart, CartMovement>> cartMovements = result.getCartMovements();
+        if(cartMovements != null){
+            for(Map.Entry<Cart, CartMovement> cartMovement : cartMovements){
+                Cart cart = cartMovement.getKey();
+                CartMovement movement = cartMovement.getValue();
+                cart.setPosition(movement);
+            }
+        }
+
+        // --- Set new train location according to new frames
+        Vector3 headLocation = track.getRawPositions().get(result.getNewHeadOfTrainFrame().getValue()).toVector3();
+        Vector3 middleLocation = result.getNewTrainLocation();
+        Vector3 tailLocation = track.getRawPositions().get(result.getNewTailOfTrainFrame().getValue()).toVector3();
+        train.setCurrentLocation(headLocation, middleLocation, tailLocation);
+
+        // --- Section occupations
+        // ---   Calculate new head section occupation
+        Section toHeadSection = sectionProvider.getSectionFor(train, train.getHeadOfTrainFrame());
+        if(toHeadSection != fromHeadSection){
+            sectionLogic(fromHeadSection, toHeadSection, speedBPS.isPositive(), true);
+        }
+
+        // ---   Calculate new tail section occupation
+        Section toTailSection = sectionProvider.getSectionFor(train, train.getTailOfTrainFrame());
+        if(toTailSection != fromTailSection){
+            sectionLogic(fromTailSection, toTailSection, speedBPS.isPositive(), false);
+        }
+
+        // Check if the next effect should be played yet
+        while(nextEffect != null){
+            Frame nextEffectFrame = nextEffect.getFrame();
+            boolean activateEffect = train.getHeadSection().hasPassed(nextEffectFrame, result.getNewHeadOfTrainFrame());
+            if(!activateEffect) break;
+            nextEffect.execute(train);
+            nextEffect = nextEffect.next();
         }
     }
 

@@ -76,8 +76,18 @@ public class SimpleTrain implements Train {
     }
 
     @Override
+    public Vector3 getCurrentHeadLocation() {
+        return headLocation;
+    }
+
+    @Override
     public Vector3 getCurrentLocation() {
         return middleLocation;
+    }
+
+    @Override
+    public Vector3 getCurrentTailLocation() {
+        return tailLocation;
     }
 
     @Override
@@ -156,6 +166,11 @@ public class SimpleTrain implements Train {
     @Override
     public boolean equals(Train other) {
         return this.getName().equalsIgnoreCase(other.getName());
+    }
+
+    @Override
+    public boolean isFacingForwards() {
+        return true;
     }
 
     @Override

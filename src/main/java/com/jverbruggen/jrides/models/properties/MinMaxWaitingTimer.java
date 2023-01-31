@@ -1,7 +1,11 @@
 package com.jverbruggen.jrides.models.properties;
 
 import com.jverbruggen.jrides.control.DispatchLock;
+import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileTags;
+import com.jverbruggen.jrides.language.StringReplacementBuilder;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.ChatColor;
 
 import java.util.List;
@@ -10,6 +14,7 @@ public class MinMaxWaitingTimer {
     private final int minimumWaitingTime;
     private final int maximumWaitingTime;
     private final DispatchLock lock;
+    private final LanguageFile languageFile;
 
     private double preferredWaitingTime;
     private double waitingTimerState;
@@ -18,6 +23,7 @@ public class MinMaxWaitingTimer {
         this.minimumWaitingTime = minimumWaitingTime;
         this.maximumWaitingTime = maximumWaitingTime;
         this.lock = lock;
+        this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
 
         reset();
     }
@@ -88,10 +94,14 @@ public class MinMaxWaitingTimer {
             return;
         }
 
-        players.forEach(p -> p.sendActionbarMessage(ChatColor.GOLD + "Waiting time: " + visualDispatchTime + " seconds"));
+        String waitingTimeNotification = new StringReplacementBuilder()
+                .add(LanguageFileTags.time, visualDispatchTime + "")
+                .apply(languageFile.notificationDispatchWaitSpecific);
+
+        players.forEach(p -> p.sendActionbarMessage(ChatColor.GOLD + waitingTimeNotification));
     }
 
     public void sendGenericWaitingNotification(List<Player> players){
-        players.forEach(p -> p.sendActionbarMessage(ChatColor.GOLD + "Please wait until the ride is dispatched"));
+        players.forEach(p -> p.sendActionbarMessage(ChatColor.GOLD + languageFile.notificationDispatchWaitGeneric));
     }
 }

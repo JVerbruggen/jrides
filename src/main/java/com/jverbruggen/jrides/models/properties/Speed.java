@@ -58,6 +58,10 @@ public class Speed {
         return this.speedPerTick == speed;
     }
 
+    public boolean isPositive(){
+        return this.speedPerTick >= 0;
+    }
+
     @Override
     public String toString() {
         return speedPerTick + "b/t";

@@ -31,7 +31,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.3.0-SNAPSHOT</version>
+        <version>3.3.0</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -104,7 +104,7 @@
     <dependency>
       <groupId>com.sk89q.worldguard</groupId>
       <artifactId>worldguard-bukkit</artifactId>
-      <version>7.0.4</version>
+      <version>7.0.5</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
@@ -112,13 +112,10 @@
     <project.artifactOutput>${testServer.location}/plugins</project.artifactOutput>
     <java.versioneasy>16</java.versioneasy>
     <maven.compiler.target>16.0.1</maven.compiler.target>
-    <project.dependencyRoot>${project.rootDir}/src/main/resources/buildtools/1_19_2</project.dependencyRoot>
     <java.version>16.0.1</java.version>
     <maven.compiler.source>16.0.1</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <minecraft.version>1.19.2-R0.1-SNAPSHOT</minecraft.version>
-    <project.rootDir>C:/Users/jurje/OneDrive/Documenten/Projects/jrides</project.rootDir>
-    <testServer.location>C:/Users/jurje/OneDrive/Documenten/Projects/jrides_testserver/1.19.2</testServer.location>
-    <dependency.spigot>${project.dependencyRoot}/spigot.jar</dependency.spigot>
+    <testServer.location>../jrides_testserver/1.19.2</testServer.location>
   </properties>
 </project>

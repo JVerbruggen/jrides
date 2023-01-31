@@ -45,7 +45,7 @@ public class Player implements MessageReceiver {
 
     @Override
     public void sendMessage(String message){
-        languageFile.sendMessage(bukkitPlayer, message);
+        bukkitPlayer.sendMessage(message);
     }
 
     public void sendActionbarMessage(String message){

@@ -21,12 +21,12 @@ import com.jverbruggen.jrides.control.trigger.RestraintTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
+import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.FrameRange;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.properties.SimpleFrame;
-import com.jverbruggen.jrides.models.properties.factory.FrameFactory;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.gate.FenceGate;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
@@ -39,22 +39,20 @@ import java.util.List;
 public class TrackBehaviourFactory {
     private final CartMovementFactory cartMovementFactory;
     private final EffectTriggerFactory effectTriggerFactory;
+    private final LanguageFile languageFile;
 
     public TrackBehaviourFactory() {
         this.cartMovementFactory = ServiceProvider.getSingleton(CartMovementFactory.class);
         this.effectTriggerFactory = ServiceProvider.getSingleton(EffectTriggerFactory.class);
+        this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
     }
-
-//    public TrackBehaviour getBrakeBehaviour(int stopTime){
-//        return new FullStopAndGoTrackBehaviour(cartMovementFactory, stopTime);
-//    }
 
     public TrackBehaviour getTrackBehaviour(double gravityConstant, double dragConstant){
         return new FreeMovementTrackBehaviour(cartMovementFactory, gravityConstant, dragConstant);
     }
 
-    public TrackBehaviour getBlockBrakeBehaviour(Frame blockBrakeEngageFrame, boolean canSpawn){
-        return new BlockBrakeTrackBehaviour(cartMovementFactory, blockBrakeEngageFrame, canSpawn);
+    public TrackBehaviour getBlockBrakeBehaviour(Frame blockBrakeEngageFrame, boolean canSpawn, double driveSpeed){
+        return new BlockBrakeTrackBehaviour(cartMovementFactory, blockBrakeEngageFrame, canSpawn, driveSpeed);
     }
 
     public TrackBehaviour getStationBehaviour(Frame blockBrakeEngageFrame, CoasterHandle coasterHandle, SectionConfig sectionConfig, GateOwnerConfigSpec gateSpec){
@@ -65,11 +63,11 @@ public class TrackBehaviourFactory {
 
         DispatchLockCollection dispatchLockCollection = new DispatchLockCollection("Main locks");
 
-        DispatchLock trainInStationDispatchLock = new SimpleDispatchLock(dispatchLockCollection, "No train present in station", true);
-        DispatchLock blockSectionOccupiedDispatchLock = new SimpleDispatchLock(dispatchLockCollection, "Next block section is occupied", true);
-        DispatchLock minimumWaitTimeDispatchLock = new SimpleDispatchLock(dispatchLockCollection, "Waiting time has not passed yet", true);
-        DispatchLock restraintLock = new SimpleDispatchLock(dispatchLockCollection, "Restraints are not closed", true);
-        DispatchLockCollection gatesGenericLock = new DispatchLockCollection("Not all gates are closed", dispatchLockCollection);
+        DispatchLock trainInStationDispatchLock = new SimpleDispatchLock(dispatchLockCollection, languageFile.notificationRideNoTrainPresent, true);
+        DispatchLock blockSectionOccupiedDispatchLock = new SimpleDispatchLock(dispatchLockCollection, languageFile.notificationRideNextBlockOccupied, true);
+        DispatchLock minimumWaitTimeDispatchLock = new SimpleDispatchLock(dispatchLockCollection, languageFile.notificationRideWaitingTime, true);
+        DispatchLock restraintLock = new SimpleDispatchLock(dispatchLockCollection, languageFile.notificationRideRestraintsNotClosed, true);
+        DispatchLockCollection gatesGenericLock = new DispatchLockCollection(languageFile.notificationRideGatesNotClosed, dispatchLockCollection);
 
         List<Gate> gates = new ArrayList<>();
         List<GateConfig> gateConfigs = gateSpec.getGateSpecConfigEntry().getGates();
@@ -78,7 +76,7 @@ public class TrackBehaviourFactory {
             String gateName = stationName + "_gate_" + i;
             Vector3 location = gateConfig.getLocation();
             gates.add(new FenceGate(gateName,
-                    new SimpleDispatchLock(gatesGenericLock, "Gate " + gateName + " is not closed", false),
+                    new SimpleDispatchLock(gatesGenericLock, languageFile.notificationRideGateNotClosed, false),
                     location.toBukkitLocation(world).getBlock()));
         }
 
@@ -92,6 +90,8 @@ public class TrackBehaviourFactory {
         int minimumWaitingTime = stationSpecConfig.getMinimumWaitIntervalSeconds();
         int maximumWaitingTime = stationSpecConfig.getMaximumWaitIntervalSeconds();
 
+        double driveSpeed = stationSpecConfig.getDriveSpeed();
+
         StationEffectsConfig stationEffectsConfig = stationSpecConfig.getStationEffectsConfig();
         List<EffectTriggerHandle> entryEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, stationEffectsConfig.getEntryEffects());
         List<EffectTriggerHandle> exitEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, stationEffectsConfig.getExitEffects());
@@ -102,7 +102,7 @@ public class TrackBehaviourFactory {
                 entryEffectTriggers, exitEffectTriggers);
 
         return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, true, triggerContext,
-                stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock, restraintLock);
+                stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock, restraintLock, driveSpeed);
     }
 
     public TrackBehaviour getTrackBehaviourFor(CoasterHandle coasterHandle, CoasterConfig coasterConfig, SectionConfig sectionConfig, int totalFrames){
@@ -120,9 +120,10 @@ public class TrackBehaviourFactory {
             Frame lowerRange = new SimpleFrame(sectionConfig.getLowerRange() + globalOffset);
             Frame upperRange = new SimpleFrame(sectionConfig.getUpperRange() + globalOffset);
             boolean canSpawn = blockSectionSpecConfig.canSpawn();
+            double driveSpeed = blockSectionSpecConfig.getDriveSpeed();
 
             Frame blockBrakeEngageFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
-            return getBlockBrakeBehaviour(blockBrakeEngageFrame, canSpawn);
+            return getBlockBrakeBehaviour(blockBrakeEngageFrame, canSpawn, driveSpeed);
         }else if(type.equalsIgnoreCase("station")){
             StationSpecConfig stationSectionSpecConfig = sectionConfig.getStationSectionSpec();
             String stationIdentifier = stationSectionSpecConfig.getIdentifier();
@@ -137,6 +138,7 @@ public class TrackBehaviourFactory {
             return getStationBehaviour(blockBrakeEngageFrame, coasterHandle, sectionConfig, gateSpec);
         }
 
-        throw new RuntimeException("Unknown section type " + type);
+        JRidesPlugin.getLogger().severe("Unknown section type " + type);
+        return null;
     }
 }

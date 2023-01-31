@@ -3,30 +3,27 @@ package com.jverbruggen.jrides.animator.trackbehaviour;
 import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
-import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.Track;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
-import com.jverbruggen.jrides.models.ride.section.Section;
-import org.bukkit.Bukkit;
 
 public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour{
     private final double passThroughSpeed;
     private final double deceleration;
     private final double acceleration;
-    private final double driverSpeed;
+    private final double driveSpeed;
 
     private BlockBrakePhase phase;
     private final Frame stopFrame;
     private final boolean canSpawn;
 
-    public BlockBrakeTrackBehaviour(CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn) {
+    public BlockBrakeTrackBehaviour(CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, double driveSpeed) {
         super(cartMovementFactory);
         this.passThroughSpeed = 1.0;
-        this.deceleration = 0.2;
+        this.deceleration = 0.1;
         this.acceleration = 0.1;
-        this.driverSpeed = 1.0;
+        this.driveSpeed = driveSpeed;
         this.phase = BlockBrakePhase.IDLE;
         this.stopFrame = stopFrame;
         this.canSpawn = canSpawn;
@@ -51,8 +48,8 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
                     goIntoSwitch = true;
                     break;
                 case PASSING_THROUGH:
-                    if(newSpeed.getSpeedPerTick() > driverSpeed){
-                        newSpeed.minus(deceleration, driverSpeed);
+                    if(newSpeed.getSpeedPerTick() > driveSpeed){
+                        newSpeed.minus(deceleration, driveSpeed);
                     }
                     else{
                         phase = BlockBrakePhase.DRIVING;
@@ -68,7 +65,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
                         }
                         goIntoSwitch = true;
                     }else{
-                        newSpeed.approach(acceleration, deceleration, 1.0);
+                        newSpeed.approach(acceleration, deceleration, driveSpeed);
                     }
                     break;
                 case STOPPING:
@@ -82,7 +79,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
                     }
                     break;
                 case DRIVING:
-                    newSpeed.add(acceleration, 1.0);
+                    newSpeed.approach(acceleration, deceleration, driveSpeed);
                     break;
             }
         }

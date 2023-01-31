@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.models.ride.coaster;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.event.player.PlayerSitDownEvent;
 import com.jverbruggen.jrides.event.player.PlayerStandUpEvent;
 import com.jverbruggen.jrides.models.entity.Player;
@@ -66,7 +67,7 @@ public class CoasterSeat implements Seat {
             return true;
         }else{
             SoftEjector.addTimer(passenger);
-            passenger.sendMessage(ChatColor.YELLOW + "" + ChatColor.ITALIC + "Press shift again within 2 seconds to confirm exiting the ride");
+            JRidesPlugin.getLanguageFile().sendMessage(passenger, JRidesPlugin.getLanguageFile().notificationShiftExitConfirmation);
             return false;
         }
     }

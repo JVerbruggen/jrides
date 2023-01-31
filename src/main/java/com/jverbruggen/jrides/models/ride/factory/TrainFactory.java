@@ -18,7 +18,6 @@ import com.jverbruggen.jrides.models.properties.LinkedFrame;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.*;
 import com.jverbruggen.jrides.models.ride.section.Section;
-import com.jverbruggen.jrides.models.ride.section.exception.NoSpawnAvailableException;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Bukkit;
@@ -39,7 +38,10 @@ public class TrainFactory {
     public Train createEquallyDistributedTrain(Track track, CoasterConfig coasterConfig, String trainIdentifier){
         final int totalFrames = track.getRawPositionsCount();
         final Section spawnSection = track.getNextSpawnSection();
-        if(spawnSection == null) throw new NoSpawnAvailableException(track);
+        if(spawnSection == null){
+            JRidesPlugin.getLogger().severe("No spawn section available on track " + track.toString() + " for train to spawn!");
+            return null;
+        }
 
         VehiclesConfig vehiclesConfig = coasterConfig.getVehicles();
 

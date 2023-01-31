@@ -18,4 +18,17 @@ public class StringReplacementBuilder {
     public Map<String, String> collect(){
         return replacements;
     }
+
+    public String apply(String input){
+        String output = input;
+
+        if(replacements.size() > 0){
+            for(Map.Entry<String, String> replacement : replacements.entrySet()){
+                String tag = replacement.getKey();
+                output = output.replace("%" + tag + "%", replacement.getValue());
+            }
+        }
+
+        return output;
+    }
 }

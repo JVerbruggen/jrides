@@ -44,16 +44,7 @@ public class SimpleSection implements Section {
 
     @Override
     public boolean isInSection(Frame frame) {
-        int startFrameValue = startFrame.getValue();
-        int endFrameValue = endFrame.getValue();
-        int compareFrameValue = frame.getValue();
-
-        boolean inNormalSection = (startFrameValue < endFrameValue)
-                && (startFrameValue <= compareFrameValue && compareFrameValue <= endFrameValue);
-        boolean inCycledSection = (endFrameValue < startFrameValue)
-                && (startFrameValue <= compareFrameValue || compareFrameValue <= endFrameValue);
-
-        return inNormalSection || inCycledSection;
+        return Frame.isBetweenFrames(startFrame, endFrame, frame);
     }
 
     @Override
@@ -64,6 +55,11 @@ public class SimpleSection implements Section {
     @Override
     public boolean isOccupied() {
         return occupiedBy != null;
+    }
+
+    @Override
+    public Train getOccupiedBy() {
+        return occupiedBy;
     }
 
     @Override
@@ -122,6 +118,11 @@ public class SimpleSection implements Section {
     }
 
     @Override
+    public boolean passesCycle() {
+        return startFrame.getValue() > endFrame.getValue();
+    }
+
+    @Override
     public Section next() {
         return nextSection;
     }
@@ -141,6 +142,17 @@ public class SimpleSection implements Section {
     public void setPrevious(Section section) {
         if(previousSection != null) throw new RuntimeException("Cannot set previous section twice!");
         previousSection = section;
+    }
+
+    @Override
+    public boolean spansOver(Train train) {
+        Frame headOfTrainFrame = train.getHeadOfTrainFrame();
+        Frame tailOfTrainFrame = train.getTailOfTrainFrame();
+
+        return isInSection(headOfTrainFrame)
+                || isInSection(tailOfTrainFrame)
+                || Frame.isBetweenFrames(tailOfTrainFrame, headOfTrainFrame, endFrame)
+                || Frame.isBetweenFrames(tailOfTrainFrame, headOfTrainFrame, startFrame);
     }
 
     @Override

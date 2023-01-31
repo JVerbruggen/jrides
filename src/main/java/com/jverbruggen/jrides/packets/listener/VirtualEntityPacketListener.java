@@ -6,6 +6,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimation;
+import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
@@ -30,6 +31,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
     private final List<UUID> shiftPressedDebounce;
     private final boolean canExitDuringRide;
     private final PacketSender packetSender;
+    private final LanguageFile languageFile;
 
     public VirtualEntityPacketListener() {
         super(JRidesPlugin.getBukkitPlugin(), ListenerPriority.NORMAL,
@@ -42,6 +44,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         this.packetSender = ServiceProvider.getSingleton(PacketSender.class);
         this.shiftPressedDebounce = new ArrayList<>();
         this.canExitDuringRide = true;
+        this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
     }
 
     @Override
@@ -51,9 +54,6 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
             onUseEntity(event);
         } else if (packetType.equals(PacketType.Play.Client.STEER_VEHICLE)) {
             onSteerVehicle(event);
-        } else {
-            org.bukkit.entity.Player bukkitPlayer = event.getPlayer();
-            if (bukkitPlayer != null) bukkitPlayer.sendMessage("Not implemented yet");
         }
     }
 
@@ -80,7 +80,6 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
             return;
         }
         if (bukkitPlayer.getLocation().toVector().distanceSquared(entity.getLocation().toBukkitVector()) > 49) {
-            bukkitPlayer.sendMessage(ChatColor.DARK_RED + "Stand closer to the vehicle to enter");
             return;
         }
 
@@ -109,7 +108,6 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         VirtualEntity entity = seat.getEntity();
 
         if(!entity.getPassenger().getBukkitPlayer().getUniqueId().equals(bukkitPlayer.getUniqueId())){
-            bukkitPlayer.sendMessage("Not allowed to steer");
             return; // Can only steer vehicle that one is in
         }
 
@@ -121,14 +119,14 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
             if(bukkitPlayer.hasPermission(Permissions.SEAT_RESTRAINT_OVERRIDE)){
                 boolean ejected = seat.ejectPassengerSoft();
 
-                if(ejected) bukkitPlayer.sendMessage(ChatColor.GRAY + "You just exited the ride while the restraints were closed");
+                if(ejected) bukkitPlayer.sendMessage(ChatColor.GRAY + languageFile.notificationShiftExitConfirmed);
                 return;
             }else if(canExitDuringRide){
                 seat.ejectPassengerSoft();
                 return;
             }
 
-            bukkitPlayer.sendMessage("The restraints are closed");
+            bukkitPlayer.sendMessage(languageFile.notificationRestraintOnExitAttempt);
             return;
         }
         seat.setPassenger(null);

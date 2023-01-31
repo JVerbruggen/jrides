@@ -116,6 +116,7 @@ public class RideManager {
         CoasterHandle coasterHandle = new CoasterHandle(ride, world, effectTriggerCollection);
 
         Track track = loadCoasterTrackFromConfig(coasterHandle, coasterConfig, offsetX, offsetY, offsetZ, startOffset);
+        if(track == null) return;
         SectionProvider sectionProvider = new SectionProvider(track);
         coasterHandle.setTrack(track);
 
@@ -142,6 +143,8 @@ public class RideManager {
 
     private TrainHandle createTrain(Track track, CoasterConfig coasterConfig, SectionProvider sectionProvider, String trainIdentifier){
         Train train = trainFactory.createEquallyDistributedTrain(track, coasterConfig, trainIdentifier);
+        if(train == null) return null;
+
         return new TrainHandle(sectionProvider, train, track);
     }
 
@@ -149,7 +152,9 @@ public class RideManager {
         List<TrainHandle> trains = new ArrayList<>();
         for(int i = 0; i < count; i++){
             String trainName = rideIdentifier + ":train_" + (i+1);
-            trains.add(createTrain(track, coasterConfig, sectionProvider, trainName));
+            TrainHandle trainHandle = createTrain(track, coasterConfig, sectionProvider, trainName);
+            if(trainHandle != null)
+                trains.add(trainHandle);
         }
         return trains;
     }

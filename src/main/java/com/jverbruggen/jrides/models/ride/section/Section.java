@@ -12,15 +12,18 @@ public interface Section {
     boolean isInSection(Frame frame);
     TrackBehaviour getTrackBehaviour();
     boolean isOccupied();
+    Train getOccupiedBy();
     boolean canBlock();
     boolean isBlockSectionSafe();
     void addOccupation(@NonNull  Train train);
     void removeOccupation(@NonNull  Train train);
     boolean canTrainSpawnOn();
     boolean hasPassed(Frame staticFrame, Frame movingFrame);
+    boolean passesCycle();
 
     Section next();
     Section previous();
     void setNext(Section section);
     void setPrevious(Section section);
+    boolean spansOver(Train train);
 }

@@ -10,7 +10,6 @@
 
     <properties>
         <testServer.location>../jrides_testserver/1.19.2</testServer.location>
-<!--        <testServer.location>C:/Users/jurje/OneDrive/Documenten/Projects/jrides_testserver/1.19.2</testServer.location>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>16.0.1</java.version>
         <java.versioneasy>16</java.versioneasy>
@@ -44,12 +43,12 @@
             <version>5.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.sk89q.worldguard</groupId>-->
-<!--            <artifactId>worldguard-bukkit</artifactId>-->
-<!--            <version>7.0.5</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.sk89q.worldguard</groupId>
+            <artifactId>worldguard-bukkit</artifactId>
+            <version>7.0.5</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>

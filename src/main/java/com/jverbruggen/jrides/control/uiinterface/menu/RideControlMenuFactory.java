@@ -13,7 +13,10 @@ import com.jverbruggen.jrides.control.uiinterface.menu.button.common.BlinkingBut
 import com.jverbruggen.jrides.control.uiinterface.menu.button.common.CabinOccupationVisual;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.common.StaticButtonVisual;
 import com.jverbruggen.jrides.items.ItemStackFactory;
+import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -23,9 +26,11 @@ import java.util.*;
 
 public class RideControlMenuFactory {
     private final Map<Player, RideControlMenu> openRideControlMenus;
+    private final LanguageFile languageFile;
 
     public RideControlMenuFactory() {
         this.openRideControlMenus = new HashMap<>();
+        this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
     }
 
     public RideControlMenu getControlMenu(RideController rideController){
@@ -38,48 +43,52 @@ public class RideControlMenuFactory {
 
         RideControlButton claimOperatingButton = new SimpleRideControlButton(
                 rideIdentifier,
-                new CabinOccupationVisual(rideController, new StaticButtonVisual(Material.BLACK_CONCRETE_POWDER, ChatColor.GOLD, "Claim operating cabin")),
+                new CabinOccupationVisual(rideController, new StaticButtonVisual(Material.BLACK_CONCRETE_POWDER, ChatColor.GOLD, languageFile.buttonClaimCabin),
+                        languageFile.buttonCabinClaimed),
                 4, new RunnableButtonWithContextAction((p, b) -> {
                     if(p.equals(rideController.getOperator())){
                         p.setOperating(null);
-                        p.sendMessage("You are no longer controlling " + rideIdentifier);
+                        languageFile.sendMessage(p, languageFile.notificationRideControlInactive,
+                                builder -> builder.add(LanguageFileTags.rideIdentifier, rideIdentifier));
                     }else{
                         boolean set = p.setOperating(rideController);
                         if(set)
-                            p.sendMessage("You are now controlling " + rideIdentifier);
+                            languageFile.sendMessage(p, languageFile.notificationRideControlActive,
+                                    builder -> builder.add(LanguageFileTags.rideIdentifier, rideIdentifier));
                     }
         }));
 
         RideControlButton dispatchButton = new LockResembledControlButton(
                 rideIdentifier,
-                new StaticButtonVisual(Material.GREEN_CONCRETE, ChatColor.DARK_GREEN, "Dispatch", List.of(ChatColor.GRAY + "Not allowed")),
+                new StaticButtonVisual(Material.GREEN_CONCRETE, ChatColor.DARK_GREEN,
+                        languageFile.buttonDispatchState, List.of(ChatColor.GRAY + languageFile.buttonDispatchProblemState)),
                 new BlinkingButtonVisual(
-                        new StaticButtonVisual(Material.LIME_CONCRETE, ChatColor.GREEN, "Dispatch"),
-                        new StaticButtonVisual(Material.GREEN_CONCRETE, ChatColor.DARK_GREEN, "Dispatch")
+                        new StaticButtonVisual(Material.LIME_CONCRETE, ChatColor.GREEN, languageFile.buttonDispatchState),
+                        new StaticButtonVisual(Material.GREEN_CONCRETE, ChatColor.DARK_GREEN, languageFile.buttonDispatchState)
                 ),
                 10, dispatchTrigger.getDispatchLockCollection(), new RunnableButtonAction(dispatchTrigger::execute));
 
         RideControlButton problemList = new SimpleRideControlButton(
                 rideIdentifier,
-                new StaticButtonVisual(Material.ITEM_FRAME, ChatColor.RED, "Problems"),
+                new StaticButtonVisual(Material.ITEM_FRAME, ChatColor.RED, languageFile.buttonProblemsState),
                 11, null);
         problemList.changeLore(dispatchLockCollection.getProblems(1));
 
         RideControlButton gateButton = new LockResembledControlButton(
                 rideIdentifier,
                 new BlinkingButtonVisual(
-                        new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, "Gates are open"),
-                        new StaticButtonVisual(Material.LIGHT_GRAY_CONCRETE, ChatColor.GRAY, "Gates are open")
+                        new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, languageFile.buttonGatesOpenState),
+                        new StaticButtonVisual(Material.LIGHT_GRAY_CONCRETE, ChatColor.GRAY, languageFile.buttonGatesOpenState)
                 ),
-                new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, "Gates are closed"),
+                new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, languageFile.buttonGatesClosedState),
                 15, gateTrigger.getLock(), new RunnableButtonAction(gateTrigger::execute));
         RideControlButton restraintButton = new LockResembledControlButton(
                 rideIdentifier,
                 new BlinkingButtonVisual(
-                        new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, "Restraints are open"),
-                        new StaticButtonVisual(Material.LIGHT_GRAY_CONCRETE, ChatColor.GRAY, "Restraints are open")
+                        new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, languageFile.buttonRestraintsOpenState),
+                        new StaticButtonVisual(Material.LIGHT_GRAY_CONCRETE, ChatColor.GRAY, languageFile.buttonRestraintsOpenState)
                 ),
-                new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, "Restraints are closed"),
+                new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, languageFile.buttonRestraintsClosedState),
                 16, restraintTrigger.getLock(), new RunnableButtonAction(restraintTrigger::execute));
 
         dispatchLockCollection.addEventListener(lock -> {

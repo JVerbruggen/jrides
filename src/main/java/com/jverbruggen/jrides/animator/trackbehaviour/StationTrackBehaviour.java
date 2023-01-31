@@ -15,13 +15,12 @@ import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.Track;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
-import org.bukkit.SoundCategory;
 
 public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour{
     private final double passThroughSpeed;
     private final double deceleration;
     private final double acceleration;
-    private final double driverSpeed;
+    private final double driveSpeed;
 
     private final CoasterHandle coasterHandle;
     private final JRidesLogger logger;
@@ -39,14 +38,14 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
 
     public StationTrackBehaviour(CoasterHandle coasterHandle, CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, TriggerContext triggerContext,
                                  StationHandle stationHandle, DispatchLock trainInStationDispatchLock, DispatchLock blockSectionOccupiedDispatchLock,
-                                 DispatchLock restraintsLock) {
+                                 DispatchLock restraintsLock, double driveSpeed) {
         super(cartMovementFactory);
         this.coasterHandle = coasterHandle;
         this.logger = JRidesPlugin.getLogger();
         this.passThroughSpeed = 1.0;
         this.deceleration = 0.2;
         this.acceleration = 0.1;
-        this.driverSpeed = 1.0;
+        this.driveSpeed = driveSpeed;
         this.handlingTrain = null;
         this.phase = StationPhase.IDLE;
         this.stopFrame = stopFrame;
