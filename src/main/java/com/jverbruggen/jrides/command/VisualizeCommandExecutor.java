@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.command;
 
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
+import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.language.StringReplacementBuilder;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -38,12 +39,12 @@ public class VisualizeCommandExecutor extends BaseCommandExecutor {
             tool.removeViewer(player);
 
             languageFile.sendMessage(player, languageFile.commandVisualizeRemovedViewer,
-                    new StringReplacementBuilder().add("RIDE_IDENTIFIER", actualIdentifier).collect());
+                    b -> b.add(LanguageFileTags.rideIdentifier, actualIdentifier));
         }else{
             tool.addViewer(player);
 
             languageFile.sendMessage(player, languageFile.commandVisualizeAddedViewer,
-                    new StringReplacementBuilder().add("RIDE_IDENTIFIER", actualIdentifier).collect());
+                    b -> b.add(LanguageFileTags.rideIdentifier, actualIdentifier));
         }
 
         return true;

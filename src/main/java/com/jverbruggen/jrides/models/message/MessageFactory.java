@@ -10,10 +10,6 @@ public class MessageFactory {
         this.protocolManager = ServiceProvider.getSingleton(ProtocolManager.class);
     }
 
-    public Message getChatMessage(String contents){
-        return new SimpleChatMessage(contents);
-    }
-
     public Message getTitle(String title, String subtitle){
         return new TitleMessage(title, subtitle);
     }

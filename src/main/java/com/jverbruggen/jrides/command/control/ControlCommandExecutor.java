@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.control.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
+import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.language.StringReplacementBuilder;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.models.entity.Player;
@@ -44,9 +45,9 @@ public class ControlCommandExecutor extends BaseCommandExecutor {
             DispatchTrigger dispatchTrigger = rideController.getTriggerContext().getDispatchTrigger();
 
             boolean dispatched = dispatchTrigger.execute(messageReceiver);
-            if(dispatched) languageFile.sendMessage(messageReceiver,
-                    languageFile.commandRideDispatchedMessage,
-                    new StringReplacementBuilder().add("RIDE_IDENTIFIER", identifier).collect());
+            if(dispatched)
+                languageFile.sendMessage(messageReceiver, languageFile.commandRideDispatchedMessage,
+                        b -> b.add(LanguageFileTags.rideIdentifier, identifier));
 
             return true;
         }else if(subCommand.equalsIgnoreCase("menu")){

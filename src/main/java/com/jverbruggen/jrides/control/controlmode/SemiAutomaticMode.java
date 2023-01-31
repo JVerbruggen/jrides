@@ -73,7 +73,7 @@ public class SemiAutomaticMode extends BaseControlMode implements ControlMode {
         if(newOperator.getBukkitPlayer().hasPermission(Permissions.OPERATOR_OVERRIDE)){
             operator.getBukkitPlayer().closeInventory();
             languageFile.sendMessage(operator, languageFile.elevatedOperatorOverrideVictimMessage,
-                    new StringReplacementBuilder().add(LanguageFileTags.player, newOperator.getName()).collect());
+                    b -> b.add(LanguageFileTags.player, newOperator.getName()));
             operator.clearOperating();
             operator = newOperator;
             return true;

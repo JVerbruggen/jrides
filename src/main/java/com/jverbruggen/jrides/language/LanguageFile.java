@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.Map;
+import java.util.function.Function;
 
 public class LanguageFile {
     private FeedbackType defaultFeedbackType = FeedbackType.INFO;
@@ -33,17 +34,17 @@ public class LanguageFile {
         sendMessage(messageReceiver, content, defaultFeedbackType, null);
     }
 
-    public void sendMessage(MessageReceiver messageReceiver, String content, Map<String, String> replacements){
-        sendMessage(messageReceiver, content, defaultFeedbackType, replacements);
+    public void sendMessage(MessageReceiver messageReceiver, String content, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
+        sendMessage(messageReceiver, content, defaultFeedbackType, builder);
     }
 
     public void sendMessage(MessageReceiver messageReceiver, String content, FeedbackType feedbackType) {
         sendMessage(messageReceiver, content, feedbackType, null);
     }
 
-    public void sendMessage(MessageReceiver messageReceiver, String content, FeedbackType feedbackType, Map<String, String> replacements){
+    public void sendMessage(MessageReceiver messageReceiver, String content, FeedbackType feedbackType, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
         String prefix = getChatFeedbackColor(feedbackType) + chatFeedbackPrefix;
-        sendMessage(messageReceiver, prefix, content, replacements);
+        sendMessage(messageReceiver, prefix, content, builder);
     }
 
     public void sendMessage(CommandSender commandSender, String content){
@@ -54,15 +55,15 @@ public class LanguageFile {
         sendMessage(new SimpleMessageReceiver(commandSender), content, feedbackType, null);
     }
 
-    public void sendMessage(CommandSender commandSender, String content, Map<String, String> replacements){
-        sendMessage(new SimpleMessageReceiver(commandSender), content, defaultFeedbackType, replacements);
+    public void sendMessage(CommandSender commandSender, String content, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
+        sendMessage(new SimpleMessageReceiver(commandSender), content, defaultFeedbackType, builder);
     }
 
     public void sendMultilineMessage(CommandSender commandSender, String content){
         sendMultilineMessage(new SimpleMessageReceiver(commandSender), content);
     }
 
-    public void sendMultilineMessage(CommandSender commandSender, String content, Map<String, String> replacements){
+    public void sendMultilineMessage(CommandSender commandSender, String content, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
         sendMultilineMessage(new SimpleMessageReceiver(commandSender), content);
     }
 
@@ -74,16 +75,20 @@ public class LanguageFile {
         sendMultilineMessage(messageReceiver, content, feedbackType, null);
     }
 
-    public void sendMultilineMessage(MessageReceiver messageReceiver, String content, Map<String, String> replacements){
-        sendMultilineMessage(messageReceiver, content, defaultFeedbackType, replacements);
+    public void sendMultilineMessage(MessageReceiver messageReceiver, String content, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
+        sendMultilineMessage(messageReceiver, content, defaultFeedbackType, builder);
     }
 
-    public void sendMultilineMessage(MessageReceiver messageReceiver, String content, FeedbackType feedbackType, Map<String, String> replacements){
+    public void sendMultilineMessage(MessageReceiver messageReceiver, String content, FeedbackType feedbackType, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
         String prefix = getChatFeedbackColor(feedbackType);
-        sendMessage(messageReceiver, prefix, content, replacements);
+        sendMessage(messageReceiver, prefix, content, builder);
     }
 
-    public void sendMessage(MessageReceiver messageReceiver, String prefix, String content, Map<String, String> replacements){
+    public void sendMessage(MessageReceiver messageReceiver, String prefix, String content, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
+        Map<String, String> replacements;
+        if(builder == null) replacements = Map.of();
+        else replacements = builder.apply(new StringReplacementBuilder()).collect();
+
         if(replacements != null && replacements.size() > 0){
             for(Map.Entry<String, String> replacement : replacements.entrySet()){
                 String tag = replacement.getKey();
