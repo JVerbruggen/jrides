@@ -7,15 +7,17 @@ import com.jverbruggen.jrides.config.gates.GatesConfig;
 import com.jverbruggen.jrides.models.math.Vector3;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.Objects;
+
 public class CoasterConfig {
-    private String manifestVersion;
-    private String identifier;
-    private String displayName;
-    private Vector3 warpLocation;
-    private TrackConfig track;
-    private VehiclesConfig vehicles;
-    private CartSpecConfig cartSpec;
-    private GatesConfig gates;
+    private final String manifestVersion;
+    private final String identifier;
+    private final String displayName;
+    private final Vector3 warpLocation;
+    private final TrackConfig track;
+    private final VehiclesConfig vehicles;
+    private final CartSpecConfig cartSpec;
+    private final GatesConfig gates;
     private final double gravityConstant;
     private final double dragConstant;
 
@@ -80,10 +82,10 @@ public class CoasterConfig {
         Vector3 warpLocation = Vector3.fromDoubleList(configurationSection.getDoubleList("warpLocation"));
         double gravityConstant = configurationSection.getDouble("gravityConstant");
         double dragConstant = configurationSection.getDouble("dragConstant");
-        TrackConfig track = TrackConfig.fromConfigurationSection(configurationSection.getConfigurationSection("track"));
-        VehiclesConfig vehicles = VehiclesConfig.fromConfigurationSection(configurationSection.getConfigurationSection("vehicles"));
-        CartSpecConfig cartSpec = CartSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("cartSpec"));
-        GatesConfig gates = GatesConfig.fromConfigurationSection(configurationSection.getConfigurationSection("gates"));
+        TrackConfig track = TrackConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("track")));
+        VehiclesConfig vehicles = VehiclesConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("vehicles")));
+        CartSpecConfig cartSpec = CartSpecConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("cartSpec")));
+        GatesConfig gates = GatesConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("gates")));
 
         return new CoasterConfig(manifestVersion, identifier, displayName, warpLocation, track, vehicles,
                 cartSpec, gates, gravityConstant, dragConstant);

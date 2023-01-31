@@ -19,7 +19,6 @@ import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.GateTrigger;
 import com.jverbruggen.jrides.control.trigger.RestraintTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
-import com.jverbruggen.jrides.effect.EffectTrigger;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -39,18 +38,16 @@ import java.util.List;
 
 public class TrackBehaviourFactory {
     private final CartMovementFactory cartMovementFactory;
-    private final FrameFactory frameFactory;
     private final EffectTriggerFactory effectTriggerFactory;
 
     public TrackBehaviourFactory() {
         this.cartMovementFactory = ServiceProvider.getSingleton(CartMovementFactory.class);
-        this.frameFactory = ServiceProvider.getSingleton(FrameFactory.class);
         this.effectTriggerFactory = ServiceProvider.getSingleton(EffectTriggerFactory.class);
     }
 
-    public TrackBehaviour getBrakeBehaviour(int stopTime){
-        return new FullStopAndGoTrackBehaviour(cartMovementFactory, stopTime);
-    }
+//    public TrackBehaviour getBrakeBehaviour(int stopTime){
+//        return new FullStopAndGoTrackBehaviour(cartMovementFactory, stopTime);
+//    }
 
     public TrackBehaviour getTrackBehaviour(double gravityConstant, double dragConstant){
         return new FreeMovementTrackBehaviour(cartMovementFactory, gravityConstant, dragConstant);
