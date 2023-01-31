@@ -35,12 +35,11 @@ public class HardcodedBMTrackFactory implements TrackFactory {
         Frame stationBlockEngage = frameFactory.createFrameBetween(stationBegin, stationEnd, 0.95);
         Frame liftBlockEngage = frameFactory.createFrameBetween(stationEnd, liftEnd, 0.98);
 
-
         SectionBuilder sectionBuilder = new SectionBuilder();
         List<Section> sections = sectionBuilder
                 .add(new SimpleSection(stationBegin, stationEnd, trackBehaviourFactory.getBlockBrakeBehaviour(stationBlockEngage, true)))
                 .add(new SimpleSection(stationEnd, liftEnd, trackBehaviourFactory.getBlockBrakeBehaviour(liftBlockEngage, true)))
-                .add(new SimpleSection(liftEnd, blockBrakeBegin, trackBehaviourFactory.getTrackBehaviour()))
+                .add(new SimpleSection(liftEnd, blockBrakeBegin, trackBehaviourFactory.getTrackBehaviour(coasterConfig.getGravityConstant(), coasterConfig.getDragConstant())))
                 .add(new SimpleSection(blockBrakeBegin, stationBegin, trackBehaviourFactory.getBlockBrakeBehaviour(blockBlackEngage, true)))
                 .collect();
 

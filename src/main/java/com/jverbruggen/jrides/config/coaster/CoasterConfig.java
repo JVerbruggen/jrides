@@ -16,9 +16,11 @@ public class CoasterConfig {
     private VehiclesConfig vehicles;
     private CartSpecConfig cartSpec;
     private GatesConfig gates;
+    private final double gravityConstant;
+    private final double dragConstant;
 
     public CoasterConfig(String manifestVersion, String identifier, String displayName, Vector3 warpLocation, TrackConfig track,
-                         VehiclesConfig vehicles, CartSpecConfig cartSpec, GatesConfig gates) {
+                         VehiclesConfig vehicles, CartSpecConfig cartSpec, GatesConfig gates, double gravityConstant, double dragConstant) {
         this.manifestVersion = manifestVersion;
         this.identifier = identifier;
         this.displayName = displayName;
@@ -27,6 +29,8 @@ public class CoasterConfig {
         this.vehicles = vehicles;
         this.cartSpec = cartSpec;
         this.gates = gates;
+        this.gravityConstant = gravityConstant;
+        this.dragConstant = dragConstant;
     }
 
     public String getManifestVersion() {
@@ -61,16 +65,27 @@ public class CoasterConfig {
         return gates;
     }
 
+    public double getGravityConstant() {
+        return gravityConstant;
+    }
+
+    public double getDragConstant() {
+        return dragConstant;
+    }
+
     public static CoasterConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         String manifestVersion = configurationSection.getString("manifestVersion");
         String identifier = configurationSection.getString("identifier");
         String displayName = configurationSection.getString("displayName");
         Vector3 warpLocation = Vector3.fromDoubleList(configurationSection.getDoubleList("warpLocation"));
+        double gravityConstant = configurationSection.getDouble("gravityConstant");
+        double dragConstant = configurationSection.getDouble("dragConstant");
         TrackConfig track = TrackConfig.fromConfigurationSection(configurationSection.getConfigurationSection("track"));
         VehiclesConfig vehicles = VehiclesConfig.fromConfigurationSection(configurationSection.getConfigurationSection("vehicles"));
         CartSpecConfig cartSpec = CartSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("cartSpec"));
         GatesConfig gates = GatesConfig.fromConfigurationSection(configurationSection.getConfigurationSection("gates"));
 
-        return new CoasterConfig(manifestVersion, identifier, displayName, warpLocation, track, vehicles, cartSpec, gates);
+        return new CoasterConfig(manifestVersion, identifier, displayName, warpLocation, track, vehicles,
+                cartSpec, gates, gravityConstant, dragConstant);
     }
 }

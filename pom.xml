@@ -9,8 +9,8 @@
     <version>1.0</version>
 
     <properties>
-        <project.rootDir>C:/Users/jurje/OneDrive/Documenten/Projects/jrides</project.rootDir>
-        <testServer.location>C:/Users/jurje/OneDrive/Documenten/Projects/jrides_testserver/1.19.2</testServer.location>
+        <testServer.location>../jrides_testserver/1.19.2</testServer.location>
+<!--        <testServer.location>C:/Users/jurje/OneDrive/Documenten/Projects/jrides_testserver/1.19.2</testServer.location>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>16.0.1</java.version>
         <java.versioneasy>16</java.versioneasy>
@@ -18,9 +18,6 @@
         <maven.compiler.target>16.0.1</maven.compiler.target>
         <minecraft.version>1.19.2-R0.1-SNAPSHOT</minecraft.version>
         <project.artifactOutput>${testServer.location}/plugins</project.artifactOutput>
-        <project.dependencyRoot>${project.rootDir}/src/main/resources/buildtools/1_19_2</project.dependencyRoot>
-        <dependency.spigot>${project.dependencyRoot}/spigot.jar</dependency.spigot>
-<!--        <dependency.gccore>${project.dependencyRoot}/GCCore.jar</dependency.gccore>-->
     </properties>
 
     <dependencies>
@@ -30,20 +27,6 @@
             <version>${minecraft.version}</version>
             <scope>provided</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.spigotmc</groupId>-->
-<!--            <artifactId>spigot</artifactId>-->
-<!--            <version>${minecraft.version}</version>-->
-<!--            <systemPath>${dependency.spigot}</systemPath>-->
-<!--            <scope>system</scope>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>io.papermc.paper</groupId>-->
-<!--            <artifactId>paper-api</artifactId>-->
-<!--            <version>${minecraft.version}</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>me.m56738</groupId>
             <artifactId>SmoothCoastersAPI</artifactId>
@@ -61,12 +44,12 @@
             <version>5.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.sk89q.worldguard</groupId>
-            <artifactId>worldguard-bukkit</artifactId>
-            <version>7.0.4</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.sk89q.worldguard</groupId>-->
+<!--            <artifactId>worldguard-bukkit</artifactId>-->
+<!--            <version>7.0.5</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -84,39 +67,6 @@
             </resource>
         </resources>
         <plugins>
-<!--            <plugin>-->
-<!--                <groupId>net.md-5</groupId>-->
-<!--                <artifactId>specialsource-maven-plugin</artifactId>-->
-<!--                <version>1.2.2</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <phase>package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>remap</goal>-->
-<!--                        </goals>-->
-<!--                        <id>remap-obf</id>-->
-<!--                        <configuration>-->
-<!--                            <srgIn>org.spigotmc:minecraft-server:${minecraft.version}:txt:maps-mojang</srgIn>-->
-<!--                            <reverse>true</reverse>-->
-<!--                            <remappedDependencies>org.spigotmc:spigot:${minecraft.version}:jar:remapped-mojang</remappedDependencies>-->
-<!--                            <remappedArtifactAttached>true</remappedArtifactAttached>-->
-<!--                            <remappedClassifierName>remapped-obf</remappedClassifierName>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                    <execution>-->
-<!--                        <phase>package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>remap</goal>-->
-<!--                        </goals>-->
-<!--                        <id>remap-spigot</id>-->
-<!--                        <configuration>-->
-<!--                            <inputFile>${project.build.directory}/${project.artifactId}-${project.version}-remapped-obf.jar</inputFile>-->
-<!--                            <srgIn>org.spigotmc:minecraft-server:${minecraft.version}:csrg:maps-spigot</srgIn>-->
-<!--                            <remappedDependencies>org.spigotmc:spigot:${minecraft.version}:jar:remapped-obf</remappedDependencies>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -137,7 +87,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.0-SNAPSHOT</version>
+                <version>3.3.0</version>
                 <configuration>
                     <relocations>
                         <relocation>
@@ -168,10 +118,6 @@
     </build>
 
     <repositories>
-<!--        <repository>-->
-<!--            <id>papermc</id>-->
-<!--            <url>https://papermc.io/repo/repository/maven-public/</url>-->
-<!--        </repository>-->
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>

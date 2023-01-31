@@ -10,15 +10,18 @@ import com.jverbruggen.jrides.models.ride.coaster.Track;
 import com.jverbruggen.jrides.models.ride.coaster.Train;
 
 public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
+    private final double gravityConstant;
+    private final double dragConstant;
 
-    public FreeMovementTrackBehaviour(CartMovementFactory cartMovementFactory) {
+    public FreeMovementTrackBehaviour(CartMovementFactory cartMovementFactory, double gravityConstant, double dragConstant) {
         super(cartMovementFactory);
+
+        this.gravityConstant = gravityConstant;
+        this.dragConstant = dragConstant;
     }
 
     public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Track track) {
         // --- Constants
-        final double dragFactorPerTick = 0.9992;
-        final double gravityAccelerationPerTick = 0.6;
 
         // --- New mass middle calculation
         Train train = trainHandle.getTrain();
@@ -30,8 +33,8 @@ public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements Tr
         // --- Gravity speed calculation
         Speed newSpeed = currentSpeed.clone();
         double dy = train.getMassMiddlePoint().getY() - newMassMiddle.getY(); // negative if going up
-        newSpeed.add(dy*gravityAccelerationPerTick);
-        newSpeed.multiply(dragFactorPerTick);
+        newSpeed.add(dy * this.gravityConstant);
+        newSpeed.multiply(this.dragConstant);
         if(newSpeed.getSpeedPerTick() < 0) newSpeed.setSpeedPerTick(0);
 
         return calculateTrainMovement(train, track, newSpeed);

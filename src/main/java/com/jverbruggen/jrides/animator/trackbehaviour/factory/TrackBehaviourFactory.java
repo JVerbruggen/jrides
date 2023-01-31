@@ -52,8 +52,8 @@ public class TrackBehaviourFactory {
         return new FullStopAndGoTrackBehaviour(cartMovementFactory, stopTime);
     }
 
-    public TrackBehaviour getTrackBehaviour(){
-        return new FreeMovementTrackBehaviour(cartMovementFactory);
+    public TrackBehaviour getTrackBehaviour(double gravityConstant, double dragConstant){
+        return new FreeMovementTrackBehaviour(cartMovementFactory, gravityConstant, dragConstant);
     }
 
     public TrackBehaviour getBlockBrakeBehaviour(Frame blockBrakeEngageFrame, boolean canSpawn){
@@ -113,7 +113,9 @@ public class TrackBehaviourFactory {
         TrackConfig trackConfig = coasterConfig.getTrack();
 
         if(type.equalsIgnoreCase("track")){
-            return getTrackBehaviour();
+            double gravityConstant = coasterConfig.getGravityConstant();
+            double dragConstant = coasterConfig.getDragConstant();
+            return getTrackBehaviour(gravityConstant, dragConstant);
         }else if(type.equalsIgnoreCase("blocksection")){
             BlockSectionSpecConfig blockSectionSpecConfig = sectionConfig.getBlockSectionSpec();
             double engagePercentage = blockSectionSpecConfig.getEngage();
