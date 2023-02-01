@@ -23,12 +23,12 @@ public class LinkedFrame implements Frame {
 
     @Override
     public Track getTrack() {
-        throw new RuntimeException("Unimplemented");
+        return linkedTo.getTrack();
     }
 
     @Override
     public void setTrack(Track track) {
-        throw new RuntimeException("Unimplemented");
+        linkedTo.setTrack(track);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class LinkedFrame implements Frame {
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Frame clone() {
-        return new SimpleFrame(getValue());
+        return new SimpleFrame(getValue(), getTrack());
     }
 
     @Override

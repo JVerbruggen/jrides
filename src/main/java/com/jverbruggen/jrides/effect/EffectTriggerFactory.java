@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.effect.music.MusicEffectTriggerFactory;
 import com.jverbruggen.jrides.effect.platform.MultiArmorstandMovementEffectTriggerFactory;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.SimpleFrame;
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -64,23 +65,23 @@ public class EffectTriggerFactory {
                     if(effectNameRawComponents.length == 2){
                         reversed = effectNameRawComponents[1].equalsIgnoreCase("reversed");
                     }
-//                    Bukkit.broadcastMessage("Initing effect " + effectName + " as reversed: " + reversed);
                     return getEffectTrigger(effectName, reversed, null, configManager.getTriggerConfig(rideIdentifier, effectName));
                 })
                 .collect(Collectors.toList());
     }
 
-    public EffectTriggerCollection getEffectTriggers(String rideIdentifier, int globalOffset){
-        ConfigurationSection allEffectsConfigurationSection = configManager.getAllEffectsConfigSection(rideIdentifier);
+    public EffectTriggerCollection getEffectTriggers(String rideIdentifier, Track track){
+        ConfigurationSection allEffectsConfigurationSection = configManager.getAllEffectsConfigSection(rideIdentifier, "default");
 
         int lastFrameIndex = Integer.MIN_VALUE;
         Map<Frame, String> effects = new HashMap<>();
         Set<String> effectIdentifiers = allEffectsConfigurationSection.getKeys(false);
         for(String effectIdentifier : effectIdentifiers){
-            int frameIndex = allEffectsConfigurationSection.getConfigurationSection(effectIdentifier).getInt("frame");
+            ConfigurationSection effectConfigurationSection = allEffectsConfigurationSection.getConfigurationSection(effectIdentifier);
+            int frameIndex = effectConfigurationSection.getInt("frame");
             if(lastFrameIndex > frameIndex) throw new RuntimeException("Every effect trigger frame needs to be after the frame of the effect before");
 
-            effects.put(new SimpleFrame(frameIndex + globalOffset), effectIdentifier);
+            effects.put(new SimpleFrame(frameIndex, track), effectIdentifier);
 
             lastFrameIndex = frameIndex;
         }

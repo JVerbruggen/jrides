@@ -41,9 +41,21 @@ public class TransferSectionSpecConfig {
     public static TransferSectionSpecConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         String sectionAtStart = configurationSection.getString("sectionAtStart");
         String sectionAtEnd = configurationSection.getString("sectionAtEnd");
-        int moveTicks = configurationSection.getInt("moveTicks");
-        Vector3 position = Vector3.fromDoubleList(configurationSection.getDoubleList("position"));
-        Vector3 rotation = Vector3.fromDoubleList(configurationSection.getDoubleList("rotation"));
+
+        int moveTicks;
+        if(configurationSection.contains("moveTicks")) moveTicks = 0;
+        else moveTicks = configurationSection.getInt("moveTicks");
+
+        Vector3 position;
+        if(configurationSection.contains("position"))
+            position = Vector3.fromDoubleList(configurationSection.getDoubleList("position"));
+        else position = new Vector3(0,0,0);
+
+        Vector3 rotation;
+        if(configurationSection.contains("rotation"))
+            rotation = Vector3.fromDoubleList(configurationSection.getDoubleList("rotation"));
+        else rotation = new Vector3(0,0,0);
+
         return new TransferSectionSpecConfig(sectionAtStart, sectionAtEnd, position, rotation, moveTicks);
     }
 }

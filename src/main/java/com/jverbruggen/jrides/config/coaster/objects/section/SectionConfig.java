@@ -81,7 +81,9 @@ public class SectionConfig {
 
         int lowerRange = (Integer)range.get(0);
         int upperRange = (Integer)range.get(1);
-        String trackSource = (String)range.get(2);
+        String trackSource = "default";
+        if(range.size() == 3)
+            trackSource = (String)range.get(2);
         String type = configurationSection.getString("type");
 
         BlockSectionSpecConfig blockSectionSpec = null;

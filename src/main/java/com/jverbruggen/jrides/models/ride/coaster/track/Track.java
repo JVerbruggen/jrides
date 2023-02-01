@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.models.ride.section.Section;
 import java.util.List;
 
 public interface Track {
+    String getIdentifier();
     int getLength();
     List<Section> getSections();
     Section getNextSpawnSection();

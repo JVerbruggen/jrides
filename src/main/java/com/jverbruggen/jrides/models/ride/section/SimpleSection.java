@@ -2,13 +2,13 @@ package com.jverbruggen.jrides.models.ride.section;
 
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 public class SimpleSection extends BaseSection {
     private Frame startFrame;
     private Frame endFrame;
     private final TrackBehaviour trackBehaviour;
-
 
     public SimpleSection(Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour) {
         super();
@@ -89,6 +89,14 @@ public class SimpleSection extends BaseSection {
                 || isInSection(tailOfTrainFrame)
                 || Frame.isBetweenFrames(tailOfTrainFrame, headOfTrainFrame, endFrame)
                 || Frame.isBetweenFrames(tailOfTrainFrame, headOfTrainFrame, startFrame);
+    }
+
+    @Override
+    public void setParentTrack(Track track) {
+        super.setParentTrack(track);
+
+        startFrame.setTrack(track);
+        endFrame.setTrack(track);
     }
 
     @Override

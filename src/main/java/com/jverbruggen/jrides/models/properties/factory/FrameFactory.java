@@ -4,8 +4,6 @@ import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.SimpleFrame;
 
 public class FrameFactory {
-
-
     public Frame createFrameBetween(Frame a, Frame b, double percentage){
         assert percentage <= 1 && percentage >= 0;
 
@@ -14,6 +12,6 @@ public class FrameFactory {
         int delta = bValue - aValue;
         int offset = (int) (delta * percentage);
 
-        return new SimpleFrame(aValue + offset);
+        return new SimpleFrame(aValue + offset, a.getTrack());
     }
 }

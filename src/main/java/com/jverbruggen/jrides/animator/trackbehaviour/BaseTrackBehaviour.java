@@ -36,9 +36,12 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
         return new TrainMovement(speed, newHeadOfTrainFrame, newTailOfTrainFrame, newTrainLocation, cartMovements);
     }
 
+    protected abstract void setParentTrackOnFrames(Track parentTrack);
+
     @Override
     public void setParentTrack(Track parentTrack) {
         this.parentTrack = parentTrack;
+        setParentTrackOnFrames(parentTrack);
     }
 
     @Override

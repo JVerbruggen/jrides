@@ -193,5 +193,10 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
     public Frame getSpawnFrame() {
         return stopFrame;
     }
+
+    @Override
+    protected void setParentTrackOnFrames(Track parentTrack) {
+        stopFrame.setTrack(parentTrack);
+    }
 }
 

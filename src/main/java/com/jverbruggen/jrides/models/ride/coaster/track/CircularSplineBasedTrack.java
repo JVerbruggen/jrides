@@ -11,16 +11,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CircularSplineBasedTrack implements Track {
+    private final String identifier;
     private List<NoLimitsExportPositionRecord> splinePositions;
     private List<Section> sections;
     private int splinePositionsCount;
 
-    public CircularSplineBasedTrack(List<NoLimitsExportPositionRecord> splinePositions, List<Section> sections) {
+    public CircularSplineBasedTrack(String identifier, List<NoLimitsExportPositionRecord> splinePositions, List<Section> sections) {
+        this.identifier = identifier;
         this.splinePositions = splinePositions;
         this.sections = sections;
         this.splinePositionsCount = splinePositions.size();
 
         this.sections.forEach(s-> s.setParentTrack(this));
+    }
+
+    @Override
+    public String getIdentifier() {
+        return identifier;
     }
 
     @Override
@@ -64,7 +71,7 @@ public class CircularSplineBasedTrack implements Track {
 
     @Override
     public Frame getFrameFor(int value) {
-        return new CyclicFrame(value, this.getLength());
+        return new CyclicFrame(value, this.getLength(), this);
     }
 
     public int countPositions(){

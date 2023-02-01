@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
@@ -11,6 +12,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LooseEndedSplineBasedTrack implements CompoundTrackPart {
+    private final String identifier;
+
     private List<NoLimitsExportPositionRecord> splinePositions;
     private List<Section> sections;
     private int splinePositionsCount;
@@ -21,14 +24,23 @@ public class LooseEndedSplineBasedTrack implements CompoundTrackPart {
     private Frame startFrame;
     private Frame endFrame;
 
-    public LooseEndedSplineBasedTrack(List<NoLimitsExportPositionRecord> splinePositions, List<Section> sections, Frame startFrame, Frame endFrame) {
+    public LooseEndedSplineBasedTrack(String identifier, List<NoLimitsExportPositionRecord> splinePositions, List<Section> sections, Frame startFrame, Frame endFrame) {
+        this.identifier = identifier;
         this.splinePositions = splinePositions;
         this.sections = sections;
         this.splinePositionsCount = splinePositions.size();
         this.startFrame = startFrame;
         this.endFrame = endFrame;
 
+        this.startFrame.setTrack(this);
+        this.endFrame.setTrack(this);
+
         this.sections.forEach(s-> s.setParentTrack(this));
+    }
+
+    @Override
+    public String getIdentifier() {
+        return identifier;
     }
 
     @Override
@@ -68,6 +80,11 @@ public class LooseEndedSplineBasedTrack implements CompoundTrackPart {
     @Override
     public List<Vector3> getAllPositions() {
         return splinePositions.stream().map(NoLimitsExportPositionRecord::toVector3).collect(Collectors.toList());
+    }
+
+    @Override
+    public Frame getFrameFor(int value) {
+        return new SimpleFrame(value, this);
     }
 
     public int countPositions(){

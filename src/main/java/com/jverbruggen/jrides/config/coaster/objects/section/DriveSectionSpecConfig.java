@@ -9,6 +9,10 @@ public class DriveSectionSpecConfig {
         this.driveSpeed = driveSpeed;
     }
 
+    public double getDriveSpeed() {
+        return driveSpeed;
+    }
+
     public static DriveSectionSpecConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         double driveSpeed = configurationSection.getDouble("driveSpeed");
 

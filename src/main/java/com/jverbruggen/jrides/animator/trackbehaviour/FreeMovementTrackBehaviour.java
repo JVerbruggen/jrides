@@ -72,4 +72,8 @@ public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements Tr
         return null;
     }
 
+    @Override
+    protected void setParentTrackOnFrames(Track parentTrack) {
+
+    }
 }

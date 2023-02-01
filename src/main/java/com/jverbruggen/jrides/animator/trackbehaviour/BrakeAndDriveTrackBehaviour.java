@@ -8,41 +8,24 @@ import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
+public class BrakeAndDriveTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour{
+    private final double deceleration;
+    private final double acceleration;
+    private final double driveSpeed;
 
-public class FullStopAndGoTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour{
-    private final int stopTime;
-    private Phase phase;
-    private int stopTimeCounter;
-
-    public FullStopAndGoTrackBehaviour(CartMovementFactory cartMovementFactory, int stopTime) {
+    public BrakeAndDriveTrackBehaviour(CartMovementFactory cartMovementFactory, double driveSpeed, double deceleration, double acceleration) {
         super(cartMovementFactory);
-
-        this.stopTime = stopTime;
-        trainExitedAtEnd();
+        this.deceleration = deceleration;
+        this.acceleration = acceleration;
+        this.driveSpeed = driveSpeed;
     }
 
     @Override
     public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Track track) {
-//        Bukkit.broadcastMessage("Brake " + phase.toString());
         Speed newSpeed = currentSpeed.clone();
         Train train = trainHandle.getTrain();
 
-        final double deceleration = 0.5;
-        final double acceleration = 0.1;
-
-        switch (phase){
-            case STOPPING:
-                if(currentSpeed.is(0)) phase = Phase.STOPPED;
-                newSpeed.minus(deceleration, 0);
-                break;
-            case STOPPED:
-                if(stopTimeCounter <= 0) phase = Phase.LEAVING;
-                stopTimeCounter--;
-                break;
-            case LEAVING:
-                newSpeed.add(acceleration, 1.0);
-                break;
-        }
+        newSpeed.approach(acceleration, deceleration, driveSpeed);
 
         return calculateTrainMovement(train, track, newSpeed);
     }
@@ -54,13 +37,12 @@ public class FullStopAndGoTrackBehaviour extends BaseTrackBehaviour implements T
 
     @Override
     public void trainExitedAtEnd(){
-        this.phase = Phase.STOPPING;
-        this.stopTimeCounter = this.stopTime;
+
     }
 
     @Override
     public String getName() {
-        return "FullStopAndGo";
+        return "BrakeAndDrive";
     }
 
     @Override
@@ -82,10 +64,4 @@ public class FullStopAndGoTrackBehaviour extends BaseTrackBehaviour implements T
     protected void setParentTrackOnFrames(Track parentTrack) {
 
     }
-}
-
-enum Phase{
-    STOPPING,
-    STOPPED,
-    LEAVING
 }

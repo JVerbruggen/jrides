@@ -47,8 +47,8 @@ public class ConfigManager {
         return getFolder(rideIdentifier) + "/triggers";
     }
 
-    public ConfigurationSection getAllEffectsConfigSection(String rideIdentifier){
-        String fileName = getFolder(rideIdentifier) + "/" + rideIdentifier + ".trigger.yml";
+    public ConfigurationSection getAllEffectsConfigSection(String rideIdentifier, String trackIdentifier){
+        String fileName = getFolder(rideIdentifier) + "/" + rideIdentifier + "." + trackIdentifier + ".trigger.yml";
         YamlConfiguration yamlConfiguration = getYamlConfiguration(fileName);
         return yamlConfiguration.getConfigurationSection("triggers");
     }

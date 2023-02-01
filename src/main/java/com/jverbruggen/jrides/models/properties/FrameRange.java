@@ -36,6 +36,6 @@ public class FrameRange {
             }
         }
 
-        return new SimpleFrame(frameIndex);
+        return new SimpleFrame(frameIndex, lower.getTrack());
     }
 }

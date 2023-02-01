@@ -114,6 +114,11 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
     public Frame getSpawnFrame() {
         return stopFrame;
     }
+
+    @Override
+    protected void setParentTrackOnFrames(Track parentTrack) {
+        stopFrame.setTrack(parentTrack);
+    }
 }
 
 enum BlockBrakePhase{

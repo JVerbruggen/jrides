@@ -6,16 +6,22 @@ import com.jverbruggen.jrides.models.properties.Frame;
 import java.util.List;
 
 public class TrackDescription {
+    private final String identifier;
     private final List<NoLimitsExportPositionRecord> positions;
     private final TrackType trackType;
     private final Frame startFrame;
     private final Frame endFrame;
 
-    public TrackDescription(List<NoLimitsExportPositionRecord> positions, TrackType trackType, Frame startFrame, Frame endFrame) {
+    public TrackDescription(String identifier, List<NoLimitsExportPositionRecord> positions, TrackType trackType, Frame startFrame, Frame endFrame) {
+        this.identifier = identifier;
         this.positions = positions;
         this.trackType = trackType;
         this.startFrame = startFrame;
         this.endFrame = endFrame;
+    }
+
+    public String getIdentifier() {
+        return identifier;
     }
 
     public List<NoLimitsExportPositionRecord> getPositions() {

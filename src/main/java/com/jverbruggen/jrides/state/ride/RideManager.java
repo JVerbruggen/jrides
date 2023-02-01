@@ -115,15 +115,16 @@ public class RideManager {
         float offsetY = offset.get(1);
         float offsetZ = offset.get(2);
 
-        int startOffset = coasterConfig.getTrack().getOffset();
-        EffectTriggerCollection effectTriggerCollection = effectTriggerFactory.getEffectTriggers(rideIdentifier, startOffset);
-        CoasterHandle coasterHandle = new CoasterHandle(ride, world, effectTriggerCollection);
+        CoasterHandle coasterHandle = new CoasterHandle(ride, world);
 
-        Track track = loadCoasterTrackFromConfig(coasterHandle, coasterConfig, offsetX, offsetY, offsetZ, startOffset);
+        Track track = loadCoasterTrackFromConfig(coasterHandle, coasterConfig, offsetX, offsetY, offsetZ);
         if(track == null) return;
-        SectionProvider sectionProvider = new SectionProvider(track);
         coasterHandle.setTrack(track);
 
+        EffectTriggerCollection effectTriggerCollection = effectTriggerFactory.getEffectTriggers(rideIdentifier, track);
+        coasterHandle.setEffectTriggerCollection(effectTriggerCollection);
+
+        SectionProvider sectionProvider = new SectionProvider(track);
         int trainCount = coasterConfig.getVehicles().getTrains();
         List<TrainHandle> trainHandles = createTrains(track, coasterConfig, sectionProvider, rideIdentifier, trainCount);
         coasterHandle.setTrains(trainHandles);
@@ -163,10 +164,11 @@ public class RideManager {
         return trains;
     }
 
-    private Track loadCoasterTrackFromConfig(CoasterHandle coasterHandle, CoasterConfig coasterConfig, float offsetX, float offsetY, float offsetZ, int startOffset){
+    private Track loadCoasterTrackFromConfig(CoasterHandle coasterHandle, CoasterConfig coasterConfig, float offsetX, float offsetY, float offsetZ){
         Ride ride = coasterHandle.getRide();
         String rideIdentifier = ride.getIdentifier();
-        String configFileName = configManager.getFolder(rideIdentifier) + "/" + rideIdentifier + ".csv";
+        String trackIdentifier = "default";
+        String configFileName = configManager.getFolder(rideIdentifier) + "/track/" + rideIdentifier + "." + trackIdentifier + ".csv";
         File configFile = new File(dataFolder, configFileName);
         Path pathToConfigFile = configFile.toPath();
         List<NoLimitsExportPositionRecord> positions = new ArrayList<>();
@@ -187,8 +189,8 @@ public class RideManager {
             ioe.printStackTrace();
         }
 
-        Frame startFrame = new SimpleFrame(startOffset);
-        TrackFactory trackFactory = new ConfigCircularNoInterruptionTrackFactory(coasterHandle, coasterConfig, new TrackDescription(positions, TrackType.TRACK, startFrame, startFrame), startOffset);
+        Frame startFrame = new SimpleFrame(0);
+        TrackFactory trackFactory = new ConfigCircularNoInterruptionTrackFactory(coasterHandle, coasterConfig, new TrackDescription(trackIdentifier, positions, TrackType.TRACK, startFrame, startFrame));
         return trackFactory.createTrack();
     }
 }

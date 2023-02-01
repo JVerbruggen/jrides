@@ -6,10 +6,7 @@ import com.jverbruggen.jrides.animator.trackbehaviour.*;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
-import com.jverbruggen.jrides.config.coaster.objects.section.BlockSectionSpecConfig;
-import com.jverbruggen.jrides.config.coaster.objects.section.SectionConfig;
-import com.jverbruggen.jrides.config.coaster.objects.section.StationEffectsConfig;
-import com.jverbruggen.jrides.config.coaster.objects.section.StationSpecConfig;
+import com.jverbruggen.jrides.config.coaster.objects.section.*;
 import com.jverbruggen.jrides.config.gates.GateConfig;
 import com.jverbruggen.jrides.config.gates.GateOwnerConfigSpec;
 import com.jverbruggen.jrides.control.DispatchLock;
@@ -114,7 +111,7 @@ public class TrackBehaviourFactory {
             double gravityConstant = coasterConfig.getGravityConstant();
             double dragConstant = coasterConfig.getDragConstant();
             return getTrackBehaviour(gravityConstant, dragConstant);
-        }else if(type.equalsIgnoreCase("blocksection")){
+        }else if(type.equalsIgnoreCase("blocksection") || type.equalsIgnoreCase("transfer")){
             BlockSectionSpecConfig blockSectionSpecConfig = sectionConfig.getBlockSectionSpec();
             double engagePercentage = blockSectionSpecConfig.getEngage();
             Frame lowerRange = new SimpleFrame(sectionConfig.getLowerRange());
@@ -134,6 +131,15 @@ public class TrackBehaviourFactory {
 
             Frame blockBrakeEngageFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
             return getStationBehaviour(blockBrakeEngageFrame, coasterHandle, sectionConfig, gateSpec);
+        }else if(type.equalsIgnoreCase("brake")){
+            BrakeSectionSpecConfig brakeSectionSpecConfig = sectionConfig.getBrakeSectionSpec();
+            double driveSpeed = brakeSectionSpecConfig.getDriveSpeed();
+            double deceleration = brakeSectionSpecConfig.getDeceleration();
+            return new BrakeAndDriveTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, deceleration);
+        }else if(type.equalsIgnoreCase("drive")){
+            DriveSectionSpecConfig driveSectionSpecConfig = sectionConfig.getDriveSectionSpec();
+            double driveSpeed = driveSectionSpecConfig.getDriveSpeed();
+            return new BrakeAndDriveTrackBehaviour(cartMovementFactory, driveSpeed, 1.0, 1.0);
         }
 
         JRidesPlugin.getLogger().severe("Unknown section type " + type);

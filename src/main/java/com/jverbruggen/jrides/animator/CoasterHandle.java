@@ -29,7 +29,7 @@ public class CoasterHandle implements RideHandle {
     private List<TrainHandle> trains;
     private EffectTriggerCollection effectTriggerCollection;
 
-    public CoasterHandle(Ride ride, World world, EffectTriggerCollection effectTriggerCollection) {
+    public CoasterHandle(Ride ride, World world) {
         this.ride = ride;
         this.world = world;
         this.rideController = null;
@@ -38,7 +38,7 @@ public class CoasterHandle implements RideHandle {
         this.stationHandles = new ArrayList<>();
         this.visualisationTool = null;
         this.track = null;
-        this.effectTriggerCollection = effectTriggerCollection;
+        this.effectTriggerCollection = null;
     }
 
     @Override
@@ -113,5 +113,9 @@ public class CoasterHandle implements RideHandle {
 
     public EffectTriggerCollection getEffectTriggerCollection() {
         return effectTriggerCollection;
+    }
+
+    public void setEffectTriggerCollection(EffectTriggerCollection effectTriggerCollection) {
+        this.effectTriggerCollection = effectTriggerCollection;
     }
 }

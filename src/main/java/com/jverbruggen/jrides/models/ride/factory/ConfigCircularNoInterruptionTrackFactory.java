@@ -26,13 +26,11 @@ public class ConfigCircularNoInterruptionTrackFactory implements TrackFactory {
     private final CoasterHandle coasterHandle;
     private final CoasterConfig coasterConfig;
     private final TrackDescription trackDescription;
-    private final int startOffset;
 
-    public ConfigCircularNoInterruptionTrackFactory(CoasterHandle coasterHandle, CoasterConfig coasterConfig, TrackDescription trackDescription, int startOffset) {
+    public ConfigCircularNoInterruptionTrackFactory(CoasterHandle coasterHandle, CoasterConfig coasterConfig, TrackDescription trackDescription) {
         this.coasterHandle = coasterHandle;
         this.coasterConfig = coasterConfig;
         this.trackDescription = trackDescription;
-        this.startOffset = startOffset;
         this.trackBehaviourFactory = ServiceProvider.getSingleton(TrackBehaviourFactory.class);
         this.frameFactory = ServiceProvider.getSingleton(FrameFactory.class);
     }
@@ -42,7 +40,6 @@ public class ConfigCircularNoInterruptionTrackFactory implements TrackFactory {
         SectionBuilder sectionBuilder = new SectionBuilder(true);
         List<NoLimitsExportPositionRecord> positions = trackDescription.getPositions();
         int totalFrames = positions.size();
-        int globalOffset = coasterConfig.getTrack().getOffset();
 
         TrackConfig trackConfig = coasterConfig.getTrack();
 
@@ -56,7 +53,7 @@ public class ConfigCircularNoInterruptionTrackFactory implements TrackFactory {
             // set startFrame of this section to the previous endFrame is it exists
             Frame startFrame = (previousEndFrame != null)
                     ? previousEndFrame
-                    : new SimpleFrame(sectionConfig.getLowerRange() + globalOffset);
+                    : new SimpleFrame(sectionConfig.getLowerRange());
 
             Frame endFrame;
             // Set endFrame to startFrame if theres only 1 section
@@ -67,7 +64,7 @@ public class ConfigCircularNoInterruptionTrackFactory implements TrackFactory {
                 endFrame = firstStartFrame;
             // .. or else make a new endFrame
             }else{
-                endFrame = new SimpleFrame(sectionConfig.getUpperRange() + globalOffset);
+                endFrame = new SimpleFrame(sectionConfig.getUpperRange());
             }
 
             TrackBehaviour trackBehaviour = trackBehaviourFactory.getTrackBehaviourFor(coasterHandle, coasterConfig, sectionConfig, totalFrames);
@@ -79,6 +76,6 @@ public class ConfigCircularNoInterruptionTrackFactory implements TrackFactory {
             previousEndFrame = endFrame;
         }
 
-        return new CircularSplineBasedTrack(positions, sectionBuilder.collect());
+        return new CircularSplineBasedTrack(trackDescription.getIdentifier(), positions, sectionBuilder.collect());
     }
 }

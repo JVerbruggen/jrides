@@ -58,7 +58,6 @@ public class ConfigAdvancedSplineTrackFactory implements TrackFactory {
         List<NoLimitsExportPositionRecord> positions = trackDescription.getPositions();
         SectionBuilder sectionBuilder = new SectionBuilder(false);
         int totalFrames = positions.size();
-        int globalOffset = coasterConfig.getTrack().getOffset();
 
         TrackConfig trackConfig = coasterConfig.getTrack();
 
@@ -72,7 +71,7 @@ public class ConfigAdvancedSplineTrackFactory implements TrackFactory {
             // set startFrame of this section to the previous endFrame is it exists
             Frame startFrame = (previousEndFrame != null)
                     ? previousEndFrame
-                    : new SimpleFrame(sectionConfig.getLowerRange() + globalOffset);
+                    : new SimpleFrame(sectionConfig.getLowerRange());
 
             Frame endFrame;
             // Set endFrame to startFrame if theres only 1 section
@@ -83,7 +82,7 @@ public class ConfigAdvancedSplineTrackFactory implements TrackFactory {
                 endFrame = firstStartFrame;
                 // .. or else make a new endFrame
             }else{
-                endFrame = new SimpleFrame(sectionConfig.getUpperRange() + globalOffset);
+                endFrame = new SimpleFrame(sectionConfig.getUpperRange());
             }
 
             TrackBehaviour trackBehaviour = trackBehaviourFactory.getTrackBehaviourFor(coasterHandle, coasterConfig, sectionConfig, totalFrames);
@@ -95,6 +94,7 @@ public class ConfigAdvancedSplineTrackFactory implements TrackFactory {
             previousEndFrame = endFrame;
         }
 
-        return new LooseEndedSplineBasedTrack(positions, sectionBuilder.collect(), trackDescription.getStartFrame(), trackDescription.getEndFrame());
+        return new LooseEndedSplineBasedTrack(trackDescription.getIdentifier(), positions, sectionBuilder.collect(),
+                trackDescription.getStartFrame(), trackDescription.getEndFrame());
     }
 }
