@@ -7,8 +7,6 @@ import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.jverbruggen.jrides.models.entity.Player;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class ActionBarMessage implements Message {
     private ProtocolManager protocolManager;
     private String contents;

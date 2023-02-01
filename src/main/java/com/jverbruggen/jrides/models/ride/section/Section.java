@@ -2,12 +2,11 @@ package com.jverbruggen.jrides.models.ride.section;
 
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.models.properties.Frame;
-import com.jverbruggen.jrides.models.ride.coaster.Track;
-import com.jverbruggen.jrides.models.ride.coaster.Train;
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public interface Section {
-    Frame getStartFrame();
     Frame getSpawnFrame();
     Frame getEndFrame();
     boolean isInSection(Frame frame);

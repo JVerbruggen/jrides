@@ -1,24 +1,34 @@
 package com.jverbruggen.jrides.models.properties;
 
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+
 public class LinkedFrame implements Frame {
     private final Frame linkedTo;
     private final int offsetFromLink;
-    private final int totalFrames;
 
-    public LinkedFrame(Frame linkedTo, int offsetFromLink, int totalFrames) {
+    public LinkedFrame(Frame linkedTo, int offsetFromLink) {
         this.linkedTo = linkedTo;
         this.offsetFromLink = offsetFromLink;
-        this.totalFrames = totalFrames;
     }
 
     @Override
     public int getValue() {
-        return Frame.getCyclicFrameValue(linkedTo.getValue() + offsetFromLink, totalFrames);
+        return linkedTo.clone().add(offsetFromLink).getValue();
     }
 
     @Override
     public void setValue(int frame) {
-        linkedTo.setValue(Frame.getCyclicFrameValue(frame - offsetFromLink, totalFrames));
+        linkedTo.setValue(frame - offsetFromLink);
+    }
+
+    @Override
+    public Track getTrack() {
+        throw new RuntimeException("Unimplemented");
+    }
+
+    @Override
+    public void setTrack(Track track) {
+        throw new RuntimeException("Unimplemented");
     }
 
     @Override
@@ -27,6 +37,7 @@ public class LinkedFrame implements Frame {
         return this;
     }
 
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Frame clone() {
         return new SimpleFrame(getValue());

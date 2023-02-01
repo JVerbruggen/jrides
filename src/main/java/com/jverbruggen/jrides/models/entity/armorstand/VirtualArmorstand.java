@@ -135,7 +135,7 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         packetSender.teleportVirtualEntity(this.getViewers(), entityId, newLocation);
     }
 
-    public static final Vector3 getHeadOffset(){
+    public static Vector3 getHeadOffset(){
         return new Vector3(0, 1.8, 0);
     }
 }

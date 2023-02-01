@@ -11,12 +11,11 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.properties.TrainEnd;
-import com.jverbruggen.jrides.models.ride.coaster.Cart;
-import com.jverbruggen.jrides.models.ride.coaster.Track;
-import com.jverbruggen.jrides.models.ride.coaster.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionProvider;
-import org.bukkit.Bukkit;
 
 import java.util.Map;
 import java.util.Set;

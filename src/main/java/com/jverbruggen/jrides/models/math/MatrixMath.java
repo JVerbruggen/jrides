@@ -176,6 +176,7 @@ public class MatrixMath {
     //        _Numerical_Recipes_in_C_, Cambridge University Press,
     //        1988, pp 44-45.
     //
+    @SuppressWarnings("PointlessArithmeticExpression")
     public static void luBacksubstitution(double[] matrix1,
                                           int[] row_perm,
                                           double[] matrix2) {

@@ -6,13 +6,11 @@ import com.jverbruggen.jrides.control.ControlAction;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileTags;
-import com.jverbruggen.jrides.language.StringReplacementBuilder;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.StationHandle;
-import com.jverbruggen.jrides.models.ride.coaster.Train;
-import org.bukkit.Bukkit;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 public class SemiAutomaticMode extends BaseControlMode implements ControlMode {
     private Player operator;

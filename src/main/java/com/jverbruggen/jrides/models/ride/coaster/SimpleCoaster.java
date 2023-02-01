@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.models.ride.coaster;
 
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 import java.util.ArrayList;
 import java.util.List;

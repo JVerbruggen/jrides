@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.serviceprovider;
 import java.util.HashMap;
 import java.util.function.Function;
 
+@SuppressWarnings("rawtypes")
 public class HashMapServiceProvider implements ServiceProvider {
 
     private HashMap<Class, Object> instances;

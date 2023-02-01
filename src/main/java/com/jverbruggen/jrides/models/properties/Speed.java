@@ -50,6 +50,7 @@ public class Speed {
         return (int) (speedPerTick * frameIncrementFactor);
     }
 
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Speed clone(){
         return new Speed(this.speedPerTick);
     }

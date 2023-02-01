@@ -368,7 +368,7 @@ public class Quaternion implements Cloneable {
         rotateX_unsafe(Math.sqrt(0.5 + r), Math.sqrt(0.5 - r));
     }
 
-    private final void rotateX_unsafe(double fy, double fz) {
+    private void rotateX_unsafe(double fy, double fz) {
         double x = this.x * fy + this.w * fz;
         double y = this.y * fy + this.z * fz;
         double z = this.z * fy - this.y * fz;
@@ -407,7 +407,7 @@ public class Quaternion implements Cloneable {
         rotateY_unsafe(Math.sqrt(0.5 + r), Math.sqrt(0.5 - r));
     }
 
-    private final void rotateY_unsafe(double fx, double fz) {
+    private void rotateY_unsafe(double fx, double fz) {
         double x = this.x * fx - this.z * fz;
         double y = this.y * fx + this.w * fz;
         double z = this.z * fx + this.x * fz;
@@ -446,7 +446,7 @@ public class Quaternion implements Cloneable {
         rotateZ_unsafe(Math.sqrt(0.5 + r), Math.sqrt(0.5 - r));
     }
 
-    private final void rotateZ_unsafe(double fx, double fy) {
+    private void rotateZ_unsafe(double fx, double fy) {
         double x = this.x * fx + this.y * fy;
         double y = this.y * fx - this.x * fy;
         double z = this.z * fx + this.w * fy;
@@ -485,6 +485,7 @@ public class Quaternion implements Cloneable {
         this.x *= f; this.y *= f; this.z *= f; this.w *= f;
     }
 
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Quaternion clone() {
         return new Quaternion(this);
@@ -866,7 +867,7 @@ public class Quaternion implements Cloneable {
 
     // This method is used often for the two-arg rotateX/Y/Z functions
     // Optimized equivalent of 0.5 * Math.cos(Math.atan2(y, x))
-    private static final double halfcosatan2(double y, double x) {
+    private static double halfcosatan2(double y, double x) {
         double tmp = y / x;
         tmp *= tmp;
         tmp += 1.0;

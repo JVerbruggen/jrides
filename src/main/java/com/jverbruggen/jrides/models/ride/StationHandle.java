@@ -2,11 +2,10 @@ package com.jverbruggen.jrides.models.ride;
 
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
-import com.jverbruggen.jrides.effect.EffectTrigger;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
-import com.jverbruggen.jrides.models.ride.coaster.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
 
 import java.util.List;

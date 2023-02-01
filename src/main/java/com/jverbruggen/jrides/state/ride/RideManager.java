@@ -8,20 +8,26 @@ import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.ride.RideConfig;
 import com.jverbruggen.jrides.config.ride.RideConfigObject;
 import com.jverbruggen.jrides.control.RideController;
-import com.jverbruggen.jrides.control.controlmode.AutomaticMode;
 import com.jverbruggen.jrides.control.controlmode.ControlMode;
 import com.jverbruggen.jrides.control.controlmode.SemiAutomaticMode;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.identifier.RideIdentifier;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.*;
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.factory.ConfigCircularNoInterruptionTrackFactory;
 import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrackFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrainFactory;
+import com.jverbruggen.jrides.models.ride.factory.track.TrackDescription;
+import com.jverbruggen.jrides.models.ride.factory.track.TrackType;
 import com.jverbruggen.jrides.models.ride.section.SectionProvider;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
@@ -43,7 +49,6 @@ public class RideManager {
     private final ConfigManager configManager;
     private final ViewportManager viewportManager;
     private final TrainFactory trainFactory;
-    private final TrackFactory trackFactory;
     private final SeatFactory seatFactory;
     private final EffectTriggerFactory effectTriggerFactory;
     private List<String> rideIdentifiers;
@@ -55,7 +60,6 @@ public class RideManager {
         this.viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
         this.configManager = ServiceProvider.getSingleton(ConfigManager.class);
         this.trainFactory = ServiceProvider.getSingleton(TrainFactory.class);
-        this.trackFactory = ServiceProvider.getSingleton(TrackFactory.class);
         this.seatFactory = ServiceProvider.getSingleton(SeatFactory.class);
         this.effectTriggerFactory = ServiceProvider.getSingleton(EffectTriggerFactory.class);
         this.rideIdentifiers = new ArrayList<>();
@@ -183,6 +187,8 @@ public class RideManager {
             ioe.printStackTrace();
         }
 
-        return trackFactory.createSimpleTrack(coasterHandle, coasterConfig, positions, startOffset);
+        Frame startFrame = new SimpleFrame(startOffset);
+        TrackFactory trackFactory = new ConfigCircularNoInterruptionTrackFactory(coasterHandle, coasterConfig, new TrackDescription(positions, TrackType.TRACK, startFrame, startFrame), startOffset);
+        return trackFactory.createTrack();
     }
 }

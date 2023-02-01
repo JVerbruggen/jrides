@@ -5,7 +5,7 @@ import com.jverbruggen.jrides.models.math.Matrix4x4;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Seat;
-import com.jverbruggen.jrides.models.ride.coaster.CoasterSeat;
+import com.jverbruggen.jrides.models.ride.coaster.train.CoasterSeat;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 

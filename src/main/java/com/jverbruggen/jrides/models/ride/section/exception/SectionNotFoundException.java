@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.models.ride.section.exception;
 
-import com.jverbruggen.jrides.models.ride.coaster.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 public class SectionNotFoundException extends RuntimeException {
     private final Train train;

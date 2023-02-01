@@ -1,7 +1,6 @@
 package com.jverbruggen.jrides.models.ride.factory;
 
 import com.jverbruggen.jrides.JRidesPlugin;
-import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.VehiclesConfig;
 import com.jverbruggen.jrides.config.coaster.objects.cart.CartModelItemConfig;
@@ -17,7 +16,11 @@ import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.LinkedFrame;
 import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.ride.Seat;
-import com.jverbruggen.jrides.models.ride.coaster.*;
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
+import com.jverbruggen.jrides.models.ride.coaster.train.SimpleCart;
+import com.jverbruggen.jrides.models.ride.coaster.train.SimpleTrain;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
@@ -37,7 +40,6 @@ public class TrainFactory {
     }
 
     public Train createEquallyDistributedTrain(Track track, CoasterConfig coasterConfig, String trainIdentifier){
-        final int totalFrames = track.getRawPositionsCount();
         final Section spawnSection = track.getNextSpawnSection();
         if(spawnSection == null){
             JRidesPlugin.getLogger().severe("No spawn section available on track " + track.toString() + " for train to spawn!");
@@ -46,18 +48,19 @@ public class TrainFactory {
 
         VehiclesConfig vehiclesConfig = coasterConfig.getVehicles();
 
-        final Frame headOfTrainFrame = CyclicFrame.fromFrame(spawnSection.getSpawnFrame(), totalFrames);
+        final Frame headOfTrainFrame = track.getFrameFor(spawnSection.getSpawnFrame().getValue());
         final int amountOfCarts = vehiclesConfig.getCarts();
         final int cartDistance = vehiclesConfig.getCartDistance();
-        final LinkedFrame massMiddleFrame = new LinkedFrame(headOfTrainFrame, -(amountOfCarts*cartDistance) / 2, totalFrames);
+        final LinkedFrame massMiddleFrame = new LinkedFrame(headOfTrainFrame, -(amountOfCarts*cartDistance) / 2);
         final int headOfTrainOffset = headOfTrainFrame.getValue();
         final Vector3 cartOffset = coasterConfig.getCartSpec().getDefault().getModel().getPosition();
-        final LinkedFrame tailOfTrainFrame = new LinkedFrame(headOfTrainFrame, -(amountOfCarts*cartDistance), totalFrames);
+        final LinkedFrame tailOfTrainFrame = new LinkedFrame(headOfTrainFrame, -(amountOfCarts*cartDistance));
 
         List<Cart> carts = new ArrayList<>();
         for(int i = 0; i < amountOfCarts; i++){
             int cartOffsetFrames = i*cartDistance;
-            int cartFrameValue = Frame.getCyclicFrameValue(headOfTrainOffset - cartOffsetFrames, totalFrames);
+
+            Frame cartFrame = track.getFrameFor(headOfTrainOffset - cartOffsetFrames);
 
             CartTypeSpecConfig cartTypeSpecConfig = coasterConfig.getCartSpec().getDefault();
             CartModelItemConfig cartModelItemConfig = cartTypeSpecConfig.getModel().getItem();
@@ -67,7 +70,6 @@ public class TrainFactory {
             boolean unbreakable = cartModelItemConfig.isUnbreakable();
             TrainModelItem model = new TrainModelItem(ItemStackFactory.getCoasterStack(modelMaterial, modelDamage, unbreakable));
 
-            Frame cartFrame = new SimpleFrame(cartFrameValue, track);
             Vector3 trackLocation = track.getLocationFor(cartFrame);
             Quaternion orientation = track.getOrientationFor(cartFrame);
             Vector3 cartLocation = Cart.calculateLocation(trackLocation, cartOffset, orientation);
@@ -82,7 +84,7 @@ public class TrainFactory {
                     seats,
                     armorStand,
                     cartOffset,
-                    new LinkedFrame(headOfTrainFrame, -cartOffsetFrames, totalFrames));
+                    new LinkedFrame(headOfTrainFrame, -cartOffsetFrames));
             carts.add(cart);
         }
 

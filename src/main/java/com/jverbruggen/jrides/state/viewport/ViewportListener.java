@@ -1,14 +1,10 @@
 package com.jverbruggen.jrides.state.viewport;
 
 import com.jverbruggen.jrides.JRidesPlugin;
-import com.jverbruggen.jrides.event.player.PlayerSitDownEvent;
-import com.jverbruggen.jrides.event.player.PlayerStandUpEvent;
-import com.jverbruggen.jrides.event.ride.OnrideMusicTriggerEvent;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;

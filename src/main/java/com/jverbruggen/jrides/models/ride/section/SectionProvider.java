@@ -1,8 +1,8 @@
 package com.jverbruggen.jrides.models.ride.section;
 
 import com.jverbruggen.jrides.models.properties.Frame;
-import com.jverbruggen.jrides.models.ride.coaster.Track;
-import com.jverbruggen.jrides.models.ride.coaster.Train;
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.exception.SectionNotFoundException;
 import org.checkerframework.checker.nullness.qual.NonNull;
 

@@ -1,8 +1,7 @@
 package com.jverbruggen.jrides.effect.platform;
 
 import com.jverbruggen.jrides.effect.EffectTrigger;
-import com.jverbruggen.jrides.models.ride.coaster.Train;
-import org.bukkit.Bukkit;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 import java.util.List;
 

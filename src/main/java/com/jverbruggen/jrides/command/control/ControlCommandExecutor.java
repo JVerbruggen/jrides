@@ -3,21 +3,11 @@ package com.jverbruggen.jrides.command.control;
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.command.BaseCommandExecutor;
 import com.jverbruggen.jrides.command.context.CommandContext;
-import com.jverbruggen.jrides.control.RideController;
-import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
-import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
-import com.jverbruggen.jrides.language.LanguageFileTags;
-import com.jverbruggen.jrides.language.StringReplacementBuilder;
-import com.jverbruggen.jrides.models.entity.MessageReceiver;
-import com.jverbruggen.jrides.models.entity.Player;
-import com.jverbruggen.jrides.models.entity.SimpleMessageReceiver;
-import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.inventory.Inventory;
 
 import java.util.List;
 

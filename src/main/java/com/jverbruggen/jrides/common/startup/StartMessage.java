@@ -5,13 +5,15 @@ import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import java.util.logging.Logger;
 
 public class StartMessage {
-    private static String splashLogo = "\n" +
-            "    _      _     _           \n" +
-            "   (_)_ __(_) __| | ___  ___ \n" +
-            "   | | '__| |/ _` |/ _ \\/ __|\n" +
-            "   | | |  | | (_| |  __/\\__ \\\n" +
-            "  _/ |_|  |_|\\__,_|\\___||___/\n" +
-            " |__/                        \n";
+    private static String splashLogo = """
+
+                _      _     _          \s
+               (_)_ __(_) __| | ___  ___\s
+               | | '__| |/ _` |/ _ \\/ __|
+               | | |  | | (_| |  __/\\__ \\
+              _/ |_|  |_|\\__,_|\\___||___/
+             |__/                       \s
+            """;
     private static String enabled = "        E N A B L E D";
     private static String disabled = "        D I S A B L E D";
 

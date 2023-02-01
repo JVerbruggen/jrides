@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.models.ride.coaster;
+package com.jverbruggen.jrides.models.ride.coaster.train;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.event.player.PlayerSitDownEvent;
@@ -9,8 +9,8 @@ import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Seat;
+import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.state.ride.SoftEjector;
-import org.bukkit.ChatColor;
 
 public class CoasterSeat implements Seat {
     private Player passenger;

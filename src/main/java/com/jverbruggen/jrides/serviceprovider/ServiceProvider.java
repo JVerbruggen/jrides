@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.serviceprovider;
 
 import java.util.function.Function;
 
+@SuppressWarnings("rawtypes")
 public interface ServiceProvider {
     <T> T _getSingleton(Class<T> type);
 

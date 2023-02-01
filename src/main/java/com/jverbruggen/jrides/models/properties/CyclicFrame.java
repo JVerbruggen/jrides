@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.models.properties;
 
-import org.bukkit.Bukkit;
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 
 public class CyclicFrame implements Frame {
     private int frame;
@@ -22,11 +22,22 @@ public class CyclicFrame implements Frame {
     }
 
     @Override
+    public Track getTrack() {
+        throw new RuntimeException("Unimplemented");
+    }
+
+    @Override
+    public void setTrack(Track track) {
+        throw new RuntimeException("Unimplemented");
+    }
+
+    @Override
     public Frame add(int frames) {
         setValue(this.frame + frames);
         return this;
     }
 
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Frame clone() {
         return new CyclicFrame(frame, cycle);

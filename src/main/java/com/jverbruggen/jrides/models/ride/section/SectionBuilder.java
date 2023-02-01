@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SectionBuilder {
-    private List<Section> sections;
+    private final List<Section> sections;
     private boolean collected;
+    private final boolean tieLooseEnds;
 
-    public SectionBuilder() {
+    public SectionBuilder(boolean tieLooseEnds) {
         this.sections = new ArrayList<>();
         this.collected = false;
+        this.tieLooseEnds = tieLooseEnds;
     }
 
     private Section getFirstItem(){
@@ -38,14 +40,16 @@ public class SectionBuilder {
         if(collected) throw new RuntimeException("Builder was already collected");
         collected = true;
 
-        Section firstSection = getFirstItem();
-        Section lastSection = getLastItem();
+        if(tieLooseEnds){
+            Section firstSection = getFirstItem();
+            Section lastSection = getLastItem();
 
-        assert firstSection != null;
-        assert lastSection != null;
+            assert firstSection != null;
+            assert lastSection != null;
 
-        firstSection.setPrevious(lastSection);
-        lastSection.setNext(firstSection);
+            firstSection.setPrevious(lastSection);
+            lastSection.setNext(firstSection);
+        }
 
         return sections;
     }

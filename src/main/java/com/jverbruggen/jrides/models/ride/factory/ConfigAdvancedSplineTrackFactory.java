@@ -10,26 +10,53 @@ import com.jverbruggen.jrides.config.coaster.objects.section.SectionConfig;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.properties.factory.FrameFactory;
-import com.jverbruggen.jrides.models.ride.coaster.SplineBasedTrack;
-import com.jverbruggen.jrides.models.ride.coaster.Track;
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+import com.jverbruggen.jrides.models.ride.coaster.track.compound.CompoundTrack;
+import com.jverbruggen.jrides.models.ride.coaster.track.compound.LooseEndedSplineBasedTrack;
+import com.jverbruggen.jrides.models.ride.factory.track.TrackDescription;
+import com.jverbruggen.jrides.models.ride.factory.track.TrackType;
 import com.jverbruggen.jrides.models.ride.section.SectionBuilder;
 import com.jverbruggen.jrides.models.ride.section.SimpleSection;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ConfigTrackFactory implements TrackFactory {
+public class ConfigAdvancedSplineTrackFactory implements TrackFactory {
     private final TrackBehaviourFactory trackBehaviourFactory;
     private final FrameFactory frameFactory;
 
-    public ConfigTrackFactory() {
+    private final CoasterHandle coasterHandle;
+    private final CoasterConfig coasterConfig;
+    private final List<TrackDescription> trackDescriptions;
+
+    public ConfigAdvancedSplineTrackFactory(CoasterHandle coasterHandle, CoasterConfig coasterConfig, List<TrackDescription> trackDescriptions) {
+        this.coasterHandle = coasterHandle;
+        this.coasterConfig = coasterConfig;
+        this.trackDescriptions = trackDescriptions;
         this.trackBehaviourFactory = ServiceProvider.getSingleton(TrackBehaviourFactory.class);
         this.frameFactory = ServiceProvider.getSingleton(FrameFactory.class);
     }
 
     @Override
-    public Track createSimpleTrack(CoasterHandle coasterHandle, CoasterConfig coasterConfig, List<NoLimitsExportPositionRecord> positions, int startOffset){
-        SectionBuilder sectionBuilder = new SectionBuilder();
+    public Track createTrack(){
+        List<Track> childrenTracks = new ArrayList<>();
+
+        for(TrackDescription trackDescription : trackDescriptions){
+            Track track;
+            if(trackDescription.getTrackType() == TrackType.TRACK){
+                track = createSplineTrack(trackDescription);
+            }else if(trackDescription.getTrackType() == TrackType.TRANSFER){
+                track = null;
+            }
+        }
+
+        return new CompoundTrack(childrenTracks);
+    }
+
+    public Track createSplineTrack(TrackDescription trackDescription){
+        List<NoLimitsExportPositionRecord> positions = trackDescription.getPositions();
+        SectionBuilder sectionBuilder = new SectionBuilder(false);
         int totalFrames = positions.size();
         int globalOffset = coasterConfig.getTrack().getOffset();
 
@@ -51,10 +78,10 @@ public class ConfigTrackFactory implements TrackFactory {
             // Set endFrame to startFrame if theres only 1 section
             if(sectionConfigs.size() == 1){
                 endFrame = startFrame;
-            // .. or to firstStartFrame if it is the last, to make it cyclic
+                // .. or to firstStartFrame if it is the last, to make it cyclic
             }else if (i == sectionConfigs.size()-1){
                 endFrame = firstStartFrame;
-            // .. or else make a new endFrame
+                // .. or else make a new endFrame
             }else{
                 endFrame = new SimpleFrame(sectionConfig.getUpperRange() + globalOffset);
             }
@@ -68,6 +95,6 @@ public class ConfigTrackFactory implements TrackFactory {
             previousEndFrame = endFrame;
         }
 
-        return new SplineBasedTrack(positions, sectionBuilder.collect());
+        return new LooseEndedSplineBasedTrack(positions, sectionBuilder.collect(), trackDescription.getStartFrame(), trackDescription.getEndFrame());
     }
 }

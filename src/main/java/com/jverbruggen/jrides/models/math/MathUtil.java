@@ -556,7 +556,7 @@ public class MathUtil {
      * @return value, min or max
      */
     public static double clamp(double value, double min, double max) {
-        return value < min ? min : (value > max ? max : value);
+        return value < min ? min : (Math.min(value, max));
     }
 
     /**
@@ -579,7 +579,7 @@ public class MathUtil {
      * @return value, min or max
      */
     public static float clamp(float value, float min, float max) {
-        return value < min ? min : (value > max ? max : value);
+        return value < min ? min : (Math.min(value, max));
     }
 
     /**
@@ -602,7 +602,7 @@ public class MathUtil {
      * @return value, min or max
      */
     public static int clamp(int value, int min, int max) {
-        return value < min ? min : (value > max ? max : value);
+        return value < min ? min : (Math.min(value, max));
     }
 
     /**
@@ -625,7 +625,7 @@ public class MathUtil {
      * @return value, min or max
      */
     public static long clamp(long value, long min, long max) {
-        return value < min ? min : (value > max ? max : value);
+        return value < min ? min : (Math.min(value, max));
     }
 
     /**
@@ -681,7 +681,7 @@ public class MathUtil {
     }
 
     public static int longHashLsw(long key) {
-        return (int) (key & 0xFFFFFFFF) + Integer.MIN_VALUE;
+        return (int) (key) + Integer.MIN_VALUE;
     }
 
     /**
@@ -694,7 +694,7 @@ public class MathUtil {
      */
     public static long longHashSumW(long keyA, long keyB) {
         long sum_msw = (keyA & 0xFFFFFFFF00000000L) + (keyB & 0xFFFFFFFF00000000L);
-        long sum_lsw = (keyA & 0xFFFFFFFF) + (keyB & 0xFFFFFFFF);
+        long sum_lsw = (keyA) + (keyB);
         return sum_msw + (int) sum_lsw - Integer.MIN_VALUE;
     }
 

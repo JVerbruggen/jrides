@@ -5,7 +5,6 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.packets.Packet;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public abstract class SingularClientPacket implements Packet {

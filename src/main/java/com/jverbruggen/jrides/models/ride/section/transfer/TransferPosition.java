@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.models.properties.Frame;
 public class TransferPosition {
     private Frame connectionAtStart;
     private Frame connectionAtEnd;
+
     private Vector3 transferPosition;
     private Quaternion transferRotation;
 
@@ -26,4 +27,5 @@ public class TransferPosition {
     public Vector3 getTransferPosition() {
         return transferPosition;
     }
+
 }

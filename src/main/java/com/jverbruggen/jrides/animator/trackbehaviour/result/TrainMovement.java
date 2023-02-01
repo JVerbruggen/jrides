@@ -3,7 +3,7 @@ package com.jverbruggen.jrides.animator.trackbehaviour.result;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
-import com.jverbruggen.jrides.models.ride.coaster.Cart;
+import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;

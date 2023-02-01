@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.animator.tool;
 
 import com.jverbruggen.jrides.models.entity.Player;
-import com.jverbruggen.jrides.models.ride.coaster.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.bukkit.Particle;
 import org.bukkit.World;
 
@@ -18,12 +18,12 @@ public class ParticleTrainVisualisationTool extends ParticleVisualisationTool {
     @Override
     public void tick(){
         for(Player viewer : getViewers()){
-//            spawnVisualisationParticles(viewer);
+            spawnVisualisationParticles(viewer);
         }
     }
 
-//    public void spawnVisualisationParticles(Player player){
-//        org.bukkit.entity.Player bukkitPlayer = player.getBukkitPlayer();
-//        bukkitPlayer.spawnParticle(Particle.VILLAGER_HAPPY, headOfTrainLocation, 1, 0.01, 0.01, 0.01, 0);
-//    }
+    public void spawnVisualisationParticles(Player player){
+        org.bukkit.entity.Player bukkitPlayer = player.getBukkitPlayer();
+        bukkitPlayer.spawnParticle(Particle.VILLAGER_HAPPY, train.getCurrentHeadLocation().toBukkitLocation(world), 1, 0.01, 0.01, 0.01, 0);
+    }
 }

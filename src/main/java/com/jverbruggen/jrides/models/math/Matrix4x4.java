@@ -248,7 +248,7 @@ public class Matrix4x4 implements Cloneable {
         rotateX_unsafe(y * f, z * f);
     }
 
-    private final void rotateX_unsafe(double cos, double sin) {
+    private void rotateX_unsafe(double cos, double sin) {
         double m01, m02;
         double m11, m12;
         double m21, m22;
@@ -296,7 +296,7 @@ public class Matrix4x4 implements Cloneable {
         rotateY_unsafe(x * f, z * f);
     }
 
-    private final void rotateY_unsafe(double cos, double sin) {
+    private void rotateY_unsafe(double cos, double sin) {
         double m00, m02;
         double m10, m12;
         double m20, m22;
@@ -344,7 +344,7 @@ public class Matrix4x4 implements Cloneable {
         rotateZ_unsafe(x * f, y * f);
     }
 
-    private final void rotateZ_unsafe(double cos, double sin) {
+    private void rotateZ_unsafe(double cos, double sin) {
         double m00, m01;
         double m10, m11;
         double m20, m21;
@@ -785,6 +785,7 @@ public class Matrix4x4 implements Cloneable {
         return new Location(world, m03, m13, m23, (float) ypr.getY(), (float) ypr.getX());
     }
 
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Matrix4x4 clone() {
         return new Matrix4x4(this);

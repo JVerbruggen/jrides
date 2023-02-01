@@ -2,9 +2,7 @@ package com.jverbruggen.jrides.config.coaster.objects.section;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class StationEffectsConfig {
     private final List<String> entryEffects;

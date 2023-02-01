@@ -5,11 +5,10 @@ import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
-import com.jverbruggen.jrides.models.ride.coaster.Track;
-import com.jverbruggen.jrides.models.ride.coaster.Train;
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour{
-    private final double passThroughSpeed;
     private final double deceleration;
     private final double acceleration;
     private final double driveSpeed;
@@ -20,7 +19,6 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
 
     public BlockBrakeTrackBehaviour(CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, double driveSpeed) {
         super(cartMovementFactory);
-        this.passThroughSpeed = 1.0;
         this.deceleration = 0.1;
         this.acceleration = 0.1;
         this.driveSpeed = driveSpeed;

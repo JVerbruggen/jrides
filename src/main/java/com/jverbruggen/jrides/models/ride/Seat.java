@@ -4,8 +4,7 @@ import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.ride.coaster.Cart;
-import com.jverbruggen.jrides.models.ride.coaster.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 
 public interface Seat {
     Player getPassenger();

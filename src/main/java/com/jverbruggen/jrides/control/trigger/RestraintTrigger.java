@@ -5,7 +5,7 @@ import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.models.ride.StationHandle;
-import com.jverbruggen.jrides.models.ride.coaster.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 public class RestraintTrigger implements StationTrigger {
     private StationHandle stationHandle;

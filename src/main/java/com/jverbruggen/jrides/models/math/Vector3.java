@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
-import javax.management.RuntimeErrorException;
 import java.util.List;
 
 public class Vector3 {
@@ -96,6 +95,7 @@ public class Vector3 {
         return (dx * dx) + (dy * dy) + (dz * dz);
     }
 
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Vector3 clone() {
         return new Vector3(x, y, z);

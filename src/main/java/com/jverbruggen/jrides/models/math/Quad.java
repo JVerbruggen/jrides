@@ -130,7 +130,7 @@ public class Quad implements Comparable<Quad>, Cloneable {
         mergePoint(quad.p3);
     }
 
-    private final void mergePoint(Vector3 p) {
+    private void mergePoint(Vector3 p) {
         if (p0.equals(p)) p0 = p;
         if (p1.equals(p)) p1 = p;
         if (p2.equals(p)) p2 = p;
@@ -152,6 +152,7 @@ public class Quad implements Comparable<Quad>, Cloneable {
         return Double.compare(this.depth(), o.depth());
     }
 
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Quad clone() {
         return new Quad(this);

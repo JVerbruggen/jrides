@@ -2,10 +2,7 @@ package com.jverbruggen.jrides.models.ride.gate;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.control.DispatchLock;
-import com.jverbruggen.jrides.models.math.Vector3;
-import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
@@ -53,7 +50,7 @@ public class FenceGate implements Gate {
     private void setBukkitGateState(boolean open){
         BlockData blockData = block.getBlockData();
         if(!(blockData instanceof org.bukkit.block.data.type.Gate)){
-            JRidesPlugin.getLogger().severe("Fence gate " + name + " not positioned over actual fence gate block (location: " + block.getLocation().toString() + ")");
+            JRidesPlugin.getLogger().severe("Fence gate " + name + " not positioned over actual fence gate block (location: " + block.getLocation() + ")");
             return;
         }
 

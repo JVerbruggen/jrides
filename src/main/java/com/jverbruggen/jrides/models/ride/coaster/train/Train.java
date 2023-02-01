@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.models.ride.coaster;
+package com.jverbruggen.jrides.models.ride.coaster.train;
 
 import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.models.entity.Player;

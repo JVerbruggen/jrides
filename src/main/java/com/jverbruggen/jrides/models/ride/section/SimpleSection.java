@@ -2,7 +2,7 @@ package com.jverbruggen.jrides.models.ride.section;
 
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.models.properties.Frame;
-import com.jverbruggen.jrides.models.ride.coaster.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 public class SimpleSection extends BaseSection {
     private Frame startFrame;
@@ -15,11 +15,6 @@ public class SimpleSection extends BaseSection {
         this.startFrame = startFrame.clone();
         this.endFrame = endFrame.clone().add(-1);
         this.trackBehaviour = trackBehaviour;
-    }
-
-    @Override
-    public Frame getStartFrame() {
-        return startFrame;
     }
 
     @Override

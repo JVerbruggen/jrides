@@ -2,7 +2,6 @@ package com.jverbruggen.jrides.models.render;
 
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
-import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;

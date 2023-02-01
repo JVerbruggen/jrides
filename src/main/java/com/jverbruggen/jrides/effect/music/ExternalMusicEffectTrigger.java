@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.effect.music;
 
 import com.jverbruggen.jrides.event.ride.OnrideMusicTriggerEvent;
-import com.jverbruggen.jrides.models.ride.coaster.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.plugin.PluginManager;
 

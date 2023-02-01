@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.models.properties;
 
-import com.jverbruggen.jrides.models.ride.coaster.Track;
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 
 public class SimpleFrame implements Frame {
     private int frame;
@@ -41,6 +41,7 @@ public class SimpleFrame implements Frame {
         return this;
     }
 
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Frame clone(){
         return new SimpleFrame(frame, track);

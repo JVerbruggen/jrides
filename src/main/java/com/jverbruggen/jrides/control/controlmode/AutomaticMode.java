@@ -7,7 +7,7 @@ import com.jverbruggen.jrides.models.properties.DebounceCall;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.StationHandle;
-import com.jverbruggen.jrides.models.ride.coaster.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 public class AutomaticMode extends BaseControlMode implements ControlMode{
     private DebounceCall dispatchDebounce;

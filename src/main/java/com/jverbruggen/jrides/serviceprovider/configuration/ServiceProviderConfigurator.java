@@ -65,7 +65,6 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(TrainFactory.class, new TrainFactory());
         ServiceProvider.register(CartMovementFactory.class, new CartMovementFactory());
         ServiceProvider.register(TrackBehaviourFactory.class, new TrackBehaviourFactory());
-        ServiceProvider.register(TrackFactory.class, new ConfigTrackFactory());
         ServiceProvider.register(RideManager.class, new RideManager(dataFolder));
         ServiceProvider.register(RideControlMenuFactory.class, new RideControlMenuFactory());
         ServiceProvider.register(VirtualEntityPacketListener.class, new VirtualEntityPacketListener());

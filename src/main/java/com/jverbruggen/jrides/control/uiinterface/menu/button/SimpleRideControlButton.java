@@ -46,9 +46,7 @@ public class SimpleRideControlButton extends BaseRideControlButton implements Ri
         if(hasUpdate){
             hasUpdate = false;
 
-            getParentMenu().getSessions().forEach((player, inventory) -> {
-                inventory.setItem(slot, getItemStack());
-            });
+            getParentMenu().getSessions().forEach((player, inventory) -> inventory.setItem(slot, getItemStack()));
         }
     }
 

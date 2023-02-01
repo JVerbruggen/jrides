@@ -2,7 +2,7 @@ package com.jverbruggen.jrides.animator.tool;
 
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.ride.coaster.Track;
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;

@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.command.context;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("rawtypes")
 public class CommandContext {
     private final Map<Class, Object> objects;
 

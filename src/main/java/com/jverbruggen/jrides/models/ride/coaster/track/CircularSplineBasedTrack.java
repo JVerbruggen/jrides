@@ -1,19 +1,21 @@
-package com.jverbruggen.jrides.models.ride.coaster;
+package com.jverbruggen.jrides.models.ride.coaster.track;
 
 import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.CyclicFrame;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SplineBasedTrack implements Track {
+public class CircularSplineBasedTrack implements Track {
     private List<NoLimitsExportPositionRecord> splinePositions;
     private List<Section> sections;
     private int splinePositionsCount;
 
-    public SplineBasedTrack(List<NoLimitsExportPositionRecord> splinePositions, List<Section> sections) {
+    public CircularSplineBasedTrack(List<NoLimitsExportPositionRecord> splinePositions, List<Section> sections) {
         this.splinePositions = splinePositions;
         this.sections = sections;
         this.splinePositionsCount = splinePositions.size();
@@ -22,7 +24,7 @@ public class SplineBasedTrack implements Track {
     }
 
     @Override
-    public int getRawPositionsCount() {
+    public int getLength() {
         return splinePositionsCount;
     }
 
@@ -41,12 +43,28 @@ public class SplineBasedTrack implements Track {
 
     @Override
     public Vector3 getLocationFor(Frame frame) {
+        if(!frame.getTrack().equals(this))
+            throw new RuntimeException("Cannot get frame location if the frame is not on this track");
+
         return splinePositions.get(frame.getValue()).toVector3();
+    }
+
+    @Override
+    public Quaternion getOrientationFor(Frame frame) {
+        if(!frame.getTrack().equals(this))
+            throw new RuntimeException("Cannot get frame location if the frame is not on this track");
+
+        return splinePositions.get(frame.getValue()).getOrientation();
     }
 
     @Override
     public List<Vector3> getAllPositions() {
         return splinePositions.stream().map(NoLimitsExportPositionRecord::toVector3).collect(Collectors.toList());
+    }
+
+    @Override
+    public Frame getFrameFor(int value) {
+        return new CyclicFrame(value, this.getLength());
     }
 
     public int countPositions(){

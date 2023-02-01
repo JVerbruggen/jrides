@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.models.properties;
 
-import com.jverbruggen.jrides.models.ride.coaster.Track;
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 
 public interface Frame {
     int getValue();
