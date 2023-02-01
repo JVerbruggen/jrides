@@ -1,9 +1,15 @@
 package com.jverbruggen.jrides.models.properties;
 
+import com.jverbruggen.jrides.models.ride.coaster.Track;
+
 public interface Frame {
     int getValue();
 
     void setValue(int frame);
+
+    Track getTrack();
+
+    void setTrack(Track track);
 
     Frame add(int frames);
 

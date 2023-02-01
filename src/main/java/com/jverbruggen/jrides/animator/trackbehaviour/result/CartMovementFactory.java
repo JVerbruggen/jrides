@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.animator.trackbehaviour.result;
 import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.Cart;
 import com.jverbruggen.jrides.models.ride.coaster.Track;
 
@@ -15,10 +16,9 @@ public class CartMovementFactory {
         HashMap<Cart, CartMovement> cartMovements = new HashMap<>();
 
         for(Cart cart : carts){
-            int cartFrame = cart.getFrame().getValue();
-            NoLimitsExportPositionRecord cartPositionOnTrackRecord = track.getRawPositions().get(cartFrame);
-            Vector3 cartPositionOnTrack = cartPositionOnTrackRecord.toVector3();
-            Quaternion orientation = cartPositionOnTrackRecord.getOrientation();
+            Frame cartFrame = cart.getFrame();
+            Vector3 cartPositionOnTrack = track.getLocationFor(cartFrame);
+            Quaternion orientation = track.getOrientationFor(cartFrame);
 
             Vector3 cartPosition = Cart.calculateLocation(cartPositionOnTrack, cart.getTrackOffset(), orientation);
 

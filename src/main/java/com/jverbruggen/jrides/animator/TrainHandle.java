@@ -109,9 +109,9 @@ public class TrainHandle {
         }
 
         // --- Set new train location according to new frames
-        Vector3 headLocation = track.getRawPositions().get(result.getNewHeadOfTrainFrame().getValue()).toVector3();
+        Vector3 headLocation = track.getLocationFor(result.getNewHeadOfTrainFrame());
         Vector3 middleLocation = result.getNewTrainLocation();
-        Vector3 tailLocation = track.getRawPositions().get(result.getNewTailOfTrainFrame().getValue()).toVector3();
+        Vector3 tailLocation = track.getLocationFor(result.getNewTailOfTrainFrame());
         train.setCurrentLocation(headLocation, middleLocation, tailLocation);
 
         // --- Section occupations

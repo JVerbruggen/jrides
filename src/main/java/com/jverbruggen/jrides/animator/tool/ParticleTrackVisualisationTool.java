@@ -1,8 +1,7 @@
 package com.jverbruggen.jrides.animator.tool;
 
-import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.models.entity.Player;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.coaster.Track;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -10,6 +9,7 @@ import org.bukkit.World;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ParticleTrackVisualisationTool extends ParticleVisualisationTool {
     private List<Location> locations;
@@ -24,18 +24,18 @@ public class ParticleTrackVisualisationTool extends ParticleVisualisationTool {
     }
 
     public static ParticleTrackVisualisationTool fromTrack(World world, Track track, int takeOneInX){
-        List<NoLimitsExportPositionRecord> positions = track.getRawPositions();
-
-        int totalFrames = positions.size();
+        List<Vector3> positions = track.getAllPositions();
 
         List<Location> sectionSplitLocations = track.getSections().stream()
-                .map(s -> positions.get(Frame.getCyclicFrameValue(s.getEndFrame().getValue(), totalFrames)).toVector3().toBukkitLocation(world))
+                .map(s -> s.getParentTrack().getLocationFor(s.getEndFrame()).toBukkitLocation(world))
                 .collect(Collectors.toList());
 
-        List<Location> locations = positions.stream()
-                .filter(p -> p.getIndex() % takeOneInX == 0)
-                .map(p -> new Location(world, p.getPosX(), p.getPosY(), p.getPosZ()))
+        List<Location> locations = IntStream
+                .range(0, positions.size())
+                .filter(i -> i % takeOneInX == 0)
+                .mapToObj(i -> positions.get(i).toBukkitLocation(world))
                 .collect(Collectors.toList());
+
         return new ParticleTrackVisualisationTool(world, locations, sectionSplitLocations);
     }
 

@@ -27,8 +27,8 @@ public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements Tr
 
         // --- New mass middle calculation
         Train train = trainHandle.getTrain();
-        Vector3 newHeadOfTrainLocation = track.getRawPositions().get(train.getHeadOfTrainFrame().getValue()).toVector3();
-        Vector3 newTailOfTrainLocation = track.getRawPositions().get(train.getTailOfTrainFrame().getValue()).toVector3();
+        Vector3 newHeadOfTrainLocation = track.getLocationFor(train.getHeadOfTrainFrame());
+        Vector3 newTailOfTrainLocation = track.getLocationFor(train.getTailOfTrainFrame());
 
         // --- Gravity speed calculation
         Speed newSpeed = currentSpeed.clone();

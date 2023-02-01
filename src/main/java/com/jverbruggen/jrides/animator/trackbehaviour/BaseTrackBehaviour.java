@@ -27,7 +27,7 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
 
         Frame newHeadOfTrainFrame = CyclicFrame.fromFrame(train.getHeadOfTrainFrame(), track.getRawPositionsCount()).add(speed.getFrameIncrement());
         Frame newTailOfTrainFrame = CyclicFrame.fromFrame(train.getTailOfTrainFrame(), track.getRawPositionsCount()).add(speed.getFrameIncrement());
-        Vector3 newTrainLocation = track.getRawPositions().get(train.getMiddleOfTrainFrame().getValue()).toVector3();
+        Vector3 newTrainLocation = track.getLocationFor(train.getMiddleOfTrainFrame());
 
         HashMap<Cart, CartMovement> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getCarts(), track);
 

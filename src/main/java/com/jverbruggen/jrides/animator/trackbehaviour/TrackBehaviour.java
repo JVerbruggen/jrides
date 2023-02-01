@@ -15,4 +15,5 @@ public interface TrackBehaviour {
     boolean canBlock();
     boolean canSpawnOn();
     Frame getSpawnFrame();
+    void setParentTrack(Track parentTrack);
 }

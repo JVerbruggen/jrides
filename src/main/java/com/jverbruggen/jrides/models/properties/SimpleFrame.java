@@ -1,7 +1,15 @@
 package com.jverbruggen.jrides.models.properties;
 
+import com.jverbruggen.jrides.models.ride.coaster.Track;
+
 public class SimpleFrame implements Frame {
     private int frame;
+    private Track track;
+
+    public SimpleFrame(int frame, Track track) {
+        this.frame = frame;
+        this.track = track;
+    }
 
     public SimpleFrame(int frame) {
         this.frame = frame;
@@ -18,6 +26,16 @@ public class SimpleFrame implements Frame {
     }
 
     @Override
+    public Track getTrack() {
+        return track;
+    }
+
+    @Override
+    public void setTrack(Track track) {
+        this.track = track;
+    }
+
+    @Override
     public Frame add(int frames){
         this.frame += frames;
         return this;
@@ -25,7 +43,7 @@ public class SimpleFrame implements Frame {
 
     @Override
     public Frame clone(){
-        return new SimpleFrame(frame);
+        return new SimpleFrame(frame, track);
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.CyclicFrame;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.LinkedFrame;
+import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.*;
 import com.jverbruggen.jrides.models.ride.section.Section;
@@ -56,7 +57,7 @@ public class TrainFactory {
         List<Cart> carts = new ArrayList<>();
         for(int i = 0; i < amountOfCarts; i++){
             int cartOffsetFrames = i*cartDistance;
-            int cartFrame = Frame.getCyclicFrameValue(headOfTrainOffset - cartOffsetFrames, totalFrames);
+            int cartFrameValue = Frame.getCyclicFrameValue(headOfTrainOffset - cartOffsetFrames, totalFrames);
 
             CartTypeSpecConfig cartTypeSpecConfig = coasterConfig.getCartSpec().getDefault();
             CartModelItemConfig cartModelItemConfig = cartTypeSpecConfig.getModel().getItem();
@@ -66,9 +67,9 @@ public class TrainFactory {
             boolean unbreakable = cartModelItemConfig.isUnbreakable();
             TrainModelItem model = new TrainModelItem(ItemStackFactory.getCoasterStack(modelMaterial, modelDamage, unbreakable));
 
-            NoLimitsExportPositionRecord positionRecord = track.getRawPositions().get(cartFrame);
-            Vector3 trackLocation = positionRecord.toVector3();
-            Quaternion orientation = positionRecord.getOrientation();
+            Frame cartFrame = new SimpleFrame(cartFrameValue, track);
+            Vector3 trackLocation = track.getLocationFor(cartFrame);
+            Quaternion orientation = track.getOrientationFor(cartFrame);
             Vector3 cartLocation = Cart.calculateLocation(trackLocation, cartOffset, orientation);
 
             VirtualArmorstand armorStand = viewportManager.spawnVirtualArmorstand(cartLocation, model);
@@ -85,9 +86,9 @@ public class TrainFactory {
             carts.add(cart);
         }
 
-        Vector3 headLocation = track.getRawPositions().get(headOfTrainFrame.getValue()).toVector3();
-        Vector3 middleLocation = track.getRawPositions().get(massMiddleFrame.getValue()).toVector3();
-        Vector3 tailLocation = track.getRawPositions().get(tailOfTrainFrame.getValue()).toVector3();
+        Vector3 headLocation = track.getLocationFor(headOfTrainFrame);
+        Vector3 middleLocation = track.getLocationFor(massMiddleFrame);
+        Vector3 tailLocation = track.getLocationFor(tailOfTrainFrame);
 
         Train train = new SimpleTrain(trainIdentifier, carts, headOfTrainFrame, massMiddleFrame, tailOfTrainFrame, headLocation, middleLocation, tailLocation, spawnSection);
         spawnSection.addOccupation(train);

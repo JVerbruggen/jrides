@@ -10,14 +10,11 @@ import com.jverbruggen.jrides.config.coaster.objects.section.SectionConfig;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.properties.factory.FrameFactory;
-import com.jverbruggen.jrides.models.ride.Ride;
-import com.jverbruggen.jrides.models.ride.coaster.SimpleTrack;
+import com.jverbruggen.jrides.models.ride.coaster.SplineBasedTrack;
 import com.jverbruggen.jrides.models.ride.coaster.Track;
-import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionBuilder;
 import com.jverbruggen.jrides.models.ride.section.SimpleSection;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import org.bukkit.Bukkit;
 
 import java.util.List;
 
@@ -71,6 +68,6 @@ public class ConfigTrackFactory implements TrackFactory {
             previousEndFrame = endFrame;
         }
 
-        return new SimpleTrack(positions, sectionBuilder.collect());
+        return new SplineBasedTrack(positions, sectionBuilder.collect());
     }
 }
