@@ -8,28 +8,16 @@ import java.util.List;
 import java.util.Set;
 
 public class TrackConfig {
-    private final String mode;
     private final List<Float> position;
-    private final int offset;
     private final List<SectionConfig> sections;
 
-    public TrackConfig(String mode, List<Float> position, int offset, List<SectionConfig> sections) {
-        this.mode = mode;
+    public TrackConfig(List<Float> position, List<SectionConfig> sections) {
         this.position = position;
-        this.offset = offset;
         this.sections = sections;
-    }
-
-    public String getMode() {
-        return mode;
     }
 
     public List<Float> getPosition() {
         return position;
-    }
-
-    public int getOffset() {
-        return offset;
     }
 
     public List<SectionConfig> getSections() {
@@ -37,9 +25,7 @@ public class TrackConfig {
     }
 
     public static TrackConfig fromConfigurationSection(ConfigurationSection configurationSection) {
-        String mode = configurationSection.getString("mode");
         List<Float> position = configurationSection.getFloatList("position");
-        int offset = configurationSection.getInt("offset");
 
         List<SectionConfig> sections = new ArrayList<>();
         ConfigurationSection configurationSectionSections = configurationSection.getConfigurationSection("sections");
@@ -47,11 +33,22 @@ public class TrackConfig {
         for(String sectionKey : sectionsKeys){
             ConfigurationSection sectionSpec = configurationSectionSections.getConfigurationSection(sectionKey);
 
+            String track = "spline";
             assert sectionSpec != null;
-            sections.add(SectionConfig.fromConfigurationSection(sectionSpec, sectionKey));
+            if(sectionSpec.contains("track")){
+                track = sectionSpec.getString("track");
+            }
+
+            assert track != null;
+            if(track.equalsIgnoreCase("spline")){
+                sections.add(SectionConfig.fromConfigurationSection(sectionSpec, sectionKey));
+            }else if(track.equalsIgnoreCase("straight")){
+                throw new RuntimeException("Straight track not implemented yet");
+            }
+
         }
 
-        return new TrackConfig(mode, position, offset, sections);
+        return new TrackConfig(position, sections);
     }
 }
 

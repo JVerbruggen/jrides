@@ -108,6 +108,7 @@ public class TrackBehaviourFactory {
     public TrackBehaviour getTrackBehaviourFor(CoasterHandle coasterHandle, CoasterConfig coasterConfig, SectionConfig sectionConfig, int totalFrames){
         String type = sectionConfig.getType();
         TrackConfig trackConfig = coasterConfig.getTrack();
+        String identifier = sectionConfig.getIdentifier();
 
         if(type.equalsIgnoreCase("track")){
             double gravityConstant = coasterConfig.getGravityConstant();
@@ -116,9 +117,8 @@ public class TrackBehaviourFactory {
         }else if(type.equalsIgnoreCase("blocksection")){
             BlockSectionSpecConfig blockSectionSpecConfig = sectionConfig.getBlockSectionSpec();
             double engagePercentage = blockSectionSpecConfig.getEngage();
-            int globalOffset = trackConfig.getOffset();
-            Frame lowerRange = new SimpleFrame(sectionConfig.getLowerRange() + globalOffset);
-            Frame upperRange = new SimpleFrame(sectionConfig.getUpperRange() + globalOffset);
+            Frame lowerRange = new SimpleFrame(sectionConfig.getLowerRange());
+            Frame upperRange = new SimpleFrame(sectionConfig.getUpperRange());
             boolean canSpawn = blockSectionSpecConfig.canSpawn();
             double driveSpeed = blockSectionSpecConfig.getDriveSpeed();
 
@@ -126,13 +126,11 @@ public class TrackBehaviourFactory {
             return getBlockBrakeBehaviour(blockBrakeEngageFrame, canSpawn, driveSpeed);
         }else if(type.equalsIgnoreCase("station")){
             StationSpecConfig stationSectionSpecConfig = sectionConfig.getStationSectionSpec();
-            String stationIdentifier = stationSectionSpecConfig.getIdentifier();
-            GateOwnerConfigSpec gateSpec = coasterConfig.getGates().getGateOwnerSpec(stationIdentifier);
+            GateOwnerConfigSpec gateSpec = coasterConfig.getGates().getGateOwnerSpec(identifier);
 
             double engagePercentage = stationSectionSpecConfig.getEngage();
-            int globalOffset = trackConfig.getOffset();
-            Frame lowerRange = new SimpleFrame(sectionConfig.getLowerRange() + globalOffset);
-            Frame upperRange = new SimpleFrame(sectionConfig.getUpperRange() + globalOffset);
+            Frame lowerRange = new SimpleFrame(sectionConfig.getLowerRange());
+            Frame upperRange = new SimpleFrame(sectionConfig.getUpperRange());
 
             Frame blockBrakeEngageFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
             return getStationBehaviour(blockBrakeEngageFrame, coasterHandle, sectionConfig, gateSpec);
