@@ -3,16 +3,24 @@ package com.jverbruggen.jrides.command;
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.language.LanguageFileTags;
-import com.jverbruggen.jrides.language.StringReplacementBuilder;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.List;
+
 public class VisualizeCommandExecutor extends BaseCommandExecutor {
+    private final RideManager rideManager;
+
+    protected VisualizeCommandExecutor(int depth) {
+        super(depth);
+        this.rideManager = ServiceProvider.getSingleton(RideManager.class);
+    }
+
     @Override
-    public String getGenericHelpMessage() {
+    public String getHelpMessageForParent() {
         return "/jrides visualize <identifier>";
     }
 
@@ -24,7 +32,7 @@ public class VisualizeCommandExecutor extends BaseCommandExecutor {
         }
 
         if(args.length != 2){
-            languageFile.sendMessage(commandSender, getGenericHelpMessage());
+            languageFile.sendMessage(commandSender, getHelpMessageForSelf());
             return true;
         }
 
@@ -48,5 +56,22 @@ public class VisualizeCommandExecutor extends BaseCommandExecutor {
         }
 
         return true;
+    }
+
+    @Override
+    public String getHelpMessageForSelf() {
+        return getHelpMessageForParent();
+    }
+
+    @Override
+    public String getCommand() {
+        return "visualize";
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        if(strings.length == depth+1)
+            return rideManager.getRideIdentifiers();
+        return null;
     }
 }

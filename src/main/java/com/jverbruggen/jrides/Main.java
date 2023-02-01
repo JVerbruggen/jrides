@@ -40,7 +40,10 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new ButtonClickEventListener(), this);
         pluginManager.registerEvents(new SignMenuListener("Click me!"), this);
 
-        getServer().getPluginCommand("jrides").setExecutor(new MainCommandExecutor());
+
+        MainCommandExecutor commandExecutor = new MainCommandExecutor();
+        getServer().getPluginCommand("jrides").setTabCompleter(commandExecutor);
+        getServer().getPluginCommand("jrides").setExecutor(commandExecutor);
 
         RideManager rideManager = ServiceProvider.getSingleton(RideManager.class);
         rideManager.initAllRides(world);

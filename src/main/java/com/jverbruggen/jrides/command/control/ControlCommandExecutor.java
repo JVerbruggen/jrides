@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.command.control;
 
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.command.BaseCommandExecutor;
+import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.control.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
@@ -18,68 +19,58 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.Inventory;
 
+import java.util.List;
+
 public class ControlCommandExecutor extends BaseCommandExecutor {
     private final RideManager rideManager;
     private final RideControlMenuFactory rideControlMenuFactory;
+    private final ControlMenuCommandExecutor controlMenuCommandExecutor;
+    private final ControlDispatchCommandExecutor controlDispatchCommandExecutor;
 
-    public ControlCommandExecutor() {
+    public ControlCommandExecutor(int depth) {
+        super(depth);
         rideManager = ServiceProvider.getSingleton(RideManager.class);
         rideControlMenuFactory = ServiceProvider.getSingleton(RideControlMenuFactory.class);
+
+        controlMenuCommandExecutor = registerSubCommand(new ControlMenuCommandExecutor(depth+2));
+        controlDispatchCommandExecutor = registerSubCommand(new ControlDispatchCommandExecutor(depth+2));
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String arg, String[] args) {
+    public boolean onCommand(CommandSender commandSender, Command command, String arg, String[] args, CommandContext commandContext) {
         if(args.length <= 2){
-            languageFile.sendMultilineMessage(commandSender, getHelpMessage());
+            languageFile.sendMultilineMessage(commandSender, getHelpMessageForSelf());
             return true;
         }
 
-        MessageReceiver messageReceiver = SimpleMessageReceiver.from(commandSender);
 
         String identifier = args[1];
         String subCommand = args[2];
-        CoasterHandle rideHandle = rideManager.getRideHandle(identifier);
-        RideController rideController = rideHandle.getRideController();
 
-        if(subCommand.equalsIgnoreCase("dispatch")){
-            DispatchTrigger dispatchTrigger = rideController.getTriggerContext().getDispatchTrigger();
+        commandContext.add(CoasterHandle.class, rideManager.getRideHandle(identifier));
 
-            boolean dispatched = dispatchTrigger.execute(messageReceiver);
-            if(dispatched)
-                languageFile.sendMessage(messageReceiver, languageFile.commandRideDispatchedMessage,
-                        b -> b.add(LanguageFileTags.rideIdentifier, identifier));
+        runSubCommand(commandSender, command, arg, args, subCommand, commandContext);
 
-            return true;
-        }else if(subCommand.equalsIgnoreCase("menu")){
-            if(!(commandSender instanceof org.bukkit.entity.Player)){
-                languageFile.sendMessage(commandSender, languageFile.errorPlayerCommandOnlyMessage);
-                return true;
-            }
-            if(!commandSender.hasPermission(Permissions.COMMAND_MENU)){
-                languageFile.sendMessage(commandSender, languageFile.errorGeneralNoPermissionMessage);
-                return true;
-            }
-            Player player = playerManager.getPlayer((org.bukkit.entity.Player) commandSender);
-
-            RideControlMenu rideControlMenu = rideHandle.getRideControlMenu();
-            Inventory inventory = rideControlMenu.getInventoryFor(player);
-
-            rideControlMenuFactory.addOpenRideControlMenu(player, rideControlMenu, inventory);
-            player.getBukkitPlayer().openInventory(inventory);
-            return true;
-        }
-
-        languageFile.sendMultilineMessage(messageReceiver, getHelpMessage());
         return true;
     }
 
-    private String getHelpMessage(){
-        return "/jrides control <identifier> dispatch\n" +
-                "/jrides control <identifier> menu";
+    @Override
+    public String getCommand() {
+        return "control";
     }
 
     @Override
-    public String getGenericHelpMessage() {
+    public String getHelpMessageForParent() {
         return "/jrides control";
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        if(strings.length == depth+1){
+            return rideManager.getRideIdentifiers();
+        }else if(strings.length == depth+2){
+            return getCommandSuggestions();
+        }
+        return null;
     }
 }
