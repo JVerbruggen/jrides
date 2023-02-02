@@ -72,6 +72,8 @@ public class EffectTriggerFactory {
 
     public EffectTriggerCollection getEffectTriggers(String rideIdentifier, Track track){
         ConfigurationSection allEffectsConfigurationSection = configManager.getAllEffectsConfigSection(rideIdentifier, "default");
+        if(allEffectsConfigurationSection == null)
+            return null;
 
         int lastFrameIndex = Integer.MIN_VALUE;
         Map<Frame, String> effects = new HashMap<>();

@@ -137,7 +137,8 @@ public class TrackBehaviourFactory {
         }else if(type.equalsIgnoreCase("drive")){
             DriveSectionSpecConfig driveSectionSpecConfig = sectionConfig.getDriveSectionSpec();
             double driveSpeed = driveSectionSpecConfig.getDriveSpeed();
-            return new BrakeAndDriveTrackBehaviour(cartMovementFactory, driveSpeed, 1.0, 1.0);
+            double acceleration = driveSectionSpecConfig.getAcceleration();
+            return new BrakeAndDriveTrackBehaviour(cartMovementFactory, driveSpeed, acceleration, acceleration);
         }
 
         JRidesPlugin.getLogger().severe("Unknown section type " + type);
