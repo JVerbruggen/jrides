@@ -40,7 +40,7 @@ public class LinkedFrame implements Frame {
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Frame clone() {
-        return new SimpleFrame(getValue(), getTrack());
+        return new LinkedFrame(linkedTo, offsetFromLink);
     }
 
     @Override
@@ -50,6 +50,6 @@ public class LinkedFrame implements Frame {
 
     @Override
     public String toString() {
-        return "<Frame: " + getValue() + ">";
+        return "<LinkedFrame: " + getValue() + " to: " + linkedTo + ">";
     }
 }
