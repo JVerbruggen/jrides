@@ -2,10 +2,7 @@ package com.jverbruggen.jrides.state.player;
 
 import com.jverbruggen.jrides.models.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerManager {
     private final HashMap<UUID, Player> players;
@@ -39,6 +36,10 @@ public class PlayerManager {
         }
         Player player = players.remove(uuid);
         if(isOperator(player)) unregisterOperator(player);
+    }
+
+    public Collection<Player> getPlayers(){
+        return players.values();
     }
 
     public void registerOperator(Player player){

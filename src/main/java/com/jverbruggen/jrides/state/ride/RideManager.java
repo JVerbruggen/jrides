@@ -16,6 +16,7 @@ import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.identifier.RideIdentifier;
@@ -107,8 +108,9 @@ public class RideManager {
         CoasterConfig coasterConfig = configManager.getCoasterConfig(rideIdentifier);
 
         String displayName = coasterConfig.getDisplayName();
-        Vector3 warpLocation = coasterConfig.getWarpLocation();
-        Ride ride = new SimpleCoaster(rideIdentifier, displayName, warpLocation);
+        PlayerLocation warpLocation = coasterConfig.getWarpLocation();
+        PlayerLocation ejectLocation = coasterConfig.getEjectLocation();
+        Ride ride = new SimpleCoaster(rideIdentifier, displayName, warpLocation, ejectLocation);
         List<Float> offset = coasterConfig.getTrack().getPosition();
         float offsetX = offset.get(0);
         float offsetY = offset.get(1);

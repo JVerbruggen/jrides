@@ -9,7 +9,6 @@ import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Seat;
-import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.state.ride.SoftEjector;
 
 public class CoasterSeat implements Seat {
@@ -57,13 +56,15 @@ public class CoasterSeat implements Seat {
     }
 
     @Override
-    public boolean ejectPassengerSoft() {
+    public boolean ejectPassengerSoft(boolean teleport) {
         if(!hasPassenger()) return false;
         Player passenger = getPassenger();
 
         if(SoftEjector.hasTimer(passenger)){
             SoftEjector.removeTimer(passenger);
             setPassenger(null);
+            if(teleport)
+                passenger.teleport(getParentCart().getParentTrain().getHandle().getCoasterHandle().getRide().getEjectLocation());
             return true;
         }else{
             SoftEjector.addTimer(passenger);
@@ -79,10 +80,12 @@ public class CoasterSeat implements Seat {
 
     @Override
     public void setLocation(Vector3 location, Quaternion orientation) {
-        virtualArmorstand.setLocation(location, orientation.getEntityYaw());
+        virtualArmorstand.setLocation(location, orientation);
 
         if(hasPassenger()){
-            passenger.setSmoothAnimationRotation(orientation);
+            Quaternion smoothAnimationRotation = orientation.clone();
+            smoothAnimationRotation.rotateY(90);
+            passenger.setSmoothAnimationRotation(smoothAnimationRotation);
         }
     }
 
@@ -109,5 +112,9 @@ public class CoasterSeat implements Seat {
     @Override
     public Cart getParentCart() {
         return this.parentCart;
+    }
+
+    public static Vector3 getHeightCompensation(){
+        return new Vector3(0, 1.5, 0);
     }
 }

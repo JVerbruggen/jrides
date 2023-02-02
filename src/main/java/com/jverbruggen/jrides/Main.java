@@ -70,6 +70,10 @@ public class Main extends JavaPlugin {
         PlayerManager playerManager = ServiceProvider.getSingleton(PlayerManager.class);
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
+        for(Player player : playerManager.getPlayers()){
+            player.clearSmoothAnimationRotation();
+        }
+
         viewportManager.despawnAll();
 
         StartMessage.sendDisabledMessage("1.0.0");

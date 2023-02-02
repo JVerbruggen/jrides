@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.models.entity;
 
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
@@ -57,7 +58,7 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     }
 
     @Override
-    public void setLocation(Vector3 newLocation, double yawRotation) {
+    public void setLocation(Vector3 newLocation, Quaternion orientation) {
         final int chunkSize = viewportManager.getRenderChunkSize();
 
         if(Vector3.chunkRotated(location, newLocation, chunkSize)){
@@ -65,6 +66,7 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
         }
 
         double distanceSquared = newLocation.distanceSquared(this.location);
+        double packetYaw = orientation == null ? 0 : orientation.getPacketYaw();
 
         if(distanceSquared > 49 || teleportSyncCoundownState > 60) {
             Vector3 blockLocation = newLocation.toBlock();
@@ -72,11 +74,11 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
             teleportSyncCoundownState = 0;
 
             Vector3 delta = Vector3.subtract(newLocation, newLocation.toBlock());
-            moveEntity(delta, yawRotation);
+            moveEntity(delta, packetYaw);
         }
         else{
             Vector3 delta = Vector3.subtract(newLocation, this.location);
-            moveEntity(delta, yawRotation);
+            moveEntity(delta, packetYaw);
         }
 
         this.location = newLocation;

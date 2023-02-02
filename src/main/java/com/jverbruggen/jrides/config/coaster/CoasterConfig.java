@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
 import com.jverbruggen.jrides.config.coaster.objects.VehiclesConfig;
 import com.jverbruggen.jrides.config.gates.GatesConfig;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Objects;
@@ -14,7 +15,8 @@ public class CoasterConfig {
     private final String manifestVersion;
     private final String identifier;
     private final String displayName;
-    private final Vector3 warpLocation;
+    private final PlayerLocation warpLocation;
+    private final PlayerLocation ejectLocation;
     private final TrackConfig track;
     private final VehiclesConfig vehicles;
     private final CartSpecConfig cartSpec;
@@ -23,12 +25,13 @@ public class CoasterConfig {
     private final double dragConstant;
     private final SoundsConfig soundsConfig;
 
-    public CoasterConfig(String manifestVersion, String identifier, String displayName, Vector3 warpLocation, TrackConfig track,
+    public CoasterConfig(String manifestVersion, String identifier, String displayName, PlayerLocation warpLocation, PlayerLocation ejectLocation, TrackConfig track,
                          VehiclesConfig vehicles, CartSpecConfig cartSpec, GatesConfig gates, double gravityConstant, double dragConstant, SoundsConfig soundsConfig) {
         this.manifestVersion = manifestVersion;
         this.identifier = identifier;
         this.displayName = displayName;
         this.warpLocation = warpLocation;
+        this.ejectLocation = ejectLocation;
         this.track = track;
         this.vehicles = vehicles;
         this.cartSpec = cartSpec;
@@ -50,8 +53,12 @@ public class CoasterConfig {
         return displayName;
     }
 
-    public Vector3 getWarpLocation() {
+    public PlayerLocation getWarpLocation() {
         return warpLocation;
+    }
+
+    public PlayerLocation getEjectLocation() {
+        return ejectLocation;
     }
 
     public TrackConfig getTrack() {
@@ -86,7 +93,8 @@ public class CoasterConfig {
         String manifestVersion = configurationSection.getString("manifestVersion");
         String identifier = configurationSection.getString("identifier");
         String displayName = configurationSection.getString("displayName");
-        Vector3 warpLocation = Vector3.fromDoubleList(configurationSection.getDoubleList("warpLocation"));
+        PlayerLocation warpLocation = PlayerLocation.fromDoubleList(configurationSection.getDoubleList("warpLocation"));
+        PlayerLocation ejectLocation = PlayerLocation.fromDoubleList(configurationSection.getDoubleList("ejectLocation"));
         double gravityConstant = configurationSection.getDouble("gravityConstant");
         double dragConstant = configurationSection.getDouble("dragConstant");
         TrackConfig track = TrackConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("track")));
@@ -95,7 +103,7 @@ public class CoasterConfig {
         GatesConfig gates = GatesConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("gates")));
         SoundsConfig sounds = SoundsConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("sounds")));
 
-        return new CoasterConfig(manifestVersion, identifier, displayName, warpLocation, track, vehicles,
+        return new CoasterConfig(manifestVersion, identifier, displayName, warpLocation, ejectLocation, track, vehicles,
                 cartSpec, gates, gravityConstant, dragConstant, sounds);
     }
 }

@@ -1,11 +1,11 @@
 package com.jverbruggen.jrides.models.ride;
 
-import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.PlayerLocation;
 
 public interface Ride {
     String getIdentifier();
     String getDisplayName();
 
-    Vector3 playerWarpLocation();
-
+    PlayerLocation getWarpLocation();
+    PlayerLocation getEjectLocation();
 }

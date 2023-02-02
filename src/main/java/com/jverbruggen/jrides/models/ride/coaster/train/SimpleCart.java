@@ -64,7 +64,7 @@ public class SimpleCart implements Cart {
 
     @Override
     public void setPosition(Vector3 position) {
-        modelArmorstand.setLocation(position, 0);
+        modelArmorstand.setLocation(position, null);
     }
 
     @Override

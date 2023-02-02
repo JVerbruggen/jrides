@@ -114,6 +114,10 @@ public class Vector3 {
         return new Location(world, x, y, z);
     }
 
+    public Location toBukkitLocation(World world, double yaw) {
+        return new Location(world, x, y, z, (float)yaw, 0f);
+    }
+
     public Vector3F toVector3F(){
         float x = (float) this.x;
         float y = (float) this.y;

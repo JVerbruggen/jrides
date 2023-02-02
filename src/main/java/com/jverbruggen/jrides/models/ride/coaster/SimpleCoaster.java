@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.models.ride.coaster;
 
-import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 import java.util.ArrayList;
@@ -10,12 +10,14 @@ public class SimpleCoaster implements Coaster {
     private List<Train> trains;
     private String identifier;
     private String displayName;
-    private Vector3 warpLocation;
+    private PlayerLocation warpLocation;
+    private PlayerLocation ejectLocation;
 
-    public SimpleCoaster(String identifier, String displayName, Vector3 warpLocation) {
+    public SimpleCoaster(String identifier, String displayName, PlayerLocation warpLocation, PlayerLocation ejectLocation) {
         this.identifier = identifier;
         this.displayName = displayName;
         this.warpLocation = warpLocation;
+        this.ejectLocation = ejectLocation;
         this.trains = new ArrayList<>();
     }
 
@@ -40,7 +42,12 @@ public class SimpleCoaster implements Coaster {
     }
 
     @Override
-    public Vector3 playerWarpLocation() {
+    public PlayerLocation getWarpLocation() {
         return warpLocation;
+    }
+
+    @Override
+    public PlayerLocation getEjectLocation() {
+        return ejectLocation;
     }
 }

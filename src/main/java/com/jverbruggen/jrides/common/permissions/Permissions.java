@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.common.permissions;
 
 public class Permissions {
     public static final String RIDE_ENTER = "jrides.default.ride_enter";
+    public static final String RIDE_WARP = "jrides.default.warp";
 
     public static final String CABIN_OPERATE = "jrides.operator.cabin_operate";
 

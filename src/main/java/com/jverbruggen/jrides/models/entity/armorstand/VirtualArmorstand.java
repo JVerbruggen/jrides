@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.models.entity.BaseVirtualEntity;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.packets.PacketSender;
@@ -35,7 +36,7 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         this.yawRotation = yawRotation;
         this.rotations = new ArmorstandRotations();
         this.models = new ArmorstandModels();
-        this.invisible = true;
+        this.invisible = false;
         this.leashedToEntity = -1;
         this.allowsPassengerValue = false;
         this.partOfSeat = null;
@@ -71,6 +72,11 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         }else{
             this.passengerSyncCounterActive = false;
         }
+    }
+
+    @Override
+    public double getYaw() {
+        return yawRotation;
     }
 
     @Override
@@ -113,8 +119,11 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     }
 
     @Override
-    public void setLocation(Vector3 newLocation, double yawRotation) {
-        super.setLocation(newLocation, yawRotation);
+    public void setLocation(Vector3 newLocation, Quaternion orientation) {
+        super.setLocation(newLocation, orientation);
+
+        if(orientation != null)
+            this.yawRotation = orientation.getYaw() - 90;
 
         if(passengerSyncCounterActive){
             if(passengerSyncCounter > 20){

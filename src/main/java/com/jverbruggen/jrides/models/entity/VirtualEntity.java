@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.models.entity;
 
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 
 import java.util.List;
@@ -16,7 +17,8 @@ public interface VirtualEntity {
     void setPassenger(Player player);
 
     Vector3 getLocation();
-    void setLocation(Vector3 location, double yawRotation);
+    double getYaw();
+    void setLocation(Vector3 location, Quaternion orientation);
     List<Player> getViewers();
     void addViewer(Player player);
     void removeViewer(Player player);

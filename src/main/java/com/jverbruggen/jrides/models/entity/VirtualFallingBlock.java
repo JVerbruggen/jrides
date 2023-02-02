@@ -40,6 +40,11 @@ public class VirtualFallingBlock extends BaseVirtualEntity implements VirtualEnt
     }
 
     @Override
+    public double getYaw() {
+        return 0;
+    }
+
+    @Override
     public void spawnFor(Player player) {
 
     }

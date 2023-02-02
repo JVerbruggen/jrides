@@ -7,11 +7,13 @@ import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,6 +149,21 @@ public class Player implements MessageReceiver {
 
     public List<VirtualEntity> getViewing() {
         return viewing;
+    }
+
+    public void teleport(PlayerLocation location) {
+        World world = bukkitPlayer.getWorld();
+        bukkitPlayer.teleport(location.toBukkitLocation(world));
+    }
+
+    public void teleport(Vector3 location){
+        World world = bukkitPlayer.getWorld();
+        bukkitPlayer.teleport(location.toBukkitLocation(world));
+    }
+
+    public void teleport(Vector3 location, double yaw){
+        World world = bukkitPlayer.getWorld();
+        bukkitPlayer.teleport(location.toBukkitLocation(world, yaw));
     }
 }
 

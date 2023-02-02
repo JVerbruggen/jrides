@@ -237,7 +237,7 @@ public class Quaternion implements Cloneable {
         return getYaw(x, y, z, w);
     }
 
-    public final double getEntityYaw(){
+    public final double getPacketYaw(){
         return (getYaw() - 90) * 256/360;
     }
 

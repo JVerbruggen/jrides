@@ -10,8 +10,10 @@ import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
+import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.common.permissions.Permissions;
+import com.jverbruggen.jrides.models.ride.coaster.train.CoasterSeat;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.player.PlayerManager;
@@ -87,6 +89,8 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         Seat seat = virtualArmorstand.getHostSeat();
         Player player = playerManager.getPlayer(bukkitPlayer);
 
+        if(player.isSeated()) return;
+
         if(seat.restraintsActive()){
             if(!player.getBukkitPlayer().hasPermission(Permissions.SEAT_RESTRAINT_OVERRIDE)){
                 languageFile.sendMessage(player, languageFile.notificationRestraintOnEnterAttempt);
@@ -123,21 +127,31 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         if(shiftPressedDebounce.contains(uuid)) return;
         shiftPressedDebounce.add(uuid);
 
+        double teleportYaw = player.getBukkitPlayer().getLocation().getYaw();
+
         if(seat.restraintsActive()){
             if(bukkitPlayer.hasPermission(Permissions.SEAT_RESTRAINT_OVERRIDE)){
-                boolean ejected = seat.ejectPassengerSoft();
-
-                if(ejected) bukkitPlayer.sendMessage(ChatColor.GRAY + languageFile.notificationShiftExitConfirmed);
+                Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> {
+                    boolean ejected = seat.ejectPassengerSoft(false);
+                    if(ejected){
+                        languageFile.sendMessage(player, languageFile.notificationShiftExitConfirmed);
+                        player.teleport(Vector3.add(entity.getLocation(), CoasterSeat.getHeightCompensation()), teleportYaw);
+                    }
+                });
                 return;
             }else if(canExitDuringRide){
-                seat.ejectPassengerSoft();
+                Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> seat.ejectPassengerSoft(true));
                 return;
             }
 
-            bukkitPlayer.sendMessage(languageFile.notificationRestraintOnExitAttempt);
+            languageFile.sendMessage(player, languageFile.notificationRestraintOnExitAttempt);
             return;
         }
-        seat.setPassenger(null);
+
+        Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> {
+            seat.setPassenger(null);
+            player.teleport(Vector3.add(entity.getLocation(), CoasterSeat.getHeightCompensation()), teleportYaw);
+        });
     }
 
     private void onSendingSpawnPlayerPacket(PacketEvent event){

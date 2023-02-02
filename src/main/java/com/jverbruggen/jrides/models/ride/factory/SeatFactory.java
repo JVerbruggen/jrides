@@ -28,7 +28,7 @@ public class SeatFactory {
             Vector3 relativeSeatLocation = calculateSeatLocationOnMatrix(rotationMatrix, seatOffset);
             Vector3 absoluteSeatLocation = Vector3.add(cartLocation, relativeSeatLocation);
 
-            double yawRotation = orientation.getEntityYaw();
+            double yawRotation = orientation.getPacketYaw();
             VirtualArmorstand seatArmorStand = viewportManager.spawnVirtualArmorstand(absoluteSeatLocation, yawRotation);
             Seat seat = new CoasterSeat(seatArmorStand, seatOffset);
             seatArmorStand.setHostSeat(seat);
@@ -38,7 +38,7 @@ public class SeatFactory {
     }
 
     private static Vector3 calculateSeatLocationOnMatrix(Matrix4x4 alreadyRotatedMatrix, Vector3 seatOffset){
-        final Vector3 heightCompensationVector = new Vector3(0, 1.5, 0);
+        final Vector3 heightCompensationVector = CoasterSeat.getHeightCompensation();
         Vector3 compensatedSeatOffset = Vector3.add(seatOffset, heightCompensationVector);
         alreadyRotatedMatrix.translate(compensatedSeatOffset);
 
