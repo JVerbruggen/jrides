@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
 import com.jverbruggen.jrides.logging.LogType;
+import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
@@ -17,6 +18,7 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionProvider;
 import org.bukkit.Bukkit;
+import org.bukkit.SoundCategory;
 
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +34,9 @@ public class TrainHandle {
     private boolean hasEffects;
     private EffectTriggerHandle nextEffect;
 
+    private final int windSoundInterval;
+    private int windSoundState;
+
     public TrainHandle(SectionProvider sectionProvider, Train train, Track track) {
         this.sectionProvider = sectionProvider;
         this.train = train;
@@ -44,6 +49,9 @@ public class TrainHandle {
         this.hasEffects = false;
 
         this.train.setHandle(this);
+
+        this.windSoundInterval = 4;
+        this.windSoundState = 0;
     }
 
     public void resetEffects(){
@@ -130,13 +138,27 @@ public class TrainHandle {
             sectionLogic(fromTailSection, toTailSection, speedBPS.isPositive(), false);
         }
 
-        // Check if the next effect should be played yet
+        // --- Check if the next effect should be played yet
         while(nextEffect != null){
             Frame nextEffectFrame = nextEffect.getFrame();
             boolean activateEffect = train.getHeadSection().hasPassed(nextEffectFrame, result.getNewHeadOfTrainFrame());
             if(!activateEffect) break;
             nextEffect.execute(train);
             nextEffect = nextEffect.next();
+        }
+
+        // --- Play wind sounds
+        if(windSoundState < windSoundInterval)
+            windSoundState++;
+        else{
+            String sound = coasterHandle.getWindSound();
+            for(Player player : train.getPassengers()){
+                float pitch = (float)Math.abs(speedBPS.getSpeedPerTick() / 10) + 0.4f;
+                float volume = Math.abs((pitch - 0.3f) / 5) - 0.05f;
+                player.getBukkitPlayer().playSound(player.getBukkitPlayer().getLocation(),
+                        sound, SoundCategory.MASTER, volume, pitch);
+            }
+            windSoundState = 0;
         }
     }
 

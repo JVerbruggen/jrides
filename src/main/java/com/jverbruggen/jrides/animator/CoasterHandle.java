@@ -28,10 +28,18 @@ public class CoasterHandle implements RideHandle {
     private List<StationHandle> stationHandles;
     private List<TrainHandle> trains;
     private EffectTriggerCollection effectTriggerCollection;
+    private final String dispatchSound;
+    private final String restraintOpenSound;
+    private final String restraintCloseSound;
+    private final String windSound;
 
-    public CoasterHandle(Ride ride, World world) {
+    public CoasterHandle(Ride ride, World world, String dispatchSound, String restraintOpenSound, String restraintCloseSound, String windSound) {
         this.ride = ride;
         this.world = world;
+        this.dispatchSound = dispatchSound;
+        this.restraintOpenSound = restraintOpenSound;
+        this.restraintCloseSound = restraintCloseSound;
+        this.windSound = windSound;
         this.rideController = null;
 
         this.trains = new ArrayList<>();
@@ -117,5 +125,21 @@ public class CoasterHandle implements RideHandle {
 
     public void setEffectTriggerCollection(EffectTriggerCollection effectTriggerCollection) {
         this.effectTriggerCollection = effectTriggerCollection;
+    }
+
+    public String getDispatchSound() {
+        return dispatchSound;
+    }
+
+    public String getRestraintOpenSound() {
+        return restraintOpenSound;
+    }
+
+    public String getRestraintCloseSound() {
+        return restraintCloseSound;
+    }
+
+    public String getWindSound() {
+        return windSound;
     }
 }

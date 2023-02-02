@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.config.coaster;
 
 import com.jverbruggen.jrides.config.coaster.objects.CartSpecConfig;
+import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
 import com.jverbruggen.jrides.config.coaster.objects.VehiclesConfig;
 import com.jverbruggen.jrides.config.gates.GatesConfig;
@@ -20,9 +21,10 @@ public class CoasterConfig {
     private final GatesConfig gates;
     private final double gravityConstant;
     private final double dragConstant;
+    private final SoundsConfig soundsConfig;
 
     public CoasterConfig(String manifestVersion, String identifier, String displayName, Vector3 warpLocation, TrackConfig track,
-                         VehiclesConfig vehicles, CartSpecConfig cartSpec, GatesConfig gates, double gravityConstant, double dragConstant) {
+                         VehiclesConfig vehicles, CartSpecConfig cartSpec, GatesConfig gates, double gravityConstant, double dragConstant, SoundsConfig soundsConfig) {
         this.manifestVersion = manifestVersion;
         this.identifier = identifier;
         this.displayName = displayName;
@@ -33,6 +35,7 @@ public class CoasterConfig {
         this.gates = gates;
         this.gravityConstant = gravityConstant;
         this.dragConstant = dragConstant;
+        this.soundsConfig = soundsConfig;
     }
 
     public String getManifestVersion() {
@@ -75,6 +78,10 @@ public class CoasterConfig {
         return dragConstant;
     }
 
+    public SoundsConfig getSoundsConfig() {
+        return soundsConfig;
+    }
+
     public static CoasterConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         String manifestVersion = configurationSection.getString("manifestVersion");
         String identifier = configurationSection.getString("identifier");
@@ -86,8 +93,9 @@ public class CoasterConfig {
         VehiclesConfig vehicles = VehiclesConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("vehicles")));
         CartSpecConfig cartSpec = CartSpecConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("cartSpec")));
         GatesConfig gates = GatesConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("gates")));
+        SoundsConfig sounds = SoundsConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("sounds")));
 
         return new CoasterConfig(manifestVersion, identifier, displayName, warpLocation, track, vehicles,
-                cartSpec, gates, gravityConstant, dragConstant);
+                cartSpec, gates, gravityConstant, dragConstant, sounds);
     }
 }

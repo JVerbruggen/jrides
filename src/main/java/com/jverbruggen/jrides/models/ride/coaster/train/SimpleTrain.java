@@ -219,24 +219,21 @@ public class SimpleTrain implements Train {
 
     @Override
     public void playRestraintOpenSound() {
-        playSound("lapbar_open");
+        playSound(trainHandle.getCoasterHandle().getRestraintOpenSound());
     }
 
     @Override
     public void playRestraintCloseSound() {
-        playSound("lapbar_close");
-
+        playSound(trainHandle.getCoasterHandle().getRestraintCloseSound());
     }
 
     @Override
     public void playDispatchSound() {
-        playSound("dispatch");
-
+        playSound(trainHandle.getCoasterHandle().getDispatchSound());
     }
 
     private void playSound(String soundName){
         JRidesPlugin.getWorld().playSound(this.getCurrentLocation().toBukkitLocation(JRidesPlugin.getWorld()), soundName, SoundCategory.MASTER, 0.1f, 1f);
-
     }
 
     @Override

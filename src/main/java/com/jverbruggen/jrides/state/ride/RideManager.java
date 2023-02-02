@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
+import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.config.ride.RideConfig;
 import com.jverbruggen.jrides.config.ride.RideConfigObject;
 import com.jverbruggen.jrides.control.RideController;
@@ -28,7 +29,6 @@ import com.jverbruggen.jrides.models.ride.factory.track.TrackType;
 import com.jverbruggen.jrides.models.ride.section.SectionProvider;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import java.io.BufferedReader;
@@ -114,7 +114,13 @@ public class RideManager {
         float offsetY = offset.get(1);
         float offsetZ = offset.get(2);
 
-        CoasterHandle coasterHandle = new CoasterHandle(ride, world);
+        SoundsConfig sounds = coasterConfig.getSoundsConfig();
+        String dispatchSound = sounds.getDispatch();
+        String restraintOpenSound = sounds.getRestraintOpen();
+        String restraintCloseSound = sounds.getRestraintClose();
+        String windSound = sounds.getOnrideWind();
+
+        CoasterHandle coasterHandle = new CoasterHandle(ride, world, dispatchSound, restraintOpenSound, restraintCloseSound, windSound);
 
         Track track = loadCoasterTrackFromConfig(coasterHandle, coasterConfig, offsetX, offsetY, offsetZ);
         if(track == null) return;
