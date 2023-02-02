@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.command.control;
 
 import com.jverbruggen.jrides.animator.CoasterHandle;
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.command.BaseCommandExecutor;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
@@ -37,7 +38,7 @@ public class ControlCommandExecutor extends BaseCommandExecutor {
         String identifier = args[1];
         String subCommand = args[2];
 
-        commandContext.add(CoasterHandle.class, rideManager.getRideHandle(identifier));
+        commandContext.add(RideHandle.class, rideManager.getRideHandle(identifier));
 
         runSubCommand(commandSender, command, arg, args, subCommand, commandContext);
 

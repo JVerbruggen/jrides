@@ -2,10 +2,12 @@ package com.jverbruggen.jrides.command;
 
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
+import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -25,7 +27,7 @@ public class VisualizeCommandExecutor extends BaseCommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String arg, String[] args) {
+    public boolean onCommand(CommandSender commandSender, Command command, String arg, String[] args, CommandContext context) {
         if(!(commandSender instanceof org.bukkit.entity.Player)){
             languageFile.sendMessage(commandSender, languageFile.errorPlayerCommandOnlyMessage);
             return true;

@@ -16,6 +16,7 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionProvider;
+import org.bukkit.Bukkit;
 
 import java.util.Map;
 import java.util.Set;
@@ -64,6 +65,7 @@ public class TrainHandle {
                 // else if that train is self
             }else{
                 if(applyNewBehaviour) trackBehaviour = toSection.getTrackBehaviour();
+//                Bukkit.broadcastMessage("From " + fromSection + ", to " + toSection + ", spans:" + fromSection.spansOver(train));
                 if(!fromSection.spansOver(train)){
                     fromSection.removeOccupation(train);
                     train.removeCurrentSection(fromSection);
