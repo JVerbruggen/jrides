@@ -87,6 +87,14 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         Seat seat = virtualArmorstand.getHostSeat();
         Player player = playerManager.getPlayer(bukkitPlayer);
 
+        if(!seat.restraintsActive()){
+            if(!player.getBukkitPlayer().hasPermission(Permissions.SEAT_RESTRAINT_OVERRIDE)){
+                languageFile.sendMessage(player, languageFile.notificationRestraintOnEnterAttempt);
+                return;
+            }
+            languageFile.sendMessage(player, languageFile.notificationRestraintEnterOverride);
+        }
+
         player.setSmoothAnimationSupport(smoothAnimation.isEnabled(player));
         seat.setPassenger(player);
     }

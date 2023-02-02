@@ -20,4 +20,5 @@ public interface Seat {
     boolean restraintsActive();
 
     void setParentCart(Cart cart);
+    Cart getParentCart();
 }

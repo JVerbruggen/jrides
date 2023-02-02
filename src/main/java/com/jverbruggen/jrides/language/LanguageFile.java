@@ -36,6 +36,8 @@ public class LanguageFile {
     public String notificationDispatchWaitGeneric = "Please wait until the ride is dispatched";
     public String notificationDispatchWaitSpecific = "Waiting time: %" + LanguageFileTags.time + "% seconds";
     public String notificationRestraintOnExitAttempt = "The restraints are closed";
+    public String notificationRestraintOnEnterAttempt = "The restraints are closed";
+    public String notificationRestraintEnterOverride = "You just entered the ride while the restraints were closed";
 
     public String elevatedOperatorOverrideVictimMessage = "Player %" + LanguageFileTags.player + "% took over control of the operating cabin";
 

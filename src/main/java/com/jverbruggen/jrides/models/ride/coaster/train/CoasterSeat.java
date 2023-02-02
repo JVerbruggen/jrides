@@ -105,4 +105,9 @@ public class CoasterSeat implements Seat {
     public void setParentCart(Cart cart) {
         this.parentCart = cart;
     }
+
+    @Override
+    public Cart getParentCart() {
+        return this.parentCart;
+    }
 }
