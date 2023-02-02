@@ -96,6 +96,12 @@ public class SimpleCart implements Cart {
 
     @Override
     public void ejectPassengers() {
-        seats.forEach(s -> s.setPassenger(null));
+        seats.forEach(s -> {
+            Player passenger = s.getPassenger();
+            if(passenger != null){
+                s.setPassenger(null);
+                passenger.teleport(getParentTrain().getHandle().getCoasterHandle().getRide().getEjectLocation());
+            }
+        });
     }
 }
