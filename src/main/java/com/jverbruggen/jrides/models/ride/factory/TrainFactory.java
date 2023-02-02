@@ -11,10 +11,7 @@ import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.properties.CyclicFrame;
-import com.jverbruggen.jrides.models.properties.Frame;
-import com.jverbruggen.jrides.models.properties.LinkedFrame;
-import com.jverbruggen.jrides.models.properties.SimpleFrame;
+import com.jverbruggen.jrides.models.properties.*;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
@@ -48,7 +45,8 @@ public class TrainFactory {
 
         VehiclesConfig vehiclesConfig = coasterConfig.getVehicles();
 
-        final Frame headOfTrainFrame = track.getFrameFor(spawnSection.getSpawnFrame().getValue());
+        final Frame sectionSpawnFrame = spawnSection.getSpawnFrame();
+        final AutoTrackUpdateFrame headOfTrainFrame = new AutoTrackUpdateFrame(sectionSpawnFrame.getValue(), sectionSpawnFrame.getTrack());
         final int amountOfCarts = vehiclesConfig.getCarts();
         final int cartDistance = vehiclesConfig.getCartDistance();
         final LinkedFrame massMiddleFrame = new LinkedFrame(headOfTrainFrame, -(amountOfCarts*cartDistance) / 2);
@@ -60,7 +58,7 @@ public class TrainFactory {
         for(int i = 0; i < amountOfCarts; i++){
             int cartOffsetFrames = i*cartDistance;
 
-            Frame cartFrame = track.getFrameFor(headOfTrainOffset - cartOffsetFrames);
+            Frame cartFrame = headOfTrainFrame.clone().add(-cartOffsetFrames);
 
             CartTypeSpecConfig cartTypeSpecConfig = coasterConfig.getCartSpec().getDefault();
             CartModelItemConfig cartModelItemConfig = cartTypeSpecConfig.getModel().getItem();

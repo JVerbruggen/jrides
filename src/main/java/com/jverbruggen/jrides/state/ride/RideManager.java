@@ -22,15 +22,13 @@ import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.*;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import com.jverbruggen.jrides.models.ride.factory.ConfigCircularNoInterruptionTrackFactory;
-import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
-import com.jverbruggen.jrides.models.ride.factory.TrackFactory;
-import com.jverbruggen.jrides.models.ride.factory.TrainFactory;
+import com.jverbruggen.jrides.models.ride.factory.*;
 import com.jverbruggen.jrides.models.ride.factory.track.TrackDescription;
 import com.jverbruggen.jrides.models.ride.factory.track.TrackType;
 import com.jverbruggen.jrides.models.ride.section.SectionProvider;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import java.io.BufferedReader;
@@ -190,7 +188,11 @@ public class RideManager {
         }
 
         Frame startFrame = new SimpleFrame(0);
-        TrackFactory trackFactory = new ConfigCircularNoInterruptionTrackFactory(coasterHandle, coasterConfig, new TrackDescription(trackIdentifier, positions, TrackType.TRACK, startFrame, startFrame));
+        Frame endFrame = new SimpleFrame(positions.size()-1);
+        List<TrackDescription> trackDescriptions = List.of(new TrackDescription(trackIdentifier, positions, TrackType.TRACK, startFrame, endFrame));
+
+//        TrackFactory trackFactory = new ConfigCircularNoInterruptionTrackFactory(coasterHandle, coasterConfig, new TrackDescription(trackIdentifier, positions, TrackType.TRACK, startFrame, startFrame));
+        TrackFactory trackFactory = new ConfigAdvancedSplineTrackFactory(coasterHandle, coasterConfig, trackDescriptions);
         return trackFactory.createTrack();
     }
 }

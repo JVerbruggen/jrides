@@ -39,5 +39,9 @@ public class TrackDescription {
     public Frame getEndFrame() {
         return endFrame;
     }
+
+    public int getCycle(){
+        return getPositions().size()-1;
+    }
 }
 

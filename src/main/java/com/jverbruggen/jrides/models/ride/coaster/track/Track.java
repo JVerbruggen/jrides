@@ -10,10 +10,17 @@ import java.util.List;
 public interface Track {
     String getIdentifier();
     int getLength();
+
     List<Section> getSections();
     Section getNextSpawnSection();
+
     Vector3 getLocationFor(Frame frame);
     Quaternion getOrientationFor(Frame frame);
     List<Vector3> getAllPositions();
-    Frame getFrameFor(int value);
+    int getLowerFrame();
+    int getUpperFrame();
+    Track getNextTrack();
+    Track getPreviousTrack();
+    void setNextTrack(Track track);
+    void setPreviousTrack(Track track);
 }

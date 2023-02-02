@@ -68,10 +68,40 @@ public class CircularSplineBasedTrack implements Track {
     public List<Vector3> getAllPositions() {
         return splinePositions.stream().map(NoLimitsExportPositionRecord::toVector3).collect(Collectors.toList());
     }
+//
+//    @Override
+//    public Frame getFrameFor(int value) {
+//        return new CyclicFrame(value, this.getLength(), this);
+//    }
 
     @Override
-    public Frame getFrameFor(int value) {
-        return new CyclicFrame(value, this.getLength(), this);
+    public int getLowerFrame() {
+        return 0;
+    }
+
+    @Override
+    public int getUpperFrame() {
+        return splinePositions.size()-1;
+    }
+
+    @Override
+    public Track getNextTrack() {
+        return this;
+    }
+
+    @Override
+    public Track getPreviousTrack() {
+        return this;
+    }
+
+    @Override
+    public void setNextTrack(Track track) {
+
+    }
+
+    @Override
+    public void setPreviousTrack(Track track) {
+
     }
 
     public int countPositions(){

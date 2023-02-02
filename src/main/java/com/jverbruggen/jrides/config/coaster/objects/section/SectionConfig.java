@@ -11,6 +11,7 @@ public class SectionConfig {
     private final int upperRange;
     private final String trackSource;
     private final String type;
+    private final String nextSection;
     private final BlockSectionSpecConfig blockSectionSpec;
     private final StationSpecConfig stationSectionSpec;
     private final BrakeSectionSpecConfig brakeSectionSpec;
@@ -18,12 +19,13 @@ public class SectionConfig {
     private final StorageSectionSpecConfig storageSectionSpec;
     private final TransferSectionSpecConfig transferSectionSpec;
 
-    public SectionConfig(String identifier, int lowerRange, int upperRange, String trackSource, String type, BlockSectionSpecConfig blockSectionSpec, StationSpecConfig stationSectionSpec, BrakeSectionSpecConfig brakeSectionSpec, DriveSectionSpecConfig driveSectionSpec, StorageSectionSpecConfig storageSectionSpec, TransferSectionSpecConfig transferSectionSpec) {
+    public SectionConfig(String identifier, int lowerRange, int upperRange, String trackSource, String type, String nextSection, BlockSectionSpecConfig blockSectionSpec, StationSpecConfig stationSectionSpec, BrakeSectionSpecConfig brakeSectionSpec, DriveSectionSpecConfig driveSectionSpec, StorageSectionSpecConfig storageSectionSpec, TransferSectionSpecConfig transferSectionSpec) {
         this.identifier = identifier;
         this.lowerRange = lowerRange;
         this.upperRange = upperRange;
         this.trackSource = trackSource;
         this.type = type;
+        this.nextSection = nextSection;
         this.blockSectionSpec = blockSectionSpec;
         this.stationSectionSpec = stationSectionSpec;
         this.brakeSectionSpec = brakeSectionSpec;
@@ -36,6 +38,10 @@ public class SectionConfig {
         return identifier;
     }
 
+    public String getNextSection() {
+        return nextSection;
+    }
+
     public int getLowerRange() {
         return lowerRange;
     }
@@ -44,7 +50,7 @@ public class SectionConfig {
         return upperRange;
     }
 
-    public String getTrackSource() {
+    public String getParentTrackIdentifier() {
         return trackSource;
     }
 
@@ -85,6 +91,7 @@ public class SectionConfig {
         if(range.size() == 3)
             trackSource = (String)range.get(2);
         String type = configurationSection.getString("type");
+        String nextSection = configurationSection.getString("nextSection");
 
         BlockSectionSpecConfig blockSectionSpec = null;
         if(configurationSection.contains("blockSection"))
@@ -110,6 +117,6 @@ public class SectionConfig {
         if(configurationSection.contains("transferSection"))
             transferSectionSpec = TransferSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("transferSection"));
 
-        return new SectionConfig(sectionIdentifier, lowerRange, upperRange, trackSource, type, blockSectionSpec, stationSectionSpec, brakeSectionSpec, driveSectionSpec, storageSectionSpec, transferSectionSpec);
+        return new SectionConfig(sectionIdentifier, lowerRange, upperRange, trackSource, type, nextSection, blockSectionSpec, stationSectionSpec, brakeSectionSpec, driveSectionSpec, storageSectionSpec, transferSectionSpec);
     }
 }

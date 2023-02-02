@@ -3,10 +3,12 @@ package com.jverbruggen.jrides.models.ride.coaster.track.compound;
 import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.AutoTrackUpdateFrame;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import org.bukkit.Bukkit;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,8 +85,13 @@ public class LooseEndedSplineBasedTrack implements CompoundTrackPart {
     }
 
     @Override
-    public Frame getFrameFor(int value) {
-        return new SimpleFrame(value, this);
+    public int getLowerFrame() {
+        return startFrame.getValue();
+    }
+
+    @Override
+    public int getUpperFrame() {
+        return endFrame.getValue();
     }
 
     public int countPositions(){

@@ -15,8 +15,8 @@ import com.jverbruggen.jrides.models.ride.coaster.track.compound.CompoundTrack;
 import com.jverbruggen.jrides.models.ride.coaster.track.compound.LooseEndedSplineBasedTrack;
 import com.jverbruggen.jrides.models.ride.factory.track.TrackDescription;
 import com.jverbruggen.jrides.models.ride.factory.track.TrackType;
-import com.jverbruggen.jrides.models.ride.section.SectionBuilder;
-import com.jverbruggen.jrides.models.ride.section.SimpleSection;
+import com.jverbruggen.jrides.models.ride.section.AdvancedSectionBuilder;
+import com.jverbruggen.jrides.models.ride.section.SectionReference;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 
 import java.util.ArrayList;
@@ -40,61 +40,89 @@ public class ConfigAdvancedSplineTrackFactory implements TrackFactory {
 
     @Override
     public Track createTrack(){
-        List<Track> childrenTracks = new ArrayList<>();
+        // --- Calculate sections
+        TrackConfig trackConfig = coasterConfig.getTrack();
+        AdvancedSectionBuilder sectionBuilder = createSectionBuilder(trackConfig);
 
+        // --- Assemble tracks
+        List<Track> childrenTracks = new ArrayList<>();
         for(TrackDescription trackDescription : trackDescriptions){
             Track track;
             if(trackDescription.getTrackType() == TrackType.TRACK){
-                track = createSplineTrack(trackDescription);
+                track = createSplineTrack(trackDescription, sectionBuilder);
             }else if(trackDescription.getTrackType() == TrackType.TRANSFER){
                 track = null;
+            }else throw new RuntimeException("TrackType not recognized");
+
+            trackDescription.getStartFrame().setTrack(track);
+            trackDescription.getEndFrame().setTrack(track);
+
+            childrenTracks.add(track);
+        }
+
+        // --- Tie track and section ends together
+        Track prevTrack = null;
+        Track firstTrack = null;
+        for(int i = 0; i < childrenTracks.size(); i++){
+            Track track = childrenTracks.get(i);
+            if(firstTrack == null) firstTrack = track;
+            boolean isLast = i == childrenTracks.size()-1;
+
+            if(prevTrack != null){
+                prevTrack.setNextTrack(track);
+                track.setPreviousTrack(prevTrack);
             }
+            if(isLast){
+                track.setNextTrack(firstTrack);
+                firstTrack.setPreviousTrack(track);
+            }
+
+            prevTrack = track;
         }
 
         return new CompoundTrack(childrenTracks);
     }
 
-    public Track createSplineTrack(TrackDescription trackDescription){
+    public Track createSplineTrack(TrackDescription trackDescription, AdvancedSectionBuilder sectionBuilder){
         List<NoLimitsExportPositionRecord> positions = trackDescription.getPositions();
-        SectionBuilder sectionBuilder = new SectionBuilder(false);
-        int totalFrames = positions.size();
 
-        TrackConfig trackConfig = coasterConfig.getTrack();
+        String parentTrackIdentifier = trackDescription.getIdentifier();
+
+        return new LooseEndedSplineBasedTrack(trackDescription.getIdentifier(), positions, sectionBuilder.collectFor(parentTrackIdentifier),
+                trackDescription.getStartFrame(), trackDescription.getEndFrame());
+    }
+
+    private AdvancedSectionBuilder createSectionBuilder(TrackConfig trackConfig){
+        AdvancedSectionBuilder sectionBuilder = new AdvancedSectionBuilder();
+        List<SectionConfig> sectionConfigs = trackConfig.getSections();
 
         Frame firstStartFrame = null;
         Frame previousEndFrame = null;
-        List<SectionConfig> sectionConfigs = trackConfig.getSections();
 
         for(int i = 0; i < sectionConfigs.size(); i++){
             SectionConfig sectionConfig = sectionConfigs.get(i);
+            String sectionIdentifier = sectionConfig.getIdentifier();
+            String nextSectionIdentifier = sectionConfig.getNextSection();
+            String parentTrackIdentifier = sectionConfig.getParentTrackIdentifier();
 
-            // set startFrame of this section to the previous endFrame is it exists
-            Frame startFrame = (previousEndFrame != null)
-                    ? previousEndFrame
-                    : new SimpleFrame(sectionConfig.getLowerRange());
+            TrackDescription trackDescription = trackDescriptions.stream()
+                    .filter(d -> d.getIdentifier().equalsIgnoreCase(sectionConfig.getParentTrackIdentifier()))
+                    .findFirst().orElseThrow();
 
-            Frame endFrame;
-            // Set endFrame to startFrame if theres only 1 section
-            if(sectionConfigs.size() == 1){
-                endFrame = startFrame;
-                // .. or to firstStartFrame if it is the last, to make it cyclic
-            }else if (i == sectionConfigs.size()-1){
-                endFrame = firstStartFrame;
-                // .. or else make a new endFrame
-            }else{
-                endFrame = new SimpleFrame(sectionConfig.getUpperRange());
-            }
+            Frame startFrame = new SimpleFrame(sectionConfig.getLowerRange());
+            Frame endFrame = new SimpleFrame(sectionConfig.getUpperRange());
 
-            TrackBehaviour trackBehaviour = trackBehaviourFactory.getTrackBehaviourFor(coasterHandle, coasterConfig, sectionConfig, totalFrames);
+            TrackBehaviour trackBehaviour = trackBehaviourFactory.getTrackBehaviourFor(coasterHandle, coasterConfig, sectionConfig, trackDescription.getCycle());
             if(trackBehaviour == null) return null;
 
-            sectionBuilder.add(new SimpleSection(startFrame, endFrame, trackBehaviour));
+            sectionBuilder.add(new SectionReference(sectionIdentifier, startFrame, endFrame, trackBehaviour, nextSectionIdentifier, parentTrackIdentifier));
 
             if(firstStartFrame == null) firstStartFrame = startFrame;
             previousEndFrame = endFrame;
         }
 
-        return new LooseEndedSplineBasedTrack(trackDescription.getIdentifier(), positions, sectionBuilder.collect(),
-                trackDescription.getStartFrame(), trackDescription.getEndFrame());
+        sectionBuilder.calculate();
+
+        return sectionBuilder;
     }
 }
