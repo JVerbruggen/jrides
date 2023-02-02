@@ -20,10 +20,7 @@ import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.properties.Frame;
-import com.jverbruggen.jrides.models.properties.FrameRange;
-import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
-import com.jverbruggen.jrides.models.properties.SimpleFrame;
+import com.jverbruggen.jrides.models.properties.*;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.gate.FenceGate;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
@@ -92,11 +89,12 @@ public class TrackBehaviourFactory {
         StationEffectsConfig stationEffectsConfig = stationSpecConfig.getStationEffectsConfig();
         List<EffectTriggerHandle> entryEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, stationEffectsConfig.getEntryEffects());
         List<EffectTriggerHandle> exitEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, stationEffectsConfig.getExitEffects());
+        PlayerLocation ejectLocation = stationSpecConfig.getEjectLocation();
 
         MinMaxWaitingTimer waitingTimer = new MinMaxWaitingTimer(minimumWaitingTime, maximumWaitingTime, minimumWaitTimeDispatchLock);
 
         StationHandle stationHandle = new StationHandle(coasterHandle, stationName, triggerContext, gates, waitingTimer,
-                entryEffectTriggers, exitEffectTriggers);
+                entryEffectTriggers, exitEffectTriggers, ejectLocation);
 
         return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, true, triggerContext,
                 stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock, restraintLock, driveSpeed);

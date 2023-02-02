@@ -97,6 +97,14 @@ public class CoasterHandle implements RideHandle {
         return getStationHandle(contextOwner).getTriggerContext();
     }
 
+    @Override
+    public PlayerLocation getEjectLocation() {
+        return stationHandles.stream()
+                .filter(s -> s.getEjectLocation() != null)
+                .map(StationHandle::getEjectLocation)
+                .findFirst().orElse(null);
+    }
+
     public void addStationHandle(StationHandle stationHandle) {
         stationHandles.add(stationHandle);
     }
@@ -143,4 +151,5 @@ public class CoasterHandle implements RideHandle {
     public String getWindSound() {
         return windSound;
     }
+
 }

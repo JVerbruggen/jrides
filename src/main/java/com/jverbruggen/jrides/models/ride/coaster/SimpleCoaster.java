@@ -11,13 +11,11 @@ public class SimpleCoaster implements Coaster {
     private String identifier;
     private String displayName;
     private PlayerLocation warpLocation;
-    private PlayerLocation ejectLocation;
 
-    public SimpleCoaster(String identifier, String displayName, PlayerLocation warpLocation, PlayerLocation ejectLocation) {
+    public SimpleCoaster(String identifier, String displayName, PlayerLocation warpLocation) {
         this.identifier = identifier;
         this.displayName = displayName;
         this.warpLocation = warpLocation;
-        this.ejectLocation = ejectLocation;
         this.trains = new ArrayList<>();
     }
 
@@ -44,10 +42,5 @@ public class SimpleCoaster implements Coaster {
     @Override
     public PlayerLocation getWarpLocation() {
         return warpLocation;
-    }
-
-    @Override
-    public PlayerLocation getEjectLocation() {
-        return ejectLocation;
     }
 }

@@ -9,15 +9,13 @@ import com.jverbruggen.jrides.models.ride.Ride;
 
 public interface RideHandle {
     void start();
-
     Ride getRide();
-
     RideController getRideController();
     RideControlMenu getRideControlMenu();
 
     void setRideController(RideController rideController);
-
     DispatchTrigger getDispatchTrigger();
-
     TriggerContext getTriggerContext(String contextOwner);
+
+    PlayerLocation getEjectLocation();
 }

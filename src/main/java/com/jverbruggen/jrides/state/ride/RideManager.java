@@ -109,8 +109,7 @@ public class RideManager {
 
         String displayName = coasterConfig.getDisplayName();
         PlayerLocation warpLocation = coasterConfig.getWarpLocation();
-        PlayerLocation ejectLocation = coasterConfig.getEjectLocation();
-        Ride ride = new SimpleCoaster(rideIdentifier, displayName, warpLocation, ejectLocation);
+        Ride ride = new SimpleCoaster(rideIdentifier, displayName, warpLocation);
         List<Float> offset = coasterConfig.getTrack().getPosition();
         float offsetX = offset.get(0);
         float offsetY = offset.get(1);

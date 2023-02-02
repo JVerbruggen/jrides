@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.config.coaster.objects.section;
 
+import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class StationSpecConfig {
@@ -8,13 +9,15 @@ public class StationSpecConfig {
     private final int minimumWaitIntervalSeconds;
     private final int maximumWaitIntervalSeconds;
     private final StationEffectsConfig stationEffectsConfig;
+    private final PlayerLocation ejectLocation;
 
-    private StationSpecConfig(double engage, double driveSpeed, int minimumWaitIntervalSeconds, int maximumWaitIntervalSeconds, StationEffectsConfig stationEffectsConfig) {
+    private StationSpecConfig(double engage, double driveSpeed, int minimumWaitIntervalSeconds, int maximumWaitIntervalSeconds, StationEffectsConfig stationEffectsConfig, PlayerLocation ejectLocation) {
         this.engage = engage;
         this.driveSpeed = driveSpeed;
         this.minimumWaitIntervalSeconds = minimumWaitIntervalSeconds;
         this.maximumWaitIntervalSeconds = maximumWaitIntervalSeconds;
         this.stationEffectsConfig = stationEffectsConfig;
+        this.ejectLocation = ejectLocation;
     }
 
     public double getEngage() {
@@ -33,6 +36,10 @@ public class StationSpecConfig {
         return maximumWaitIntervalSeconds;
     }
 
+    public PlayerLocation getEjectLocation() {
+        return ejectLocation;
+    }
+
     public StationEffectsConfig getStationEffectsConfig() {
         return stationEffectsConfig;
     }
@@ -43,7 +50,8 @@ public class StationSpecConfig {
         int minimumWaitIntervalSeconds = configurationSection.getInt("minimumWaitIntervalSeconds");
         int maximumWaitIntervalSeconds = configurationSection.getInt("maximumWaitIntervalSeconds");
         StationEffectsConfig effects = StationEffectsConfig.fromConfigurationSection(configurationSection.getConfigurationSection("effects"));
+        PlayerLocation ejectLocation = PlayerLocation.fromDoubleList(configurationSection.getDoubleList("ejectLocation"));
 
-        return new StationSpecConfig(engage, driveSpeed, minimumWaitIntervalSeconds, maximumWaitIntervalSeconds, effects);
+        return new StationSpecConfig(engage, driveSpeed, minimumWaitIntervalSeconds, maximumWaitIntervalSeconds, effects, ejectLocation);
     }
 }

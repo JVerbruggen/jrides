@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
+import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
 
@@ -19,8 +20,9 @@ public class StationHandle {
     private final MinMaxWaitingTimer waitingTimer;
     private final List<EffectTriggerHandle> entryEffectTriggers;
     private final List<EffectTriggerHandle> exitEffectTriggers;
+    private final PlayerLocation ejectLocation;
 
-    public StationHandle(CoasterHandle coasterHandle, String name, TriggerContext triggerContext, List<Gate> entryGates, MinMaxWaitingTimer waitingTimer, List<EffectTriggerHandle> entryEffectTriggers, List<EffectTriggerHandle> exitEffectTriggers){
+    public StationHandle(CoasterHandle coasterHandle, String name, TriggerContext triggerContext, List<Gate> entryGates, MinMaxWaitingTimer waitingTimer, List<EffectTriggerHandle> entryEffectTriggers, List<EffectTriggerHandle> exitEffectTriggers, PlayerLocation ejectLocation){
         this.coasterHandle = coasterHandle;
         this.triggerContext = triggerContext;
         this.entryGates = entryGates;
@@ -29,10 +31,15 @@ public class StationHandle {
         this.exitEffectTriggers = exitEffectTriggers;
         this.stationaryTrain = null;
         this.name = name;
+        this.ejectLocation = ejectLocation;
 
         triggerContext.getRestraintTrigger().setStationHandle(this);
         triggerContext.getGateTrigger().setStationHandle(this);
         coasterHandle.addStationHandle(this);
+    }
+
+    public PlayerLocation getEjectLocation() {
+        return ejectLocation;
     }
 
     public List<Gate> getEntryGates() {

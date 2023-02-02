@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.LinkedFrame;
+import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
 
@@ -100,7 +101,11 @@ public class SimpleCart implements Cart {
             Player passenger = s.getPassenger();
             if(passenger != null){
                 s.setPassenger(null);
-                passenger.teleport(getParentTrain().getHandle().getCoasterHandle().getRide().getEjectLocation());
+                PlayerLocation ejectLocation = (parentTrain.isStationary())
+                        ? parentTrain.getStationaryAt().getEjectLocation()
+                        : getParentTrain().getHandle().getCoasterHandle().getEjectLocation();
+                if(ejectLocation != null)
+                    passenger.teleport(ejectLocation);
             }
         });
     }

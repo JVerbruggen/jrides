@@ -44,6 +44,7 @@ public interface Train {
 
     void setStationaryAt(StationHandle stationaryAt);
     boolean isStationary();
+    StationHandle getStationaryAt();
 
     void setHandle(TrainHandle trainHandle);
     TrainHandle getHandle();

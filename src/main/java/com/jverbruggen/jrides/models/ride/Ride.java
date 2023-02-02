@@ -7,5 +7,4 @@ public interface Ride {
     String getDisplayName();
 
     PlayerLocation getWarpLocation();
-    PlayerLocation getEjectLocation();
 }

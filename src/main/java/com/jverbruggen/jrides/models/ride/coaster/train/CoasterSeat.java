@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.state.ride.SoftEjector;
 import org.bukkit.Bukkit;
@@ -64,8 +65,10 @@ public class CoasterSeat implements Seat {
         if(SoftEjector.hasTimer(passenger)){
             SoftEjector.removeTimer(passenger);
             setPassenger(null);
-            if(teleport)
-                passenger.teleport(getParentCart().getParentTrain().getHandle().getCoasterHandle().getRide().getEjectLocation());
+            if(teleport){
+                PlayerLocation ejectLocation = getParentCart().getParentTrain().getHandle().getCoasterHandle().getEjectLocation();
+                passenger.teleport(ejectLocation);
+            }
             return true;
         }else{
             SoftEjector.addTimer(passenger);

@@ -203,6 +203,11 @@ public class SimpleTrain implements Train {
     }
 
     @Override
+    public StationHandle getStationaryAt() {
+        return onStation;
+    }
+
+    @Override
     public void setHandle(TrainHandle trainHandle) {
         this.trainHandle = trainHandle;
     }
