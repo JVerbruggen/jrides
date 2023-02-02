@@ -90,6 +90,8 @@ public class TrainHandle {
         // --- Fetch current/old sections (before move operation)
         Section fromHeadSection = train.getHeadSection();
         Section fromTailSection = train.getTailSection();
+        Frame fromHeadFrame = train.getHeadOfTrainFrame();
+        Frame fromTailFrame = train.getTailOfTrainFrame();
 
         // --- Calculate movement that should be applied to the train
         TrainMovement result = trackBehaviour.move(speedBPS, this, track);
@@ -117,13 +119,13 @@ public class TrainHandle {
 
         // --- Section occupations
         // ---   Calculate new head section occupation
-        Section toHeadSection = sectionProvider.getSectionFor(train, train.getHeadOfTrainFrame());
+        Section toHeadSection = sectionProvider.getSectionFor(train, fromHeadSection, fromHeadFrame, train.getHeadOfTrainFrame());
         if(toHeadSection != fromHeadSection){
             sectionLogic(fromHeadSection, toHeadSection, speedBPS.isPositive(), true);
         }
 
         // ---   Calculate new tail section occupation
-        Section toTailSection = sectionProvider.getSectionFor(train, train.getTailOfTrainFrame());
+        Section toTailSection = sectionProvider.getSectionFor(train, fromTailSection, fromTailFrame, train.getTailOfTrainFrame());
         if(toTailSection != fromTailSection){
             sectionLogic(fromTailSection, toTailSection, speedBPS.isPositive(), false);
         }

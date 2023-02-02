@@ -123,7 +123,7 @@ public class RideManager {
         EffectTriggerCollection effectTriggerCollection = effectTriggerFactory.getEffectTriggers(rideIdentifier, track);
         coasterHandle.setEffectTriggerCollection(effectTriggerCollection);
 
-        SectionProvider sectionProvider = new SectionProvider(track);
+        SectionProvider sectionProvider = new SectionProvider();
         int trainCount = coasterConfig.getVehicles().getTrains();
         List<TrainHandle> trainHandles = createTrains(track, coasterConfig, sectionProvider, rideIdentifier, trainCount);
         coasterHandle.setTrains(trainHandles);
