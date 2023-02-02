@@ -39,6 +39,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RideManager {
     private final JRidesLogger logger;
@@ -163,9 +164,18 @@ public class RideManager {
     }
 
     private Track loadCoasterTrackFromConfig(CoasterHandle coasterHandle, CoasterConfig coasterConfig, float offsetX, float offsetY, float offsetZ){
+        List<String> trackIdentifiers = coasterConfig.getTrack().getParts();
+        List<TrackDescription> trackDescriptions = trackIdentifiers.stream()
+                .map(identifier -> loadTrackSegmentFromConfig(identifier, coasterHandle, coasterConfig, offsetX, offsetY, offsetZ))
+                .collect(Collectors.toList());
+
+        TrackFactory trackFactory = new ConfigAdvancedSplineTrackFactory(coasterHandle, coasterConfig, trackDescriptions);
+        return trackFactory.createTrack();
+    }
+
+    private TrackDescription loadTrackSegmentFromConfig(String trackIdentifier, CoasterHandle coasterHandle, CoasterConfig coasterConfig, float offsetX, float offsetY, float offsetZ){
         Ride ride = coasterHandle.getRide();
         String rideIdentifier = ride.getIdentifier();
-        String trackIdentifier = "default";
         String configFileName = configManager.getFolder(rideIdentifier) + "/track/" + rideIdentifier + "." + trackIdentifier + ".csv";
         File configFile = new File(dataFolder, configFileName);
         Path pathToConfigFile = configFile.toPath();
@@ -189,10 +199,6 @@ public class RideManager {
 
         Frame startFrame = new SimpleFrame(0);
         Frame endFrame = new SimpleFrame(positions.size()-1);
-        List<TrackDescription> trackDescriptions = List.of(new TrackDescription(trackIdentifier, positions, TrackType.TRACK, startFrame, endFrame));
-
-//        TrackFactory trackFactory = new ConfigCircularNoInterruptionTrackFactory(coasterHandle, coasterConfig, new TrackDescription(trackIdentifier, positions, TrackType.TRACK, startFrame, startFrame));
-        TrackFactory trackFactory = new ConfigAdvancedSplineTrackFactory(coasterHandle, coasterConfig, trackDescriptions);
-        return trackFactory.createTrack();
+        return new TrackDescription(trackIdentifier, positions, TrackType.TRACK, startFrame, endFrame);
     }
 }

@@ -10,10 +10,12 @@ import java.util.Set;
 public class TrackConfig {
     private final List<Float> position;
     private final List<SectionConfig> sections;
+    private final List<String> parts;
 
-    public TrackConfig(List<Float> position, List<SectionConfig> sections) {
+    public TrackConfig(List<Float> position, List<SectionConfig> sections, List<String> parts) {
         this.position = position;
         this.sections = sections;
+        this.parts = parts;
     }
 
     public List<Float> getPosition() {
@@ -24,8 +26,13 @@ public class TrackConfig {
         return sections;
     }
 
+    public List<String> getParts() {
+        return parts;
+    }
+
     public static TrackConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         List<Float> position = configurationSection.getFloatList("position");
+        List<String> parts = configurationSection.getStringList("parts");
 
         List<SectionConfig> sections = new ArrayList<>();
         ConfigurationSection configurationSectionSections = configurationSection.getConfigurationSection("sections");
@@ -48,7 +55,7 @@ public class TrackConfig {
 
         }
 
-        return new TrackConfig(position, sections);
+        return new TrackConfig(position, sections, parts);
     }
 }
 
