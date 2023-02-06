@@ -12,5 +12,5 @@ public class Permissions {
     public static final String COMMAND_DISPATCH = "jrides.command.dispatch";
     public static final String COMMAND_MENU = "jrides.command.menu";
 
-
+    public static final String STATUS_INSPECTION = "jrides.debug.status_inspection";
 }

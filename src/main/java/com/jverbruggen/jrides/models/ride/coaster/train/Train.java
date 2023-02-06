@@ -58,4 +58,9 @@ public interface Train {
     void playRestraintOpenSound();
     void playRestraintCloseSound();
     void playDispatchSound();
+
+    void setStatusMessage(String statusMessage);
+    void addStatusMessageListener(Player player);
+    void removeStatusMessageListener(Player player);
+    boolean statusModeEnabled(Player player);
 }

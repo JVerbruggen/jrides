@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.models.ride.coaster.train;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.TrainHandle;
+import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
@@ -29,7 +30,12 @@ public class SimpleTrain implements Train {
     private StationHandle onStation;
     private TrainHandle trainHandle;
 
-    public SimpleTrain(String name, List<Cart> carts, Frame headOfTrainFrame, Frame massMiddleFrame, Frame tailOfTrainFrame, Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation, Section section) {
+    private String statusMessage;
+    private List<Player> statusMessageListeners;
+    private boolean debugMode;
+
+    public SimpleTrain(String name, List<Cart> carts, Frame headOfTrainFrame, Frame massMiddleFrame, Frame tailOfTrainFrame,
+                       Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation, Section section, boolean debugMode) {
         this.name = name;
         this.carts = carts;
         this.headOfTrainFrame = headOfTrainFrame;
@@ -46,6 +52,9 @@ public class SimpleTrain implements Train {
         this.passengers = new ArrayList<>();
         this.onStation = null;
         this.trainHandle = null;
+        this.statusMessage = "";
+        this.statusMessageListeners = new ArrayList<>();
+        this.debugMode = debugMode;
 
         getCarts().forEach(c -> c.setParentTrain(this));
     }
@@ -176,15 +185,19 @@ public class SimpleTrain implements Train {
     @Override
     public void onPlayerEnter(Player player) {
         passengers.add(player);
+        if(statusModeEnabled(player)){
+            addStatusMessageListener(player);
+        }
 
-        if(!isStationary()) return;
-
-        onStation.onPlayerEnter(player);
+        if(isStationary()){
+            onStation.onPlayerEnter(player);
+        }
     }
 
     @Override
     public void onPlayerExit(Player player) {
         passengers.remove(player);
+        removeStatusMessageListener(player);
     }
 
     @Override
@@ -235,6 +248,32 @@ public class SimpleTrain implements Train {
     @Override
     public void playDispatchSound() {
         playSound(trainHandle.getCoasterHandle().getDispatchSound());
+    }
+
+    @Override
+    public void setStatusMessage(String statusMessage) {
+        if(!debugMode) return;
+        this.statusMessage = statusMessage;
+        if(!statusMessage.equals(""))
+            statusMessageListeners.forEach(l -> l.sendMessage(statusMessage));
+    }
+
+    @Override
+    public void addStatusMessageListener(Player player) {
+        if(!debugMode) return;
+        statusMessageListeners.add(player);
+        player.sendMessage(statusMessage);
+    }
+
+    @Override
+    public void removeStatusMessageListener(Player player) {
+        if(!debugMode) return;
+        statusMessageListeners.remove(player);
+    }
+
+    @Override
+    public boolean statusModeEnabled(Player player) {
+        return debugMode && player.getBukkitPlayer().hasPermission(Permissions.STATUS_INSPECTION);
     }
 
     private void playSound(String soundName){

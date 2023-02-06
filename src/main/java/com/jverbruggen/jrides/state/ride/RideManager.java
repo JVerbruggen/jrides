@@ -165,6 +165,7 @@ public class RideManager {
             TrainHandle trainHandle = createTrain(track, coasterConfig, sectionProvider, trainName);
             if(trainHandle != null)
                 trains.add(trainHandle);
+            else throw new RuntimeException("TrainHandle was null!");
         }
         return trains;
     }

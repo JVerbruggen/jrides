@@ -31,10 +31,12 @@ import java.util.List;
 public class TrainFactory {
     private final ViewportManager viewportManager;
     private final SeatFactory seatFactory;
+    private final boolean debugMode;
 
     public TrainFactory() {
         this.viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
         this.seatFactory = ServiceProvider.getSingleton(SeatFactory.class);
+        this.debugMode = false; // TODO: add to a config
     }
 
     public Train createEquallyDistributedTrain(Track track, CoasterConfig coasterConfig, String trainIdentifier){
@@ -99,7 +101,8 @@ public class TrainFactory {
         Vector3 middleLocation = track.getLocationFor(massMiddleFrame);
         Vector3 tailLocation = track.getLocationFor(tailOfTrainFrame);
 
-        Train train = new SimpleTrain(trainIdentifier, carts, headOfTrainFrame, massMiddleFrame, tailOfTrainFrame, headLocation, middleLocation, tailLocation, spawnSection);
+        Train train = new SimpleTrain(trainIdentifier, carts, headOfTrainFrame, massMiddleFrame, tailOfTrainFrame,
+                headLocation, middleLocation, tailLocation, spawnSection, debugMode);
         spawnSection.addOccupation(train);
 
         return train;

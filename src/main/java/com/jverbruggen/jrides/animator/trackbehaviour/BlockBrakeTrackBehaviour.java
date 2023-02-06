@@ -40,6 +40,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
             goIntoSwitch = false;
             switch (phase){
                 case IDLE:
+                    train.setStatusMessage("Idle");
                     if(train.getHeadSection().next().isBlockSectionSafe())
                         phase = BlockBrakePhase.PASSING_THROUGH;
                     else
@@ -47,6 +48,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
                     goIntoSwitch = true;
                     break;
                 case PASSING_THROUGH:
+                    train.setStatusMessage("Passing through");
                     if(newSpeed.getSpeedPerTick() > driveSpeed){
                         newSpeed.minus(deceleration, driveSpeed);
                     }
@@ -56,6 +58,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
                     }
                     break;
                 case DRIVING_UNTIL_STOP:
+                    train.setStatusMessage("Driving until stop");
                     if(train.getHeadSection().hasPassed(stopFrame, train.getHeadOfTrainFrame())){
                         if(train.getHeadSection().next().isBlockSectionSafe()){
                             phase = BlockBrakePhase.DRIVING;
@@ -68,16 +71,22 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
                     }
                     break;
                 case STOPPING:
-                    if(newSpeed.is(0)) phase = BlockBrakePhase.WAITING;
+                    train.setStatusMessage("Stopping" + newSpeed.getSpeedPerTick());
+                    if(newSpeed.is(0)){
+                        phase = BlockBrakePhase.WAITING;
+                        goIntoSwitch = true;
+                    }
                     newSpeed.minus(deceleration, 0);
                     break;
                 case WAITING:
+                    train.setStatusMessage("Waiting");
                     if(train.getHeadSection().next().isBlockSectionSafe()){
                         phase = BlockBrakePhase.DRIVING;
                         goIntoSwitch = true;
                     }
                     break;
                 case DRIVING:
+                    train.setStatusMessage("Driving");
                     newSpeed.approach(acceleration, deceleration, driveSpeed);
                     break;
             }
