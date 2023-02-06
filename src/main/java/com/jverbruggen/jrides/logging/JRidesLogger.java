@@ -47,7 +47,7 @@ public class JRidesLogger extends Logger {
             if(level.equals(Level.INFO))
                 color = ChatColor.GRAY;
             else if(level.equals(Level.WARNING))
-                color = ChatColor.RED;
+                color = ChatColor.YELLOW;
             else if(level.equals(Level.SEVERE))
                 color = ChatColor.DARK_RED;
             else

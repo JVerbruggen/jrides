@@ -36,7 +36,7 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         this.yawRotation = yawRotation;
         this.rotations = new ArmorstandRotations();
         this.models = new ArmorstandModels();
-        this.invisible = true;
+        this.invisible = false;
         this.leashedToEntity = -1;
         this.allowsPassengerValue = false;
         this.partOfSeat = null;

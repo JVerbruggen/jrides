@@ -86,6 +86,8 @@ public class RideManager {
 
     public void initAllRides(World world){
         RideConfig rideConfig = configManager.getRideConfig();
+        if(rideConfig == null) return;
+
         List<RideConfigObject> rideConfigObjects = rideConfig.getRides();
 
         for (RideConfigObject rideConfigObject : rideConfigObjects) {
@@ -105,6 +107,7 @@ public class RideManager {
 
     private void loadCoaster(World world, String rideIdentifier){
         CoasterConfig coasterConfig = configManager.getCoasterConfig(rideIdentifier);
+        if(coasterConfig == null) return;
 
         String displayName = coasterConfig.getDisplayName();
         PlayerLocation warpLocation = coasterConfig.getWarpLocation();

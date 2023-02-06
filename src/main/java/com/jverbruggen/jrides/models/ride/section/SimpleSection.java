@@ -13,7 +13,8 @@ public class SimpleSection extends BaseSection {
     public SimpleSection(Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour) {
         super();
         this.startFrame = startFrame.clone();
-        this.endFrame = endFrame.clone().add(-1);
+        this.endFrame = endFrame.clone();
+//        this.endFrame = endFrame.clone().add(-1);
         this.trackBehaviour = trackBehaviour;
     }
 

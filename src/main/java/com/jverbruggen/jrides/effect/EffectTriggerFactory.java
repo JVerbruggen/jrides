@@ -31,6 +31,8 @@ public class EffectTriggerFactory {
     }
 
     public EffectTriggerHandle getEffectTrigger(String rideIdentifier, String effectName, boolean reversed, Frame frame, TriggerConfig triggerConfig){
+        if(triggerConfig == null) return null;
+
         EffectTrigger effectTrigger;
         String mapKey = rideIdentifier + ":" + effectName;
         if(!effectTriggerMap.containsKey(mapKey)){
@@ -97,6 +99,7 @@ public class EffectTriggerFactory {
             String effectName = effect.getValue();
 
             EffectTriggerHandle effectTrigger = getEffectTrigger(rideIdentifier, effectName, false, frame, configManager.getTriggerConfig(rideIdentifier, effectName));
+            if(effectTrigger == null) return null;
             if(previous != null) previous.setNext(effectTrigger);
             effectTriggers.add(effectTrigger);
 
