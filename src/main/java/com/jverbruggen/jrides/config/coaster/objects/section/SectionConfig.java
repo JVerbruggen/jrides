@@ -18,8 +18,9 @@ public class SectionConfig {
     private final DriveSectionSpecConfig driveSectionSpec;
     private final StorageSectionSpecConfig storageSectionSpec;
     private final TransferSectionSpecConfig transferSectionSpec;
+    private final LaunchSectionSpecConfig launchSectionSpecConfig;
 
-    public SectionConfig(String identifier, int lowerRange, int upperRange, String trackSource, String type, String nextSection, BlockSectionSpecConfig blockSectionSpec, StationSpecConfig stationSectionSpec, BrakeSectionSpecConfig brakeSectionSpec, DriveSectionSpecConfig driveSectionSpec, StorageSectionSpecConfig storageSectionSpec, TransferSectionSpecConfig transferSectionSpec) {
+    public SectionConfig(String identifier, int lowerRange, int upperRange, String trackSource, String type, String nextSection, BlockSectionSpecConfig blockSectionSpec, StationSpecConfig stationSectionSpec, BrakeSectionSpecConfig brakeSectionSpec, DriveSectionSpecConfig driveSectionSpec, StorageSectionSpecConfig storageSectionSpec, TransferSectionSpecConfig transferSectionSpec, LaunchSectionSpecConfig launchSectionSpecConfig) {
         this.identifier = identifier;
         this.lowerRange = lowerRange;
         this.upperRange = upperRange;
@@ -32,6 +33,7 @@ public class SectionConfig {
         this.driveSectionSpec = driveSectionSpec;
         this.storageSectionSpec = storageSectionSpec;
         this.transferSectionSpec = transferSectionSpec;
+        this.launchSectionSpecConfig = launchSectionSpecConfig;
     }
 
     public String getIdentifier() {
@@ -82,6 +84,10 @@ public class SectionConfig {
         return transferSectionSpec;
     }
 
+    public LaunchSectionSpecConfig getLaunchSectionSpecConfig() {
+        return launchSectionSpecConfig;
+    }
+
     public static SectionConfig fromConfigurationSection(ConfigurationSection configurationSection, String sectionIdentifier) {
         List<?> range = configurationSection.getList("range");
 
@@ -117,6 +123,10 @@ public class SectionConfig {
         if(configurationSection.contains("transferSection"))
             transferSectionSpec = TransferSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("transferSection"));
 
-        return new SectionConfig(sectionIdentifier, lowerRange, upperRange, trackSource, type, nextSection, blockSectionSpec, stationSectionSpec, brakeSectionSpec, driveSectionSpec, storageSectionSpec, transferSectionSpec);
+        LaunchSectionSpecConfig launchSectionSpec = null;
+        if(configurationSection.contains("launchSection"))
+            launchSectionSpec = LaunchSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("launchSection"));
+
+        return new SectionConfig(sectionIdentifier, lowerRange, upperRange, trackSource, type, nextSection, blockSectionSpec, stationSectionSpec, brakeSectionSpec, driveSectionSpec, storageSectionSpec, transferSectionSpec, launchSectionSpec);
     }
 }

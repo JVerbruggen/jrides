@@ -1,9 +1,10 @@
 package com.jverbruggen.jrides.config.coaster.objects.section;
 
+import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class StationSpecConfig {
+public class StationSpecConfig extends BaseConfig {
     private final double engage;
     private final double driveSpeed;
     private final int minimumWaitIntervalSeconds;
@@ -45,10 +46,10 @@ public class StationSpecConfig {
     }
 
     public static StationSpecConfig fromConfigurationSection(ConfigurationSection configurationSection) {
-        double engage = configurationSection.getDouble("engage");
-        double driveSpeed = configurationSection.getDouble("driveSpeed");
-        int minimumWaitIntervalSeconds = configurationSection.getInt("minimumWaitIntervalSeconds");
-        int maximumWaitIntervalSeconds = configurationSection.getInt("maximumWaitIntervalSeconds");
+        double engage = getDouble(configurationSection, "engage");
+        double driveSpeed = getDouble(configurationSection, "driveSpeed");
+        int minimumWaitIntervalSeconds = getInt(configurationSection, "minimumWaitIntervalSeconds");
+        int maximumWaitIntervalSeconds = getInt(configurationSection, "maximumWaitIntervalSeconds");
         StationEffectsConfig effects = StationEffectsConfig.fromConfigurationSection(configurationSection.getConfigurationSection("effects"));
         PlayerLocation ejectLocation = PlayerLocation.fromDoubleList(configurationSection.getDoubleList("ejectLocation"));
 

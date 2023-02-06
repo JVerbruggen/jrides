@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.config.ride.RideConfig;
 import com.jverbruggen.jrides.config.trigger.TriggerConfig;
 import com.jverbruggen.jrides.config.trigger.TriggerConfigFactory;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -56,7 +57,7 @@ public class ConfigManager {
     public TriggerConfig getTriggerConfig(String rideIdentifier, String effectName){
         String fileName = getTriggerFolder(rideIdentifier) + "/" + effectName + ".yml";
         YamlConfiguration yamlConfiguration = getYamlConfiguration(fileName);
-        return triggerConfigFactory.fromConfigurationSection(effectName, yamlConfiguration.getConfigurationSection("trigger"));
+        return triggerConfigFactory.fromConfigurationSection(rideIdentifier, effectName, yamlConfiguration.getConfigurationSection("trigger"));
     }
 
     public CoasterConfig getCoasterConfig(String rideIdentifier){

@@ -26,6 +26,14 @@ public class CartSpecConfig {
         return tail;
     }
 
+    public boolean hasHead(){
+        return head != null;
+    }
+
+    public boolean hasTail(){
+        return tail != null;
+    }
+
     public static CartSpecConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         CartTypeSpecConfig _default = CartTypeSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("default"));
         CartTypeSpecConfig head = null;

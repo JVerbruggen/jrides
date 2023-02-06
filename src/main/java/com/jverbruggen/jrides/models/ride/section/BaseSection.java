@@ -69,7 +69,7 @@ public abstract class BaseSection implements Section{
 
     @Override
     public void setPrevious(Section section) {
-        if(previousSection != null) throw new RuntimeException("Cannot set previous section twice!");
+        if(previousSection != null) throw new RuntimeException("Cannot set previous section twice! (Check if multiple sections point to the same singular section)");
         previousSection = section;
     }
 

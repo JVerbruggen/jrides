@@ -74,6 +74,7 @@ public abstract class BaseCommandExecutor implements JRidesCommandExecutor {
             return getCommandSuggestions();
         }else{
             JRidesCommandExecutor subCommand = findSubCommand(strings[depth]);
+            if(subCommand == null) return List.of();
             return subCommand.onTabComplete(commandSender, command, s, strings);
         }
     }

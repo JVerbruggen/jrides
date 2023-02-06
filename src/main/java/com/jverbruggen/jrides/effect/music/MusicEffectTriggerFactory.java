@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.effect.music;
 
 import com.jverbruggen.jrides.config.trigger.TriggerConfig;
 import com.jverbruggen.jrides.config.trigger.music.MusicTriggerConfig;
+import org.bukkit.Bukkit;
 
 public class MusicEffectTriggerFactory {
     public MusicEffectTrigger getMusicEffectTrigger(TriggerConfig triggerConfig){

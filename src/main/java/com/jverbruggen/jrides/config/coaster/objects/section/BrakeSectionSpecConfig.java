@@ -1,8 +1,9 @@
 package com.jverbruggen.jrides.config.coaster.objects.section;
 
+import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class BrakeSectionSpecConfig {
+public class BrakeSectionSpecConfig extends BaseConfig {
     private final double driveSpeed;
     private final double deceleration;
 
@@ -20,8 +21,8 @@ public class BrakeSectionSpecConfig {
     }
 
     public static BrakeSectionSpecConfig fromConfigurationSection(ConfigurationSection configurationSection) {
-        double driveSpeed = configurationSection.getDouble("driveSpeed");
-        double deceleration = configurationSection.getDouble("deceleration");
+        double driveSpeed = getDouble(configurationSection, "driveSpeed");
+        double deceleration = getDouble(configurationSection, "deceleration");
 
         return new BrakeSectionSpecConfig(driveSpeed, deceleration);
     }

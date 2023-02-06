@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.effect.music;
 import com.jverbruggen.jrides.event.ride.OnrideMusicTriggerEvent;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
 public class ExternalMusicEffectTrigger implements MusicEffectTrigger {
@@ -17,6 +18,7 @@ public class ExternalMusicEffectTrigger implements MusicEffectTrigger {
     @Override
     public void execute(Train train) {
         pluginManager.callEvent(new OnrideMusicTriggerEvent(musicResource));
+        Bukkit.broadcastMessage(musicResource);
     }
 
     @Override

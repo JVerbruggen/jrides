@@ -13,10 +13,11 @@ public class TriggerConfigFactory {
         this.triggerConfigList = new HashMap<>();
     }
 
-    public TriggerConfig fromConfigurationSection(String effectName, ConfigurationSection configurationSection){
+    public TriggerConfig fromConfigurationSection(String rideIdentifier, String effectName, ConfigurationSection configurationSection){
         TriggerType type = TriggerType.fromString(configurationSection.getString("type"));
         TriggerConfig triggerConfig;
-        if(triggerConfigList.containsKey(effectName)) return triggerConfigList.get(effectName);
+        String mapKey = rideIdentifier + ":" + effectName;
+        if(triggerConfigList.containsKey(mapKey)) return triggerConfigList.get(mapKey);
 
         switch(type){
             case MUSIC:
@@ -29,7 +30,7 @@ public class TriggerConfigFactory {
                 throw new RuntimeException("Trigger type " + type + " is not supported");
         }
 
-        triggerConfigList.put(effectName, triggerConfig);
+        triggerConfigList.put(mapKey, triggerConfig);
 
         return triggerConfig;
     }

@@ -1,8 +1,9 @@
 package com.jverbruggen.jrides.config.coaster.objects.section;
 
+import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class BlockSectionSpecConfig {
+public class BlockSectionSpecConfig extends BaseConfig {
     private final double engage;
     private final double driveSpeed;
     private final boolean canSpawn;
@@ -26,9 +27,9 @@ public class BlockSectionSpecConfig {
     }
 
     public static BlockSectionSpecConfig fromConfigurationSection(ConfigurationSection configurationSection) {
-        double engage = configurationSection.getDouble("engage");
-        double driveSpeed = configurationSection.getDouble("driveSpeed");
-        boolean canSpawn = configurationSection.getBoolean("canSpawn");
+        double engage = getDouble(configurationSection, "engage");
+        double driveSpeed = getDouble(configurationSection, "driveSpeed");
+        boolean canSpawn = getBoolean(configurationSection, "canSpawn");
 
         return new BlockSectionSpecConfig(engage, driveSpeed, canSpawn);
     }

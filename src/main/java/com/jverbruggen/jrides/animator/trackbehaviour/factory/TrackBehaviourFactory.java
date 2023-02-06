@@ -49,6 +49,13 @@ public class TrackBehaviourFactory {
         return new BlockBrakeTrackBehaviour(cartMovementFactory, blockBrakeEngageFrame, canSpawn, driveSpeed);
     }
 
+    public TrackBehaviour getLaunchBehaviour(CoasterHandle coasterHandle, Frame engageFrame, double driveSpeed, double acceleration, double deceleration, int waitTicks, double launchAcceleration, double launchMaxSpeed, List<String> launchEffectStrings){
+        String rideIdentifier = coasterHandle.getRide().getIdentifier();
+        List<EffectTriggerHandle> launchEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, launchEffectStrings);
+
+        return new LaunchTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, acceleration, waitTicks, engageFrame, launchAcceleration, launchMaxSpeed, launchEffectTriggers);
+    }
+
     public TrackBehaviour getStationBehaviour(Frame blockBrakeEngageFrame, CoasterHandle coasterHandle, SectionConfig sectionConfig, GateOwnerConfigSpec gateSpec){
         int stationNr = coasterHandle.getStationHandles().size() + 1;
         String rideIdentifier = coasterHandle.getRide().getIdentifier();
@@ -139,6 +146,22 @@ public class TrackBehaviourFactory {
             double driveSpeed = driveSectionSpecConfig.getDriveSpeed();
             double acceleration = driveSectionSpecConfig.getAcceleration();
             return new BrakeAndDriveTrackBehaviour(cartMovementFactory, driveSpeed, acceleration, acceleration);
+        }else if(type.equalsIgnoreCase("launch")){
+            LaunchSectionSpecConfig launchSectionSpecConfig = sectionConfig.getLaunchSectionSpecConfig();
+            double engagePercentage = launchSectionSpecConfig.getEngage();
+            Frame lowerRange = new SimpleFrame(sectionConfig.getLowerRange());
+            Frame upperRange = new SimpleFrame(sectionConfig.getUpperRange());
+            Frame engageFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
+
+            double driveSpeed = launchSectionSpecConfig.getDriveSpeed();
+            double acceleration = launchSectionSpecConfig.getAcceleration();
+            double deceleration = launchSectionSpecConfig.getDeceleration();
+            int waitTicks = launchSectionSpecConfig.getWaitTicks();
+            double launchAcceleration = launchSectionSpecConfig.getLaunchAcceleration();
+            double launchMaxSpeed = launchSectionSpecConfig.getLaunchMaxSpeed();
+            List<String> launchEffectsString = launchSectionSpecConfig.getLaunchEffectsConfig().getLaunchEffects();
+
+            return getLaunchBehaviour(coasterHandle, engageFrame, driveSpeed, acceleration, deceleration, waitTicks, launchAcceleration, launchMaxSpeed, launchEffectsString);
         }
 
         JRidesPlugin.getLogger().severe("Unknown section type " + type);

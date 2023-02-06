@@ -11,6 +11,7 @@ import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.SimpleFrame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.*;
@@ -29,9 +30,10 @@ public class EffectTriggerFactory {
         this.effectTriggerMap = new HashMap<>();
     }
 
-    public EffectTriggerHandle getEffectTrigger(String effectName, boolean reversed, Frame frame, TriggerConfig triggerConfig){
+    public EffectTriggerHandle getEffectTrigger(String rideIdentifier, String effectName, boolean reversed, Frame frame, TriggerConfig triggerConfig){
         EffectTrigger effectTrigger;
-        if(!effectTriggerMap.containsKey(effectName)){
+        String mapKey = rideIdentifier + ":" + effectName;
+        if(!effectTriggerMap.containsKey(mapKey)){
             switch(triggerConfig.getType()){
                 case MUSIC:
                     effectTrigger = musicEffectTriggerFactory.getMusicEffectTrigger(triggerConfig);
@@ -43,9 +45,9 @@ public class EffectTriggerFactory {
                     throw new RuntimeException("Cannot resolve trigger type when creating effect trigger");
             }
 
-            effectTriggerMap.put(effectName, effectTrigger);
+            effectTriggerMap.put(mapKey, effectTrigger);
         }else{
-            effectTrigger = effectTriggerMap.get(effectName);
+            effectTrigger = effectTriggerMap.get(mapKey);
         }
 
         if(reversed) {
@@ -65,7 +67,7 @@ public class EffectTriggerFactory {
                     if(effectNameRawComponents.length == 2){
                         reversed = effectNameRawComponents[1].equalsIgnoreCase("reversed");
                     }
-                    return getEffectTrigger(effectName, reversed, null, configManager.getTriggerConfig(rideIdentifier, effectName));
+                    return getEffectTrigger(rideIdentifier, effectName, reversed, null, configManager.getTriggerConfig(rideIdentifier, effectName));
                 })
                 .collect(Collectors.toList());
     }
@@ -94,7 +96,7 @@ public class EffectTriggerFactory {
             Frame frame = effect.getKey();
             String effectName = effect.getValue();
 
-            EffectTriggerHandle effectTrigger = getEffectTrigger(effectName, false, frame, configManager.getTriggerConfig(rideIdentifier, effectName));
+            EffectTriggerHandle effectTrigger = getEffectTrigger(rideIdentifier, effectName, false, frame, configManager.getTriggerConfig(rideIdentifier, effectName));
             if(previous != null) previous.setNext(effectTrigger);
             effectTriggers.add(effectTrigger);
 

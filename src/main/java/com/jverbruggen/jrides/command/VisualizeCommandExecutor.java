@@ -39,6 +39,10 @@ public class VisualizeCommandExecutor extends BaseCommandExecutor {
         }
 
         String identifier = args[1];
+        if(identifier.equalsIgnoreCase("")){
+            languageFile.sendMessage(commandSender, getHelpMessageForSelf());
+            return true;
+        }
 
         CoasterHandle coasterHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
         ParticleTrackVisualisationTool tool = coasterHandle.getVisualisationTool();

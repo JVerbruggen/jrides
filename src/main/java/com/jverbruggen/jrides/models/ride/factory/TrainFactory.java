@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.models.ride.factory;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
+import com.jverbruggen.jrides.config.coaster.objects.CartSpecConfig;
 import com.jverbruggen.jrides.config.coaster.objects.VehiclesConfig;
 import com.jverbruggen.jrides.config.coaster.objects.cart.CartModelItemConfig;
 import com.jverbruggen.jrides.config.coaster.objects.cart.CartTypeSpecConfig;
@@ -60,7 +61,15 @@ public class TrainFactory {
 
             Frame cartFrame = headOfTrainFrame.clone().add(-cartOffsetFrames);
 
-            CartTypeSpecConfig cartTypeSpecConfig = coasterConfig.getCartSpec().getDefault();
+            CartSpecConfig cartSpecConfig = coasterConfig.getCartSpec();
+            CartTypeSpecConfig cartTypeSpecConfig;
+            if(i == 0 && cartSpecConfig.hasHead())
+                cartTypeSpecConfig = cartSpecConfig.getHead();
+            else if(i == amountOfCarts-1 && cartSpecConfig.hasTail())
+                cartTypeSpecConfig = cartSpecConfig.getTail();
+            else
+                cartTypeSpecConfig = cartSpecConfig.getDefault();
+
             CartModelItemConfig cartModelItemConfig = cartTypeSpecConfig.getModel().getItem();
 
             Material modelMaterial = cartModelItemConfig.getMaterial();
