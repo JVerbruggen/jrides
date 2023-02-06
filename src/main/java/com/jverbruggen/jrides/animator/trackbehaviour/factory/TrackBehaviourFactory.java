@@ -3,10 +3,15 @@ package com.jverbruggen.jrides.animator.trackbehaviour.factory;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.trackbehaviour.*;
+import com.jverbruggen.jrides.animator.trackbehaviour.brake.BlockBrakeTrackBehaviour;
+import com.jverbruggen.jrides.animator.trackbehaviour.brake.BrakeAndDriveTrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
+import com.jverbruggen.jrides.animator.trackbehaviour.transfer.TrainDisplacerTransferTrackBehaviour;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.*;
+import com.jverbruggen.jrides.config.coaster.objects.section.transfer.TransferSectionPositionSpecConfig;
+import com.jverbruggen.jrides.config.coaster.objects.section.transfer.TransferSectionSpecConfig;
 import com.jverbruggen.jrides.config.gates.GateConfig;
 import com.jverbruggen.jrides.config.gates.GateOwnerConfigSpec;
 import com.jverbruggen.jrides.control.DispatchLock;
@@ -116,7 +121,7 @@ public class TrackBehaviourFactory {
             double gravityConstant = coasterConfig.getGravityConstant();
             double dragConstant = coasterConfig.getDragConstant();
             return getTrackBehaviour(gravityConstant, dragConstant);
-        }else if(type.equalsIgnoreCase("blocksection") || type.equalsIgnoreCase("transfer")){
+        }else if(type.equalsIgnoreCase("blocksection")){
             BlockSectionSpecConfig blockSectionSpecConfig = sectionConfig.getBlockSectionSpec();
             double engagePercentage = blockSectionSpecConfig.getEngage();
             Frame lowerRange = new SimpleFrame(sectionConfig.getLowerRange());
@@ -162,6 +167,18 @@ public class TrackBehaviourFactory {
             List<String> launchEffectsString = launchSectionSpecConfig.getLaunchEffectsConfig().getLaunchEffects();
 
             return getLaunchBehaviour(coasterHandle, engageFrame, driveSpeed, acceleration, deceleration, waitTicks, launchAcceleration, launchMaxSpeed, launchEffectsString);
+        }else if(type.equalsIgnoreCase("transfer")){
+            TransferSectionSpecConfig transferSectionSpecConfig = sectionConfig.getTransferSectionSpec();
+
+            for(TransferSectionPositionSpecConfig transferSectionPositionSpecConfig : transferSectionSpecConfig.getPositions()){
+                String sectionAtStartString = transferSectionPositionSpecConfig.getSectionAtStart();
+                String sectionAtEndString = transferSectionPositionSpecConfig.getSectionAtEnd();
+                Vector3 position = transferSectionPositionSpecConfig.getPosition();
+                Vector3 rotation = transferSectionPositionSpecConfig.getRotation();
+                int moveTicks = transferSectionPositionSpecConfig.getMoveTicks();
+            }
+
+//            return new TrainDisplacerTransferTrackBehaviour(cartMovementFactory, driveSpeed, acceleration, deceleration);
         }
 
         JRidesPlugin.getLogger().severe("Unknown section type " + type);

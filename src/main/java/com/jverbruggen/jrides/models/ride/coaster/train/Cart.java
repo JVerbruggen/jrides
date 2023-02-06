@@ -15,6 +15,8 @@ public interface Cart {
     List<Player> getPassengers();
     LinkedFrame getFrame();
     Vector3 getTrackOffset();
+    Vector3 getPosition();
+    Quaternion getOrientation();
     void setPosition(Vector3 position, Quaternion orientation);
     void setPosition(Vector3 position);
     void setPosition(CartMovement cartMovement);

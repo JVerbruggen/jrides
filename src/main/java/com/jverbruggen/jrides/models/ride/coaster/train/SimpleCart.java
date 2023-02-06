@@ -21,12 +21,15 @@ public class SimpleCart implements Cart {
     private LinkedFrame linkedFrame;
     private Train parentTrain;
 
+    private Quaternion currentOrientation;
+
     public SimpleCart(List<Seat> seats, VirtualArmorstand modelArmorstand, Vector3 trackOffset, LinkedFrame linkedFrame) {
         this.seats = seats;
         this.modelArmorstand = modelArmorstand;
         this.trackOffset = trackOffset;
         this.linkedFrame = linkedFrame;
         this.parentTrain = null;
+        this.currentOrientation = null;
 
         seats.forEach(s -> s.setParentCart(this));
     }
@@ -55,11 +58,21 @@ public class SimpleCart implements Cart {
     }
 
     @Override
+    public Vector3 getPosition() {
+        return modelArmorstand.getLocation();
+    }
+
+    @Override
+    public Quaternion getOrientation() {
+        return currentOrientation;
+    }
+
+    @Override
     public void setPosition(Vector3 position, Quaternion orientation) {
         setPosition(position);
+        currentOrientation = orientation;
 
-        modelArmorstand.setHeadpose(ArmorStandPose.getArmorStandPose(orientation)); // TODO: expensive
-
+        modelArmorstand.setHeadpose(ArmorStandPose.getArmorStandPose(orientation));
         SeatFactory.moveSeats(seats, position, orientation);
     }
 

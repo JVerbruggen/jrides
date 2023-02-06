@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.config.coaster.objects.section;
 
+import com.jverbruggen.jrides.config.coaster.objects.section.transfer.TransferSectionPositionSpecConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.transfer.TransferSectionSpecConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -20,7 +21,10 @@ public class SectionConfig {
     private final TransferSectionSpecConfig transferSectionSpec;
     private final LaunchSectionSpecConfig launchSectionSpecConfig;
 
-    public SectionConfig(String identifier, int lowerRange, int upperRange, String trackSource, String type, String nextSection, BlockSectionSpecConfig blockSectionSpec, StationSpecConfig stationSectionSpec, BrakeSectionSpecConfig brakeSectionSpec, DriveSectionSpecConfig driveSectionSpec, StorageSectionSpecConfig storageSectionSpec, TransferSectionSpecConfig transferSectionSpec, LaunchSectionSpecConfig launchSectionSpecConfig) {
+    public SectionConfig(String identifier, int lowerRange, int upperRange, String trackSource, String type, String nextSection,
+                         BlockSectionSpecConfig blockSectionSpec, StationSpecConfig stationSectionSpec, BrakeSectionSpecConfig brakeSectionSpec,
+                         DriveSectionSpecConfig driveSectionSpec, StorageSectionSpecConfig storageSectionSpec, TransferSectionSpecConfig transferSectionSpec,
+                         LaunchSectionSpecConfig launchSectionSpecConfig) {
         this.identifier = identifier;
         this.lowerRange = lowerRange;
         this.upperRange = upperRange;

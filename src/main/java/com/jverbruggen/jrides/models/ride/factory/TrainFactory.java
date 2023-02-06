@@ -36,7 +36,7 @@ public class TrainFactory {
     public TrainFactory() {
         this.viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
         this.seatFactory = ServiceProvider.getSingleton(SeatFactory.class);
-        this.debugMode = true; // TODO: add to a config
+        this.debugMode = false; // TODO: add to a config
     }
 
     public Train createEquallyDistributedTrain(Track track, CoasterConfig coasterConfig, String trainIdentifier){
