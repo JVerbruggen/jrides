@@ -79,7 +79,8 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
                     newSpeed.minus(deceleration, 0);
                     break;
                 case WAITING:
-                    train.setStatusMessage("Waiting");
+                    train.setStatusMessage("Waiting \n" + train.getHeadSection() + "\n"
+                        + train.getHeadSection().next());
                     if(train.getHeadSection().next().isBlockSectionSafe()){
                         phase = BlockBrakePhase.DRIVING;
                         goIntoSwitch = true;

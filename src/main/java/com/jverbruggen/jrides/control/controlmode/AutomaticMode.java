@@ -69,11 +69,6 @@ public class AutomaticMode extends BaseControlMode implements ControlMode{
     }
 
     @Override
-    public void stopOperating() {
-
-    }
-
-    @Override
     public void onDispatch() {
         dispatchDebounce.reset();
     }

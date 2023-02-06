@@ -1,6 +1,5 @@
 package com.jverbruggen.jrides.animator;
 
-import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.control.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
@@ -13,7 +12,6 @@ import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import java.util.ArrayList;
@@ -48,12 +46,6 @@ public class CoasterHandle implements RideHandle {
         this.visualisationTool = null;
         this.track = null;
         this.effectTriggerCollection = null;
-    }
-
-    @Override
-    public void start(){
-        Bukkit.getScheduler().runTaskTimer(JRidesPlugin.getBukkitPlugin(), this::tick, 1L, 1L);
-        rideController.start();
     }
 
     public void setTrains(List<TrainHandle> trains) {
@@ -122,7 +114,8 @@ public class CoasterHandle implements RideHandle {
         return rideControlMenu;
     }
 
-    private void tick(){
+    public void tick(){
+        rideController.getControlMode().tick();
         for(TrainHandle trainHandle : trains){
             trainHandle.tick();
         }

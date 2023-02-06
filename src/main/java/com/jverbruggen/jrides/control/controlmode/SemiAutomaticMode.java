@@ -46,11 +46,6 @@ public class SemiAutomaticMode extends BaseControlMode implements ControlMode {
     }
 
     @Override
-    public void stopOperating() {
-
-    }
-
-    @Override
     public void onDispatch() {
 
     }

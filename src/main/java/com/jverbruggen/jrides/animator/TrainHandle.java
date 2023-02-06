@@ -60,7 +60,7 @@ public class TrainHandle {
         nextEffect = coasterHandle.getEffectTriggerCollection().first();
     }
 
-    private void sectionLogic(Section fromSection, Section toSection, boolean goingForward, boolean applyNewBehaviour){
+    private void sectionLogic(Section fromSection, Section toSection, TrainEnd onTrainEnd, boolean applyNewBehaviour){
         // If the section it is entering is occupied by some train
         if(toSection.isOccupied()){
             // If that train is a different train
@@ -83,9 +83,8 @@ public class TrainHandle {
         // else if the section is free
         }else{
             // .. occupy it
-            TrainEnd trainEnd = goingForward ? TrainEnd.HEAD : TrainEnd.TAIL;
             toSection.addOccupation(train);
-            train.addCurrentSection(toSection, trainEnd);
+            train.addCurrentSection(toSection, onTrainEnd);
             if(applyNewBehaviour){
                 trackBehaviour = toSection.getTrackBehaviour();
             }
@@ -129,13 +128,15 @@ public class TrainHandle {
         // ---   Calculate new head section occupation
         Section toHeadSection = sectionProvider.getSectionFor(train, fromHeadSection, fromHeadFrame, train.getHeadOfTrainFrame());
         if(toHeadSection != fromHeadSection){
-            sectionLogic(fromHeadSection, toHeadSection, speedBPS.isPositive(), true);
+            TrainEnd trainEnd = speedBPS.isPositive() ? TrainEnd.HEAD : TrainEnd.TAIL;
+            sectionLogic(fromHeadSection, toHeadSection, trainEnd, true);
         }
 
         // ---   Calculate new tail section occupation
         Section toTailSection = sectionProvider.getSectionFor(train, fromTailSection, fromTailFrame, train.getTailOfTrainFrame());
         if(toTailSection != fromTailSection){
-            sectionLogic(fromTailSection, toTailSection, speedBPS.isPositive(), false);
+            TrainEnd trainEnd = speedBPS.isPositive() ? TrainEnd.TAIL : TrainEnd.HEAD;
+            sectionLogic(fromTailSection, toTailSection, trainEnd, false);
         }
 
         // --- Check if the next effect should be played yet

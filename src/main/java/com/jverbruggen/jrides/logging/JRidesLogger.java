@@ -20,6 +20,8 @@ public class JRidesLogger extends Logger {
         this.threshold = Level.INFO;
         this.broadcastMode = broadcastMode;
         this.enabledLogTypes = new ArrayList<>();
+
+        enableLogType(LogType.SECTIONS);
     }
 
     public void enableLogType(LogType logType){

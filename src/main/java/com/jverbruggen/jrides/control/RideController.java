@@ -25,8 +25,6 @@ public class RideController {
     }
 
     public void changeMode(ControlMode newControlMode){
-        if(controlMode != null) controlMode.stopOperating();
-
         if(rideHandle != null){
             newControlMode.setTriggerContext(getTriggerContext());
         }
@@ -35,10 +33,6 @@ public class RideController {
 
     public Ride getRide() {
         return rideHandle.getRide();
-    }
-
-    public void start(){
-        controlMode.startOperating();
     }
 
     public void onTrainArrive(Train train){

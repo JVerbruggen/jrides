@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.state.ride;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.animator.TrainHandle;
@@ -29,6 +30,7 @@ import com.jverbruggen.jrides.models.ride.factory.track.TrackType;
 import com.jverbruggen.jrides.models.ride.section.SectionProvider;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import java.io.BufferedReader;
@@ -103,6 +105,8 @@ public class RideManager {
                 loadCoaster(world, rideIdentifier);
             }else throw new RuntimeException("Ride type unknown: " + rideType);
         }
+
+        start();
     }
 
     private void loadCoaster(World world, String rideIdentifier){
@@ -150,7 +154,6 @@ public class RideManager {
         rideController.setRideHandle(coasterHandle);
         coasterHandle.setRideController(rideController);
 
-        coasterHandle.start();
         this.addRideHandle(coasterHandle);
     }
 
@@ -210,5 +213,15 @@ public class RideManager {
         Frame startFrame = new SimpleFrame(0);
         Frame endFrame = new SimpleFrame(positions.size()-1);
         return new TrackDescription(trackIdentifier, positions, TrackType.TRACK, startFrame, endFrame);
+    }
+
+    private void start(){
+        Bukkit.getScheduler().runTaskTimer(JRidesPlugin.getBukkitPlugin(), this::tick, 1L, 1L);
+    }
+
+    private void tick(){
+        for(CoasterHandle coasterHandle : coasterHandles){
+            coasterHandle.tick();
+        }
     }
 }

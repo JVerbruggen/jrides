@@ -14,7 +14,6 @@ public class SimpleSection extends BaseSection {
         super();
         this.startFrame = startFrame.clone();
         this.endFrame = endFrame.clone();
-//        this.endFrame = endFrame.clone().add(-1);
         this.trackBehaviour = trackBehaviour;
     }
 
@@ -102,6 +101,6 @@ public class SimpleSection extends BaseSection {
 
     @Override
     public String toString() {
-        return "<Section from " + startFrame + " to " + endFrame + " of type " + trackBehaviour.getName() + ">";
+        return "<" + startFrame + "-" + endFrame + " " + trackBehaviour.getName() + " occ:" + isOccupied() + ">";
     }
 }

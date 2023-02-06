@@ -15,8 +15,6 @@ public interface ControlMode {
     void onTrainDepart(Train train);
     void onPlayerEnter(Seat seat, Player player);
     void onPlayerExit(Seat seat, Player player);
-    void startOperating();
-    void stopOperating();
     void onDispatch();
     boolean setOperator(Player player);
     boolean allowsAction(ControlAction action, Player player);

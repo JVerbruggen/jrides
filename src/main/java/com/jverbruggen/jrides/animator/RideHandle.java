@@ -8,7 +8,7 @@ import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Ride;
 
 public interface RideHandle {
-    void start();
+    void tick();
     Ride getRide();
     RideController getRideController();
     RideControlMenu getRideControlMenu();

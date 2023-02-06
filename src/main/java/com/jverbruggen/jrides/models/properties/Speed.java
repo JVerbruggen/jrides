@@ -63,6 +63,10 @@ public class Speed {
         return this.speedPerTick >= 0;
     }
 
+    public boolean isPositiveExclZero(){
+        return this.speedPerTick >= 0;
+    }
+
     @Override
     public String toString() {
         return speedPerTick + "b/t";
