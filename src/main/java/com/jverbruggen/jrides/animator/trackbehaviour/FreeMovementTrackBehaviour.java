@@ -34,7 +34,6 @@ public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements Tr
         // --- Gravity speed calculation
         Speed newSpeed = currentSpeed.clone();
         double pitch = getGravityPitch(train, newHeadOfTrainLocation, newTailOfTrainLocation);
-        Bukkit.broadcastMessage("pitch: " + pitch);
 
         double dy = Math.sin(pitch/180*3.141592);
 
