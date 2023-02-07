@@ -13,9 +13,18 @@ public class StraightTransferSection extends BaseSection {
     private Frame transferStartFrame;
     private Frame transferEndFrame;
 
+    public StraightTransferSection() {
+        super(null);
+    }
+
     @Override
     public Frame getSpawnFrame() {
         return getEndFrame();
+    }
+
+    @Override
+    public Frame getStartFrame() {
+        return transferStartFrame;
     }
 
     @Override

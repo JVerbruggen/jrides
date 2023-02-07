@@ -44,6 +44,11 @@ public class LinkedFrame implements Frame {
     }
 
     @Override
+    public Frame capture() {
+        return new LinkedFrame(linkedTo.capture(), offsetFromLink);
+    }
+
+    @Override
     public void updateTo(Frame other) {
         setValue(other.getValue());
     }

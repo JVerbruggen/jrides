@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.section.Section;
 
 
 public class FullStopAndGoTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
@@ -24,7 +25,7 @@ public class FullStopAndGoTrackBehaviour extends BaseTrackBehaviour implements T
     }
 
     @Override
-    public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Track track) {
+    public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Section section) {
 //        Bukkit.broadcastMessage("Brake " + phase.toString());
         Speed newSpeed = currentSpeed.clone();
         Train train = trainHandle.getTrain();
@@ -46,7 +47,7 @@ public class FullStopAndGoTrackBehaviour extends BaseTrackBehaviour implements T
                 break;
         }
 
-        return calculateTrainMovement(train, track, newSpeed);
+        return calculateTrainMovement(train, section, newSpeed);
     }
 
     @Override

@@ -48,6 +48,11 @@ public class SimpleFrame implements Frame {
     }
 
     @Override
+    public Frame capture() {
+        return clone();
+    }
+
+    @Override
     public void updateTo(Frame other){
         this.frame = other.getValue();
     }

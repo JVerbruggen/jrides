@@ -15,6 +15,7 @@ import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.section.Section;
 
 public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour{
     private final double passThroughSpeed;
@@ -63,7 +64,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
     }
 
     @Override
-    public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Track track) {
+    public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Section section) {
         Speed newSpeed = currentSpeed.clone();
         Train train = trainHandle.getTrain();
 
@@ -155,7 +156,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
             }
         }
 
-        return calculateTrainMovement(train, track, newSpeed);
+        return calculateTrainMovement(train, section, newSpeed);
     }
 
     private void trainExited(){

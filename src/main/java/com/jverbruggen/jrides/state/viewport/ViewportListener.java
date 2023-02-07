@@ -33,6 +33,10 @@ public class ViewportListener implements Listener {
     public void onTeleport(PlayerTeleportEvent event){
         Player player = playerManager.getPlayer(event.getPlayer());
         viewportManager.updateVisuals(player);
+
+        if(player.isSeated()){
+            player.getSeatedOn().setPassenger(null);
+        }
     }
 
     @EventHandler

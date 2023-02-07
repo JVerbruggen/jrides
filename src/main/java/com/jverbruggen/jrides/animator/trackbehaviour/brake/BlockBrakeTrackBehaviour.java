@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.section.Section;
 
 public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
     private final double deceleration;
@@ -32,7 +33,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
     }
 
     @Override
-    public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Track track) {
+    public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Section section) {
         Speed newSpeed = currentSpeed.clone();
         Train train = trainHandle.getTrain();
 
@@ -94,7 +95,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
             }
         }
 
-        return calculateTrainMovement(train, track, newSpeed);
+        return calculateTrainMovement(train, section, newSpeed);
     }
 
     @Override

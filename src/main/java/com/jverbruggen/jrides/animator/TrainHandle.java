@@ -17,7 +17,6 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionProvider;
-import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
 
 import java.util.Map;
@@ -97,11 +96,11 @@ public class TrainHandle {
         // --- Fetch current/old sections (before move operation)
         Section fromHeadSection = train.getHeadSection();
         Section fromTailSection = train.getTailSection();
-        Frame fromHeadFrame = train.getHeadOfTrainFrame();
-        Frame fromTailFrame = train.getTailOfTrainFrame();
+        Frame fromHeadFrame = train.getHeadOfTrainFrame().capture();
+        Frame fromTailFrame = train.getTailOfTrainFrame().capture();
 
         // --- Calculate movement that should be applied to the train
-        TrainMovement result = trackBehaviour.move(speedBPS, this, track);
+        TrainMovement result = trackBehaviour.move(speedBPS, this, fromHeadSection);
         if(result == null) return;
 
         // --- Apply movement: new head frame and speed
@@ -177,5 +176,9 @@ public class TrainHandle {
 
     public CoasterHandle getCoasterHandle() {
         return coasterHandle;
+    }
+
+    public Speed getSpeed() {
+        return speedBPS;
     }
 }

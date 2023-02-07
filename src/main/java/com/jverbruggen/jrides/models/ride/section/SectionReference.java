@@ -3,6 +3,8 @@ package com.jverbruggen.jrides.models.ride.section;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.models.properties.Frame;
 
+import java.util.Map;
+
 public class SectionReference {
     private final String sectionIdentifier;
     private final String nextSectionIdentifier;
@@ -52,5 +54,12 @@ public class SectionReference {
 
     public String getParentTrackIdentifier() {
         return parentTrackIdentifier;
+    }
+
+    public static Section findByIdentifier(String sectionIdentifier, Map<SectionReference, Section> sectionMap){
+        return sectionMap.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey().getSectionIdentifier().equalsIgnoreCase(sectionIdentifier))
+                .findFirst().orElseThrow().getValue();
     }
 }

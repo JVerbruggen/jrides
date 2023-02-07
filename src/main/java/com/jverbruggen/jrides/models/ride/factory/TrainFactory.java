@@ -79,8 +79,8 @@ public class TrainFactory {
             boolean unbreakable = cartModelItemConfig.isUnbreakable();
             TrainModelItem model = new TrainModelItem(ItemStackFactory.getCoasterStack(modelMaterial, modelDamage, unbreakable));
 
-            Vector3 trackLocation = track.getLocationFor(cartFrame);
-            Quaternion orientation = track.getOrientationFor(cartFrame);
+            Vector3 trackLocation = spawnSection.getLocationFor(cartFrame);
+            Quaternion orientation = spawnSection.getOrientationFor(cartFrame);
             Vector3 cartLocation = Cart.calculateLocation(trackLocation, cartOffset, orientation);
 
             VirtualArmorstand armorStand = viewportManager.spawnVirtualArmorstand(cartLocation, model);

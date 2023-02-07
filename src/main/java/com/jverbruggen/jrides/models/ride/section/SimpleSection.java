@@ -8,13 +8,11 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 public class SimpleSection extends BaseSection {
     private Frame startFrame;
     private Frame endFrame;
-    private final TrackBehaviour trackBehaviour;
 
     public SimpleSection(Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour) {
-        super();
+        super(trackBehaviour);
         this.startFrame = startFrame.clone();
         this.endFrame = endFrame.clone();
-        this.trackBehaviour = trackBehaviour;
     }
 
     @Override
@@ -23,6 +21,11 @@ public class SimpleSection extends BaseSection {
         if(behaviourDefinedSpawnFrame == null)
             return getEndFrame();
         return behaviourDefinedSpawnFrame;
+    }
+
+    @Override
+    public Frame getStartFrame() {
+        return startFrame;
     }
 
     @Override

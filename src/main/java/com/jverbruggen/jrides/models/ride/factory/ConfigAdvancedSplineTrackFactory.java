@@ -122,6 +122,7 @@ public class ConfigAdvancedSplineTrackFactory implements TrackFactory {
         }
 
         sectionBuilder.calculate();
+        sectionBuilder.populateTransfers(coasterHandle.getTransfers());
 
         return sectionBuilder;
     }

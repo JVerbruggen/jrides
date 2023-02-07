@@ -750,6 +750,14 @@ public class Quaternion implements Cloneable {
         }
     }
 
+    public static Quaternion fromAnglesVector(Vector3 anglesVector){
+        Quaternion quaternion = new Quaternion();
+        quaternion.rotateX(anglesVector.getX());
+        quaternion.rotateY(anglesVector.getY());
+        quaternion.rotateZ(anglesVector.getZ());
+        return quaternion;
+    }
+
     /**
      * Performs a linear interpolation between two quaternions.
      * Separate theta values can be specified to set how much of each quaternion to keep

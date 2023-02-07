@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.TrackEnd;
 import com.jverbruggen.jrides.models.properties.TrainEnd;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.section.Section;
@@ -180,6 +181,14 @@ public class SimpleTrain implements Train {
     @Override
     public boolean isFacingForwards() {
         return true;
+    }
+
+    @Override
+    public TrackEnd getDirection() {
+        boolean forwards = getHandle().getSpeed().isPositive();
+        if(!isFacingForwards()) forwards = !forwards;
+
+        return forwards ? TrackEnd.END : TrackEnd.START;
     }
 
     @Override

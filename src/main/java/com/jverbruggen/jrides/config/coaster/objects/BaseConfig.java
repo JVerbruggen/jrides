@@ -51,7 +51,7 @@ public abstract class BaseConfig {
 
         return configurationSection.getList(key)
                 .stream()
-                .map(obj -> (Double)obj)
+                .map(BaseConfig::toDouble)
                 .collect(Collectors.toList());
     }
 

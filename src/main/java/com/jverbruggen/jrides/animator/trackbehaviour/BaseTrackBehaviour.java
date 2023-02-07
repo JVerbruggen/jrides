@@ -23,16 +23,16 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
         this.parentTrack = null;
     }
 
-    protected TrainMovement calculateTrainMovement(Train train, Track track, Speed speed){
+    protected TrainMovement calculateTrainMovement(Train train, Section section, Speed speed){
         if(speed.is(0)){
             return new TrainMovement(speed, train.getHeadOfTrainFrame(), train.getTailOfTrainFrame(), train.getCurrentLocation(), null);
         }
 
         Frame newHeadOfTrainFrame = train.getHeadOfTrainFrame().clone().add(speed.getFrameIncrement());
         Frame newTailOfTrainFrame = train.getTailOfTrainFrame().clone().add(speed.getFrameIncrement());
-        Vector3 newTrainLocation = track.getLocationFor(train.getMiddleOfTrainFrame());
+        Vector3 newTrainLocation = section.getLocationFor(train.getMiddleOfTrainFrame());
 
-        HashMap<Cart, CartMovement> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getCarts(), track);
+        HashMap<Cart, CartMovement> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getCarts(), section);
 
         return new TrainMovement(speed, newHeadOfTrainFrame, newTailOfTrainFrame, newTrainLocation, cartMovements);
     }
@@ -51,11 +51,6 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     }
 
     @Override
-    public boolean definesAdjacentSections() {
-        return false;
-    }
-
-    @Override
     public Section getSectionAtEnd() {
         return null;
     }
@@ -63,5 +58,15 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     @Override
     public Section getSectionAtStart() {
         return null;
+    }
+
+    @Override
+    public boolean canMoveFromParentTrack() {
+        return false;
+    }
+
+    @Override
+    public Vector3 getBehaviourDefinedPosition() {
+        return new Vector3(0,0,0);
     }
 }

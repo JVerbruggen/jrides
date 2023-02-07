@@ -9,6 +9,8 @@ import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.section.Section;
+import org.bukkit.Bukkit;
 
 public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
     private final double gravityConstant;
@@ -21,25 +23,34 @@ public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements Tr
         this.dragConstant = dragConstant;
     }
 
-    public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Track track) {
+    public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Section section) {
         // --- Constants
 
         // --- New mass middle calculation
         Train train = trainHandle.getTrain();
-        Vector3 newHeadOfTrainLocation = track.getLocationFor(train.getHeadOfTrainFrame());
-        Vector3 newTailOfTrainLocation = track.getLocationFor(train.getTailOfTrainFrame());
+        Vector3 newHeadOfTrainLocation = section.getLocationFor(train.getHeadOfTrainFrame());
+        Vector3 newTailOfTrainLocation = section.getLocationFor(train.getTailOfTrainFrame());
 
         // --- Gravity speed calculation
         Speed newSpeed = currentSpeed.clone();
-        Vector3 headTailDifference = Vector3.subtract(newHeadOfTrainLocation, newTailOfTrainLocation);
-        Quaternion quaternion = Quaternion.fromLookDirection(headTailDifference.toBukkitVector());
+        double pitch = getGravityPitch(train, newHeadOfTrainLocation, newTailOfTrainLocation);
+        Bukkit.broadcastMessage("pitch: " + pitch);
 
-        double dy = Math.sin(quaternion.getPitch()/180*3.141592);
+        double dy = Math.sin(pitch/180*3.141592);
 
         newSpeed.add(dy * this.gravityConstant);
         newSpeed.multiply(this.dragConstant);
 
-        return calculateTrainMovement(train, track, newSpeed);
+        return calculateTrainMovement(train, section, newSpeed);
+    }
+
+    private double getGravityPitch(Train train, Vector3 newHeadOfTrainLocation, Vector3 newTailOfTrainLocation){
+        if(train.getCarts().size() == 1){
+            return -train.getCarts().get(0).getOrientation().getRoll();
+        }else{
+            Vector3 headTailDifference = Vector3.subtract(newHeadOfTrainLocation, newTailOfTrainLocation);
+            return Quaternion.fromLookDirection(headTailDifference.toBukkitVector()).getPitch();
+        }
     }
 
     @Override

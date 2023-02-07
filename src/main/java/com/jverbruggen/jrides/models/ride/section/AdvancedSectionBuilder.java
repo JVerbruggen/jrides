@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.models.ride.section;
 
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,6 +86,12 @@ public class AdvancedSectionBuilder {
         this.calculated = true;
     }
 
+    public void populateTransfers(List<Transfer> transfers){
+        for(Transfer transfer : transfers){
+            transfer.populateTransferPositionSections(result);
+        }
+    }
+
     public List<Section> collectFor(String track){
         if(!this.calculated) throw new RuntimeException("Calculate the builder before collecting");
 
@@ -93,7 +100,5 @@ public class AdvancedSectionBuilder {
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
     }
-
-
 
 }

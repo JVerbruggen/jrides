@@ -1,18 +1,25 @@
 package com.jverbruggen.jrides.models.ride.section;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.logging.LogType;
+import com.jverbruggen.jrides.models.math.Quaternion;
+import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public abstract class BaseSection implements Section{
+    protected final TrackBehaviour trackBehaviour;
+    protected Track parentTrack;
+
     private Train occupiedBy;
     private Section previousSection;
     private Section nextSection;
-    private Track parentTrack;
 
-    public BaseSection() {
+    public BaseSection(TrackBehaviour trackBehaviour) {
+        this.trackBehaviour = trackBehaviour;
         this.occupiedBy = null;
         this.previousSection = null;
         this.nextSection = null;
@@ -29,6 +36,19 @@ public abstract class BaseSection implements Section{
         return occupiedBy != null;
     }
 
+    @Override
+    public Vector3 getLocationFor(Frame frame) {
+        if(trackBehaviour.canMoveFromParentTrack()){
+            return Vector3.add(parentTrack.getLocationFor(frame), trackBehaviour.getBehaviourDefinedPosition());
+        }
+
+        return parentTrack.getLocationFor(frame);
+    }
+
+    @Override
+    public Quaternion getOrientationFor(Frame frame) {
+        return parentTrack.getOrientationFor(frame);
+    }
 
     @Override
     public void addOccupation(@NonNull Train train) {
@@ -52,11 +72,19 @@ public abstract class BaseSection implements Section{
 
     @Override
     public Section next() {
+        if(trackBehaviour.canMoveFromParentTrack()){
+            return trackBehaviour.getSectionAtEnd();
+        }
+
         return nextSection;
     }
 
     @Override
     public Section previous() {
+        if(trackBehaviour.canMoveFromParentTrack()){
+            return trackBehaviour.getSectionAtStart();
+        }
+
         return previousSection;
     }
 

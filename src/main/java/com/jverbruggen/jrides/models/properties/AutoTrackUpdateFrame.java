@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.models.properties;
 
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+import com.jverbruggen.jrides.models.ride.section.Section;
 import org.bukkit.Bukkit;
 
 public class AutoTrackUpdateFrame implements Frame {
@@ -37,6 +38,16 @@ public class AutoTrackUpdateFrame implements Frame {
 
         this.track = track;
     }
+//
+//    @Override
+//    public Section getSection() {
+//        throw new RuntimeException("Cannot get section of AU frame");
+//    }
+//
+//    @Override
+//    public void setSection(Section section) {
+//        throw new RuntimeException("Cannot set section of AU frame");
+//    }
 
     @Override
     public Frame add(int frames){
@@ -61,6 +72,11 @@ public class AutoTrackUpdateFrame implements Frame {
     @Override
     public Frame clone(){
         return new AutoTrackUpdateFrame(frame, track);
+    }
+
+    @Override
+    public Frame capture() {
+        return clone();
     }
 
     @Override

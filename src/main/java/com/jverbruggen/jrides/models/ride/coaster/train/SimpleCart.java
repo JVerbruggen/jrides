@@ -69,16 +69,15 @@ public class SimpleCart implements Cart {
 
     @Override
     public void setPosition(Vector3 position, Quaternion orientation) {
-        setPosition(position);
         currentOrientation = orientation;
-
+        setPosition(position);
         modelArmorstand.setHeadpose(ArmorStandPose.getArmorStandPose(orientation));
-        SeatFactory.moveSeats(seats, position, orientation);
     }
 
     @Override
     public void setPosition(Vector3 position) {
         modelArmorstand.setLocation(position, null);
+        SeatFactory.moveSeats(seats, position, currentOrientation);
     }
 
     @Override

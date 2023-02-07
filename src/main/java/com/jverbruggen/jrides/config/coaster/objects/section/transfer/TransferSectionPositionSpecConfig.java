@@ -38,13 +38,19 @@ public class TransferSectionPositionSpecConfig {
         return moveTicks;
     }
 
+    @Override
+    public String toString() {
+        return "Transfer position of " + getPosition() + " ticks " + getMoveTicks();
+    }
+
     public static TransferSectionPositionSpecConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         String sectionAtStart = configurationSection.getString("sectionAtStart");
         String sectionAtEnd = configurationSection.getString("sectionAtEnd");
 
         int moveTicks;
-        if(configurationSection.contains("moveTicks")) moveTicks = 0;
-        else moveTicks = configurationSection.getInt("moveTicks");
+        if(configurationSection.contains("moveTicks"))
+            moveTicks = configurationSection.getInt("moveTicks");
+        else moveTicks = 0;
 
         Vector3 position;
         if(configurationSection.contains("position"))

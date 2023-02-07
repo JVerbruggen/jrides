@@ -8,12 +8,12 @@ public interface Frame {
     void setValue(int frame);
 
     Track getTrack();
-
     void setTrack(Track track);
 
     Frame add(int frames);
 
     Frame clone();
+    Frame capture();
 
     void updateTo(Frame other);
 

@@ -23,13 +23,21 @@ import com.jverbruggen.jrides.control.trigger.RestraintTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
+import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.models.entity.TrainModelItem;
+import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.*;
 import com.jverbruggen.jrides.models.ride.StationHandle;
+import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
+import com.jverbruggen.jrides.models.ride.coaster.transfer.TransferPosition;
 import com.jverbruggen.jrides.models.ride.gate.FenceGate;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import com.jverbruggen.jrides.state.viewport.ViewportManager;
+import org.bukkit.Material;
 import org.bukkit.World;
 
 import java.util.ArrayList;
@@ -39,11 +47,13 @@ public class TrackBehaviourFactory {
     private final CartMovementFactory cartMovementFactory;
     private final EffectTriggerFactory effectTriggerFactory;
     private final LanguageFile languageFile;
+    private final ViewportManager viewportManager;
 
     public TrackBehaviourFactory() {
         this.cartMovementFactory = ServiceProvider.getSingleton(CartMovementFactory.class);
         this.effectTriggerFactory = ServiceProvider.getSingleton(EffectTriggerFactory.class);
         this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
+        this.viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
     }
 
     public TrackBehaviour getTrackBehaviour(double gravityConstant, double dragConstant){
@@ -170,15 +180,32 @@ public class TrackBehaviourFactory {
         }else if(type.equalsIgnoreCase("transfer")){
             TransferSectionSpecConfig transferSectionSpecConfig = sectionConfig.getTransferSectionSpec();
 
+            Vector3 origin = transferSectionSpecConfig.getOrigin();
+            double engagePercentage = transferSectionSpecConfig.getEngage();
+            Frame lowerRange = new SimpleFrame(sectionConfig.getLowerRange());
+            Frame upperRange = new SimpleFrame(sectionConfig.getUpperRange());
+            Frame engageFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
+
+            List<TransferPosition> transferPositions = new ArrayList<>();
             for(TransferSectionPositionSpecConfig transferSectionPositionSpecConfig : transferSectionSpecConfig.getPositions()){
-                String sectionAtStartString = transferSectionPositionSpecConfig.getSectionAtStart();
-                String sectionAtEndString = transferSectionPositionSpecConfig.getSectionAtEnd();
-                Vector3 position = transferSectionPositionSpecConfig.getPosition();
+                String sectionAtStartReference = transferSectionPositionSpecConfig.getSectionAtStart();
+                String sectionAtEndReference = transferSectionPositionSpecConfig.getSectionAtEnd();
+                Vector3 position = Vector3.add(origin, transferSectionPositionSpecConfig.getPosition());
                 Vector3 rotation = transferSectionPositionSpecConfig.getRotation();
                 int moveTicks = transferSectionPositionSpecConfig.getMoveTicks();
+
+                Quaternion orientation = Quaternion.fromAnglesVector(rotation);
+                transferPositions.add(new TransferPosition(position, orientation, moveTicks, sectionAtStartReference, sectionAtEndReference));
             }
 
-//            return new TrainDisplacerTransferTrackBehaviour(cartMovementFactory, driveSpeed, acceleration, deceleration);
+            Vector3 offset = new Vector3(0, -2.2, 0);
+            VirtualArmorstand virtualArmorstand = viewportManager.spawnVirtualArmorstand(
+                    Vector3.add(transferPositions.get(0).getLocation(), offset),
+                    new TrainModelItem(ItemStackFactory.getCoasterStack(Material.DIAMOND_HOE, 2, true)));
+            Transfer transfer = new Transfer(transferPositions, virtualArmorstand, offset);
+            coasterHandle.addTransfer(transfer);
+
+            return new TrainDisplacerTransferTrackBehaviour(cartMovementFactory, 1.0, 0.1, 0.1, engageFrame, transfer);
         }
 
         JRidesPlugin.getLogger().severe("Unknown section type " + type);

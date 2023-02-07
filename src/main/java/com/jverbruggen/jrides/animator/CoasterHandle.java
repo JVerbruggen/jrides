@@ -10,6 +10,7 @@ import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
+import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.World;
@@ -26,6 +27,7 @@ public class CoasterHandle implements RideHandle {
     private ParticleTrackVisualisationTool visualisationTool;
     private List<StationHandle> stationHandles;
     private List<TrainHandle> trains;
+    private List<Transfer> transfers;
     private EffectTriggerCollection effectTriggerCollection;
     private final String dispatchSound;
     private final String restraintOpenSound;
@@ -43,6 +45,7 @@ public class CoasterHandle implements RideHandle {
 
         this.trains = new ArrayList<>();
         this.stationHandles = new ArrayList<>();
+        this.transfers = new ArrayList<>();
         this.visualisationTool = null;
         this.track = null;
         this.effectTriggerCollection = null;
@@ -119,6 +122,9 @@ public class CoasterHandle implements RideHandle {
         for(TrainHandle trainHandle : trains){
             trainHandle.tick();
         }
+        for(Transfer transfer : transfers){
+            transfer.tick();
+        }
     }
 
     public EffectTriggerCollection getEffectTriggerCollection() {
@@ -145,4 +151,11 @@ public class CoasterHandle implements RideHandle {
         return windSound;
     }
 
+    public void addTransfer(Transfer transfer){
+        transfers.add(transfer);
+    }
+
+    public List<Transfer> getTransfers() {
+        return transfers;
+    }
 }

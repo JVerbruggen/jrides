@@ -93,7 +93,6 @@ public abstract class VirtualEntityViewport implements Viewport{
         double distanceSquared = virtualEntity.getLocation().distanceSquared(player.getLocation());
         if(player.isViewing(virtualEntity)){
             if(distanceSquared > maxRenderDistance*maxRenderDistance){
-
                 virtualEntity.despawnFor(player);
                 player.removeViewing(virtualEntity);
             }

@@ -46,6 +46,11 @@ public class CyclicFrame implements Frame {
     }
 
     @Override
+    public Frame capture() {
+        return clone();
+    }
+
+    @Override
     public void updateTo(Frame other) {
         setValue(other.getValue());
     }
