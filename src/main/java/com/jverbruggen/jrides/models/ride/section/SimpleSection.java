@@ -53,7 +53,8 @@ public class SimpleSection extends BaseSection {
         if(this.isOccupied()) return false;
         if(this.canBlock()) return true;
 
-        return next().isBlockSectionSafe();
+        Section next = next();
+        return next.previous() == this && next.isBlockSectionSafe();
     }
 
     @Override
