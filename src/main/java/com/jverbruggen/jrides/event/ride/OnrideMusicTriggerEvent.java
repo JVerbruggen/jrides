@@ -1,7 +1,10 @@
 package com.jverbruggen.jrides.event.ride;
 
+import com.jverbruggen.jrides.models.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+
+import java.util.List;
 
 public class OnrideMusicTriggerEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
@@ -21,7 +24,7 @@ public class OnrideMusicTriggerEvent extends Event {
         return musicResource;
     }
 
-    public List<Players> getPlayers(){
+    public List<Player> getPlayers(){
         return players;
     }
 
