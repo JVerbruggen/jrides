@@ -9,10 +9,12 @@ import java.util.List;
 public class OnrideMusicTriggerEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
     private final String musicResource;
+    private final String musicType;
     private final List<Player> players;
 
-    public OnrideMusicTriggerEvent(String musicResource, List<Player> players) {
+    public OnrideMusicTriggerEvent(String musicResource, String musicType, List<Player> players) {
         this.musicResource = musicResource;
+        this.musicType = musicType;
         this.players = players;
     }
 
@@ -22,6 +24,10 @@ public class OnrideMusicTriggerEvent extends Event {
 
     public String getMusicResource() {
         return musicResource;
+    }
+
+    public String getMusicType() {
+        return musicType;
     }
 
     public List<Player> getPlayers(){

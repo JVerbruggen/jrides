@@ -37,6 +37,11 @@ public abstract class BaseConfig {
         return configurationSection.getInt(key);
     }
 
+    protected static String getString(ConfigurationSection configurationSection, String key, String defaultValue){
+        if(!isPresent(configurationSection, key)) return defaultValue;
+        return configurationSection.getString(key);
+    }
+
     protected static String getString(ConfigurationSection configurationSection, String key){
         assertPresence(configurationSection, key);
         return configurationSection.getString(key);
