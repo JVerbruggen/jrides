@@ -5,8 +5,8 @@ public class VectorQuaternionState {
     private final Quaternion quaternion;
 
     public VectorQuaternionState(Vector3 vector, Quaternion quaternion) {
-        this.vector = vector;
-        this.quaternion = quaternion;
+        this.vector = vector.clone();
+        this.quaternion = quaternion.clone();
     }
 
     public Vector3 getVector() {

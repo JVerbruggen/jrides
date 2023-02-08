@@ -33,10 +33,14 @@ public interface Cart {
         Vector3 cartTrackOffsetVector = matrix.toVector3();
         Vector3 totalVector = Vector3.add(trackLocation, cartTrackOffsetVector);
 
-        final Vector3 armorstandHeightCompensationVector = new Vector3(0, -1.35, 0);
+        final Vector3 armorstandHeightCompensationVector = getArmorstandHeightCompensationVector();
         totalVector = Vector3.add(totalVector, armorstandHeightCompensationVector);
 
         return totalVector;
+    }
+
+    static Vector3 getArmorstandHeightCompensationVector(){
+        return new Vector3(0, -1.8, 0);
     }
 
 }

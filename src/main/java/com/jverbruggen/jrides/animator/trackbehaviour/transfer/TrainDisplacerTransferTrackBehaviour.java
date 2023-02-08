@@ -15,6 +15,7 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import org.bukkit.Bukkit;
 
 public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
     private final double deceleration;
@@ -136,16 +137,19 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
     @Override
     public Vector3 getBehaviourDefinedPosition(Vector3 originalPosition) {
         Vector3 transferLocation = transfer.getCurrentLocation();
-        Matrix4x4 rotationMatrix = transfer.getOffsetRotationMatrix();
-        VectorQuaternionState origin = transfer.getOrigin();
+        Quaternion transferOrientation = transfer.getCurrentOrientation();
 
+        VectorQuaternionState origin = transfer.getOrigin();
         Vector3 offsetFromOrigin = Vector3.subtract(originalPosition, origin.getVector());
+
+        Matrix4x4 rotationMatrix = new Matrix4x4();
+        rotationMatrix.translate(transferLocation);
+        Bukkit.broadcastMessage("rot: " + transferOrientation.toShortString());
+        Bukkit.broadcastMessage("pos: " + offsetFromOrigin.toShortString());
+        rotationMatrix.rotate(transferOrientation);
         rotationMatrix.translate(offsetFromOrigin);
 
-        Vector3 behaviourDefinedPosition = rotationMatrix.toVector3();
-
-        rotationMatrix.translate(offsetFromOrigin.negate());
-        return behaviourDefinedPosition;
+        return rotationMatrix.toVector3();
     }
 
     @Override

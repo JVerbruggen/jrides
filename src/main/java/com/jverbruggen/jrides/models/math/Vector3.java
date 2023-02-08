@@ -106,6 +106,10 @@ public class Vector3 {
         return "{x=" + x + ", y=" + y + ", z=" + z + "}";
     }
 
+    public String toShortString(){
+        return "{" + ((double)(int)(this.x*10))/10 + ", " + ((double)(int)(this.y*10))/10 + ", " + ((double)(int)(this.z*10))/10 + "}";
+    }
+
     public Vector toBukkitVector(){
         return new Vector(x, y, z);
     }

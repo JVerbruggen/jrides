@@ -508,6 +508,10 @@ public class Quaternion implements Cloneable {
         return "{" + this.x + ", " + this.y + ", " + this.z + ", " + this.w + "}";
     }
 
+    public String toShortString(){
+        return "{" + ((double)(int)(this.x*10))/10 + ", " + ((double)(int)(this.y*10))/10 + ", " + ((double)(int)(this.z*10))/10 + ", " + ((double)(int)(this.w*10))/10 + "}";
+    }
+
     /**
      * Creates a new identity quaternion
      *

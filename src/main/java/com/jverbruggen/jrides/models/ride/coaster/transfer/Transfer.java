@@ -4,10 +4,8 @@ import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.*;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
-import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionReference;
-import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,26 +140,37 @@ public class Transfer {
         currentLocation = newLocation;
         currentOrientation = newOrientation;
         currentRotationMatrix = calculateRotationMatrix(newLocation, newOrientation);
-        updateModelPosition(currentRotationMatrix);
+        updateModelPosition();
 
         if(hasTrain()){
-            moveTrain(currentRotationMatrix);
+            moveTrain();
         }
     }
 
-    private void updateModelPosition(Matrix4x4 orientationMatrix){
+    private void updateModelPosition(){
+        Vector3 armorstandCompenstationVector = Cart.getArmorstandHeightCompensationVector();
+        Vector3 modelOffsetCompensated = Vector3.subtract(modelOffset, armorstandCompenstationVector);
+
+        Matrix4x4 orientationMatrix = new Matrix4x4();
+        orientationMatrix.translate(getCurrentLocation());
+        orientationMatrix.translate(armorstandCompenstationVector);
+        orientationMatrix.rotate(getCurrentOrientation());
+        orientationMatrix.translate(modelOffsetCompensated);
+
         Quaternion modelOrientation = orientationMatrix.getRotation();
 
-        orientationMatrix.translate(modelOffset);
         Vector3 modelLocation = orientationMatrix.toVector3();
-        orientationMatrix.translate(modelOffset.negate());
 
         modelArmorstand.setLocation(modelLocation, null);
         modelOrientation.rotateYawPitchRoll(modelOffsetRotation);
         modelArmorstand.setHeadpose(ArmorStandPose.getArmorStandPose(modelOrientation));
     }
 
-    private void moveTrain(Matrix4x4 orientationMatrix){
+    private void moveTrain(){
+        Matrix4x4 matrix = new Matrix4x4();
+        matrix.translate(getCurrentLocation());
+        Vector3 armorstandCompenstationVector = Cart.getArmorstandHeightCompensationVector();
+
         for(CartOffsetFromTransferOrigin cartProgramming : cartPositions){
             Quaternion cartOrientation = cartProgramming.getOrientation();
             Vector3 cartPosition = cartProgramming.getPosition();
@@ -169,19 +178,28 @@ public class Transfer {
             cartOrientationInvert.invert();
             Vector3 cartPositionInvert = cartPosition.negate();
 
-            orientationMatrix.translate(cartPosition);
+            matrix.translate(armorstandCompenstationVector);
+            matrix.rotate(getCurrentOrientation());
+            matrix.translate(Vector3.subtract(cartPosition, armorstandCompenstationVector));
 
-            Quaternion newCartOrientation = orientationMatrix.getRotation().clone();
+            Quaternion newCartOrientation = matrix.getRotation().clone();
             newCartOrientation.multiply(cartOrientation);
 
-            cartProgramming.getCart().setPosition(orientationMatrix.toVector3(), newCartOrientation);
+            cartProgramming.getCart().setPosition(matrix.toVector3(), newCartOrientation);
 
-            orientationMatrix.translate(cartPositionInvert);
+            Quaternion inverted = getCurrentOrientation().clone();
+            inverted.invert();
+            matrix.translate(cartPositionInvert);
+            matrix.rotate(inverted);
         }
     }
 
     public Vector3 getCurrentLocation() {
         return currentLocation;
+    }
+
+    public Quaternion getCurrentOrientation(){
+        return currentOrientation;
     }
 
     public List<TransferPosition> getPossiblePositions() {
@@ -225,7 +243,7 @@ public class Transfer {
     private void calculateBakedOffset(){
         TransferPosition origin = possiblePositions.get(0);
         bakedOffsetLocation = Vector3.subtract(currentLocation, origin.getLocation());
-        bakedOffsetOrientation = Quaternion.diff(currentOrientation, origin.getOrientation());
+        bakedOffsetOrientation = Quaternion.diff(origin.getOrientation(), currentOrientation);
     }
 
     public Vector3 getOffsetLocation(){
