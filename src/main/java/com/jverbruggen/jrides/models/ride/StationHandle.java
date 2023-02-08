@@ -108,6 +108,15 @@ public class StationHandle {
         return entryGates.stream().noneMatch(Gate::isOpen);
     }
 
+    public void closeRestraints(){
+        if(stationaryTrain == null) return;
+
+        if(stationaryTrain.getRestraintState()) return;
+
+        stationaryTrain.setRestraintForAll(true);
+        triggerContext.getRestraintTrigger().getLock().setLocked(false);
+    }
+
     public void onPlayerEnter(Player player){
         int passengerCount = getStationaryTrain().getPassengers().size();
         if(passengerCount == 1){

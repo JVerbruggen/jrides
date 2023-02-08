@@ -10,8 +10,7 @@ import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.config.ride.RideConfig;
 import com.jverbruggen.jrides.config.ride.RideConfigObject;
 import com.jverbruggen.jrides.control.RideController;
-import com.jverbruggen.jrides.control.controlmode.ControlMode;
-import com.jverbruggen.jrides.control.controlmode.SemiAutomaticMode;
+import com.jverbruggen.jrides.control.controlmode.factory.ControlModeFactory;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.logging.JRidesLogger;
@@ -143,14 +142,9 @@ public class RideManager {
 
         StationHandle stationHandle = coasterHandle.getStationHandle(null);
 
-//        ControlMode controlMode = new AutomaticMode(
-//                stationHandle,
-//                coasterHandle.getDispatchTrigger().getDispatchLockCollection());
-        ControlMode controlMode = new SemiAutomaticMode(
-                stationHandle,
-                coasterHandle.getDispatchTrigger().getDispatchLockCollection());
+        ControlModeFactory controlModeFactory = new ControlModeFactory();
 
-        RideController rideController = new RideController(controlMode);
+        RideController rideController = new RideController(controlModeFactory, stationHandle);
         rideController.setRideHandle(coasterHandle);
         coasterHandle.setRideController(rideController);
 

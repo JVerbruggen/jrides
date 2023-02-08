@@ -57,8 +57,6 @@ public class MinMaxWaitingTimer {
     public void increment(long tickInterval){
         waitingTimerState += (double)tickInterval/20d;
 
-        Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "" + waitingTimerState + " timer (" + reachedFunction() + ")");
-
         if(reachedFunction()){
             this.lock.unlock();
         }

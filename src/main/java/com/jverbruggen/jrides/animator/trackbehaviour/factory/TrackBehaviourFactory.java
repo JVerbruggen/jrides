@@ -61,8 +61,8 @@ public class TrackBehaviourFactory {
         return new FreeMovementTrackBehaviour(cartMovementFactory, gravityConstant, dragConstant);
     }
 
-    public TrackBehaviour getBlockBrakeBehaviour(Frame blockBrakeEngageFrame, boolean canSpawn, double driveSpeed){
-        return new BlockBrakeTrackBehaviour(cartMovementFactory, blockBrakeEngageFrame, canSpawn, driveSpeed);
+    public TrackBehaviour getBlockBrakeBehaviour(Frame blockBrakeEngageFrame, boolean canSpawn, double driveSpeed, double acceleration, double deceleration){
+        return new BlockBrakeTrackBehaviour(cartMovementFactory, blockBrakeEngageFrame, canSpawn, driveSpeed, deceleration, acceleration);
     }
 
     public TrackBehaviour getLaunchBehaviour(CoasterHandle coasterHandle, Frame engageFrame, double driveSpeed, double acceleration, double deceleration, int waitTicks, double launchAcceleration, double launchMaxSpeed, List<String> launchEffectStrings){
@@ -139,9 +139,11 @@ public class TrackBehaviourFactory {
             Frame upperRange = new SimpleFrame(sectionConfig.getUpperRange());
             boolean canSpawn = blockSectionSpecConfig.canSpawn();
             double driveSpeed = blockSectionSpecConfig.getDriveSpeed();
+            double acceleration = blockSectionSpecConfig.getAcceleration();
+            double deceleration = blockSectionSpecConfig.getDeceleration();
 
             Frame blockBrakeEngageFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
-            return getBlockBrakeBehaviour(blockBrakeEngageFrame, canSpawn, driveSpeed);
+            return getBlockBrakeBehaviour(blockBrakeEngageFrame, canSpawn, driveSpeed, acceleration, deceleration);
         }else if(type.equalsIgnoreCase("station")){
             StationSpecConfig stationSectionSpecConfig = sectionConfig.getStationSectionSpec();
             GateOwnerConfigSpec gateSpec = coasterConfig.getGates().getGateOwnerSpec(identifier);

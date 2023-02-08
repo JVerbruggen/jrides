@@ -2,17 +2,26 @@ package com.jverbruggen.jrides.control;
 
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.control.controlmode.ControlMode;
+import com.jverbruggen.jrides.control.controlmode.factory.ControlModeFactory;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.ride.Ride;
+import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
+import javax.annotation.Nonnull;
+
 public class RideController {
+    private final ControlModeFactory controlModeFactory;
+    private final StationHandle stationHandle;
     private RideHandle rideHandle;
     private ControlMode controlMode;
 
-    public RideController(ControlMode controlMode) {
-        changeMode(controlMode);
+
+    public RideController(ControlModeFactory controlModeFactory, StationHandle stationHandle) {
+        this.stationHandle = stationHandle;
+        this.controlModeFactory = controlModeFactory;
+        changeMode(this.controlModeFactory.getForWithoutOperating(this.stationHandle));
     }
 
     public void setRideHandle(RideHandle rideHandle) {
@@ -24,7 +33,7 @@ public class RideController {
         return rideHandle.getTriggerContext(null);
     }
 
-    public void changeMode(ControlMode newControlMode){
+    public void changeMode(@Nonnull ControlMode newControlMode){
         if(rideHandle != null){
             newControlMode.setTriggerContext(getTriggerContext());
         }
@@ -48,6 +57,14 @@ public class RideController {
     }
 
     public boolean setOperator(Player player){
+        Player previousOperator = this.getControlMode().getOperator();
+        if(previousOperator == player) return true;
+
+        if(player == null){
+            this.changeMode(this.controlModeFactory.getForWithoutOperating(this.stationHandle));
+        }else if(previousOperator == null){
+            this.changeMode(this.controlModeFactory.getForWithOperator(this.stationHandle));
+        }
         return this.getControlMode().setOperator(player);
     }
 

@@ -29,13 +29,14 @@ public class AutomaticMode extends BaseControlMode implements ControlMode{
         MinMaxWaitingTimer waitingTimer = getWaitingTimer();
 
         Train stationaryTrain = stationHandle.getStationaryTrain();
-        if(stationaryTrain != null){
-            int visualTime = waitingTimer.getVisualDispatchTime(waitingTimer.timeUntilPreferredWaitingTime());
-            waitingTimer.sendTimeWaitingNotification(stationaryTrain.getPassengers(), visualTime);
-        }
+        if(stationaryTrain == null) return;
+
+        int visualTime = waitingTimer.getVisualDispatchTime(waitingTimer.timeUntilPreferredWaitingTime());
+        waitingTimer.sendTimeWaitingNotification(stationaryTrain.getPassengers(), visualTime);
 
         if(!waitingTimer.reachedFunction()) return;
         stationHandle.closeEntryGates();
+        stationHandle.closeRestraints();
 
         if(!dispatchLockCollection.allUnlocked()) return;
 

@@ -7,12 +7,13 @@ import java.util.stream.Collectors;
 
 public abstract class BaseConfig {
     private static void assertPresence(ConfigurationSection configurationSection, String key){
-        if(!configurationSection.contains(key)){
+        if(configurationSection == null || !configurationSection.contains(key)){
             throw new RuntimeException("Missing key in config: " + key);
         }
     }
 
     private static boolean isPresent(ConfigurationSection configurationSection, String key){
+        if(configurationSection == null) return false;
         return configurationSection.contains(key);
     }
 
@@ -39,6 +40,11 @@ public abstract class BaseConfig {
     protected static String getString(ConfigurationSection configurationSection, String key){
         assertPresence(configurationSection, key);
         return configurationSection.getString(key);
+    }
+
+    protected static boolean getBoolean(ConfigurationSection configurationSection, String key, boolean defaultValue) {
+        if(!isPresent(configurationSection, key)) return defaultValue;
+        return configurationSection.getBoolean(key);
     }
 
     protected static boolean getBoolean(ConfigurationSection configurationSection, String key) {

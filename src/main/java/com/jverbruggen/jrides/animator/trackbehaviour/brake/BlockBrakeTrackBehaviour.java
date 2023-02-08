@@ -20,10 +20,10 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
     private final Frame stopFrame;
     private final boolean canSpawn;
 
-    public BlockBrakeTrackBehaviour(CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, double driveSpeed) {
+    public BlockBrakeTrackBehaviour(CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, double driveSpeed, double deceleration, double acceleration) {
         super(cartMovementFactory);
-        this.deceleration = 0.1;
-        this.acceleration = 0.1;
+        this.deceleration = deceleration;
+        this.acceleration = acceleration;
         this.driveSpeed = driveSpeed;
         this.phase = BlockBrakePhase.IDLE;
         this.stopFrame = stopFrame;

@@ -30,7 +30,7 @@ public abstract class BaseControlMode implements ControlMode {
 
     @Override
     public void tick() {
-        if(tickIntervalState <= tickInterval){
+        if(tickIntervalState < tickInterval-1){
             tickIntervalState++;
             return;
         }
