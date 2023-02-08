@@ -48,7 +48,7 @@ public class StraightTransferSection extends BaseSection {
     }
 
     @Override
-    public boolean isBlockSectionSafe() {
+    public boolean isBlockSectionSafe(Train train) {
         return false;
     }
 

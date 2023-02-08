@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.animator.trackbehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovement;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.CyclicFrame;
 import com.jverbruggen.jrides.models.properties.Frame;
@@ -51,12 +52,12 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     }
 
     @Override
-    public Section getSectionAtEnd() {
+    public Section getSectionAtEnd(Train train) {
         return null;
     }
 
     @Override
-    public Section getSectionAtStart() {
+    public Section getSectionAtStart(Train train) {
         return null;
     }
 
@@ -66,7 +67,17 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     }
 
     @Override
-    public Vector3 getBehaviourDefinedPosition() {
-        return new Vector3(0,0,0);
+    public Vector3 getBehaviourDefinedPosition(Vector3 originalPosition) {
+        return originalPosition;
+    }
+
+    @Override
+    public Quaternion getBehaviourDefinedOrientation(Quaternion originalOrientation) {
+        return originalOrientation;
+    }
+
+    @Override
+    public boolean accepts(Train train) {
+        return true;
     }
 }

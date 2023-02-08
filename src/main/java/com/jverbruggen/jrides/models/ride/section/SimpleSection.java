@@ -49,12 +49,14 @@ public class SimpleSection extends BaseSection {
     }
 
     @Override
-    public boolean isBlockSectionSafe() {
+    public boolean isBlockSectionSafe(Train train) {
         if(this.isOccupied()) return false;
+        if(!this.trackBehaviour.accepts(train)) return false;
         if(this.canBlock()) return true;
 
-        Section next = next();
-        return next.previous() == this && next.isBlockSectionSafe();
+        Section next = next(train);
+        Section shouldBeThis = next.previous(train);
+        return shouldBeThis == this && next.isBlockSectionSafe(train);
     }
 
     @Override

@@ -34,7 +34,7 @@ public class AutomaticMode extends BaseControlMode implements ControlMode{
             waitingTimer.sendTimeWaitingNotification(stationaryTrain.getPassengers(), visualTime);
         }
 
-        if(!waitingTimer.reachedPreferred()) return;
+        if(!waitingTimer.reachedFunction()) return;
         stationHandle.closeEntryGates();
 
         if(!dispatchLockCollection.allUnlocked()) return;

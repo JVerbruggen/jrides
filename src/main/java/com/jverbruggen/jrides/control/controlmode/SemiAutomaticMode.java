@@ -20,6 +20,9 @@ public class SemiAutomaticMode extends BaseControlMode implements ControlMode {
         super(stationHandle, dispatchLockCollection);
         languageFile = JRidesPlugin.getLanguageFile();
 
+        MinMaxWaitingTimer waitingTimer = stationHandle.getWaitingTimer();
+        waitingTimer.setReachedTimeFunction(waitingTimer::reachedMinimum);
+
         this.operator = null;
     }
 

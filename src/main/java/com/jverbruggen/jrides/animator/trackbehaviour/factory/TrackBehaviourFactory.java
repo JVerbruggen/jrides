@@ -27,6 +27,7 @@ import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
+import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.*;
@@ -185,6 +186,8 @@ public class TrackBehaviourFactory {
             Frame lowerRange = new SimpleFrame(sectionConfig.getLowerRange());
             Frame upperRange = new SimpleFrame(sectionConfig.getUpperRange());
             Frame engageFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
+            Vector3 modelOffsetPosition = transferSectionSpecConfig.getModelOffsetPosition();
+            Vector3 modelOffsetRotation = transferSectionSpecConfig.getModelOffsetRotation();
 
             List<TransferPosition> transferPositions = new ArrayList<>();
             for(TransferSectionPositionSpecConfig transferSectionPositionSpecConfig : transferSectionSpecConfig.getPositions()){
@@ -198,11 +201,17 @@ public class TrackBehaviourFactory {
                 transferPositions.add(new TransferPosition(position, orientation, moveTicks, sectionAtStartReference, sectionAtEndReference));
             }
 
-            Vector3 offset = new Vector3(0, -2.2, 0);
+            TransferPosition originTransferPosition = transferPositions.get(0);
+
+            Quaternion modelOffsetOrientation = originTransferPosition.getOrientation().clone();
+            modelOffsetOrientation.rotateYawPitchRoll(modelOffsetRotation);
+
             VirtualArmorstand virtualArmorstand = viewportManager.spawnVirtualArmorstand(
-                    Vector3.add(transferPositions.get(0).getLocation(), offset),
+                    Vector3.add(originTransferPosition.getLocation(), modelOffsetPosition),
                     new TrainModelItem(ItemStackFactory.getCoasterStack(Material.DIAMOND_HOE, 2, true)));
-            Transfer transfer = new Transfer(transferPositions, virtualArmorstand, offset);
+            virtualArmorstand.setHeadpose(ArmorStandPose.getArmorStandPose(modelOffsetOrientation));
+
+            Transfer transfer = new Transfer(transferPositions, virtualArmorstand, modelOffsetPosition, modelOffsetRotation);
             coasterHandle.addTransfer(transfer);
 
             return new TrainDisplacerTransferTrackBehaviour(cartMovementFactory, 1.0, 0.1, 0.1, engageFrame, transfer);

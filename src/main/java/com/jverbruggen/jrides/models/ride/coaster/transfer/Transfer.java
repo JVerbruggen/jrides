@@ -2,10 +2,9 @@ package com.jverbruggen.jrides.models.ride.coaster.transfer;
 
 import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
-import com.jverbruggen.jrides.models.math.Matrix4x4;
-import com.jverbruggen.jrides.models.math.Quaternion;
-import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.math.*;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionReference;
 import org.bukkit.Bukkit;
@@ -18,6 +17,7 @@ public class Transfer {
     private TrainHandle train;
     private Vector3 currentLocation;
     private Quaternion currentOrientation;
+    private Matrix4x4 currentRotationMatrix;
 
     private boolean requestPending;
     private boolean moving;
@@ -29,15 +29,18 @@ public class Transfer {
     private Vector3 fromLocation;
     private Quaternion fromOrientation;
 
+    private int animationTicks;
     private int animationFrameState;
 
     private Vector3 bakedOffsetLocation;
     private Quaternion bakedOffsetOrientation;
+    private Matrix4x4 bakedOffsetRotationMatrix;
 
     private VirtualArmorstand modelArmorstand;
     private Vector3 modelOffset;
+    private Vector3 modelOffsetRotation;
 
-    public Transfer(List<TransferPosition> possiblePositions, VirtualArmorstand modelArmorstand, Vector3 modelOffset) {
+    public Transfer(List<TransferPosition> possiblePositions, VirtualArmorstand modelArmorstand, Vector3 modelOffset, Vector3 modelOffsetRotation) {
         this.locked = false;
         this.moving = false;
         this.requestPending = false;
@@ -47,17 +50,19 @@ public class Transfer {
         TransferPosition origin = possiblePositions.get(0);
         this.currentLocation = origin.getLocation();
         this.currentOrientation = origin.getOrientation();
+        this.currentRotationMatrix = calculateRotationMatrix(currentLocation, currentOrientation);
 
         this.fromLocation = null;
         this.fromOrientation = null;
-        this.targetPosition = null;
+        this.targetPosition = origin;
+        this.animationTicks = 0;
         this.animationFrameState = 0;
 
-        this.bakedOffsetLocation = new Vector3(0,0,0);
-        this.bakedOffsetOrientation = Quaternion.fromAnglesVector(new Vector3(0,0,0));
+        calculateBakedOffset();
 
         this.modelArmorstand = modelArmorstand;
         this.modelOffset = modelOffset;
+        this.modelOffsetRotation = modelOffsetRotation;
     }
 
     public void lockTrain(){
@@ -71,19 +76,15 @@ public class Transfer {
 
             Vector3 cartOffset = Vector3.subtract(currentCartPosition, currentLocation);
 
-            Bukkit.broadcastMessage("CARTOFFSET: " + cartOffset + " ROT " + currentCartOrientation);
-
             cartPositions.add(new CartOffsetFromTransferOrigin(cartOffset, currentCartOrientation, cart));
         }
-
-        Bukkit.broadcastMessage("lock");
     }
 
     public void unlockTrain(){
         if(!hasTrain()) throw new RuntimeException("Cannot unlock train on transfer if no train is present");
         this.locked = false;
-        this.calculateOffset();
-        Bukkit.broadcastMessage("unlock");
+        this.calculateBakedOffset();
+        this.cartPositions.clear();
     }
 
     public void setTrain(TrainHandle train){
@@ -94,11 +95,14 @@ public class Transfer {
             throw new RuntimeException("Cannot have multiple trains on same transfer");
 
         this.train = train;
-        Bukkit.broadcastMessage("transfer set: " + train);
     }
 
     private boolean hasTrain(){
         return train != null;
+    }
+
+    public TrainHandle getTrain(){
+        return train;
     }
 
     public boolean tick(){
@@ -109,16 +113,16 @@ public class Transfer {
     }
 
     private boolean doMoveTick(){
-        int totalTicks = targetPosition.getMoveTicks();
-        if(animationFrameState >= totalTicks){
-//            move(targetPosition); // Hard move
+        if(animationFrameState >= animationTicks){
+            move(targetPosition.getLocation().clone(), targetPosition.getOrientation().clone());
+
             animationFrameState = 0;
             moving = false;
+            this.calculateBakedOffset();
             return true;
         }else{
             // -- Calculate new transfer position
-
-            double theta = (double)animationFrameState / (double)totalTicks;
+            double theta = (double)animationFrameState / (double)animationTicks;
             if(theta > 1) theta = 1d;
             Vector3 delta = Vector3.subtract(targetPosition.getLocation(), fromLocation);
 
@@ -137,17 +141,27 @@ public class Transfer {
 
         currentLocation = newLocation;
         currentOrientation = newOrientation;
-        modelArmorstand.setLocation(Vector3.add(newLocation, modelOffset), newOrientation);
+        currentRotationMatrix = calculateRotationMatrix(newLocation, newOrientation);
+        updateModelPosition(currentRotationMatrix);
 
         if(hasTrain()){
-            moveTrain(currentLocation, currentOrientation);
+            moveTrain(currentRotationMatrix);
         }
     }
 
-    private void moveTrain(Vector3 currentLocation, Quaternion currentOrientation){
-        Matrix4x4 orientationMatrix = new Matrix4x4();
-        orientationMatrix.rotate(currentOrientation);
+    private void updateModelPosition(Matrix4x4 orientationMatrix){
+        Quaternion modelOrientation = orientationMatrix.getRotation();
 
+        orientationMatrix.translate(modelOffset);
+        Vector3 modelLocation = orientationMatrix.toVector3();
+        orientationMatrix.translate(modelOffset.negate());
+
+        modelArmorstand.setLocation(modelLocation, null);
+        modelOrientation.rotateYawPitchRoll(modelOffsetRotation);
+        modelArmorstand.setHeadpose(ArmorStandPose.getArmorStandPose(modelOrientation));
+    }
+
+    private void moveTrain(Matrix4x4 orientationMatrix){
         for(CartOffsetFromTransferOrigin cartProgramming : cartPositions){
             Quaternion cartOrientation = cartProgramming.getOrientation();
             Vector3 cartPosition = cartProgramming.getPosition();
@@ -155,14 +169,14 @@ public class Transfer {
             cartOrientationInvert.invert();
             Vector3 cartPositionInvert = cartPosition.negate();
 
-            orientationMatrix.rotate(cartOrientation);
             orientationMatrix.translate(cartPosition);
 
-            Vector3 newAbsoluteCartPosition = Vector3.add(currentLocation, orientationMatrix.toVector3());
-            cartProgramming.getCart().setPosition(newAbsoluteCartPosition, orientationMatrix.getRotation());
+            Quaternion newCartOrientation = orientationMatrix.getRotation().clone();
+            newCartOrientation.multiply(cartOrientation);
+
+            cartProgramming.getCart().setPosition(orientationMatrix.toVector3(), newCartOrientation);
 
             orientationMatrix.translate(cartPositionInvert);
-            orientationMatrix.rotate(cartOrientationInvert);
         }
     }
 
@@ -178,10 +192,19 @@ public class Transfer {
         if(this.requestPending)
             throw new RuntimeException("Cannot change target position if another request is still pending");
 
+        TransferPosition newTargetPosition = possiblePositions.get(i);
+        if(targetPosition == newTargetPosition)
+            return;
+
+        int fromTicks = 0;
+        if(targetPosition != null)
+            fromTicks = targetPosition.getMoveTicks();
+
         fromLocation = currentLocation.clone();
         fromOrientation = currentOrientation.clone();
-        targetPosition = possiblePositions.get(i);
+        targetPosition = newTargetPosition;
         animationFrameState = 0;
+        animationTicks = Math.abs(targetPosition.getMoveTicks() - fromTicks);
         moving = true;
 
         if(requestPending)
@@ -199,14 +222,29 @@ public class Transfer {
         this.requestPending = false;
     }
 
-    private void calculateOffset(){
+    private void calculateBakedOffset(){
         TransferPosition origin = possiblePositions.get(0);
         bakedOffsetLocation = Vector3.subtract(currentLocation, origin.getLocation());
-        bakedOffsetOrientation = Quaternion.diff(origin.getOrientation(), currentOrientation);
+        bakedOffsetOrientation = Quaternion.diff(currentOrientation, origin.getOrientation());
     }
 
-    public Vector3 getOffset(){
+    public Vector3 getOffsetLocation(){
         return bakedOffsetLocation;
+    }
+
+    public Quaternion getOffsetOrientation(){
+        return bakedOffsetOrientation;
+    }
+
+    public Matrix4x4 getOffsetRotationMatrix(){
+        return currentRotationMatrix;
+    }
+
+    private Matrix4x4 calculateRotationMatrix(Vector3 location, Quaternion orientation){
+        Matrix4x4 orientationMatrix = new Matrix4x4();
+        orientationMatrix.translate(location);
+        orientationMatrix.rotate(orientation);
+        return orientationMatrix;
     }
 
     public TransferPosition getCurrentTransferPosition(){
@@ -230,6 +268,28 @@ public class Transfer {
             position.setSectionAtStart(sectionAtStart);
             position.setSectionAtEnd(sectionAtEnd);
         }
+    }
+
+    public void trainExitedTransfer(){
+        setTrain(null);
+        setTargetPosition(0, false);
+    }
+
+    public VectorQuaternionState getOrigin(){
+        TransferPosition position = possiblePositions.get(0);
+        return new VectorQuaternionState(position.getLocation(), position.getOrientation());
+    }
+
+    public boolean isMoving(){
+        return moving;
+    }
+
+    public boolean canSafelyInteractWith(TrainHandle train){
+        if(train == null) return false;
+        if(hasTrain()){
+            return getTrain() == train;
+        }
+        return !isMoving();
     }
 }
 

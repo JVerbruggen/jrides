@@ -39,7 +39,7 @@ public abstract class BaseSection implements Section{
     @Override
     public Vector3 getLocationFor(Frame frame) {
         if(trackBehaviour.canMoveFromParentTrack()){
-            return Vector3.add(parentTrack.getLocationFor(frame), trackBehaviour.getBehaviourDefinedPosition());
+            return trackBehaviour.getBehaviourDefinedPosition(parentTrack.getLocationFor(frame));
         }
 
         return parentTrack.getLocationFor(frame);
@@ -47,6 +47,9 @@ public abstract class BaseSection implements Section{
 
     @Override
     public Quaternion getOrientationFor(Frame frame) {
+        if(trackBehaviour.canMoveFromParentTrack()){
+            return trackBehaviour.getBehaviourDefinedOrientation(parentTrack.getOrientationFor(frame));
+        }
         return parentTrack.getOrientationFor(frame);
     }
 
@@ -71,18 +74,18 @@ public abstract class BaseSection implements Section{
     }
 
     @Override
-    public Section next() {
+    public Section next(Train train) {
         if(trackBehaviour.canMoveFromParentTrack()){
-            return trackBehaviour.getSectionAtEnd();
+            return trackBehaviour.getSectionAtEnd(train);
         }
 
         return nextSection;
     }
 
     @Override
-    public Section previous() {
+    public Section previous(Train train) {
         if(trackBehaviour.canMoveFromParentTrack()){
-            return trackBehaviour.getSectionAtStart();
+            return trackBehaviour.getSectionAtStart(train);
         }
 
         return previousSection;

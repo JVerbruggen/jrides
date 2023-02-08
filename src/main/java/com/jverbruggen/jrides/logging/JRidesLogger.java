@@ -21,7 +21,7 @@ public class JRidesLogger extends Logger {
         this.broadcastMode = broadcastMode;
         this.enabledLogTypes = new ArrayList<>();
 
-        enableLogType(LogType.SECTIONS);
+//        enableLogType(LogType.SECTIONS);
     }
 
     public void enableLogType(LogType logType){

@@ -17,11 +17,11 @@ public class SectionProvider {
         if(currentSection.isInSection(toFrame)) return currentSection;
 
         if(fromFrame.getTrack() != toFrame.getTrack()){
-            return getSectionOnDifferentTrack(currentSection, toFrame);
+            return getSectionOnDifferentTrack(train, currentSection, toFrame);
         }
 
-        Section subsequentNextSection = currentSection.next();
-        Section subsequentPreviousSection = currentSection.previous();
+        Section subsequentNextSection = currentSection.next(train);
+        Section subsequentPreviousSection = currentSection.previous(train);
         if(subsequentNextSection != null){
             if(subsequentNextSection.isInSection(toFrame)) {
 //                Bukkit.broadcastMessage("isnext!");
@@ -47,15 +47,13 @@ public class SectionProvider {
             }
         }
 
-        Bukkit.broadcastMessage("nonlinear section");
-
-        Section found = findSectionBySearchingNext(toFrame, currentSection);
+        Section found = findSectionBySearchingNext(train, toFrame, currentSection);
         if(found == null) throw new SectionNotFoundException(train);
 
         return found;
     }
 
-    private Section findSectionBySearchingNext(Frame frame, Section firstSection) {
+    private Section findSectionBySearchingNext(Train train, Frame frame, Section firstSection) {
         List<Section> checked = new ArrayList<>();
 
         Section found = null;
@@ -65,7 +63,7 @@ public class SectionProvider {
                 found = checking;
             }else{
                 checked.add(checking);
-                checking = checking.next();
+                checking = checking.next(train);
 
                 if(checked.contains(checking))
                     checking = null;
@@ -91,19 +89,19 @@ public class SectionProvider {
         return found;
     }
 
-    public Section getSectionOnDifferentTrack(Section currentSection, Frame toFrame){
+    public Section getSectionOnDifferentTrack(Train train, Section currentSection, Frame toFrame){
         Track newTrack = toFrame.getTrack();
         List<Section> newTrackSections = newTrack.getSections();
 
         // If rolling forwards
-        Section logicalNextSection = currentSection.next();
+        Section logicalNextSection = currentSection.next(train);
         Section firstSectionNewTrack = newTrackSections.get(0);
         if(logicalNextSection.equals(firstSectionNewTrack)){
             return logicalNextSection;
         }
 
         // If rolling backwards
-        Section logicalPreviousSection = currentSection.previous();
+        Section logicalPreviousSection = currentSection.previous(train);
         Section lastSectionNewTrack = newTrackSections.get(newTrackSections.size()-1);
         if(logicalPreviousSection.equals(lastSectionNewTrack)){
             return logicalPreviousSection;

@@ -8,6 +8,8 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import javax.annotation.Nullable;
+
 public interface Section {
     Frame getSpawnFrame();
     Frame getStartFrame();
@@ -19,7 +21,7 @@ public interface Section {
     boolean isOccupied();
     Train getOccupiedBy();
     boolean canBlock();
-    boolean isBlockSectionSafe();
+    boolean isBlockSectionSafe(Train train);
     void addOccupation(@NonNull  Train train);
     void removeOccupation(@NonNull  Train train);
     boolean canTrainSpawnOn();
@@ -29,8 +31,10 @@ public interface Section {
     Vector3 getLocationFor(Frame frame);
     Quaternion getOrientationFor(Frame frame);
 
-    Section next();
-    Section previous();
+    @Nullable
+    Section next(Train train);
+    @Nullable
+    Section previous(Train train);
     void setNext(Section section);
     void setPrevious(Section section);
     boolean spansOver(Train train);

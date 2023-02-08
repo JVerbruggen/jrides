@@ -6,9 +6,13 @@ import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.language.StringReplacementBuilder;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
+import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class MinMaxWaitingTimer {
     private final int minimumWaitingTime;
@@ -18,14 +22,20 @@ public class MinMaxWaitingTimer {
 
     private double preferredWaitingTime;
     private double waitingTimerState;
+    private Supplier<Boolean> reachedTimeFunction;
 
     public MinMaxWaitingTimer(int minimumWaitingTime, int maximumWaitingTime, DispatchLock lock) {
         this.minimumWaitingTime = minimumWaitingTime;
         this.maximumWaitingTime = maximumWaitingTime;
         this.lock = lock;
         this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
+        this.reachedTimeFunction = this::reachedPreferred;
 
         reset();
+    }
+
+    public void setReachedTimeFunction(@Nonnull Supplier<Boolean> function){
+        this.reachedTimeFunction = function;
     }
 
     public boolean reachedMinimum(){
@@ -40,10 +50,16 @@ public class MinMaxWaitingTimer {
         return preferredWaitingTime <= waitingTimerState;
     }
 
+    public boolean reachedFunction(){
+        return reachedTimeFunction.get();
+    }
+
     public void increment(long tickInterval){
         waitingTimerState += (double)tickInterval/20d;
 
-        if(reachedPreferred()){
+        Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "" + waitingTimerState + " timer (" + reachedFunction() + ")");
+
+        if(reachedFunction()){
             this.lock.unlock();
         }
     }

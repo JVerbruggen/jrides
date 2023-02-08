@@ -5,14 +5,16 @@ import com.jverbruggen.jrides.animator.trackbehaviour.BaseTrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
+import com.jverbruggen.jrides.models.math.Matrix4x4;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.math.VectorQuaternionState;
 import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.section.Section;
-import org.bukkit.Bukkit;
 
 public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
     private final double deceleration;
@@ -68,17 +70,21 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
                     break;
                 case TRANSFERRING:
                     if(transfer.hasReachedRequest()){
+                        phase = TransferPhase.WAITING;
+                        goIntoSwitch = true;
+                    }
+                    break;
+                case WAITING:
+                    Section nextSection = train.getHeadSection().next(train);
+                    if(nextSection != null && nextSection.isBlockSectionSafe(train)){
                         transfer.unlockTrain();
                         transfer.releaseRequest();
-
                         phase = TransferPhase.DRIVING;
                         goIntoSwitch = true;
-                        Bukkit.broadcastMessage("DONE");
                     }
                     break;
                 case DRIVING:
                     newSpeed.approach(acceleration, deceleration, driveSpeed);
-                    Bukkit.broadcastMessage("next: " + section.next());
                     break;
             }
         }
@@ -88,12 +94,13 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
 
     @Override
     public void trainExitedAtStart() {
-
+        throw new RuntimeException("Not supported exited train at start train displacer");
     }
 
     @Override
     public void trainExitedAtEnd(){
         phase = TransferPhase.IDLE;
+        transfer.trainExitedTransfer();
     }
 
     @Override
@@ -127,18 +134,41 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
     }
 
     @Override
-    public Vector3 getBehaviourDefinedPosition() {
-        return transfer.getOffset();
+    public Vector3 getBehaviourDefinedPosition(Vector3 originalPosition) {
+        Vector3 transferLocation = transfer.getCurrentLocation();
+        Matrix4x4 rotationMatrix = transfer.getOffsetRotationMatrix();
+        VectorQuaternionState origin = transfer.getOrigin();
+
+        Vector3 offsetFromOrigin = Vector3.subtract(originalPosition, origin.getVector());
+        rotationMatrix.translate(offsetFromOrigin);
+
+        Vector3 behaviourDefinedPosition = rotationMatrix.toVector3();
+
+        rotationMatrix.translate(offsetFromOrigin.negate());
+        return behaviourDefinedPosition;
     }
 
     @Override
-    public Section getSectionAtStart() {
+    public Quaternion getBehaviourDefinedOrientation(Quaternion originalOrientation) {
+        Quaternion transferOrientation = transfer.getOffsetOrientation();
+        return Quaternion.multiply(transferOrientation, originalOrientation);
+    }
+
+    @Override
+    public Section getSectionAtStart(Train train) {
+        if(!transfer.canSafelyInteractWith(train.getHandle())) return null;
         return transfer.getCurrentTransferPosition().getSectionAtStart();
     }
 
     @Override
-    public Section getSectionAtEnd() {
+    public Section getSectionAtEnd(Train train) {
+        if(!transfer.canSafelyInteractWith(train.getHandle())) return null;
         return transfer.getCurrentTransferPosition().getSectionAtEnd();
+    }
+
+    @Override
+    public boolean accepts(Train train) {
+        return transfer.canSafelyInteractWith(train.getHandle());
     }
 }
 
@@ -147,5 +177,6 @@ enum TransferPhase{
     DRIVING_UNTIL_STOP,
     STOPPING,
     TRANSFERRING,
+    WAITING,
     DRIVING
 }

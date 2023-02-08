@@ -752,9 +752,7 @@ public class Quaternion implements Cloneable {
 
     public static Quaternion fromAnglesVector(Vector3 anglesVector){
         Quaternion quaternion = new Quaternion();
-        quaternion.rotateX(anglesVector.getX());
-        quaternion.rotateY(anglesVector.getY());
-        quaternion.rotateZ(anglesVector.getZ());
+        quaternion.rotateYawPitchRoll(anglesVector.getX(), anglesVector.getY(), anglesVector.getZ());
         return quaternion;
     }
 
