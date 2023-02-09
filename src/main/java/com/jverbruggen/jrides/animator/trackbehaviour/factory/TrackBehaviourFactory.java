@@ -213,7 +213,7 @@ public class TrackBehaviourFactory {
                     new TrainModelItem(ItemStackFactory.getCoasterStack(Material.DIAMOND_HOE, 2, true)));
             virtualArmorstand.setHeadpose(ArmorStandPose.getArmorStandPose(modelOffsetOrientation));
 
-            Transfer transfer = new Transfer(transferPositions, virtualArmorstand, modelOffsetPosition, modelOffsetRotation);
+            Transfer transfer = new Transfer(transferPositions, virtualArmorstand, origin, modelOffsetPosition, modelOffsetRotation);
             coasterHandle.addTransfer(transfer);
 
             return new TrainDisplacerTransferTrackBehaviour(cartMovementFactory, 1.0, 0.1, 0.1, engageFrame, transfer);

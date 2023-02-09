@@ -7,13 +7,14 @@ import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionReference;
-import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class Transfer {
+    private final Vector3 origin;
+
     private TrainHandle train;
     private Vector3 currentLocation;
     private Quaternion currentOrientation;
@@ -40,21 +41,22 @@ public class Transfer {
     private Vector3 modelOffset;
     private Vector3 modelOffsetRotation;
 
-    public Transfer(List<TransferPosition> possiblePositions, VirtualArmorstand modelArmorstand, Vector3 modelOffset, Vector3 modelOffsetRotation) {
+    public Transfer(List<TransferPosition> possiblePositions, VirtualArmorstand modelArmorstand, Vector3 origin, Vector3 modelOffset, Vector3 modelOffsetRotation) {
+        this.origin = origin;
         this.locked = false;
         this.moving = false;
         this.requestPending = false;
         this.cartPositions = new ArrayList<>();
         this.possiblePositions = possiblePositions;
 
-        TransferPosition origin = possiblePositions.get(0);
-        this.currentLocation = origin.getLocation();
-        this.currentOrientation = origin.getOrientation();
+        TransferPosition firstTransferposition = possiblePositions.get(0);
+        this.currentLocation = firstTransferposition.getLocation();
+        this.currentOrientation = firstTransferposition.getOrientation();
         this.currentRotationMatrix = calculateRotationMatrix(currentLocation, currentOrientation);
 
         this.fromLocation = null;
         this.fromOrientation = null;
-        this.targetPosition = origin;
+        this.targetPosition = firstTransferposition;
         this.animationTicks = 0;
         this.animationFrameState = 0;
 
@@ -79,9 +81,12 @@ public class Transfer {
             Quaternion currentCartOrientation = cart.getOrientation();
             if(currentCartOrientation == null) throw new RuntimeException("Cart doesn't have orientation");
 
+            Vector3 trackPositionOffset = Vector3.subtract(currentLocation, getOrigin());
+
             Frame cartFrame = cart.getFrame();
             Vector3 nonRotatedCartPosition = cartFrame.getTrack().getLocationFor(cartFrame);
             nonRotatedCartPosition = Vector3.add(nonRotatedCartPosition, cart.getTrackOffset());
+            nonRotatedCartPosition = Vector3.add(nonRotatedCartPosition, trackPositionOffset);
             nonRotatedCartPosition = Vector3.add(nonRotatedCartPosition, Cart.getArmorstandHeightCompensationVector());
 
             Vector3 offsetCartPosition = Vector3.subtract(nonRotatedCartPosition, currentLocation);
@@ -306,9 +311,8 @@ public class Transfer {
         setTargetPosition(0, false);
     }
 
-    public VectorQuaternionState getOrigin(){
-        TransferPosition position = possiblePositions.get(0);
-        return new VectorQuaternionState(position.getLocation(), position.getOrientation());
+    public Vector3 getOrigin(){
+        return origin;
     }
 
     public boolean isMoving(){

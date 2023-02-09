@@ -139,8 +139,7 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
         Vector3 transferLocation = transfer.getCurrentLocation();
         Quaternion transferOrientation = transfer.getCurrentOrientation();
 
-        VectorQuaternionState origin = transfer.getOrigin();
-        Vector3 offsetFromOrigin = Vector3.subtract(originalPosition, origin.getVector());
+        Vector3 offsetFromOrigin = Vector3.subtract(originalPosition, transfer.getOrigin());
 
         Matrix4x4 rotationMatrix = new Matrix4x4();
         rotationMatrix.translate(transferLocation);
