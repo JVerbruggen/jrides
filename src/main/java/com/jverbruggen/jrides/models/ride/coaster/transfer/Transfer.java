@@ -3,9 +3,11 @@ package com.jverbruggen.jrides.models.ride.coaster.transfer;
 import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.*;
+import com.jverbruggen.jrides.models.properties.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionReference;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,20 +63,31 @@ public class Transfer {
         this.modelArmorstand = modelArmorstand;
         this.modelOffset = modelOffset;
         this.modelOffsetRotation = modelOffsetRotation;
+
+        updateModelPosition();
     }
 
     public void lockTrain(){
         if(!hasTrain()) throw new RuntimeException("Cannot lock train on transfer if no train is present");
         this.locked = true;
 
+        Matrix4x4 rotationMatrix = new Matrix4x4();
+        rotationMatrix.translate(currentLocation);
+        rotationMatrix.rotate(currentOrientation);
+
         for(Cart cart : train.getTrain().getCarts()){
-            Vector3 currentCartPosition = cart.getPosition();
             Quaternion currentCartOrientation = cart.getOrientation();
             if(currentCartOrientation == null) throw new RuntimeException("Cart doesn't have orientation");
 
-            Vector3 cartOffset = Vector3.subtract(currentCartPosition, currentLocation);
+            Frame cartFrame = cart.getFrame();
+            Vector3 nonRotatedCartPosition = cartFrame.getTrack().getLocationFor(cartFrame);
+            nonRotatedCartPosition = Vector3.add(nonRotatedCartPosition, cart.getTrackOffset());
+            nonRotatedCartPosition = Vector3.add(nonRotatedCartPosition, Cart.getArmorstandHeightCompensationVector());
 
-            cartPositions.add(new CartOffsetFromTransferOrigin(cartOffset, currentCartOrientation, cart));
+            Vector3 offsetCartPosition = Vector3.subtract(nonRotatedCartPosition, currentLocation);
+
+            Quaternion orientationOffset = Quaternion.divide(currentCartOrientation, currentOrientation);
+            cartPositions.add(new CartOffsetFromTransferOrigin(offsetCartPosition, orientationOffset, cart));
         }
     }
 

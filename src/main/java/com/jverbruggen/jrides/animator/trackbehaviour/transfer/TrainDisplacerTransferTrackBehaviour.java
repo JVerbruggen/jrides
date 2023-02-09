@@ -144,8 +144,6 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
 
         Matrix4x4 rotationMatrix = new Matrix4x4();
         rotationMatrix.translate(transferLocation);
-        Bukkit.broadcastMessage("rot: " + transferOrientation.toShortString());
-        Bukkit.broadcastMessage("pos: " + offsetFromOrigin.toShortString());
         rotationMatrix.rotate(transferOrientation);
         rotationMatrix.translate(offsetFromOrigin);
 
@@ -154,7 +152,7 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
 
     @Override
     public Quaternion getBehaviourDefinedOrientation(Quaternion originalOrientation) {
-        Quaternion transferOrientation = transfer.getOffsetOrientation();
+        Quaternion transferOrientation = transfer.getCurrentOrientation();
         return Quaternion.multiply(transferOrientation, originalOrientation);
     }
 
