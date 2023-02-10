@@ -7,9 +7,9 @@ import com.jverbruggen.jrides.animator.trackbehaviour.factory.TrackBehaviourFact
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.SectionConfig;
-import com.jverbruggen.jrides.models.properties.Frame;
-import com.jverbruggen.jrides.models.properties.SimpleFrame;
-import com.jverbruggen.jrides.models.properties.factory.FrameFactory;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
+import com.jverbruggen.jrides.models.properties.frame.SimpleFrame;
+import com.jverbruggen.jrides.models.properties.frame.factory.FrameFactory;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.track.compound.CompoundTrack;
 import com.jverbruggen.jrides.models.ride.coaster.track.compound.LooseEndedSplineBasedTrack;

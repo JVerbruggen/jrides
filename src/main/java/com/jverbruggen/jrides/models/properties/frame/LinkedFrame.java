@@ -1,14 +1,19 @@
-package com.jverbruggen.jrides.models.properties;
+package com.jverbruggen.jrides.models.properties.frame;
 
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+import com.jverbruggen.jrides.models.ride.section.Section;
 
 public class LinkedFrame implements Frame {
     private final Frame linkedTo;
     private final int offsetFromLink;
+    private Section section;
+    private boolean canSetValue;
 
-    public LinkedFrame(Frame linkedTo, int offsetFromLink) {
+    public LinkedFrame(Frame linkedTo, int offsetFromLink, Section section) {
         this.linkedTo = linkedTo;
         this.offsetFromLink = offsetFromLink;
+        this.section = section;
+        this.canSetValue = true;
     }
 
     @Override
@@ -18,6 +23,8 @@ public class LinkedFrame implements Frame {
 
     @Override
     public void setValue(int frame) {
+        if(!canSetValue)
+            throw new RuntimeException("Cannot set value of this linked frame " + this);
         linkedTo.setValue(frame - offsetFromLink);
     }
 
@@ -32,6 +39,16 @@ public class LinkedFrame implements Frame {
     }
 
     @Override
+    public Section getSection() {
+        throw new RuntimeException("LinkedFrames dont have accurate sections");
+    }
+
+    @Override
+    public void setSection(Section section) {
+        this.section = section;
+    }
+
+    @Override
     public Frame add(int frames) {
         linkedTo.add(frames);
         return this;
@@ -40,12 +57,17 @@ public class LinkedFrame implements Frame {
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Frame clone() {
-        return new LinkedFrame(linkedTo, offsetFromLink);
+        return new LinkedFrame(linkedTo, offsetFromLink, section);
     }
 
     @Override
     public Frame capture() {
-        return new LinkedFrame(linkedTo.capture(), offsetFromLink);
+        return new LinkedFrame(linkedTo.capture(), offsetFromLink, section);
+    }
+
+    @Override
+    public void setInvertedFrameAddition(boolean inverted) {
+        throw new RuntimeException("Not supported");
     }
 
     @Override

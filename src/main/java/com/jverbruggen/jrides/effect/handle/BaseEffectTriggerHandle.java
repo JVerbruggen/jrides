@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.effect.handle;
 
 import com.jverbruggen.jrides.effect.EffectTrigger;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 
 public abstract class BaseEffectTriggerHandle implements EffectTriggerHandle {
     protected final Frame frame;

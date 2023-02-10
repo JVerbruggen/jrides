@@ -1,4 +1,7 @@
-package com.jverbruggen.jrides.models.properties;
+package com.jverbruggen.jrides.models.properties.frame;
+
+import com.jverbruggen.jrides.models.properties.frame.factory.FrameFactory;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 
 public class FrameRange {
     private final Frame lower;
@@ -36,6 +39,6 @@ public class FrameRange {
             }
         }
 
-        return new SimpleFrame(frameIndex, lower.getTrack());
+        return ServiceProvider.getSingleton(FrameFactory.class).getBlankStaticFrame(frameIndex);
     }
 }

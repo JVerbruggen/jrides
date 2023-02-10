@@ -5,7 +5,7 @@ import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -76,7 +76,7 @@ public abstract class BaseSection implements Section{
     @Override
     public Section next(Train train) {
         if(trackBehaviour.canMoveFromParentTrack()){
-            return trackBehaviour.getSectionAtEnd(train);
+            return trackBehaviour.getSectionNext(train);
         }
 
         return nextSection;
@@ -85,7 +85,7 @@ public abstract class BaseSection implements Section{
     @Override
     public Section previous(Train train) {
         if(trackBehaviour.canMoveFromParentTrack()){
-            return trackBehaviour.getSectionAtStart(train);
+            return trackBehaviour.getSectionPrevious(train);
         }
 
         return previousSection;
@@ -115,5 +115,23 @@ public abstract class BaseSection implements Section{
             throw new RuntimeException("Section already has parent track");
         parentTrack = track;
         getTrackBehaviour().setParentTrack(track);
+    }
+
+    @Override
+    public String getName() {
+        return toString();
+    }
+
+    @Override
+    public boolean positiveDirectionToGoTo(Section section, Train forTrain) {
+        if(trackBehaviour.canMoveFromParentTrack()){
+            if(trackBehaviour.getSectionAtEnd(forTrain) == section) return true;
+            else if(trackBehaviour.getSectionAtStart(forTrain) == section) return false;
+            else throw new RuntimeException("Cannot determine behaviour-defined direction to go to section " + section + " for train " + forTrain);
+        }else{
+            if(this.next(forTrain) == section) return true;
+            else if(this.previous(forTrain) == section) return false;
+            else throw new RuntimeException("Cannot determine direction to go to section " + section + " for train " + forTrain);
+        }
     }
 }

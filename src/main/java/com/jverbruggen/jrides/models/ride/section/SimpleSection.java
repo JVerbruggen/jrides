@@ -1,18 +1,20 @@
 package com.jverbruggen.jrides.models.ride.section;
 
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 public class SimpleSection extends BaseSection {
     private Frame startFrame;
     private Frame endFrame;
+    private String name;
 
     public SimpleSection(Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour) {
         super(trackBehaviour);
         this.startFrame = startFrame.clone();
         this.endFrame = endFrame.clone();
+        this.name = null;
     }
 
     @Override
@@ -108,5 +110,15 @@ public class SimpleSection extends BaseSection {
     @Override
     public String toString() {
         return "<" + startFrame + "-" + endFrame + " " + trackBehaviour.getName() + " occ:" + isOccupied() + ">";
+    }
+
+    @Override
+    public String getName() {
+        if(name == null) return toString();
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

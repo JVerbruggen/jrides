@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.models.ride.section;
 
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 
 import java.util.Map;
 

@@ -1,6 +1,7 @@
-package com.jverbruggen.jrides.models.properties;
+package com.jverbruggen.jrides.models.properties.frame;
 
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+import com.jverbruggen.jrides.models.ride.section.Section;
 
 public interface Frame {
     int getValue();
@@ -10,11 +11,14 @@ public interface Frame {
     Track getTrack();
     void setTrack(Track track);
 
-    Frame add(int frames);
+    Section getSection();
+    void setSection(Section section);
 
+    Frame add(int frames);
     Frame clone();
     Frame capture();
 
+    void setInvertedFrameAddition(boolean inverted);
     void updateTo(Frame other);
 
     static int getCyclicFrameValue(int nonCyclicFrame, int totalFrames){

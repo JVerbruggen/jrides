@@ -9,7 +9,7 @@ import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
 import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.properties.TrainEnd;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
@@ -17,6 +17,7 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionProvider;
+import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
 
 import java.util.Map;
@@ -86,6 +87,9 @@ public class TrainHandle {
             train.addCurrentSection(toSection, onTrainEnd);
             if(applyNewBehaviour){
                 trackBehaviour = toSection.getTrackBehaviour();
+
+                //TODO: Check where it is entering from (assuming always from start now)
+                train.setDrivingDirection(true);
             }
         }
     }
@@ -98,14 +102,21 @@ public class TrainHandle {
         Section fromTailSection = train.getTailSection();
         Frame fromHeadFrame = train.getHeadOfTrainFrame().capture();
         Frame fromTailFrame = train.getTailOfTrainFrame().capture();
+        boolean positiveDrivingDirection = train.isPositiveDrivingDirection();
 
         // --- Calculate movement that should be applied to the train
         TrainMovement result = trackBehaviour.move(speedBPS, this, fromHeadSection);
         if(result == null) return;
 
         // --- Apply movement: new head frame and speed
-        speedBPS = result.getNewSpeed();
-        train.getHeadOfTrainFrame().updateTo(result.getNewHeadOfTrainFrame());
+        speedBPS.setSpeed(result.getNewSpeed().getSpeedPerTick());
+
+        Frame trainHeadOfTrainFrame = train.getHeadOfTrainFrame();
+        Frame trainMiddleOfTrainFrame = train.getMiddleOfTrainFrame();
+        Frame trainTailOfTrainFrame = train.getTailOfTrainFrame();
+        trainHeadOfTrainFrame.updateTo(result.getNewHeadOfTrainFrame());
+        trainMiddleOfTrainFrame.updateTo(result.getNewMiddleOfTrainFrame());
+        trainTailOfTrainFrame.updateTo(result.getNewTailOfTrainFrame());
 
         // --- Move carts according to instructions
         Set<Map.Entry<Cart, CartMovement>> cartMovements = result.getCartMovements();
@@ -117,37 +128,52 @@ public class TrainHandle {
             }
         }
 
+        Bukkit.broadcastMessage(trainHeadOfTrainFrame + " -=- " + trainTailOfTrainFrame);
+
         // --- Set new train location according to new frames
-        Vector3 headLocation = track.getLocationFor(result.getNewHeadOfTrainFrame());
-        Vector3 middleLocation = result.getNewTrainLocation();
-        Vector3 tailLocation = track.getLocationFor(result.getNewTailOfTrainFrame());
+        Vector3 headLocation = track.getLocationFor(trainHeadOfTrainFrame);
+        Vector3 middleLocation = track.getLocationFor(trainMiddleOfTrainFrame);
+        Vector3 tailLocation = track.getLocationFor(trainTailOfTrainFrame);
         train.setCurrentLocation(headLocation, middleLocation, tailLocation);
 
         // --- Section occupations
         // ---   Calculate new head section occupation
-        Section toHeadSection = sectionProvider.getSectionFor(train, fromHeadSection, fromHeadFrame, train.getHeadOfTrainFrame());
+        Section toHeadSection = sectionProvider.getSectionFor(train, fromHeadSection, fromHeadFrame, trainHeadOfTrainFrame);
         if(toHeadSection != fromHeadSection){
-            TrainEnd trainEnd = speedBPS.isPositive() ? TrainEnd.HEAD : TrainEnd.TAIL;
+            TrainEnd trainEnd = train.drivingTowardsEnd() ? TrainEnd.HEAD : TrainEnd.TAIL;
+            Bukkit.broadcastMessage("HEAD: " + trainEnd + "(" + positiveDrivingDirection);
+
             sectionLogic(fromHeadSection, toHeadSection, trainEnd, true);
+            trainHeadOfTrainFrame.setSection(toHeadSection);
+            trainHeadOfTrainFrame.setInvertedFrameAddition(!positiveDrivingDirection);
         }
 
         // ---   Calculate new tail section occupation
-        Section toTailSection = sectionProvider.getSectionFor(train, fromTailSection, fromTailFrame, train.getTailOfTrainFrame());
+        Section toTailSection = sectionProvider.getSectionFor(train, fromTailSection, fromTailFrame, trainTailOfTrainFrame);
         if(toTailSection != fromTailSection){
-            TrainEnd trainEnd = speedBPS.isPositive() ? TrainEnd.TAIL : TrainEnd.HEAD;
+            TrainEnd trainEnd = train.drivingTowardsEnd() ? TrainEnd.HEAD : TrainEnd.TAIL;
+            Bukkit.broadcastMessage("TAIL: " + trainEnd + "(" + positiveDrivingDirection);
+
             sectionLogic(fromTailSection, toTailSection, trainEnd, false);
+            trainTailOfTrainFrame.setSection(toTailSection);
+            trainTailOfTrainFrame.setInvertedFrameAddition(!positiveDrivingDirection);
         }
 
-        // --- Check if the next effect should be played yet
+        playEffects(trainHeadOfTrainFrame);
+        playWindSounds();
+    }
+
+    private void playEffects(Frame newFrame){
         while(nextEffect != null){
             Frame nextEffectFrame = nextEffect.getFrame();
-            boolean activateEffect = train.getHeadSection().hasPassed(nextEffectFrame, result.getNewHeadOfTrainFrame());
+            boolean activateEffect = train.getHeadSection().hasPassed(nextEffectFrame, newFrame);
             if(!activateEffect) break;
             nextEffect.execute(train);
             nextEffect = nextEffect.next();
         }
+    }
 
-        // --- Play wind sounds
+    private void playWindSounds(){
         if(windSoundState < windSoundInterval)
             windSoundState++;
         else{

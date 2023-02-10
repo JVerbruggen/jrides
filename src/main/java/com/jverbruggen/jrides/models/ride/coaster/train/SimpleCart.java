@@ -6,7 +6,8 @@ import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.properties.LinkedFrame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
+import com.jverbruggen.jrides.models.properties.frame.LinkedFrame;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
@@ -18,16 +19,16 @@ public class SimpleCart implements Cart {
     private List<Seat> seats;
     private VirtualArmorstand modelArmorstand;
     private Vector3 trackOffset;
-    private LinkedFrame linkedFrame;
+    private Frame frame;
     private Train parentTrain;
 
     private Quaternion currentOrientation;
 
-    public SimpleCart(List<Seat> seats, VirtualArmorstand modelArmorstand, Vector3 trackOffset, LinkedFrame linkedFrame) {
+    public SimpleCart(List<Seat> seats, VirtualArmorstand modelArmorstand, Vector3 trackOffset, Frame frame) {
         this.seats = seats;
         this.modelArmorstand = modelArmorstand;
         this.trackOffset = trackOffset;
-        this.linkedFrame = linkedFrame;
+        this.frame = frame;
         this.parentTrain = null;
         this.currentOrientation = null;
 
@@ -48,8 +49,8 @@ public class SimpleCart implements Cart {
     }
 
     @Override
-    public LinkedFrame getFrame() {
-        return linkedFrame;
+    public Frame getFrame() {
+        return frame;
     }
 
     @Override
@@ -120,5 +121,10 @@ public class SimpleCart implements Cart {
                     passenger.teleport(ejectLocation);
             }
         });
+    }
+
+    @Override
+    public void setInvertedFrameAddition(boolean inverted) {
+        frame.setInvertedFrameAddition(inverted);
     }
 }

@@ -5,11 +5,12 @@ import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.TrackEnd;
 import com.jverbruggen.jrides.models.properties.TrainEnd;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
 
 import java.util.ArrayList;
@@ -34,9 +35,11 @@ public class SimpleTrain implements Train {
     private String statusMessage;
     private List<Player> statusMessageListeners;
     private boolean debugMode;
+    private boolean facingForwards;
+    private boolean drivingTowardsPositiveDirection;
 
     public SimpleTrain(String name, List<Cart> carts, Frame headOfTrainFrame, Frame massMiddleFrame, Frame tailOfTrainFrame,
-                       Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation, Section section, boolean debugMode) {
+                       Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation, Section section, boolean debugMode, boolean facingForwards) {
         this.name = name;
         this.carts = carts;
         this.headOfTrainFrame = headOfTrainFrame;
@@ -57,6 +60,9 @@ public class SimpleTrain implements Train {
         this.statusMessageListeners = new ArrayList<>();
         this.debugMode = debugMode;
 
+        this.facingForwards = facingForwards;
+        this.drivingTowardsPositiveDirection = true;
+
         getCarts().forEach(c -> c.setParentTrain(this));
     }
 
@@ -68,6 +74,11 @@ public class SimpleTrain implements Train {
     @Override
     public List<Cart> getCarts() {
         return carts;
+    }
+
+    @Override
+    public int size() {
+        return carts.size();
     }
 
     @Override
@@ -136,8 +147,9 @@ public class SimpleTrain implements Train {
 
     @Override
     public void addCurrentSection(Section section, TrainEnd trainEnd) {
-        if(trainEnd.equals(TrainEnd.HEAD))
+        if(trainEnd.equals(TrainEnd.HEAD)){
             currentSections.add(0, section);
+        }
         else
             currentSections.add(section);
     }
@@ -178,17 +190,48 @@ public class SimpleTrain implements Train {
         return this.getName().equalsIgnoreCase(other.getName());
     }
 
+    @Deprecated
     @Override
     public boolean isFacingForwards() {
-        return true;
+        return facingForwards;
+    }
+
+    @Deprecated
+    @Override
+    public void setFacingForwards(boolean forwards) {
+        facingForwards = forwards;
     }
 
     @Override
     public TrackEnd getDirection() {
-        boolean forwards = getHandle().getSpeed().isPositive();
-        if(!isFacingForwards()) forwards = !forwards;
+        return getHandle().getSpeed().isPositive() ? TrackEnd.END : TrackEnd.START;
+    }
 
-        return forwards ? TrackEnd.END : TrackEnd.START;
+    @Override
+    public boolean isPositiveDrivingDirection() {
+        return drivingTowardsPositiveDirection;
+    }
+
+    @Override
+    public boolean drivingTowardsEnd() {
+        return getDirection() == TrackEnd.END;
+    }
+
+    @Override
+    public void setDrivingDirection(boolean positive) {
+        drivingTowardsPositiveDirection = positive;
+        getHandle().getSpeed().setInverted(!positive);
+    }
+
+    @Override
+    public void setInvertedFrameAddition(boolean inverted) {
+        headOfTrainFrame.setInvertedFrameAddition(inverted);
+        massMiddleFrame.setInvertedFrameAddition(inverted);
+        tailOfTrainFrame.setInvertedFrameAddition(inverted);
+
+        for(Cart cart : getCarts()){
+            cart.setInvertedFrameAddition(inverted);
+        }
     }
 
     @Override
@@ -283,6 +326,12 @@ public class SimpleTrain implements Train {
     @Override
     public boolean statusModeEnabled(Player player) {
         return debugMode && player.getBukkitPlayer().hasPermission(Permissions.STATUS_INSPECTION);
+    }
+
+    @Deprecated
+    @Override
+    public void flipFacing() {
+        facingForwards = !facingForwards;
     }
 
     private void playSound(String soundName){

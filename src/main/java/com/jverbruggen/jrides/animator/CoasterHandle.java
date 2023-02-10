@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.animator;
 
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.control.RideController;
+import com.jverbruggen.jrides.control.controlmode.ControlMode;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
@@ -89,7 +90,9 @@ public class CoasterHandle implements RideHandle {
 
     @Override
     public TriggerContext getTriggerContext(String contextOwner) {
-        return getStationHandle(contextOwner).getTriggerContext();
+        StationHandle stationHandle = getStationHandle(contextOwner);
+        if(stationHandle == null) return null;
+        return stationHandle.getTriggerContext();
     }
 
     @Override
@@ -109,6 +112,7 @@ public class CoasterHandle implements RideHandle {
     }
 
     public StationHandle getStationHandle(String identifier){
+        if(getStationHandles().size() == 0) return null;
         return getStationHandles().get(0); // TODO: actually implement this
     }
 
@@ -118,7 +122,9 @@ public class CoasterHandle implements RideHandle {
     }
 
     public void tick(){
-        rideController.getControlMode().tick();
+        if(rideController.isActive())
+            rideController.getControlMode().tick();
+
         for(TrainHandle trainHandle : trains){
             trainHandle.tick();
         }

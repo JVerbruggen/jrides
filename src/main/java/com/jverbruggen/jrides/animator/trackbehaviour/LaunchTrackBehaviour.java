@@ -4,7 +4,7 @@ import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
@@ -67,7 +67,7 @@ public class LaunchTrackBehaviour extends BaseTrackBehaviour implements TrackBeh
                     }
                     break;
                 case STOPPING:
-                    if(newSpeed.is(0)){
+                    if(newSpeed.isZero()){
                         phase = LaunchPhase.WAITING;
                         goIntoSwitch = true;
                     }

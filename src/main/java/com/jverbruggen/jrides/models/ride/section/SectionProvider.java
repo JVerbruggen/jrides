@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.models.ride.section;
 
-import com.jverbruggen.jrides.models.properties.Frame;
-import com.jverbruggen.jrides.models.properties.SimpleFrame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
+import com.jverbruggen.jrides.models.properties.frame.SimpleFrame;
 import com.jverbruggen.jrides.models.properties.TrackEnd;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
@@ -11,6 +11,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
 public class SectionProvider {
     public @NonNull Section getSectionFor(Train train, Section currentSection, Frame fromFrame, Frame toFrame){
@@ -24,36 +25,59 @@ public class SectionProvider {
         Section subsequentPreviousSection = currentSection.previous(train);
         if(subsequentNextSection != null){
             if(subsequentNextSection.isInSection(toFrame)) {
-//                Bukkit.broadcastMessage("isnext!");
+                Bukkit.broadcastMessage("isnext!");
                 return subsequentNextSection;
             }
             if(currentSection.isInSection(fromFrame) && train.getDirection() == TrackEnd.END){
-//                Bukkit.broadcastMessage("isnext! - special");
-
-                int overshotFrameAmount = toFrame.getValue() - currentSection.getEndFrame().getValue();
+                int overshotFrameAmount = getOvershotFrameAmount(train, currentSection, toFrame);
                 int newFrameValue = subsequentNextSection.getStartFrame().getValue() + overshotFrameAmount;
-                train.getHeadOfTrainFrame().updateTo(new SimpleFrame(newFrameValue));
+                Bukkit.broadcastMessage("isnext! special - to: " + toFrame.getValue() + " over: " + overshotFrameAmount + ", new: " + newFrameValue);
+
+                toFrame.setValue(newFrameValue);
+                return subsequentNextSection;
             }
         }else if(subsequentPreviousSection != null){
             if(subsequentPreviousSection.isInSection(toFrame)){ // Unchecked!
-//                Bukkit.broadcastMessage("isprev!");
+                Bukkit.broadcastMessage("isprev!");
                 return subsequentPreviousSection;
             }else if(currentSection.isInSection(fromFrame) && train.getDirection() == TrackEnd.START){
-//                Bukkit.broadcastMessage("isprev! - special");
-
-                int overshotFrameAmount = toFrame.getValue() - currentSection.getStartFrame().getValue();
+                int overshotFrameAmount = getOvershotFrameAmount(train, currentSection, toFrame);
                 int newFrameValue = subsequentPreviousSection.getEndFrame().getValue() + overshotFrameAmount;
-                train.getHeadOfTrainFrame().updateTo(new SimpleFrame(newFrameValue));
+                Bukkit.broadcastMessage("isprev! special - to: " + toFrame.getValue() + " over: " + overshotFrameAmount + ", new: " + newFrameValue);
+
+                toFrame.setValue(newFrameValue);
+                return subsequentPreviousSection;
             }
         }
 
         Section found = findSectionBySearchingNext(train, toFrame, currentSection);
-        if(found == null) throw new SectionNotFoundException(train);
+        if(found == null){
+            train.setCrashed(true);
+            Bukkit.broadcastMessage("error: " + currentSection + " to: " + toFrame);
+            throw new SectionNotFoundException(train);
+        }else{
+            Bukkit.broadcastMessage("Next section found when searched!");
+        }
 
         return found;
     }
 
-    private Section findSectionBySearchingNext(Train train, Frame frame, Section firstSection) {
+    private int getOvershotFrameAmount(Train train, Section currentSection, Frame toFrame){
+        if(train.isPositiveDrivingDirection())
+            return toFrame.getValue() - currentSection.getEndFrame().getValue();
+        else
+            return currentSection.getStartFrame().getValue() - toFrame.getValue();
+    }
+
+    public Section findSectionBySearchingNext(Train train, Frame frame, Section firstSection) {
+        return findSectionBySearchingRelative(train, frame, firstSection, Section::next);
+    }
+
+    public Section findSectionBySearchingPrevious(Train train, Frame frame, Section firstSection) {
+        return findSectionBySearchingRelative(train, frame, firstSection, Section::previous);
+    }
+
+    private Section findSectionBySearchingRelative(Train train, Frame frame, Section firstSection, BiFunction<Section, Train, Section> relativeFunction){
         List<Section> checked = new ArrayList<>();
 
         Section found = null;
@@ -63,7 +87,7 @@ public class SectionProvider {
                 found = checking;
             }else{
                 checked.add(checking);
-                checking = checking.next(train);
+                checking = relativeFunction.apply(checking, train);
 
                 if(checked.contains(checking))
                     checking = null;
@@ -73,9 +97,7 @@ public class SectionProvider {
         return found;
     }
 
-    private Section findSectionInBulk(Frame frame){
-        List<Section> sections = frame.getTrack().getSections();
-
+    public Section findSectionInBulk(Frame frame, List<Section> sections){
         Section found = null;
         int i = 0;
         while(found == null && i < sections.size()){

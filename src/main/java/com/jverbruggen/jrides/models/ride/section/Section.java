@@ -3,7 +3,7 @@ package com.jverbruggen.jrides.models.ride.section;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -38,4 +38,7 @@ public interface Section {
     void setNext(Section section);
     void setPrevious(Section section);
     boolean spansOver(Train train);
+    boolean positiveDirectionToGoTo(Section section, Train forTrain);
+
+    String getName();
 }

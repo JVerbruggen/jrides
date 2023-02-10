@@ -2,7 +2,7 @@ package com.jverbruggen.jrides.models.ride.coaster.track.compound;
 
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
@@ -86,6 +86,11 @@ public class CompoundTrack implements Track {
     @Override
     public int getUpperFrame() {
         throw new RuntimeException("Cannot get frame bounds for compound track");
+    }
+
+    @Override
+    public boolean inThisTrack(int frame) {
+        return true;
     }
 
     @Override

@@ -12,7 +12,10 @@ import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.properties.*;
+import com.jverbruggen.jrides.models.properties.frame.AutoTrackUpdateFrame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
+import com.jverbruggen.jrides.models.properties.frame.LinkedFrame;
+import com.jverbruggen.jrides.models.properties.frame.SimpleFrame;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
@@ -20,6 +23,7 @@ import com.jverbruggen.jrides.models.ride.coaster.train.SimpleCart;
 import com.jverbruggen.jrides.models.ride.coaster.train.SimpleTrain;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import com.jverbruggen.jrides.models.ride.section.SectionProvider;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Bukkit;
@@ -32,10 +36,12 @@ public class TrainFactory {
     private final ViewportManager viewportManager;
     private final SeatFactory seatFactory;
     private final boolean debugMode;
+    private final SectionProvider sectionProvider;
 
     public TrainFactory() {
         this.viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
         this.seatFactory = ServiceProvider.getSingleton(SeatFactory.class);
+        this.sectionProvider = ServiceProvider.getSingleton(SectionProvider.class);
         this.debugMode = false; // TODO: add to a config
     }
 
@@ -48,14 +54,21 @@ public class TrainFactory {
 
         VehiclesConfig vehiclesConfig = coasterConfig.getVehicles();
 
-        final Frame sectionSpawnFrame = spawnSection.getSpawnFrame();
-        final AutoTrackUpdateFrame headOfTrainFrame = new AutoTrackUpdateFrame(sectionSpawnFrame.getValue(), sectionSpawnFrame.getTrack());
         final int amountOfCarts = vehiclesConfig.getCarts();
         final int cartDistance = vehiclesConfig.getCartDistance();
-        final LinkedFrame massMiddleFrame = new LinkedFrame(headOfTrainFrame, -(amountOfCarts*cartDistance) / 2);
-        final int headOfTrainOffset = headOfTrainFrame.getValue();
+
+        final Frame sectionSpawnFrame = spawnSection.getSpawnFrame();
+        final int headOfTrainFrameValue = sectionSpawnFrame.getValue();
+        final int middleOfTrainFrameValue = headOfTrainFrameValue - (amountOfCarts*cartDistance) / 2;
+        final int tailOfTrainFrameValue = headOfTrainFrameValue - (amountOfCarts*cartDistance);
+
+        final Track spawnTrack = sectionSpawnFrame.getTrack();
+
+        final Frame headOfTrainFrame = new AutoTrackUpdateFrame(headOfTrainFrameValue, spawnTrack, spawnSection);
+        final Frame middleOfTrainFrame = new AutoTrackUpdateFrame(middleOfTrainFrameValue, spawnTrack, spawnSection);
+        final Frame tailOfTrainFrame = new AutoTrackUpdateFrame(tailOfTrainFrameValue, spawnTrack, spawnSection);
+
         final Vector3 cartOffset = coasterConfig.getCartSpec().getDefault().getModel().getPosition();
-        final LinkedFrame tailOfTrainFrame = new LinkedFrame(headOfTrainFrame, -(amountOfCarts*cartDistance));
 
         List<Cart> carts = new ArrayList<>();
         for(int i = 0; i < amountOfCarts; i++){
@@ -89,20 +102,29 @@ public class TrainFactory {
             List<Vector3> seatOffsets = cartTypeSpecConfig.getSeats().getPositions();
             List<Seat> seats = seatFactory.createSeats(seatOffsets, cartLocation, orientation);
 
+            Section cartSection = spawnSection;
+            if(!cartSection.isInSection(cartFrame)){
+                cartSection = sectionProvider.findSectionBySearchingPrevious(null, cartFrame, spawnSection);
+                if(cartSection == null)
+                    throw new RuntimeException("Cant find where cart index=" + i + " should be placed (section-wise)");
+            }
+
             Cart cart = new SimpleCart(
                     seats,
                     armorStand,
                     cartOffset,
-                    new LinkedFrame(headOfTrainFrame, -cartOffsetFrames));
+                    cartFrame);
             carts.add(cart);
         }
 
         Vector3 headLocation = track.getLocationFor(headOfTrainFrame);
-        Vector3 middleLocation = track.getLocationFor(massMiddleFrame);
+        Vector3 middleLocation = track.getLocationFor(middleOfTrainFrame);
         Vector3 tailLocation = track.getLocationFor(tailOfTrainFrame);
 
-        Train train = new SimpleTrain(trainIdentifier, carts, headOfTrainFrame, massMiddleFrame, tailOfTrainFrame,
-                headLocation, middleLocation, tailLocation, spawnSection, debugMode);
+        boolean facingForwards = true;
+
+        Train train = new SimpleTrain(trainIdentifier, carts, headOfTrainFrame, middleOfTrainFrame, tailOfTrainFrame,
+                headLocation, middleLocation, tailLocation, spawnSection, debugMode, facingForwards);
         spawnSection.addOccupation(train);
 
         return train;

@@ -1,14 +1,17 @@
-package com.jverbruggen.jrides.models.properties;
+package com.jverbruggen.jrides.models.properties.frame;
 
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+import com.jverbruggen.jrides.models.ride.section.Section;
 
 public class SimpleFrame implements Frame {
     private int frame;
     private Track track;
+    private Section section;
 
-    public SimpleFrame(int frame, Track track) {
+    public SimpleFrame(int frame, Track track, Section section) {
         this.frame = frame;
         this.track = track;
+        this.section = section;
     }
 
     public SimpleFrame(int frame) {
@@ -36,6 +39,16 @@ public class SimpleFrame implements Frame {
     }
 
     @Override
+    public Section getSection() {
+        return section;
+    }
+
+    @Override
+    public void setSection(Section section) {
+        this.section = section;
+    }
+
+    @Override
     public Frame add(int frames){
         this.frame += frames;
         return this;
@@ -44,12 +57,17 @@ public class SimpleFrame implements Frame {
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Frame clone(){
-        return new SimpleFrame(frame, track);
+        return new SimpleFrame(frame, track, section);
     }
 
     @Override
     public Frame capture() {
         return clone();
+    }
+
+    @Override
+    public void setInvertedFrameAddition(boolean inverted) {
+        throw new RuntimeException("Not supported");
     }
 
     @Override

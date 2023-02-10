@@ -17,8 +17,9 @@ import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.entity.EntityIdFactory;
 import com.jverbruggen.jrides.models.message.MessageFactory;
-import com.jverbruggen.jrides.models.properties.factory.FrameFactory;
+import com.jverbruggen.jrides.models.properties.frame.factory.FrameFactory;
 import com.jverbruggen.jrides.models.ride.factory.*;
+import com.jverbruggen.jrides.models.ride.section.SectionProvider;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.PacketSender_1_19_2;
 import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener;
@@ -46,6 +47,7 @@ public class ServiceProviderConfigurator {
 
         ServiceProvider.register(PluginManager.class, Bukkit.getPluginManager());
         ServiceProvider.register(LanguageFile.class, new LanguageFile());
+        ServiceProvider.register(SectionProvider.class, new SectionProvider());
         ServiceProvider.register(ButtonUpdateController.class, new ButtonUpdateController());
         ServiceProvider.register(ProtocolManager.class, ProtocolLibrary.getProtocolManager());
         ServiceProvider.register(EntityIdFactory.class, new EntityIdFactory(1_500_000, Integer.MAX_VALUE));

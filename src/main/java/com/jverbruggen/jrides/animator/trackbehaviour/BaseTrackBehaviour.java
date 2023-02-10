@@ -5,13 +5,13 @@ import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.properties.CyclicFrame;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 
@@ -25,17 +25,20 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     }
 
     protected TrainMovement calculateTrainMovement(Train train, Section section, Speed speed){
-        if(speed.is(0)){
-            return new TrainMovement(speed, train.getHeadOfTrainFrame(), train.getTailOfTrainFrame(), train.getCurrentLocation(), null);
+        if(speed.isZero()){
+            return new TrainMovement(speed, train.getHeadOfTrainFrame(), train.getMiddleOfTrainFrame(), train.getTailOfTrainFrame(), train.getCurrentLocation(), null);
         }
 
-        Frame newHeadOfTrainFrame = train.getHeadOfTrainFrame().clone().add(speed.getFrameIncrement());
-        Frame newTailOfTrainFrame = train.getTailOfTrainFrame().clone().add(speed.getFrameIncrement());
-        Vector3 newTrainLocation = section.getLocationFor(train.getMiddleOfTrainFrame());
+        int speedFrameIncrement = speed.getFrameIncrement();
 
-        HashMap<Cart, CartMovement> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getCarts(), section);
+        Frame newHeadOfTrainFrame = train.getHeadOfTrainFrame().clone().add(speedFrameIncrement);
+        Frame newMiddleOfTrainFrame = train.getMiddleOfTrainFrame().clone().add(speedFrameIncrement);
+        Frame newTailOfTrainFrame = train.getTailOfTrainFrame().clone().add(speedFrameIncrement);
+        Vector3 newTrainLocation = section.getLocationFor(newMiddleOfTrainFrame);
 
-        return new TrainMovement(speed, newHeadOfTrainFrame, newTailOfTrainFrame, newTrainLocation, cartMovements);
+        HashMap<Cart, CartMovement> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getCarts(), speedFrameIncrement, section);
+
+        return new TrainMovement(speed, newHeadOfTrainFrame, newMiddleOfTrainFrame, newTailOfTrainFrame, newTrainLocation, cartMovements);
     }
 
     protected abstract void setParentTrackOnFrames(Track parentTrack);
@@ -79,5 +82,15 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     @Override
     public boolean accepts(Train train) {
         return true;
+    }
+
+    @Override
+    public Section getSectionNext(Train train) {
+        return getSectionAtEnd(train);
+    }
+
+    @Override
+    public Section getSectionPrevious(Train train) {
+        return getSectionAtStart(train);
     }
 }

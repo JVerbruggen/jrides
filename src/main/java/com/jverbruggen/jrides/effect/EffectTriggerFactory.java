@@ -7,11 +7,10 @@ import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
 import com.jverbruggen.jrides.effect.handle.ReversedEffectTriggerHandle;
 import com.jverbruggen.jrides.effect.music.MusicEffectTriggerFactory;
 import com.jverbruggen.jrides.effect.platform.MultiArmorstandMovementEffectTriggerFactory;
-import com.jverbruggen.jrides.models.properties.Frame;
-import com.jverbruggen.jrides.models.properties.SimpleFrame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
+import com.jverbruggen.jrides.models.properties.frame.factory.FrameFactory;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.*;
@@ -22,12 +21,14 @@ public class EffectTriggerFactory {
     private final MultiArmorstandMovementEffectTriggerFactory platformEffectTriggerFactory;
     private final ConfigManager configManager;
     private final Map<String, EffectTrigger> effectTriggerMap;
+    private final FrameFactory frameFactory;
 
     public EffectTriggerFactory() {
         this.musicEffectTriggerFactory = ServiceProvider.getSingleton(MusicEffectTriggerFactory.class);
         this.platformEffectTriggerFactory = ServiceProvider.getSingleton(MultiArmorstandMovementEffectTriggerFactory.class);
         this.configManager = ServiceProvider.getSingleton(ConfigManager.class);
         this.effectTriggerMap = new HashMap<>();
+        this.frameFactory = ServiceProvider.getSingleton(FrameFactory.class);
     }
 
     public EffectTriggerHandle getEffectTrigger(String rideIdentifier, String effectName, boolean reversed, Frame frame, TriggerConfig triggerConfig){
@@ -87,7 +88,7 @@ public class EffectTriggerFactory {
             int frameIndex = effectConfigurationSection.getInt("frame");
             if(lastFrameIndex > frameIndex) throw new RuntimeException("Every effect trigger frame needs to be after the frame of the effect before");
 
-            effects.put(new SimpleFrame(frameIndex, track), effectIdentifier);
+            effects.put(frameFactory.getStaticFrame(frameIndex, track), effectIdentifier);
 
             lastFrameIndex = frameIndex;
         }

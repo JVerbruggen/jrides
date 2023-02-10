@@ -2,17 +2,26 @@ package com.jverbruggen.jrides.models.properties;
 
 public class Speed {
     private double speedPerTick;
+    private boolean inverted;
 
     public Speed(double speed) {
         this.speedPerTick = speed;
+        this.inverted = false;
+    }
+
+    public Speed(double speed, boolean inverted) {
+        this.speedPerTick = speed;
+        this.inverted = inverted;
+    }
+
+    public void setSpeed(double newSpeedPerTick){
+        if(inverted) newSpeedPerTick = -newSpeedPerTick;
+        this.speedPerTick = newSpeedPerTick;
     }
 
     public double getSpeedPerTick() {
+        if(inverted) return -speedPerTick;
         return speedPerTick;
-    }
-
-    public void setSpeedPerTick(double speed){
-        this.speedPerTick = speed;
     }
 
     public void add(double speed){
@@ -21,7 +30,9 @@ public class Speed {
 
     public void add(double speed, double until){
         add(speed);
-        if(this.speedPerTick > until) this.speedPerTick = until;
+
+        if(this.speedPerTick > until)
+            this.speedPerTick = until;
     }
 
     public void approach(double acceleration, double deceleration, double approachSpeed){
@@ -33,7 +44,7 @@ public class Speed {
     }
 
     public void minus(double speed){
-        this.speedPerTick -= speed;
+        add(-speed);
     }
 
     public void minus(double speed, double until){
@@ -47,24 +58,28 @@ public class Speed {
 
     public int getFrameIncrement(){
         final int frameIncrementFactor = 3;
+        final double speedPerTick = getSpeedPerTick();
+//        Bukkit.broadcastMessage("speedincr " + speedPerTick + " (" + inverted + ")");
+
         return (int) (speedPerTick * frameIncrementFactor);
     }
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Speed clone(){
-        return new Speed(this.speedPerTick);
+        return new Speed(this.speedPerTick, this.inverted);
     }
 
-    public boolean is(double speed){
-        return this.speedPerTick == speed;
+    public boolean isZero(){
+        return this.speedPerTick == 0;
     }
 
     public boolean isPositive(){
         return this.speedPerTick >= 0;
     }
 
-    public boolean isPositiveExclZero(){
-        return this.speedPerTick >= 0;
+    public void setInverted(boolean inverted) {
+//        Bukkit.broadcastMessage("Set inverted " + inverted);
+        this.inverted = inverted;
     }
 
     @Override

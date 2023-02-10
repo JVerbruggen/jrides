@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.models.ride.section.transfer;
 
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.BaseSection;

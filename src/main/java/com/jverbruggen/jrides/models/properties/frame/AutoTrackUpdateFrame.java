@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.models.properties;
+package com.jverbruggen.jrides.models.properties.frame;
 
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.section.Section;
@@ -7,14 +7,20 @@ import org.bukkit.Bukkit;
 public class AutoTrackUpdateFrame implements Frame {
     private int frame;
     private Track track;
+    private Section section;
+    private boolean invertFrameAddition;
 
-    public AutoTrackUpdateFrame(int frame, Track track) {
-        this.frame = frame;
-        this.track = track;
+    public AutoTrackUpdateFrame(int frame, Track track, Section section) {
+        this(frame, track, section, false);
     }
 
-    public AutoTrackUpdateFrame(int frame) {
+    public AutoTrackUpdateFrame(int frame, Track track, Section section, boolean invertFrameAddition) {
         this.frame = frame;
+        this.track = track;
+        this.section = section;
+        this.invertFrameAddition = invertFrameAddition;
+
+        updateTrack(frame);
     }
 
     @Override
@@ -38,32 +44,38 @@ public class AutoTrackUpdateFrame implements Frame {
 
         this.track = track;
     }
-//
-//    @Override
-//    public Section getSection() {
-//        throw new RuntimeException("Cannot get section of AU frame");
-//    }
-//
-//    @Override
-//    public void setSection(Section section) {
-//        throw new RuntimeException("Cannot set section of AU frame");
-//    }
+
+    @Override
+    public Section getSection() {
+        return section;
+    }
+
+    @Override
+    public void setSection(Section section) {
+        this.section = section;
+    }
 
     @Override
     public Frame add(int frames){
+        if(invertFrameAddition) frames = -frames;
+
         int newFrame = this.frame + frames;
-        if(newFrame > track.getUpperFrame()){ // Going forwards and out of bounds
+        return updateTrack(newFrame);
+    }
+
+    private Frame updateTrack(int toFrame){
+        if(toFrame > track.getUpperFrame()){ // Going forwards and out of bounds
             Track newTrack = track.getNextTrack();
             setTrack(newTrack);
             setValue(newTrack.getLowerFrame());
-            return add(newFrame - track.getUpperFrame());
-        }else if(newFrame < track.getLowerFrame()){ // Going backwards and out of bounds
+            return add(toFrame - track.getUpperFrame());
+        }else if(toFrame < track.getLowerFrame()){ // Going backwards and out of bounds
             Track newTrack = track.getPreviousTrack();
             setTrack(newTrack);
             setValue(newTrack.getUpperFrame());
-            return add(newFrame - track.getLowerFrame());
+            return add(toFrame - track.getLowerFrame());
         }else{ // Within bounds
-            setValue(newFrame);
+            setValue(toFrame);
             return this;
         }
     }
@@ -71,12 +83,18 @@ public class AutoTrackUpdateFrame implements Frame {
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Frame clone(){
-        return new AutoTrackUpdateFrame(frame, track);
+        return new AutoTrackUpdateFrame(frame, track, section, invertFrameAddition);
     }
 
     @Override
     public Frame capture() {
         return clone();
+    }
+
+    @Override
+    public void setInvertedFrameAddition(boolean inverted) {
+        Bukkit.broadcastMessage("Set inverted frame addition " + inverted);
+        invertFrameAddition = inverted;
     }
 
     @Override
@@ -86,7 +104,9 @@ public class AutoTrackUpdateFrame implements Frame {
 
     @Override
     public String toString() {
-        return "<AU-Frame: " + getValue() + ">";
+        String invertedTag = "";
+        if(invertFrameAddition) invertedTag = " [invert] ";
+        return "<AU-Frame: " + getValue() + invertedTag + " (" + section.getName() + ")>";
     }
 
     public boolean equals(Frame other) {

@@ -1,10 +1,9 @@
 package com.jverbruggen.jrides.models.ride.section;
 
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +65,8 @@ public class AdvancedSectionBuilder {
             Frame endFrame = sectionReference.getEndFrame();
             TrackBehaviour trackBehaviour = sectionReference.getTrackBehaviour();
 
-            Section section = new SimpleSection(startFrame, endFrame, trackBehaviour);
+            SimpleSection section = new SimpleSection(startFrame, endFrame, trackBehaviour);
+            section.setName(sectionReference.getSectionIdentifier());
             sections.put(sectionReference, section);
         }
 

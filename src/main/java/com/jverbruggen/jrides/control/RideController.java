@@ -16,9 +16,10 @@ public class RideController {
     private final StationHandle stationHandle;
     private RideHandle rideHandle;
     private ControlMode controlMode;
-
+    private boolean active;
 
     public RideController(ControlModeFactory controlModeFactory, StationHandle stationHandle) {
+        this.active = false;
         this.stationHandle = stationHandle;
         this.controlModeFactory = controlModeFactory;
         changeMode(this.controlModeFactory.getForWithoutOperating(this.stationHandle));
@@ -26,6 +27,8 @@ public class RideController {
 
     public void setRideHandle(RideHandle rideHandle) {
         this.rideHandle = rideHandle;
+
+        if(this.controlMode == null) return;
         this.controlMode.setTriggerContext(getTriggerContext());
     }
 
@@ -33,10 +36,15 @@ public class RideController {
         return rideHandle.getTriggerContext(null);
     }
 
-    public void changeMode(@Nonnull ControlMode newControlMode){
-        if(rideHandle != null){
-            newControlMode.setTriggerContext(getTriggerContext());
+    public void changeMode(ControlMode newControlMode){
+        if(newControlMode == null){
+            active = false;
+        }else{
+            if(rideHandle != null){
+                newControlMode.setTriggerContext(getTriggerContext());
+            }
         }
+
         controlMode = newControlMode;
     }
 
@@ -70,5 +78,9 @@ public class RideController {
 
     public Player getOperator(){
         return this.getControlMode().getOperator();
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }

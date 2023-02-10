@@ -3,8 +3,7 @@ package com.jverbruggen.jrides.models.ride.coaster.track;
 import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.properties.CyclicFrame;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
 import java.util.List;
@@ -82,6 +81,11 @@ public class CircularSplineBasedTrack implements Track {
     @Override
     public int getUpperFrame() {
         return splinePositions.size()-1;
+    }
+
+    @Override
+    public boolean inThisTrack(int frame) {
+        return getLowerFrame() <= frame && frame <= getUpperFrame();
     }
 
     @Override

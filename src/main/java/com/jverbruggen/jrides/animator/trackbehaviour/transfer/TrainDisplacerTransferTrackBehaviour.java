@@ -8,14 +8,12 @@ import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.models.math.Matrix4x4;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.math.VectorQuaternionState;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.section.Section;
-import org.bukkit.Bukkit;
 
 public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
     private final double deceleration;
@@ -58,7 +56,7 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
                     }
                     break;
                 case STOPPING:
-                    if(newSpeed.is(0)){
+                    if(newSpeed.isZero()){
                         phase = TransferPhase.TRANSFERRING;
 
                         transfer.setTrain(trainHandle);
@@ -76,12 +74,17 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
                     }
                     break;
                 case WAITING:
-                    Section nextSection = train.getHeadSection().next(train);
+                    Section currentSection = train.getHeadSection();
+                    Section nextSection = currentSection.next(train);
                     if(nextSection != null && nextSection.isBlockSectionSafe(train)){
                         transfer.unlockTrain();
                         transfer.releaseRequest();
                         phase = TransferPhase.DRIVING;
                         goIntoSwitch = true;
+
+                        boolean positiveTrainDirection = currentSection.positiveDirectionToGoTo(nextSection, train);
+
+                        train.setDrivingDirection(positiveTrainDirection);
                     }
                     break;
                 case DRIVING:
@@ -165,6 +168,28 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
     public Section getSectionAtEnd(Train train) {
         if(!transfer.canSafelyInteractWith(train.getHandle())) return null;
         return transfer.getCurrentTransferPosition().getSectionAtEnd();
+    }
+
+    @Override
+    public Section getSectionNext(Train train) {
+        Section logicalNext = getSectionAtEnd(train);
+        if(logicalNext != null)
+            return logicalNext;
+        else{
+            train.setDrivingDirection(false);
+            return getSectionAtStart(train);
+        }
+    }
+
+    @Override
+    public Section getSectionPrevious(Train train) {
+        Section logicalNext = getSectionAtStart(train);
+        if(logicalNext != null)
+            return logicalNext;
+        else{
+            train.setDrivingDirection(false);
+            return getSectionAtEnd(train);
+        }
     }
 
     @Override

@@ -9,7 +9,7 @@ import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
 import com.jverbruggen.jrides.logging.JRidesLogger;
-import com.jverbruggen.jrides.models.properties.Frame;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.models.ride.StationHandle;
@@ -91,7 +91,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                     }
                     break;
                 case STOPPING:
-                    if(newSpeed.is(0)) {
+                    if(newSpeed.isZero()) {
                         if(!stopping) stationHandle.runEntryEffectTriggers(train);
                         stopping = true;
 
