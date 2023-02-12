@@ -7,7 +7,7 @@ import com.jverbruggen.jrides.models.ride.section.Section;
 import org.bukkit.Bukkit;
 
 public class AutoTrackUpdateFrame implements Frame {
-    private int frame;
+    private int value;
     private Track track;
     private Section section;
     private boolean invertFrameAddition;
@@ -17,7 +17,7 @@ public class AutoTrackUpdateFrame implements Frame {
     }
 
     public AutoTrackUpdateFrame(int frame, Track track, Section section, boolean invertFrameAddition) {
-        this.frame = frame;
+        this.value = frame;
         this.track = track;
         this.section = section;
         this.invertFrameAddition = invertFrameAddition;
@@ -27,12 +27,12 @@ public class AutoTrackUpdateFrame implements Frame {
 
     @Override
     public int getValue() {
-        return frame;
+        return value;
     }
 
     @Override
     public void setValue(int frame) {
-        this.frame = frame;
+        this.value = frame;
     }
 
     @Override
@@ -61,8 +61,11 @@ public class AutoTrackUpdateFrame implements Frame {
     @Override
     public Frame add(int frames){
         if(invertFrameAddition) frames = -frames;
+        return addRaw(frames);
+    }
 
-        int newFrame = this.frame + frames;
+    private Frame addRaw(int frames){
+        int newFrame = this.value + frames;
         return updateTrack(newFrame);
     }
 
@@ -71,12 +74,12 @@ public class AutoTrackUpdateFrame implements Frame {
             Track newTrack = track.getNextTrack();
             setTrack(newTrack);
             setValue(newTrack.getLowerFrame());
-            return add(toFrame - track.getUpperFrame());
+            return addRaw(toFrame - track.getUpperFrame());
         }else if(toFrame < track.getLowerFrame()){ // Going backwards and out of bounds
             Track newTrack = track.getPreviousTrack();
             setTrack(newTrack);
             setValue(newTrack.getUpperFrame());
-            return add(toFrame - track.getLowerFrame());
+            return addRaw(toFrame - track.getLowerFrame());
         }else{ // Within bounds
             setValue(toFrame);
             return this;
@@ -86,7 +89,7 @@ public class AutoTrackUpdateFrame implements Frame {
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Frame clone(){
-        return new AutoTrackUpdateFrame(frame, track, section, invertFrameAddition);
+        return new AutoTrackUpdateFrame(value, track, section, invertFrameAddition);
     }
 
     @Override
@@ -98,6 +101,11 @@ public class AutoTrackUpdateFrame implements Frame {
     public void setInvertedFrameAddition(boolean inverted) {
         JRidesPlugin.getLogger().info(LogType.SECTIONS, "Set inverted frame addition " + inverted);
         invertFrameAddition = inverted;
+    }
+
+    @Override
+    public boolean isInvertedFrameAddition() {
+        return invertFrameAddition;
     }
 
     @Override

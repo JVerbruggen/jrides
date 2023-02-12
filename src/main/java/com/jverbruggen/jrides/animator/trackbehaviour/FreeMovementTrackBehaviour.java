@@ -10,6 +10,7 @@ import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import org.bukkit.Bukkit;
 
 public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
     private final double gravityConstant;
@@ -27,12 +28,13 @@ public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements Tr
 
         // --- New mass middle calculation
         Train train = trainHandle.getTrain();
-        Vector3 newHeadOfTrainLocation = section.getLocationFor(train.getHeadOfTrainFrame());
-        Vector3 newTailOfTrainLocation = section.getLocationFor(train.getTailOfTrainFrame());
+        Section backFacingSection = train.getBackFacingTrainFrame().getSection();
+        Vector3 newForwardsFacingFrameLocation = section.getLocationFor(train.getFrontFacingTrainFrame());
+        Vector3 newBackwardsFacingFrameLocation = backFacingSection.getLocationFor(train.getBackFacingTrainFrame());
 
         // --- Gravity speed calculation
         Speed newSpeed = currentSpeed.clone();
-        double pitch = getGravityPitch(train, newHeadOfTrainLocation, newTailOfTrainLocation);
+        double pitch = getGravityPitch(train, newForwardsFacingFrameLocation, newBackwardsFacingFrameLocation);
 
         double dy = Math.sin(pitch/180*3.141592);
 

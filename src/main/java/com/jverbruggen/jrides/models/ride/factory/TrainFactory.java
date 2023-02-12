@@ -14,8 +14,6 @@ import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.AutoTrackUpdateFrame;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
-import com.jverbruggen.jrides.models.properties.frame.LinkedFrame;
-import com.jverbruggen.jrides.models.properties.frame.SimpleFrame;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
@@ -109,7 +107,9 @@ public class TrainFactory {
                     throw new RuntimeException("Cant find where cart index=" + i + " should be placed (section-wise)");
             }
 
+            String cartName = trainIdentifier + "_cart_" + i;
             Cart cart = new SimpleCart(
+                    cartName,
                     seats,
                     armorStand,
                     cartOffset,
@@ -121,10 +121,8 @@ public class TrainFactory {
         Vector3 middleLocation = track.getLocationFor(middleOfTrainFrame);
         Vector3 tailLocation = track.getLocationFor(tailOfTrainFrame);
 
-        boolean facingForwards = true;
-
         Train train = new SimpleTrain(trainIdentifier, carts, headOfTrainFrame, middleOfTrainFrame, tailOfTrainFrame,
-                headLocation, middleLocation, tailLocation, spawnSection, debugMode, facingForwards);
+                headLocation, middleLocation, tailLocation, spawnSection, debugMode);
         spawnSection.addOccupation(train);
 
         return train;

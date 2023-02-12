@@ -1,10 +1,12 @@
 package com.jverbruggen.jrides.animator.trackbehaviour.transfer;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.animator.trackbehaviour.BaseTrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
+import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.math.Matrix4x4;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -14,6 +16,7 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import org.bukkit.Bukkit;
 
 public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
     private final double deceleration;
@@ -83,8 +86,10 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
                         goIntoSwitch = true;
 
                         boolean positiveTrainDirection = currentSection.positiveDirectionToGoTo(nextSection, train);
+                        boolean currentlyFacingForwards = true; // TODO: integrate
 
                         train.setDrivingDirection(positiveTrainDirection);
+                        train.setFacingForwards(currentlyFacingForwards == positiveTrainDirection);
                     }
                     break;
                 case DRIVING:
@@ -160,13 +165,19 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
 
     @Override
     public Section getSectionAtStart(Train train) {
-        if(!transfer.canSafelyInteractWith(train.getHandle())) return null;
+        if(!transfer.canSafelyInteractWith(train.getHandle())){
+            JRidesPlugin.getLogger().info(LogType.SECTIONS, "No safe interact at start");
+            return null;
+        }
         return transfer.getCurrentTransferPosition().getSectionAtStart();
     }
 
     @Override
     public Section getSectionAtEnd(Train train) {
-        if(!transfer.canSafelyInteractWith(train.getHandle())) return null;
+        if(!transfer.canSafelyInteractWith(train.getHandle())){
+            JRidesPlugin.getLogger().info(LogType.SECTIONS, "No safe interact at end");
+            return null;
+        }
         return transfer.getCurrentTransferPosition().getSectionAtEnd();
     }
 
@@ -176,7 +187,6 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
         if(logicalNext != null)
             return logicalNext;
         else{
-            train.setDrivingDirection(false);
             return getSectionAtStart(train);
         }
     }
@@ -187,7 +197,6 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
         if(logicalNext != null)
             return logicalNext;
         else{
-            train.setDrivingDirection(false);
             return getSectionAtEnd(train);
         }
     }

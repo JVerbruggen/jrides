@@ -44,7 +44,7 @@ public class SectionProvider {
     }
 
     public void sectionOccupationLogic(TrainHandle trainHandle, Section fromSection, Section toSection, TrainEnd onTrainEnd, boolean applyNewBehaviour){
-        Train train = trainHandle.getTrain();
+        final Train train = trainHandle.getTrain();
 
         // If the section it is entering is occupied by some train
         if(toSection.isOccupied()){
@@ -52,9 +52,7 @@ public class SectionProvider {
             if(!toSection.getOccupiedBy().equals(train)){
                 // .. crash
                 train.setCrashed(true);
-                JRidesPlugin.getLogger().warning(LogType.CRASH, "Train " + train + " has crashed!");
-                JRidesPlugin.getLogger().warning(LogType.CRASH, train.getHeadSection().toString());
-                JRidesPlugin.getLogger().warning(LogType.CRASH, toSection.toString());
+                sendTrainCrashMessage(train, toSection);
                 // else if that train is self
             }else{
                 JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Occupied");
@@ -82,6 +80,12 @@ public class SectionProvider {
         }
     }
 
+    private void sendTrainCrashMessage(Train train, Section section) {
+        JRidesPlugin.getLogger().warning(LogType.CRASH, "Train " + train + " has crashed!");
+        JRidesPlugin.getLogger().warning(LogType.CRASH, train.getHeadSection().toString());
+        JRidesPlugin.getLogger().warning(LogType.CRASH, section.toString());
+    }
+
     public @NonNull Section getSectionFor(Train train, Section currentSection, Frame fromFrame, Frame toFrame){
         if(currentSection.isInSection(toFrame)) return currentSection;
 
@@ -89,8 +93,8 @@ public class SectionProvider {
             return getSectionOnDifferentTrack(train, currentSection, toFrame);
         }
 
-        Section subsequentNextSection = currentSection.next(train);
-        Section subsequentPreviousSection = currentSection.previous(train);
+        final Section subsequentNextSection = currentSection.next(train);
+        final Section subsequentPreviousSection = currentSection.previous(train);
         if(subsequentNextSection != null){
             if(subsequentNextSection.isInSection(toFrame)) {
                 JRidesPlugin.getLogger().info(LogType.SECTIONS, "isnext!");
@@ -120,15 +124,20 @@ public class SectionProvider {
             }
         }
 
-        Section found = findSectionBySearchingNext(train, toFrame, currentSection);
+        final BiFunction<Section, Train, Section> relativeFunction = train.isPositiveDrivingDirection()
+                ? Section::next
+                : Section::previous;
+        final Section found = findSectionBySearchingRelative(train, toFrame, currentSection, relativeFunction);
+
         if(found == null){
             train.setCrashed(true);
-            JRidesPlugin.getLogger().info(LogType.SECTIONS,
-                    "error: " + currentSection + " to: " + toFrame);
+            JRidesPlugin.getLogger().info(LogType.CRASH,
+                    "Section not found!: " + currentSection + " to: " + toFrame);
+            sendTrainCrashMessage(train, currentSection);
             throw new SectionNotFoundException(train);
         }else{
             JRidesPlugin.getLogger().info(LogType.SECTIONS,
-                    "Next section found when searched!");
+                    "Section found when searched!");
         }
 
         return found;

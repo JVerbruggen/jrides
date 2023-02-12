@@ -71,6 +71,11 @@ public class SimpleFrame implements Frame {
     }
 
     @Override
+    public boolean isInvertedFrameAddition() {
+        return false;
+    }
+
+    @Override
     public void updateTo(Frame other){
         this.frame = other.getValue();
     }

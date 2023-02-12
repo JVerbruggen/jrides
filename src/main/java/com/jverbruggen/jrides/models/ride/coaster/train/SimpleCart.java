@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SimpleCart implements Cart {
+    private final String name;
     private List<Seat> seats;
     private VirtualArmorstand modelArmorstand;
     private Vector3 trackOffset;
@@ -24,7 +25,8 @@ public class SimpleCart implements Cart {
 
     private Quaternion currentOrientation;
 
-    public SimpleCart(List<Seat> seats, VirtualArmorstand modelArmorstand, Vector3 trackOffset, Frame frame) {
+    public SimpleCart(String name, List<Seat> seats, VirtualArmorstand modelArmorstand, Vector3 trackOffset, Frame frame) {
+        this.name = name;
         this.seats = seats;
         this.modelArmorstand = modelArmorstand;
         this.trackOffset = trackOffset;
@@ -33,6 +35,11 @@ public class SimpleCart implements Cart {
         this.currentOrientation = new Quaternion(0,0,0,0);
 
         seats.forEach(s -> s.setParentCart(this));
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -121,6 +128,11 @@ public class SimpleCart implements Cart {
                     passenger.teleport(ejectLocation);
             }
         });
+    }
+
+    @Override
+    public boolean shouldFaceForwards() {
+        return !frame.isInvertedFrameAddition();
     }
 
     @Override

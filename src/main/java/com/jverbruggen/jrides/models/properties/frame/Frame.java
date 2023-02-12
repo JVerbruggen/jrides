@@ -19,6 +19,7 @@ public interface Frame {
     Frame capture();
 
     void setInvertedFrameAddition(boolean inverted);
+    boolean isInvertedFrameAddition();
     void updateTo(Frame other);
 
     static int getCyclicFrameValue(int nonCyclicFrame, int totalFrames){

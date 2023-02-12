@@ -69,6 +69,11 @@ public class CyclicFrame implements Frame {
     }
 
     @Override
+    public boolean isInvertedFrameAddition() {
+        return false;
+    }
+
+    @Override
     public void updateTo(Frame other) {
         setValue(other.getValue());
     }

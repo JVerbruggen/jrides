@@ -1,5 +1,7 @@
 package com.jverbruggen.jrides.models.properties;
 
+import org.bukkit.Bukkit;
+
 public class Speed {
     private double speedPerTick;
     private boolean inverted;
@@ -59,7 +61,6 @@ public class Speed {
     public int getFrameIncrement(){
         final int frameIncrementFactor = 3;
         final double speedPerTick = getSpeedPerTick();
-//        Bukkit.broadcastMessage("speedincr " + speedPerTick + " (" + inverted + ")");
 
         return (int) (speedPerTick * frameIncrementFactor);
     }

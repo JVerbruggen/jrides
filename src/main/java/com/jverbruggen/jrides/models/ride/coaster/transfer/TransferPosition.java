@@ -60,4 +60,9 @@ public class TransferPosition {
     public void setSectionAtEnd(Section sectionAtEnd) {
         this.sectionAtEnd = sectionAtEnd;
     }
+
+    @Override
+    public String toString() {
+        return "<TPos start:" + sectionAtStart + ", end:" + sectionAtEnd + ">";
+    }
 }

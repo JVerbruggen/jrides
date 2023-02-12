@@ -12,6 +12,7 @@ import com.jverbruggen.jrides.models.ride.Seat;
 import java.util.List;
 
 public interface Cart {
+    String getName();
     List<Seat> getSeats();
     List<Player> getPassengers();
     Frame getFrame();
@@ -26,6 +27,7 @@ public interface Cart {
     void setParentTrain(Train train);
     Train getParentTrain();
     void ejectPassengers();
+    boolean shouldFaceForwards();
 
     static Vector3 calculateLocation(Vector3 trackLocation, Vector3 cartOffset, Quaternion orientation){
         Matrix4x4 matrix = new Matrix4x4();

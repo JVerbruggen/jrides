@@ -16,6 +16,9 @@ public interface Train {
     List<Cart> getCarts();
     int size();
 
+    Frame getFrontFacingTrainFrame();
+    Frame getBackFacingTrainFrame();
+
     Frame getMiddleOfTrainFrame();
     Frame getHeadOfTrainFrame();
     Frame getTailOfTrainFrame();
@@ -38,12 +41,11 @@ public interface Train {
     void setCrashed(boolean crashed);
     boolean isCrashed();
     boolean equals(Train other);
-    boolean isFacingForwards();
-    void setFacingForwards(boolean forwards);
-    void flipFacing();
     TrackEnd getDirection();
     boolean isPositiveDrivingDirection();
     boolean drivingTowardsEnd();
+    boolean isFacingForwards();
+    void setFacingForwards(boolean forwards);
     void setDrivingDirection(boolean positive);
     void setInvertedFrameAddition(boolean inverted);
 

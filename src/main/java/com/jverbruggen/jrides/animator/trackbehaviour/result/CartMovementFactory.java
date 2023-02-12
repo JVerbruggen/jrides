@@ -27,15 +27,13 @@ public class CartMovementFactory {
             Frame cartFrame = cart.getFrame();
             Frame newShadedCartFrame = cartFrame.clone().add(speedFrameIncrement);
 
-//            Bukkit.broadcastMessage("CART FRAME -- INC " + speedFrameIncrement);
             sectionProvider.addFramesWithSectionLogic(trainHandle, cartFrame, newShadedCartFrame.getValue());
-//            Bukkit.broadcastMessage("END CART FRAME -- ");
 
             Section cartSection = cartFrame.getSection();
             Vector3 cartPositionOnTrack = cartSection.getLocationFor(cartFrame);
-            Bukkit.broadcastMessage(cartFrame + "");
-            Bukkit.broadcastMessage(cartPositionOnTrack.getY() + " y");
-            Quaternion orientation = cartSection.getOrientationFor(cartFrame);
+            Quaternion orientation = cartSection.getOrientationFor(cartFrame).clone();
+            if(cartFrame.isInvertedFrameAddition())
+                orientation.rotateY(180);
 
             Vector3 cartPosition = Cart.calculateLocation(cartPositionOnTrack, cart.getTrackOffset(), orientation);
 

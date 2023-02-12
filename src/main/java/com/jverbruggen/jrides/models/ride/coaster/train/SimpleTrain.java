@@ -10,6 +10,7 @@ import com.jverbruggen.jrides.models.properties.TrackEnd;
 import com.jverbruggen.jrides.models.properties.TrainEnd;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
 
 import java.util.ArrayList;
@@ -34,11 +35,11 @@ public class SimpleTrain implements Train {
     private String statusMessage;
     private List<Player> statusMessageListeners;
     private boolean debugMode;
-    private boolean facingForwards;
     private boolean drivingTowardsPositiveDirection;
+    private boolean forwards;
 
     public SimpleTrain(String name, List<Cart> carts, Frame headOfTrainFrame, Frame middleOfTrainFrame, Frame tailOfTrainFrame,
-                       Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation, Section section, boolean debugMode, boolean facingForwards) {
+                       Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation, Section section, boolean debugMode) {
         this.name = name;
         this.carts = carts;
         this.headOfTrainFrame = headOfTrainFrame;
@@ -59,8 +60,8 @@ public class SimpleTrain implements Train {
         this.statusMessageListeners = new ArrayList<>();
         this.debugMode = debugMode;
 
-        this.facingForwards = facingForwards;
         this.drivingTowardsPositiveDirection = true;
+        this.forwards = true;
 
         getCarts().forEach(c -> c.setParentTrain(this));
     }
@@ -78,6 +79,16 @@ public class SimpleTrain implements Train {
     @Override
     public int size() {
         return carts.size();
+    }
+
+    @Override
+    public Frame getFrontFacingTrainFrame() {
+        return forwards ? getHeadOfTrainFrame() : getTailOfTrainFrame();
+    }
+
+    @Override
+    public Frame getBackFacingTrainFrame() {
+        return forwards ? getTailOfTrainFrame() : getHeadOfTrainFrame();
     }
 
     @Override
@@ -189,18 +200,6 @@ public class SimpleTrain implements Train {
         return this.getName().equalsIgnoreCase(other.getName());
     }
 
-    @Deprecated
-    @Override
-    public boolean isFacingForwards() {
-        return facingForwards;
-    }
-
-    @Deprecated
-    @Override
-    public void setFacingForwards(boolean forwards) {
-        facingForwards = forwards;
-    }
-
     @Override
     public TrackEnd getDirection() {
         return getHandle().getSpeed().isPositive() ? TrackEnd.END : TrackEnd.START;
@@ -217,9 +216,20 @@ public class SimpleTrain implements Train {
     }
 
     @Override
+    public boolean isFacingForwards() {
+        return forwards;
+    }
+
+    @Override
+    public void setFacingForwards(boolean forwards) {
+        this.forwards = forwards;
+    }
+
+    @Override
     public void setDrivingDirection(boolean positive) {
         drivingTowardsPositiveDirection = positive;
         getHandle().getSpeed().setInverted(!positive);
+//        Bukkit.broadcastMessage("Set driving direction for " + this + " to " + positive);
     }
 
     @Override
@@ -325,12 +335,6 @@ public class SimpleTrain implements Train {
     @Override
     public boolean statusModeEnabled(Player player) {
         return debugMode && player.getBukkitPlayer().hasPermission(Permissions.STATUS_INSPECTION);
-    }
-
-    @Deprecated
-    @Override
-    public void flipFacing() {
-        facingForwards = !facingForwards;
     }
 
     private void playSound(String soundName){
