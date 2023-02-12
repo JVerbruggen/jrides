@@ -46,6 +46,7 @@ public class LanguageFile {
     public String errorPlayerCommandOnlyMessage = "Only players can execute this command";
     public String errorUnknownCommandMessage = "Unknown jrides command. Type /jrides for help";
     public String errorOperatingCabinOccupied = "You can not take this operating cabin since it is already in use by another operator";
+    public String errorRideControlMenuNotFound = "Ride control menu was not found";
 
     public String buttonClaimCabin = "Claim operating cabin";
     public String buttonCabinClaimed = "Claim operating cabin";
