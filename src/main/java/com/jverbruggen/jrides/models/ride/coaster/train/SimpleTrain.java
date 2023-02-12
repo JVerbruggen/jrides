@@ -10,7 +10,6 @@ import com.jverbruggen.jrides.models.properties.TrackEnd;
 import com.jverbruggen.jrides.models.properties.TrainEnd;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.section.Section;
-import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
 
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import java.util.List;
 public class SimpleTrain implements Train {
     private final String name;
     private List<Cart> carts;
-    private Frame massMiddleFrame;
+    private Frame middleOfTrainFrame;
     private Frame headOfTrainFrame;
     private Frame tailOfTrainFrame;
     private List<Section> currentSections;
@@ -38,12 +37,12 @@ public class SimpleTrain implements Train {
     private boolean facingForwards;
     private boolean drivingTowardsPositiveDirection;
 
-    public SimpleTrain(String name, List<Cart> carts, Frame headOfTrainFrame, Frame massMiddleFrame, Frame tailOfTrainFrame,
+    public SimpleTrain(String name, List<Cart> carts, Frame headOfTrainFrame, Frame middleOfTrainFrame, Frame tailOfTrainFrame,
                        Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation, Section section, boolean debugMode, boolean facingForwards) {
         this.name = name;
         this.carts = carts;
         this.headOfTrainFrame = headOfTrainFrame;
-        this.massMiddleFrame = massMiddleFrame;
+        this.middleOfTrainFrame = middleOfTrainFrame;
         this.tailOfTrainFrame = tailOfTrainFrame;
         this.crashed = false;
 
@@ -83,7 +82,7 @@ public class SimpleTrain implements Train {
 
     @Override
     public Frame getMiddleOfTrainFrame() {
-        return massMiddleFrame;
+        return middleOfTrainFrame;
     }
 
     @Override
@@ -226,7 +225,7 @@ public class SimpleTrain implements Train {
     @Override
     public void setInvertedFrameAddition(boolean inverted) {
         headOfTrainFrame.setInvertedFrameAddition(inverted);
-        massMiddleFrame.setInvertedFrameAddition(inverted);
+        middleOfTrainFrame.setInvertedFrameAddition(inverted);
         tailOfTrainFrame.setInvertedFrameAddition(inverted);
 
         for(Cart cart : getCarts()){

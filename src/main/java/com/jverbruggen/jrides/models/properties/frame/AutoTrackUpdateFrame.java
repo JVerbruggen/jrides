@@ -1,5 +1,7 @@
 package com.jverbruggen.jrides.models.properties.frame;
 
+import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import org.bukkit.Bukkit;
@@ -53,6 +55,7 @@ public class AutoTrackUpdateFrame implements Frame {
     @Override
     public void setSection(Section section) {
         this.section = section;
+        JRidesPlugin.getLogger().info(LogType.SECTIONS, "Updated frame value " + getValue() + " to section " + section);
     }
 
     @Override
@@ -93,13 +96,13 @@ public class AutoTrackUpdateFrame implements Frame {
 
     @Override
     public void setInvertedFrameAddition(boolean inverted) {
-        Bukkit.broadcastMessage("Set inverted frame addition " + inverted);
+        JRidesPlugin.getLogger().info(LogType.SECTIONS, "Set inverted frame addition " + inverted);
         invertFrameAddition = inverted;
     }
 
     @Override
     public void updateTo(Frame other){
-        this.frame = other.getValue();
+        setValue(other.getValue());
     }
 
     @Override

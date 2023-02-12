@@ -14,6 +14,7 @@ import com.jverbruggen.jrides.models.ride.section.Section;
 import org.bukkit.Bukkit;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public abstract class BaseTrackBehaviour implements TrackBehaviour {
     protected final CartMovementFactory cartMovementFactory;
@@ -36,7 +37,8 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
         Frame newTailOfTrainFrame = train.getTailOfTrainFrame().clone().add(speedFrameIncrement);
         Vector3 newTrainLocation = section.getLocationFor(newMiddleOfTrainFrame);
 
-        HashMap<Cart, CartMovement> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getCarts(), speedFrameIncrement, section);
+        HashMap<Cart, CartMovement> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getHandle(), train.getCarts(), speedFrameIncrement, section);
+//        HashMap<Cart, CartMovement> cartMovements = new LinkedHashMap<>();
 
         return new TrainMovement(speed, newHeadOfTrainFrame, newMiddleOfTrainFrame, newTailOfTrainFrame, newTrainLocation, cartMovements);
     }

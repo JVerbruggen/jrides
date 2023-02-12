@@ -30,7 +30,7 @@ public class SimpleCart implements Cart {
         this.trackOffset = trackOffset;
         this.frame = frame;
         this.parentTrain = null;
-        this.currentOrientation = null;
+        this.currentOrientation = new Quaternion(0,0,0,0);
 
         seats.forEach(s -> s.setParentCart(this));
     }

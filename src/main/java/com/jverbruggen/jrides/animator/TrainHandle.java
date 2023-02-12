@@ -17,7 +17,6 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionProvider;
-import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
 
 import java.util.Map;
@@ -60,52 +59,11 @@ public class TrainHandle {
         nextEffect = coasterHandle.getEffectTriggerCollection().first();
     }
 
-    private void sectionLogic(Section fromSection, Section toSection, TrainEnd onTrainEnd, boolean applyNewBehaviour){
-        // If the section it is entering is occupied by some train
-        if(toSection.isOccupied()){
-            // If that train is a different train
-            if(!toSection.getOccupiedBy().equals(this.train)){
-                // .. crash
-                train.setCrashed(true);
-                JRidesPlugin.getLogger().warning(LogType.CRASH, "Train " + train + " has crashed!");
-                JRidesPlugin.getLogger().warning(LogType.CRASH, train.getHeadSection().toString());
-                JRidesPlugin.getLogger().warning(LogType.CRASH, toSection.toString());
-                // else if that train is self
-            }else{
-                if(applyNewBehaviour) trackBehaviour = toSection.getTrackBehaviour();
-//                Bukkit.broadcastMessage("From " + fromSection + ", to " + toSection + ", spans:" + fromSection.spansOver(train));
-                if(!fromSection.spansOver(train)){
-                    fromSection.removeOccupation(train);
-                    train.removeCurrentSection(fromSection);
-                    fromSection.getTrackBehaviour().trainExitedAtEnd();
-                }
-            }
-        // else if the section is free
-        }else{
-            // .. occupy it
-            toSection.addOccupation(train);
-            train.addCurrentSection(toSection, onTrainEnd);
-            if(applyNewBehaviour){
-                trackBehaviour = toSection.getTrackBehaviour();
-
-                //TODO: Check where it is entering from (assuming always from start now)
-                train.setDrivingDirection(true);
-            }
-        }
-    }
-
     public void tick(){
         if(train.isCrashed()) return;
 
-        // --- Fetch current/old sections (before move operation)
-        Section fromHeadSection = train.getHeadSection();
-        Section fromTailSection = train.getTailSection();
-        Frame fromHeadFrame = train.getHeadOfTrainFrame().capture();
-        Frame fromTailFrame = train.getTailOfTrainFrame().capture();
-        boolean positiveDrivingDirection = train.isPositiveDrivingDirection();
-
         // --- Calculate movement that should be applied to the train
-        TrainMovement result = trackBehaviour.move(speedBPS, this, fromHeadSection);
+        TrainMovement result = trackBehaviour.move(speedBPS, this, train.getHeadSection());
         if(result == null) return;
 
         // --- Apply movement: new head frame and speed
@@ -114,9 +72,21 @@ public class TrainHandle {
         Frame trainHeadOfTrainFrame = train.getHeadOfTrainFrame();
         Frame trainMiddleOfTrainFrame = train.getMiddleOfTrainFrame();
         Frame trainTailOfTrainFrame = train.getTailOfTrainFrame();
-        trainHeadOfTrainFrame.updateTo(result.getNewHeadOfTrainFrame());
-        trainMiddleOfTrainFrame.updateTo(result.getNewMiddleOfTrainFrame());
-        trainTailOfTrainFrame.updateTo(result.getNewTailOfTrainFrame());
+
+        sectionProvider.addFramesWithSectionLogic(this, trainHeadOfTrainFrame, result.getNewHeadOfTrainFrame().getValue(),
+                true, TrainEnd.HEAD, "HEAD", true);
+        sectionProvider.addFramesWithSectionLogic(this, trainMiddleOfTrainFrame, result.getNewMiddleOfTrainFrame().getValue());
+        sectionProvider.addFramesWithSectionLogic(this, trainTailOfTrainFrame, result.getNewTailOfTrainFrame().getValue(),
+                true, TrainEnd.TAIL, "TAIL", false);
+
+        JRidesPlugin.getLogger().info(LogType.SECTIONS, trainHeadOfTrainFrame + " -= "
+                + trainMiddleOfTrainFrame + " =- " + trainTailOfTrainFrame);
+
+        // --- Set new train location according to new frames
+        Vector3 headLocation = track.getLocationFor(trainHeadOfTrainFrame);
+        Vector3 middleLocation = track.getLocationFor(trainMiddleOfTrainFrame);
+        Vector3 tailLocation = track.getLocationFor(trainTailOfTrainFrame);
+        train.setCurrentLocation(headLocation, middleLocation, tailLocation);
 
         // --- Move carts according to instructions
         Set<Map.Entry<Cart, CartMovement>> cartMovements = result.getCartMovements();
@@ -126,37 +96,6 @@ public class TrainHandle {
                 CartMovement movement = cartMovement.getValue();
                 cart.setPosition(movement);
             }
-        }
-
-        Bukkit.broadcastMessage(trainHeadOfTrainFrame + " -=- " + trainTailOfTrainFrame);
-
-        // --- Set new train location according to new frames
-        Vector3 headLocation = track.getLocationFor(trainHeadOfTrainFrame);
-        Vector3 middleLocation = track.getLocationFor(trainMiddleOfTrainFrame);
-        Vector3 tailLocation = track.getLocationFor(trainTailOfTrainFrame);
-        train.setCurrentLocation(headLocation, middleLocation, tailLocation);
-
-        // --- Section occupations
-        // ---   Calculate new head section occupation
-        Section toHeadSection = sectionProvider.getSectionFor(train, fromHeadSection, fromHeadFrame, trainHeadOfTrainFrame);
-        if(toHeadSection != fromHeadSection){
-            TrainEnd trainEnd = train.drivingTowardsEnd() ? TrainEnd.HEAD : TrainEnd.TAIL;
-            Bukkit.broadcastMessage("HEAD: " + trainEnd + "(" + positiveDrivingDirection);
-
-            sectionLogic(fromHeadSection, toHeadSection, trainEnd, true);
-            trainHeadOfTrainFrame.setSection(toHeadSection);
-            trainHeadOfTrainFrame.setInvertedFrameAddition(!positiveDrivingDirection);
-        }
-
-        // ---   Calculate new tail section occupation
-        Section toTailSection = sectionProvider.getSectionFor(train, fromTailSection, fromTailFrame, trainTailOfTrainFrame);
-        if(toTailSection != fromTailSection){
-            TrainEnd trainEnd = train.drivingTowardsEnd() ? TrainEnd.HEAD : TrainEnd.TAIL;
-            Bukkit.broadcastMessage("TAIL: " + trainEnd + "(" + positiveDrivingDirection);
-
-            sectionLogic(fromTailSection, toTailSection, trainEnd, false);
-            trainTailOfTrainFrame.setSection(toTailSection);
-            trainTailOfTrainFrame.setInvertedFrameAddition(!positiveDrivingDirection);
         }
 
         playEffects(trainHeadOfTrainFrame);
@@ -206,5 +145,9 @@ public class TrainHandle {
 
     public Speed getSpeed() {
         return speedBPS;
+    }
+
+    public void setTrackBehaviour(TrackBehaviour trackBehaviour) {
+        this.trackBehaviour = trackBehaviour;
     }
 }

@@ -1,9 +1,12 @@
 package com.jverbruggen.jrides.models.ride.section;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
+import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import org.bukkit.Bukkit;
 
 public class SimpleSection extends BaseSection {
     private Frame startFrame;
@@ -92,11 +95,16 @@ public class SimpleSection extends BaseSection {
     public boolean spansOver(Train train) {
         Frame headOfTrainFrame = train.getHeadOfTrainFrame();
         Frame tailOfTrainFrame = train.getTailOfTrainFrame();
+        JRidesPlugin.getLogger().info(LogType.SECTIONS,
+                "From " + this + " Spans over " + headOfTrainFrame.getValue() + " - " + tailOfTrainFrame.getValue());
+
+        Frame lowerFrame = train.isPositiveDrivingDirection() ? tailOfTrainFrame : headOfTrainFrame;
+        Frame upperFrame = train.isPositiveDrivingDirection() ? headOfTrainFrame : tailOfTrainFrame;
 
         return isInSection(headOfTrainFrame)
                 || isInSection(tailOfTrainFrame)
-                || Frame.isBetweenFrames(tailOfTrainFrame, headOfTrainFrame, endFrame)
-                || Frame.isBetweenFrames(tailOfTrainFrame, headOfTrainFrame, startFrame);
+                || Frame.isBetweenFrames(lowerFrame, upperFrame, endFrame)
+                || Frame.isBetweenFrames(lowerFrame, upperFrame, startFrame);
     }
 
     @Override
