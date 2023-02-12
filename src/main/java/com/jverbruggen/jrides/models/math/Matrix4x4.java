@@ -159,8 +159,8 @@ public class Matrix4x4 implements Cloneable {
      */
     public final boolean invert() {
         // Copy source matrix to t1tmp
-        double mInput[] = new double[16];
-        int row_perm[] = new int[4];
+        double[] mInput = new double[16];
+        int[] row_perm = new int[4];
         this.toArray(mInput);
         if (!MatrixMath.luDecomposition(mInput, row_perm)) {
             // Matrix has no inverse
@@ -168,7 +168,7 @@ public class Matrix4x4 implements Cloneable {
         }
 
         // Perform back substitution on the identity matrix
-        double mOutput[] = new double[16];
+        double[] mOutput = new double[16];
         for(int i=0;i<16;i++) mOutput[i] = 0.0;
         mOutput[0] = 1.0; mOutput[5] = 1.0; mOutput[10] = 1.0; mOutput[15] = 1.0;
         MatrixMath.luBacksubstitution(mInput, row_perm, mOutput);
@@ -896,7 +896,7 @@ public class Matrix4x4 implements Cloneable {
     }
 
     // From https://math.stackexchange.com/questions/296794
-    public static Matrix4x4 computeProjectionMatrix(Vector3 p[])
+    public static Matrix4x4 computeProjectionMatrix(Vector3[] p)
     {
         Matrix4x4 m = new Matrix4x4(
                 p[0].x, p[1].x, p[2].x, 0.0f,

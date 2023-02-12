@@ -86,10 +86,10 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
                         goIntoSwitch = true;
 
                         boolean positiveTrainDirection = currentSection.positiveDirectionToGoTo(nextSection, train);
-                        boolean currentlyFacingForwards = true; // TODO: integrate
+                        boolean currentlyFacingForwards = train.isFacingForwards();
 
-                        train.setDrivingDirection(positiveTrainDirection);
                         train.setFacingForwards(currentlyFacingForwards == positiveTrainDirection);
+                        train.setDrivingDirection(positiveTrainDirection);
                     }
                     break;
                 case DRIVING:

@@ -344,11 +344,11 @@ public class MathUtil {
     public static Vector rotate(float yaw, float pitch, double x, double y, double z) {
         // Conversions found by (a lot of) testing
         double angle;
-        angle = Math.toRadians((double) yaw);
+        angle = Math.toRadians(yaw);
         double sinyaw = Math.sin(angle);
         double cosyaw = Math.cos(angle);
 
-        angle = Math.toRadians((double) pitch);
+        angle = Math.toRadians(pitch);
         double sinpitch = Math.sin(angle);
         double cospitch = Math.cos(angle);
 
@@ -527,8 +527,8 @@ public class MathUtil {
      */
     public static Vector getDirection(float yaw, float pitch) {
         Vector vector = new Vector();
-        double rotX = Math.toRadians((double) yaw);
-        double rotY = Math.toRadians((double) pitch);
+        double rotX = Math.toRadians(yaw);
+        double rotY = Math.toRadians(pitch);
         vector.setY(-Math.sin(rotY));
         double h = Math.cos(rotY);
         vector.setX(-h * Math.sin(rotX));

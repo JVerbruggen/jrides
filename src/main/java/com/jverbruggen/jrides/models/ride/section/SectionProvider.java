@@ -40,7 +40,7 @@ public class SectionProvider {
         }
 
         toFrame.setSection(toNewSection);
-        toFrame.setInvertedFrameAddition(!positiveDrivingDirection);
+        toFrame.setInvertedFrameAddition(!train.isFacingForwards());
     }
 
     public void sectionOccupationLogic(TrainHandle trainHandle, Section fromSection, Section toSection, TrainEnd onTrainEnd, boolean applyNewBehaviour){
@@ -86,22 +86,22 @@ public class SectionProvider {
         JRidesPlugin.getLogger().warning(LogType.CRASH, section.toString());
     }
 
-    public @NonNull Section getSectionFor(Train train, Section currentSection, Frame fromFrame, Frame toFrame){
-        if(currentSection.isInSection(toFrame)) return currentSection;
+    public @NonNull Section getSectionFor(Train train, Section fromSection, Frame fromFrame, Frame toFrame){
+        if(fromSection.isInSection(toFrame)) return fromSection;
 
         if(fromFrame.getTrack() != toFrame.getTrack()){
-            return getSectionOnDifferentTrack(train, currentSection, toFrame);
+            return getSectionOnDifferentTrack(train, fromSection, toFrame);
         }
 
-        final Section subsequentNextSection = currentSection.next(train);
-        final Section subsequentPreviousSection = currentSection.previous(train);
+        final Section subsequentNextSection = fromSection.next(train);
+        final Section subsequentPreviousSection = fromSection.previous(train);
         if(subsequentNextSection != null){
             if(subsequentNextSection.isInSection(toFrame)) {
                 JRidesPlugin.getLogger().info(LogType.SECTIONS, "isnext!");
                 return subsequentNextSection;
             }
-            if(currentSection.isInSection(fromFrame) && train.getDirection() == TrackEnd.END){
-                int overshotFrameAmount = getOvershotFrameAmount(train, currentSection, toFrame);
+            if(fromSection.isInSection(fromFrame) && train.getDirection() == TrackEnd.END){
+                int overshotFrameAmount = getOvershotFrameAmount(train, fromSection, toFrame);
                 int newFrameValue = subsequentNextSection.getStartFrame().getValue() + overshotFrameAmount;
                 JRidesPlugin.getLogger().info(LogType.SECTIONS,
                         "isnext! special - to: " + toFrame.getValue() + " over: " + overshotFrameAmount + ", new: " + newFrameValue);
@@ -113,8 +113,8 @@ public class SectionProvider {
             if(subsequentPreviousSection.isInSection(toFrame)){ // Unchecked!
                 JRidesPlugin.getLogger().info(LogType.SECTIONS, "isprev!");
                 return subsequentPreviousSection;
-            }else if(currentSection.isInSection(fromFrame) && train.getDirection() == TrackEnd.START){
-                int overshotFrameAmount = getOvershotFrameAmount(train, currentSection, toFrame);
+            }else if(fromSection.isInSection(fromFrame) && train.getDirection() == TrackEnd.START){
+                int overshotFrameAmount = getOvershotFrameAmount(train, fromSection, toFrame);
                 int newFrameValue = subsequentPreviousSection.getEndFrame().getValue() + overshotFrameAmount;
                 JRidesPlugin.getLogger().info(LogType.SECTIONS,
                         "isprev! special - to: " + toFrame.getValue() + " over: " + overshotFrameAmount + ", new: " + newFrameValue);
@@ -127,13 +127,13 @@ public class SectionProvider {
         final BiFunction<Section, Train, Section> relativeFunction = train.isPositiveDrivingDirection()
                 ? Section::next
                 : Section::previous;
-        final Section found = findSectionBySearchingRelative(train, toFrame, currentSection, relativeFunction);
+        final Section found = findSectionBySearchingRelative(train, toFrame, fromSection, relativeFunction);
 
         if(found == null){
             train.setCrashed(true);
             JRidesPlugin.getLogger().info(LogType.CRASH,
-                    "Section not found!: " + currentSection + " to: " + toFrame);
-            sendTrainCrashMessage(train, currentSection);
+                    "Section not found!: " + fromSection + " to: " + toFrame);
+            sendTrainCrashMessage(train, fromSection);
             throw new SectionNotFoundException(train);
         }else{
             JRidesPlugin.getLogger().info(LogType.SECTIONS,
@@ -144,10 +144,11 @@ public class SectionProvider {
     }
 
     private int getOvershotFrameAmount(Train train, Section currentSection, Frame toFrame){
-        if(train.isPositiveDrivingDirection())
+        if(train.isPositiveDrivingDirection() && !toFrame.isInvertedFrameAddition()) {
             return toFrame.getValue() - currentSection.getEndFrame().getValue();
-        else
+        }else{
             return currentSection.getStartFrame().getValue() - toFrame.getValue();
+        }
     }
 
     public Section findSectionBySearchingNext(Train train, Frame frame, Section firstSection) {

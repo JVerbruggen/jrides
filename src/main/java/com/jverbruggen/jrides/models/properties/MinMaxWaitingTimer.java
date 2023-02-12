@@ -118,4 +118,9 @@ public class MinMaxWaitingTimer {
     public void sendGenericWaitingNotification(List<Player> players){
         players.forEach(p -> p.sendActionbarMessage(ChatColor.GOLD + languageFile.notificationDispatchWaitGeneric));
     }
+
+    @Override
+    public String toString() {
+        return "<Timer " + waitingTimerState + " / " + preferredWaitingTime + ">";
+    }
 }

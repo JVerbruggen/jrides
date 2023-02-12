@@ -23,7 +23,7 @@ public abstract class BaseControlMode implements ControlMode {
         this.triggerContext = null;
         this.dispatchLockCollection = dispatchLockCollection;
 
-        this.dispatchIntervalActive = false;
+        this.dispatchIntervalActive = stationHandle.hasTrain();
         this.tickInterval = 5L;
         this.tickIntervalState = 0;
     }

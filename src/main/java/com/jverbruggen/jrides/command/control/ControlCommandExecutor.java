@@ -1,10 +1,8 @@
 package com.jverbruggen.jrides.command.control;
 
-import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.command.BaseCommandExecutor;
 import com.jverbruggen.jrides.command.context.CommandContext;
-import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.command.Command;
@@ -14,17 +12,13 @@ import java.util.List;
 
 public class ControlCommandExecutor extends BaseCommandExecutor {
     private final RideManager rideManager;
-    private final RideControlMenuFactory rideControlMenuFactory;
-    private final ControlMenuCommandExecutor controlMenuCommandExecutor;
-    private final ControlDispatchCommandExecutor controlDispatchCommandExecutor;
 
     public ControlCommandExecutor(int depth) {
         super(depth);
         rideManager = ServiceProvider.getSingleton(RideManager.class);
-        rideControlMenuFactory = ServiceProvider.getSingleton(RideControlMenuFactory.class);
 
-        controlMenuCommandExecutor = registerSubCommand(new ControlMenuCommandExecutor(depth+2));
-        controlDispatchCommandExecutor = registerSubCommand(new ControlDispatchCommandExecutor(depth+2));
+        registerSubCommand(new ControlMenuCommandExecutor(depth+2));
+        registerSubCommand(new ControlDispatchCommandExecutor(depth+2));
     }
 
     @Override
@@ -34,14 +28,12 @@ public class ControlCommandExecutor extends BaseCommandExecutor {
             return true;
         }
 
-
         String identifier = args[1];
         String subCommand = args[2];
 
         commandContext.add(RideHandle.class, rideManager.getRideHandle(identifier));
 
         runSubCommand(commandSender, command, arg, args, subCommand, commandContext);
-
         return true;
     }
 

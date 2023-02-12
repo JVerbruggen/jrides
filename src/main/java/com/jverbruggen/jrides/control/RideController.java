@@ -30,6 +30,7 @@ public class RideController {
 
         if(this.controlMode == null) return;
         this.controlMode.setTriggerContext(getTriggerContext());
+        active = true;
     }
 
     public TriggerContext getTriggerContext() {
@@ -42,6 +43,7 @@ public class RideController {
         }else{
             if(rideHandle != null){
                 newControlMode.setTriggerContext(getTriggerContext());
+                active = true;
             }
         }
 

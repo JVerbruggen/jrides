@@ -24,7 +24,7 @@ public class MatrixMath {
     public static boolean luDecomposition(double[] matrix0,
                                           int[] row_perm) {
 
-        double row_scale[] = new double[4];
+        double[] row_scale = new double[4];
 
         // Determine implicit scaling information by looping over rows
         {

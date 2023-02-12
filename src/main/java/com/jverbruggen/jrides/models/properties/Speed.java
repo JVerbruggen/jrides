@@ -83,6 +83,10 @@ public class Speed {
         this.inverted = inverted;
     }
 
+    public boolean isInverted() {
+        return inverted;
+    }
+
     @Override
     public String toString() {
         return speedPerTick + "b/t";

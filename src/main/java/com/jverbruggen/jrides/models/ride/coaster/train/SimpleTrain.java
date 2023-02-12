@@ -228,8 +228,7 @@ public class SimpleTrain implements Train {
     @Override
     public void setDrivingDirection(boolean positive) {
         drivingTowardsPositiveDirection = positive;
-        getHandle().getSpeed().setInverted(!positive);
-//        Bukkit.broadcastMessage("Set driving direction for " + this + " to " + positive);
+        getHandle().getSpeed().setInverted(!forwards); // TODO: untested
     }
 
     @Override
