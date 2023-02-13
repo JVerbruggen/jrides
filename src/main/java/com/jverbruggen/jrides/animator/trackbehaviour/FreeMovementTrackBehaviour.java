@@ -28,7 +28,6 @@ public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements Tr
 
         // --- New mass middle calculation
         Train train = trainHandle.getTrain();
-        Bukkit.broadcastMessage("forwards: " + train.isFacingForwards());
         Section backFacingSection = train.getBackFacingTrainFrame().getSection();
         Vector3 newForwardsFacingFrameLocation = section.getLocationFor(train.getFrontFacingTrainFrame());
         Vector3 newBackwardsFacingFrameLocation = backFacingSection.getLocationFor(train.getBackFacingTrainFrame());

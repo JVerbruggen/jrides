@@ -145,6 +145,6 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     }
 
     public static Vector3 getHeadOffset(){
-        return new Vector3(0, 1.8, 0);
+        return new Vector3(0, 1.7, 0);
     }
 }
