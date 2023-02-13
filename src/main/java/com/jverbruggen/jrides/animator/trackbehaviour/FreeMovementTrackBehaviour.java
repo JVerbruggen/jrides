@@ -28,6 +28,7 @@ public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements Tr
 
         // --- New mass middle calculation
         Train train = trainHandle.getTrain();
+        Bukkit.broadcastMessage("forwards: " + train.isFacingForwards());
         Section backFacingSection = train.getBackFacingTrainFrame().getSection();
         Vector3 newForwardsFacingFrameLocation = section.getLocationFor(train.getFrontFacingTrainFrame());
         Vector3 newBackwardsFacingFrameLocation = backFacingSection.getLocationFor(train.getBackFacingTrainFrame());
@@ -46,7 +47,10 @@ public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements Tr
 
     private double getGravityPitch(Train train, Vector3 newHeadOfTrainLocation, Vector3 newTailOfTrainLocation){
         if(train.getCarts().size() == 1){
-            return -train.getCarts().get(0).getOrientation().getRoll();
+            int forwardsMulti = -1;
+            if(!train.isFacingForwards())
+                forwardsMulti = 1;
+            return forwardsMulti * train.getCarts().get(0).getOrientation().getRoll();
         }else{
             Vector3 headTailDifference = Vector3.subtract(newHeadOfTrainLocation, newTailOfTrainLocation);
             return Quaternion.fromLookDirection(headTailDifference.toBukkitVector()).getPitch();

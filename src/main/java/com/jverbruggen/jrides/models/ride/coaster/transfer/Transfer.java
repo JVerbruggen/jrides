@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionReference;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,13 +82,8 @@ public class Transfer {
             Quaternion currentCartOrientation = cart.getOrientation();
             if(currentCartOrientation == null) throw new RuntimeException("Cart doesn't have orientation");
 
-            Vector3 trackPositionOffset = Vector3.subtract(currentLocation, getOrigin());
-
-            Frame cartFrame = cart.getFrame();
-            Vector3 nonRotatedCartPosition = cartFrame.getTrack().getLocationFor(cartFrame);
-            nonRotatedCartPosition = Vector3.add(nonRotatedCartPosition, cart.getTrackOffset());
-            nonRotatedCartPosition = Vector3.add(nonRotatedCartPosition, trackPositionOffset);
-            nonRotatedCartPosition = Vector3.add(nonRotatedCartPosition, Cart.getArmorstandHeightCompensationVector());
+            Vector3 nonRotatedCartPosition = cart.getPosition();
+            nonRotatedCartPosition = Vector3.add(nonRotatedCartPosition, Vector3.subtract(currentLocation, getOrigin()));
 
             Vector3 offsetCartPosition = Vector3.subtract(nonRotatedCartPosition, currentLocation);
 
@@ -185,16 +181,14 @@ public class Transfer {
     }
 
     private void moveTrain(){
-        Matrix4x4 matrix = new Matrix4x4();
-        matrix.translate(getCurrentLocation());
         Vector3 armorstandCompenstationVector = Cart.getArmorstandHeightCompensationVector();
 
         for(CartOffsetFromTransferOrigin cartProgramming : cartPositions){
+            Matrix4x4 matrix = new Matrix4x4();
+            matrix.translate(getCurrentLocation());
+
             Quaternion cartOrientation = cartProgramming.getOrientation();
             Vector3 cartPosition = cartProgramming.getPosition();
-            Quaternion cartOrientationInvert = cartOrientation.clone();
-            cartOrientationInvert.invert();
-            Vector3 cartPositionInvert = cartPosition.negate();
 
             matrix.translate(armorstandCompenstationVector);
             matrix.rotate(getCurrentOrientation());
@@ -204,11 +198,6 @@ public class Transfer {
             newCartOrientation.multiply(cartOrientation);
 
             cartProgramming.getCart().setPosition(matrix.toVector3(), newCartOrientation);
-
-            Quaternion inverted = getCurrentOrientation().clone();
-            inverted.invert();
-            matrix.translate(cartPositionInvert);
-            matrix.rotate(inverted);
         }
     }
 

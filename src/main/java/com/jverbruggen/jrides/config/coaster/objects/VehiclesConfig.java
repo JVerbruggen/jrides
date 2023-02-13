@@ -2,7 +2,7 @@ package com.jverbruggen.jrides.config.coaster.objects;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class VehiclesConfig {
+public class VehiclesConfig extends BaseConfig {
     private final int trains;
     private final int carts;
     private final int cartDistance;
@@ -26,9 +26,9 @@ public class VehiclesConfig {
     }
 
     public static VehiclesConfig fromConfigurationSection(ConfigurationSection configurationSection) {
-        int trains = configurationSection.getInt("trains");
-        int carts = configurationSection.getInt("carts");
-        int cartDistance = configurationSection.getInt("cartDistance");
+        int trains = getInt(configurationSection, "trains", 1);
+        int carts = getInt(configurationSection, "carts", 1);
+        int cartDistance = getInt(configurationSection, "cartDistance", 20);
 
         return new VehiclesConfig(trains, carts, cartDistance);
     }
