@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovement;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
+import com.jverbruggen.jrides.effect.EffectTrigger;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
 import com.jverbruggen.jrides.logging.LogType;
@@ -20,6 +21,8 @@ import com.jverbruggen.jrides.models.ride.section.SectionProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -57,7 +60,35 @@ public class TrainHandle {
     public void resetEffects(){
         if(!hasEffects) return;
 
-        nextEffect = coasterHandle.getEffectTriggerCollection().first();
+        LinkedList<EffectTriggerHandle> linkedList = coasterHandle.getEffectTriggerCollection().getLinkedList();
+        nextEffect = findNearestNextEffect(linkedList, train.getHeadOfTrainFrame()); // TODO: Check validity
+    }
+
+    private EffectTriggerHandle findNearestNextEffect(LinkedList<EffectTriggerHandle> linkedList, Frame currentFrame){
+        if(linkedList.size() == 1)
+            return linkedList.getFirst();
+        else{
+            EffectTriggerHandle selectedEffect = linkedList.getFirst();
+            if(shouldPlay(selectedEffect, currentFrame)){
+                Iterator<EffectTriggerHandle> iterator = linkedList.iterator();
+                while(iterator.hasNext()){
+                    EffectTriggerHandle comparing = iterator.next();
+                    if(!shouldPlay(comparing, currentFrame)){
+                        selectedEffect = comparing;
+                        break;
+                    }
+                }
+            }else{
+                Iterator<EffectTriggerHandle> iterator = linkedList.descendingIterator();
+                while(iterator.hasNext()){
+                    EffectTriggerHandle comparing = iterator.next();
+                    if(shouldPlay(comparing, currentFrame)){
+                        selectedEffect = comparing;
+                    }else break;
+                }
+            }
+            return selectedEffect;
+        }
     }
 
     public void tick(){
@@ -103,14 +134,16 @@ public class TrainHandle {
         playWindSounds();
     }
 
-    private void playEffects(Frame newFrame){
+    private void playEffects(Frame currentFrame){
         while(nextEffect != null){
-            Frame nextEffectFrame = nextEffect.getFrame();
-            boolean activateEffect = train.getHeadSection().hasPassed(nextEffectFrame, newFrame);
-            if(!activateEffect) break;
+            if(!shouldPlay(nextEffect, currentFrame)) break;
             nextEffect.execute(train);
             nextEffect = nextEffect.next();
         }
+    }
+
+    private boolean shouldPlay(EffectTriggerHandle effectTriggerHandle, Frame currentFrmae){
+        return train.getHeadSection().hasPassed(nextEffect.getFrame(), currentFrmae);
     }
 
     private void playWindSounds(){
