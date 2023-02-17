@@ -3,18 +3,18 @@ package com.jverbruggen.jrides.animator.trackbehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovement;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
+import com.jverbruggen.jrides.config.coaster.objects.connection.ConnectionsConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.properties.connection.Connections;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
-import org.bukkit.Bukkit;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public abstract class BaseTrackBehaviour implements TrackBehaviour {
     protected final CartMovementFactory cartMovementFactory;
@@ -23,6 +23,12 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     protected BaseTrackBehaviour(CartMovementFactory cartMovementFactory) {
         this.cartMovementFactory = cartMovementFactory;
         this.parentTrack = null;
+    }
+
+    protected boolean isNextSectionSafe(Train train){
+        Section nextSection = train.getHeadSection().next(train);
+        if(nextSection == null) return false;
+        return nextSection.isBlockSectionSafe(train);
     }
 
     protected TrainMovement calculateTrainMovement(Train train, Section section, Speed speed){

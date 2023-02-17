@@ -40,16 +40,16 @@ public class AdvancedSectionBuilder {
         return this;
     }
 
-    private Map.Entry<SectionReference, Section> findSection(Map<SectionReference, Section> sections, String sectionName){
+    private Map.Entry<SectionReference, Section> findSection(Map<SectionReference, Section> sections, String sectionIdentifier){
         Map.Entry<SectionReference, Section> found = null;
         for(Map.Entry<SectionReference, Section> entry : sections.entrySet()){
-            if(entry.getKey().getSectionIdentifier().equalsIgnoreCase(sectionName)){
+            if(entry.getKey().getSectionIdentifier().equalsIgnoreCase(sectionIdentifier)){
                 found = entry;
                 break;
             }
         }
         if(found == null)
-            throw new RuntimeException("Section " + sectionName + " not found in map");
+            throw new RuntimeException("Section " + sectionIdentifier + " not found in map");
 
         return found;
     }
@@ -64,8 +64,10 @@ public class AdvancedSectionBuilder {
             Frame startFrame = sectionReference.getStartFrame();
             Frame endFrame = sectionReference.getEndFrame();
             TrackBehaviour trackBehaviour = sectionReference.getTrackBehaviour();
+            boolean jumpAtStart = sectionReference.isJumpAtStart();
+            boolean jumpAtEnd = sectionReference.isJumpAtEnd();
 
-            SimpleSection section = new SimpleSection(startFrame, endFrame, trackBehaviour);
+            SimpleSection section = new SimpleSection(startFrame, endFrame, trackBehaviour, jumpAtStart, jumpAtEnd);
             section.setName(sectionReference.getSectionIdentifier());
             sections.put(sectionReference, section);
         }

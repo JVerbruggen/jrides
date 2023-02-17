@@ -20,7 +20,10 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
     private final Frame stopFrame;
     private final boolean canSpawn;
 
-    public BlockBrakeTrackBehaviour(CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, double driveSpeed, double deceleration, double acceleration) {
+    private final int minWaitTicks;
+    private int minWaitTicksState;
+
+    public BlockBrakeTrackBehaviour(CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, double driveSpeed, double deceleration, double acceleration, int minWaitTicks) {
         super(cartMovementFactory);
         this.deceleration = deceleration;
         this.acceleration = acceleration;
@@ -28,6 +31,9 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
         this.phase = BlockBrakePhase.IDLE;
         this.stopFrame = stopFrame;
         this.canSpawn = canSpawn;
+
+        this.minWaitTicks = minWaitTicks;
+        this.minWaitTicksState = 0;
 
         trainExitedAtEnd();
     }
@@ -43,7 +49,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
             switch (phase){
                 case IDLE:
                     train.setStatusMessage("Idle");
-                    if(train.getHeadSection().next(train).isBlockSectionSafe(train))
+                    if(isNextSectionSafe(train) && minWaitTicks <= 0)
                         phase = BlockBrakePhase.PASSING_THROUGH;
                     else
                         phase = BlockBrakePhase.DRIVING_UNTIL_STOP;
@@ -62,7 +68,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
                 case DRIVING_UNTIL_STOP:
                     train.setStatusMessage("Driving until stop");
                     if(train.getHeadSection().hasPassed(stopFrame, train.getHeadOfTrainFrame())){
-                        if(train.getHeadSection().next(train).isBlockSectionSafe(train)){
+                        if(isNextSectionSafe(train) && minWaitTicks <= 0){
                             phase = BlockBrakePhase.DRIVING;
                         }else{
                             phase = BlockBrakePhase.STOPPING;
@@ -83,7 +89,8 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
                 case WAITING:
                     train.setStatusMessage("Waiting \n" + train.getHeadSection() + "\n"
                         + train.getHeadSection().next(train));
-                    if(train.getHeadSection().next(train).isBlockSectionSafe(train)){
+                    if(isNextSectionSafe(train) && isMinWaitTimerFinished()){
+                        resetMinWaitTimer();
                         phase = BlockBrakePhase.DRIVING;
                         goIntoSwitch = true;
                     }
@@ -96,6 +103,15 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
         }
 
         return calculateTrainMovement(train, section, newSpeed);
+    }
+
+    private boolean isMinWaitTimerFinished(){
+        if(minWaitTicks <= 0) return true;
+        return minWaitTicksState++ >= minWaitTicks;
+    }
+
+    private void resetMinWaitTimer(){
+        minWaitTicksState = 0;
     }
 
     @Override

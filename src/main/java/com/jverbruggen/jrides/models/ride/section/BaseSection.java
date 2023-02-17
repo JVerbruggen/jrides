@@ -134,4 +134,14 @@ public abstract class BaseSection implements Section{
             else throw new RuntimeException("Cannot determine direction to go to section " + section + " for train " + forTrain);
         }
     }
+
+    @Override
+    public boolean shouldJumpAtEnd() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldJumpAtStart() {
+        return false;
+    }
 }

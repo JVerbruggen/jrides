@@ -65,7 +65,9 @@ public class TrainHandle {
     }
 
     private EffectTriggerHandle findNearestNextEffect(LinkedList<EffectTriggerHandle> linkedList, Frame currentFrame){
-        if(linkedList.size() == 1)
+        if(linkedList == null || linkedList.size() == 0 || currentFrame == null)
+            return null;
+        else if(linkedList.size() == 1)
             return linkedList.getFirst();
         else{
             EffectTriggerHandle selectedEffect = linkedList.getFirst();
@@ -142,15 +144,16 @@ public class TrainHandle {
         }
     }
 
-    private boolean shouldPlay(EffectTriggerHandle effectTriggerHandle, Frame currentFrmae){
-        return train.getHeadSection().hasPassed(nextEffect.getFrame(), currentFrmae);
+    private boolean shouldPlay(EffectTriggerHandle effectTriggerHandle, Frame currentFrame){
+        return train.getHeadSection().hasPassed(nextEffect.getFrame(), currentFrame);
     }
 
     private void playWindSounds(){
+        String sound = coasterHandle.getWindSound();
+        if(sound == null) return;
         if(windSoundState < windSoundInterval)
             windSoundState++;
         else{
-            String sound = coasterHandle.getWindSound();
             for(Player player : train.getPassengers()){
                 float pitch = (float)Math.abs(speedBPS.getSpeedPerTick() / 10) + 0.4f;
                 float volume = Math.abs((pitch - 0.3f) / 5) - 0.05f;

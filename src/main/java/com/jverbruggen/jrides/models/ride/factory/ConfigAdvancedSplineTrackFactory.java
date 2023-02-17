@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.factory.TrackBehaviourFactory;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
+import com.jverbruggen.jrides.config.coaster.objects.connection.ConnectionsConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.SectionConfig;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.frame.SimpleFrame;
@@ -50,12 +51,7 @@ public class ConfigAdvancedSplineTrackFactory implements TrackFactory {
             Track track;
             if(trackDescription.getTrackType() == TrackType.TRACK){
                 track = createSplineTrack(trackDescription, sectionBuilder);
-            }else if(trackDescription.getTrackType() == TrackType.TRANSFER){
-                track = null;
             }else throw new RuntimeException("TrackType not recognized");
-
-            trackDescription.getStartFrame().setTrack(track);
-            trackDescription.getEndFrame().setTrack(track);
 
             childrenTracks.add(track);
         }
@@ -87,9 +83,16 @@ public class ConfigAdvancedSplineTrackFactory implements TrackFactory {
         List<NoLimitsExportPositionRecord> positions = trackDescription.getPositions();
 
         String parentTrackIdentifier = trackDescription.getIdentifier();
+        Frame startFrame = trackDescription.getStartFrame();
+        Frame endFrame = trackDescription.getEndFrame();
 
-        return new LooseEndedSplineBasedTrack(trackDescription.getIdentifier(), positions, sectionBuilder.collectFor(parentTrackIdentifier),
-                trackDescription.getStartFrame(), trackDescription.getEndFrame());
+        Track track = new LooseEndedSplineBasedTrack(trackDescription.getIdentifier(), positions, sectionBuilder.collectFor(parentTrackIdentifier),
+                startFrame, endFrame);
+
+        startFrame.setTrack(track);
+        endFrame.setTrack(track);
+
+        return track;
     }
 
     private AdvancedSectionBuilder createSectionBuilder(TrackConfig trackConfig){
@@ -105,17 +108,22 @@ public class ConfigAdvancedSplineTrackFactory implements TrackFactory {
             String nextSectionIdentifier = sectionConfig.getNextSection();
             String parentTrackIdentifier = sectionConfig.getParentTrackIdentifier();
 
+            boolean jumpAtStart = sectionConfig.isJumpAtStart();
+            boolean jumpAtEnd = sectionConfig.isJumpAtEnd();
+
             TrackDescription trackDescription = trackDescriptions.stream()
                     .filter(d -> d.getIdentifier().equalsIgnoreCase(sectionConfig.getParentTrackIdentifier()))
                     .findFirst().orElseThrow();
 
             Frame startFrame = new SimpleFrame(sectionConfig.getLowerRange());
             Frame endFrame = new SimpleFrame(sectionConfig.getUpperRange());
+            ConnectionsConfig connectionsConfig = sectionConfig.getConnectionsConfig();
 
             TrackBehaviour trackBehaviour = trackBehaviourFactory.getTrackBehaviourFor(coasterHandle, coasterConfig, sectionConfig, trackDescription.getCycle());
             if(trackBehaviour == null) return null;
 
-            sectionBuilder.add(new SectionReference(sectionIdentifier, startFrame, endFrame, trackBehaviour, nextSectionIdentifier, parentTrackIdentifier));
+            sectionBuilder.add(new SectionReference(sectionIdentifier, startFrame, endFrame, trackBehaviour, nextSectionIdentifier, parentTrackIdentifier,
+                    connectionsConfig, jumpAtStart, jumpAtEnd));
 
             if(firstStartFrame == null) firstStartFrame = startFrame;
             previousEndFrame = endFrame;

@@ -70,7 +70,7 @@ public class ConfigCircularNoInterruptionTrackFactory implements TrackFactory {
             TrackBehaviour trackBehaviour = trackBehaviourFactory.getTrackBehaviourFor(coasterHandle, coasterConfig, sectionConfig, totalFrames);
             if(trackBehaviour == null) return null;
 
-            sectionBuilder.add(new SimpleSection(startFrame, endFrame, trackBehaviour));
+            sectionBuilder.add(new SimpleSection(startFrame, endFrame, trackBehaviour, false, false));
 
             if(firstStartFrame == null) firstStartFrame = startFrame;
             previousEndFrame = endFrame;

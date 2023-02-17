@@ -111,6 +111,11 @@ public class AutoTrackUpdateFrame implements Frame {
     @Override
     public void updateTo(Frame other){
         setValue(other.getValue());
+
+        Track otherTrack = other.getTrack();
+        Section otherSection = other.getSection();
+        if(otherTrack != null && otherTrack != this.getTrack()) setTrack(otherTrack);
+        if(otherSection != null && otherSection != this.getSection()) setSection(otherSection);
     }
 
     @Override

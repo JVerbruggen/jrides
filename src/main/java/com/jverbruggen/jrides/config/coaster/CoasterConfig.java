@@ -1,9 +1,6 @@
 package com.jverbruggen.jrides.config.coaster;
 
-import com.jverbruggen.jrides.config.coaster.objects.CartSpecConfig;
-import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
-import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
-import com.jverbruggen.jrides.config.coaster.objects.VehiclesConfig;
+import com.jverbruggen.jrides.config.coaster.objects.*;
 import com.jverbruggen.jrides.config.gates.GatesConfig;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
@@ -11,7 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Objects;
 
-public class CoasterConfig {
+public class CoasterConfig extends BaseConfig {
     private final String manifestVersion;
     private final String identifier;
     private final String displayName;
@@ -88,13 +85,13 @@ public class CoasterConfig {
         String identifier = configurationSection.getString("identifier");
         String displayName = configurationSection.getString("displayName");
         PlayerLocation warpLocation = PlayerLocation.fromDoubleList(configurationSection.getDoubleList("warpLocation"));
-        double gravityConstant = configurationSection.getDouble("gravityConstant");
-        double dragConstant = configurationSection.getDouble("dragConstant");
+        double gravityConstant = getDouble(configurationSection, "gravityConstant", 0.15);
+        double dragConstant = getDouble(configurationSection, "dragConstant", 0.9993);
         TrackConfig track = TrackConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("track")));
         VehiclesConfig vehicles = VehiclesConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("vehicles")));
         CartSpecConfig cartSpec = CartSpecConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("cartSpec")));
-        GatesConfig gates = GatesConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("gates")));
-        SoundsConfig sounds = SoundsConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("sounds")));
+        GatesConfig gates = GatesConfig.fromConfigurationSection(configurationSection.getConfigurationSection("gates"));
+        SoundsConfig sounds = SoundsConfig.fromConfigurationSection(configurationSection.getConfigurationSection("sounds"));
 
         return new CoasterConfig(manifestVersion, identifier, displayName, warpLocation, track, vehicles,
                 cartSpec, gates, gravityConstant, dragConstant, sounds);

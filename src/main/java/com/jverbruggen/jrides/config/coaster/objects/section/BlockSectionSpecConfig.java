@@ -9,13 +9,15 @@ public class BlockSectionSpecConfig extends BaseConfig {
     private final boolean canSpawn;
     private final double acceleration;
     private final double deceleration;
+    private final int minWaitTicks;
 
-    private BlockSectionSpecConfig(double engage, double driveSpeed, boolean canSpawn, double acceleration, double deceleration) {
+    private BlockSectionSpecConfig(double engage, double driveSpeed, boolean canSpawn, double acceleration, double deceleration, int minWaitTicks) {
         this.engage = engage;
         this.driveSpeed = driveSpeed;
         this.canSpawn = canSpawn;
         this.acceleration = acceleration;
         this.deceleration = deceleration;
+        this.minWaitTicks = minWaitTicks;
     }
 
     public double getEngage() {
@@ -38,13 +40,18 @@ public class BlockSectionSpecConfig extends BaseConfig {
         return deceleration;
     }
 
+    public int getMinWaitTicks() {
+        return minWaitTicks;
+    }
+
     public static BlockSectionSpecConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         double engage = getDouble(configurationSection, "engage", 0.01);
         double driveSpeed = getDouble(configurationSection, "driveSpeed", 1.0);
         boolean canSpawn = getBoolean(configurationSection, "canSpawn", false);
         double deceleration = getDouble(configurationSection, "deceleration", 0.1);
         double acceleration = getDouble(configurationSection, "acceleration", 0.1);
+        int minWaitTicks = getInt(configurationSection, "minWaitTicks", 0);
 
-        return new BlockSectionSpecConfig(engage, driveSpeed, canSpawn, acceleration, deceleration);
+        return new BlockSectionSpecConfig(engage, driveSpeed, canSpawn, acceleration, deceleration, minWaitTicks);
     }
 }

@@ -55,7 +55,7 @@ public class LaunchTrackBehaviour extends BaseTrackBehaviour implements TrackBeh
                     break;
                 case DRIVING:
                     if (train.getHeadSection().hasPassed(engageFrame, train.getHeadOfTrainFrame())) {
-                        if(waitTicks < 0 && train.getHeadSection().next(train).isBlockSectionSafe(train)){
+                        if(waitTicks < 0 && isNextSectionSafe(train)){
                             this.phase = LaunchPhase.LAUNCHING;
                             goIntoSwitch = true;
                         }else{
@@ -74,10 +74,10 @@ public class LaunchTrackBehaviour extends BaseTrackBehaviour implements TrackBeh
                     newSpeed.minus(deceleration, 0);
                     break;
                 case WAITING:
-                    if(doneWaiting() && train.getHeadSection().next(train).isBlockSectionSafe(train)){
+                    if(doneWaiting() && isNextSectionSafe(train)){
                         phase = LaunchPhase.LAUNCHING;
-                        launchEffectTriggers.forEach(e -> e.execute(train));
                         goIntoSwitch = true;
+                        playLaunchEffects(train);
                     }
                     break;
                 case LAUNCHING:
@@ -87,6 +87,11 @@ public class LaunchTrackBehaviour extends BaseTrackBehaviour implements TrackBeh
         }
 
         return calculateTrainMovement(train, section, newSpeed);
+    }
+
+    private void playLaunchEffects(Train train){
+        if(launchEffectTriggers == null) return;
+        launchEffectTriggers.forEach(e -> e.execute(train));
     }
 
     private void reset(){

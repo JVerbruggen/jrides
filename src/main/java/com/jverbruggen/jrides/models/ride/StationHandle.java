@@ -67,18 +67,22 @@ public class StationHandle {
     }
 
     public void runEntryEffectTriggers(Train train){
+        if(entryEffectTriggers == null) return;
         entryEffectTriggers.forEach(t -> t.execute(train));
     }
 
     public void runExitEffectTriggers(Train train){
+        if(exitEffectTriggers == null) return;
         exitEffectTriggers.forEach(t -> t.execute(train));
     }
 
     public boolean entryEffectTriggersDone(){
+        if(entryEffectTriggers == null) return true;
         return entryEffectTriggers.stream().allMatch(t -> t.getEffectTrigger().finishedPlaying());
     }
 
     public boolean exitEffectTriggersDone(){
+        if(exitEffectTriggers == null) return true;
         return exitEffectTriggers.stream().allMatch(t -> t.getEffectTrigger().finishedPlaying());
     }
 

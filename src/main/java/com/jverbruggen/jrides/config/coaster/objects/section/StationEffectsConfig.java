@@ -13,6 +13,11 @@ public class StationEffectsConfig {
         this.exitEffects = exitEffects;
     }
 
+    public StationEffectsConfig() {
+        this.entryEffects = null;
+        this.exitEffects = null;
+    }
+
     public List<String> getEntryEffects() {
         return entryEffects;
     }
@@ -22,6 +27,7 @@ public class StationEffectsConfig {
     }
 
     public static StationEffectsConfig fromConfigurationSection(ConfigurationSection configurationSection) {
+        if(configurationSection == null) return new StationEffectsConfig();
         List<String> entryEffects = configurationSection.getStringList("entry");
         List<String> exitEffects = configurationSection.getStringList("exit");
 

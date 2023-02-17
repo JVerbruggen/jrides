@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.config.gates;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class GateOwnerConfigSpec {
@@ -20,6 +21,9 @@ public class GateOwnerConfigSpec {
     }
 
     public static GateOwnerConfigSpec fromConfigurationSection(ConfigurationSection configurationSection) {
+        if(configurationSection == null)
+            throw new RuntimeException("Configuration section not defined for gate");
+
         GateSpecConfig gateSpecConfigEntry = null;
         GateSpecConfig gateSpecConfigExit = null;
 

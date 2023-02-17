@@ -117,7 +117,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                         newSpeed.minus(deceleration, 0);
                     break;
                 case STATIONARY:
-                    if(train.getHeadSection().next(train).isBlockSectionSafe(train)){
+                    if(isNextSectionSafe(train)){
                         blockSectionOccupiedDispatchLock.unlock();
                     }else{
                         blockSectionOccupiedDispatchLock.lock();
@@ -141,7 +141,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                     }
                     break;
                 case WAITING:
-                    if(train.getHeadSection().next(train).isBlockSectionSafe(train)){
+                    if(isNextSectionSafe(train)){
                         phase = StationPhase.DEPARTING;
                         blockSectionOccupiedDispatchLock.lock();
                         coasterHandle.getRideController().onTrainDepart(train);

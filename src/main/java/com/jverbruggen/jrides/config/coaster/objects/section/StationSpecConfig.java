@@ -46,10 +46,10 @@ public class StationSpecConfig extends BaseConfig {
     }
 
     public static StationSpecConfig fromConfigurationSection(ConfigurationSection configurationSection) {
-        double engage = getDouble(configurationSection, "engage");
-        double driveSpeed = getDouble(configurationSection, "driveSpeed");
-        int minimumWaitIntervalSeconds = getInt(configurationSection, "minimumWaitIntervalSeconds");
-        int maximumWaitIntervalSeconds = getInt(configurationSection, "maximumWaitIntervalSeconds");
+        double engage = getDouble(configurationSection, "engage", 0.5);
+        double driveSpeed = getDouble(configurationSection, "driveSpeed", 1.0);
+        int minimumWaitIntervalSeconds = getInt(configurationSection, "minimumWaitIntervalSeconds", 0);
+        int maximumWaitIntervalSeconds = getInt(configurationSection, "maximumWaitIntervalSeconds", 60);
         StationEffectsConfig effects = StationEffectsConfig.fromConfigurationSection(configurationSection.getConfigurationSection("effects"));
         PlayerLocation ejectLocation = PlayerLocation.fromDoubleList(configurationSection.getDoubleList("ejectLocation"));
 

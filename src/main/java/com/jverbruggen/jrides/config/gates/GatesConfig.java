@@ -12,13 +12,20 @@ public class GatesConfig {
         this.gateOwnerSpecs = gateOwnerSpecs;
     }
 
+    public GatesConfig() {
+        gateOwnerSpecs = null;
+    }
+
     public GateOwnerConfigSpec getGateOwnerSpec(String ownerName){
-        if(!gateOwnerSpecs.containsKey(ownerName)) throw new RuntimeException(ownerName + " has no gates!");
+        if(gateOwnerSpecs == null || !gateOwnerSpecs.containsKey(ownerName))
+            throw new RuntimeException(ownerName + " has no gates!");
 
         return gateOwnerSpecs.get(ownerName);
     }
 
     public static GatesConfig fromConfigurationSection(ConfigurationSection configurationSection) {
+        if(configurationSection == null) return new GatesConfig();
+
         HashMap<String, GateOwnerConfigSpec> gateOwnerSpecs = new HashMap<>();
         Set<String> gateOwners = configurationSection.getKeys(false);
 

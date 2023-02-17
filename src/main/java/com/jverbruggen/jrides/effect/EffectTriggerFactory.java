@@ -61,6 +61,7 @@ public class EffectTriggerFactory {
     }
 
     public List<EffectTriggerHandle> getFramelessEffectTriggers(String rideIdentifier, List<String> effectNames){
+        if(effectNames == null) return null;
         return effectNames
                 .stream()
                 .map(effectNameRaw -> {

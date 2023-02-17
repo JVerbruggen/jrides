@@ -6,17 +6,20 @@ import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import org.bukkit.Bukkit;
 
 public class SimpleSection extends BaseSection {
     private Frame startFrame;
     private Frame endFrame;
+    private final boolean jumpAtStart;
+    private final boolean jumpAtEnd;
     private String name;
 
-    public SimpleSection(Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour) {
+    public SimpleSection(Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour, boolean jumpAtStart, boolean jumpAtEnd) {
         super(trackBehaviour);
         this.startFrame = startFrame.clone();
         this.endFrame = endFrame.clone();
+        this.jumpAtStart = jumpAtStart;
+        this.jumpAtEnd = jumpAtEnd;
         this.name = null;
     }
 
@@ -89,6 +92,16 @@ public class SimpleSection extends BaseSection {
     @Override
     public boolean passesCycle() {
         return startFrame.getValue() > endFrame.getValue();
+    }
+
+    @Override
+    public boolean shouldJumpAtStart() {
+        return jumpAtStart;
+    }
+
+    @Override
+    public boolean shouldJumpAtEnd() {
+        return jumpAtEnd;
     }
 
     @Override
