@@ -1,8 +1,6 @@
 package com.jverbruggen.jrides.config.coaster.objects.section;
 
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
-import com.jverbruggen.jrides.config.coaster.objects.connection.ConnectionSpecConfig;
-import com.jverbruggen.jrides.config.coaster.objects.connection.ConnectionsConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.transfer.TransferSectionSpecConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -17,7 +15,6 @@ public class SectionConfig extends BaseConfig {
     private final String trackSource;
     private final String type;
     private final String nextSection;
-    private final ConnectionsConfig connectionsConfig;
     private final BlockSectionSpecConfig blockSectionSpec;
     private final StationSpecConfig stationSectionSpec;
     private final BrakeSectionSpecConfig brakeSectionSpec;
@@ -27,7 +24,7 @@ public class SectionConfig extends BaseConfig {
     private final LaunchSectionSpecConfig launchSectionSpecConfig;
 
     public SectionConfig(String identifier, int lowerRange, int upperRange, boolean jumpAtStart, boolean jumpAtEnd, String trackSource, String type,
-                         String nextSection, ConnectionsConfig connectionsConfig,
+                         String nextSection,
                          BlockSectionSpecConfig blockSectionSpec, StationSpecConfig stationSectionSpec, BrakeSectionSpecConfig brakeSectionSpec,
                          DriveSectionSpecConfig driveSectionSpec, StorageSectionSpecConfig storageSectionSpec, TransferSectionSpecConfig transferSectionSpec,
                          LaunchSectionSpecConfig launchSectionSpecConfig) {
@@ -39,7 +36,6 @@ public class SectionConfig extends BaseConfig {
         this.trackSource = trackSource;
         this.type = type;
         this.nextSection = nextSection;
-        this.connectionsConfig = connectionsConfig;
         this.blockSectionSpec = blockSectionSpec;
         this.stationSectionSpec = stationSectionSpec;
         this.brakeSectionSpec = brakeSectionSpec;
@@ -55,10 +51,6 @@ public class SectionConfig extends BaseConfig {
 
     public String getNextSection() {
         return nextSection;
-    }
-
-    public ConnectionsConfig getConnectionsConfig() {
-        return connectionsConfig;
     }
 
     public int getLowerRange() {
@@ -126,7 +118,6 @@ public class SectionConfig extends BaseConfig {
 
         boolean jumpAtStart = getBoolean(configurationSection, "jumpAtStart", false);
         boolean jumpAtEnd = getBoolean(configurationSection, "jumpAtEnd", false);
-        ConnectionsConfig connectionsConfig = getConnections(configurationSection);
 
         BlockSectionSpecConfig blockSectionSpec = null;
         if(configurationSection.contains("blockSection"))
@@ -156,36 +147,7 @@ public class SectionConfig extends BaseConfig {
         if(configurationSection.contains("launchSection"))
             launchSectionSpec = LaunchSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("launchSection"));
 
-        return new SectionConfig(sectionIdentifier, lowerRange, upperRange, jumpAtStart, jumpAtEnd, trackSource, type, nextSection, connectionsConfig, blockSectionSpec, stationSectionSpec, brakeSectionSpec, driveSectionSpec, storageSectionSpec, transferSectionSpec, launchSectionSpec);
-    }
-
-    private static ConnectionsConfig getConnections(ConfigurationSection configurationSection){
-        if(configurationSection == null) return new ConnectionsConfig();
-        List<?> connections = configurationSection.getList("connections");
-        if(connections == null) return new ConnectionsConfig();
-
-        Object rawStartConnection = connections.get(0);
-        Object rawEndConnection = connections.get(1);
-
-        ConnectionSpecConfig startConnection = getConnectionSpec(rawStartConnection);
-        ConnectionSpecConfig endConnection = getConnectionSpec(rawEndConnection);
-
-        return new ConnectionsConfig(startConnection, endConnection);
-    }
-
-    private static ConnectionSpecConfig getConnectionSpec(Object rawConnection){
-        if(rawConnection == null) return null;
-        if(!(rawConnection instanceof List))
-            throw new RuntimeException("Unexpected connection specification: " + rawConnection);
-
-        List<?> connectionDetails = (List<?>) rawConnection;
-        if(connectionDetails.size() != 2)
-            throw new RuntimeException("Expected exactly two arguments for connection specification, but got different");
-
-        int connectionFrame = (Integer) connectionDetails.get(0);
-        String connectionTrack = (String) connectionDetails.get(1);
-
-        return new ConnectionSpecConfig(connectionFrame, connectionTrack);
+        return new SectionConfig(sectionIdentifier, lowerRange, upperRange, jumpAtStart, jumpAtEnd, trackSource, type, nextSection, blockSectionSpec, stationSectionSpec, brakeSectionSpec, driveSectionSpec, storageSectionSpec, transferSectionSpec, launchSectionSpec);
     }
 }
 
