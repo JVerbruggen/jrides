@@ -3,11 +3,9 @@ package com.jverbruggen.jrides.models.ride.coaster.transfer;
 import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.*;
-import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.models.ride.section.Section;
-import com.jverbruggen.jrides.models.ride.section.SectionReference;
-import org.bukkit.Bukkit;
+import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
 
 import java.util.ArrayList;
 import java.util.List;

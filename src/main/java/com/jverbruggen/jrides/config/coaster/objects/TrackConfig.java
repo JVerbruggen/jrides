@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.config.coaster.objects;
 
-import com.jverbruggen.jrides.config.coaster.objects.section.SectionConfig;
+import com.jverbruggen.jrides.config.coaster.objects.section.base.RangedSectionConfig;
+import com.jverbruggen.jrides.config.coaster.objects.section.base.SectionConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class TrackConfig {
 
             assert track != null;
             if(track.equalsIgnoreCase("spline")){
-                sections.add(SectionConfig.fromConfigurationSection(sectionSpec, sectionKey));
+                sections.add(RangedSectionConfig.fromConfigurationSection(sectionSpec, sectionKey));
             }else if(track.equalsIgnoreCase("straight")){
                 throw new RuntimeException("Straight track not implemented yet");
             }

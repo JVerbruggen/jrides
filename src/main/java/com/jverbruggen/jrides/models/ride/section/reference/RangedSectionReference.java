@@ -1,11 +1,11 @@
-package com.jverbruggen.jrides.models.ride.section;
+package com.jverbruggen.jrides.models.ride.section.reference;
 
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
+import com.jverbruggen.jrides.models.ride.section.Section;
+import com.jverbruggen.jrides.models.ride.section.SimpleSection;
 
-import java.util.Map;
-
-public class SectionReference {
+public class RangedSectionReference extends SectionReference {
     private final String sectionIdentifier;
     private final String nextSectionIdentifier;
     private String previousSectionIdentifier;
@@ -16,8 +16,8 @@ public class SectionReference {
     private final boolean jumpAtStart;
     private final boolean jumpAtEnd;
 
-    public SectionReference(String sectionIdentifier, Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour, String nextSectionIdentifier,
-                            String parentTrackIdentifier, boolean jumpAtStart, boolean jumpAtEnd) {
+    public RangedSectionReference(String sectionIdentifier, Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour, String nextSectionIdentifier,
+                                  String parentTrackIdentifier, boolean jumpAtStart, boolean jumpAtEnd) {
         this.sectionIdentifier = sectionIdentifier;
         this.startFrame = startFrame;
         this.endFrame = endFrame;
@@ -29,14 +29,17 @@ public class SectionReference {
         this.parentTrackIdentifier = parentTrackIdentifier;
     }
 
+    @Override
     public void setPreviousSectionIdentifier(String previousSectionIdentifier) {
         this.previousSectionIdentifier = previousSectionIdentifier;
     }
 
+    @Override
     public String getPreviousSectionIdentifier() {
         return previousSectionIdentifier;
     }
 
+    @Override
     public String getSectionIdentifier() {
         return sectionIdentifier;
     }
@@ -53,12 +56,27 @@ public class SectionReference {
         return trackBehaviour;
     }
 
+    @Override
     public String getNextSectionIdentifier() {
         return nextSectionIdentifier;
     }
 
+    @Override
     public String getParentTrackIdentifier() {
         return parentTrackIdentifier;
+    }
+
+    @Override
+    public Section makeSection() {
+        Frame startFrame = getStartFrame();
+        Frame endFrame = getEndFrame();
+        TrackBehaviour trackBehaviour = getTrackBehaviour();
+        boolean jumpAtStart = isJumpAtStart();
+        boolean jumpAtEnd = isJumpAtEnd();
+
+        SimpleSection section = new SimpleSection(startFrame, endFrame, trackBehaviour, jumpAtStart, jumpAtEnd);
+        section.setName(getSectionIdentifier());
+        return section;
     }
 
     public boolean isJumpAtEnd() {
@@ -69,10 +87,4 @@ public class SectionReference {
         return jumpAtStart;
     }
 
-    public static Section findByIdentifier(String sectionIdentifier, Map<SectionReference, Section> sectionMap){
-        return sectionMap.entrySet()
-                .stream()
-                .filter(entry -> entry.getKey().getSectionIdentifier().equalsIgnoreCase(sectionIdentifier))
-                .findFirst().orElseThrow().getValue();
-    }
 }

@@ -26,7 +26,7 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.factory.*;
 import com.jverbruggen.jrides.models.ride.factory.track.TrackDescription;
 import com.jverbruggen.jrides.models.ride.factory.track.TrackType;
-import com.jverbruggen.jrides.models.ride.section.SectionProvider;
+import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Bukkit;

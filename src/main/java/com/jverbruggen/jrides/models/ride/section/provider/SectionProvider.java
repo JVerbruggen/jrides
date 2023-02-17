@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.models.ride.section;
+package com.jverbruggen.jrides.models.ride.section.provider;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.TrainHandle;
@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.models.properties.frame.SimpleFrame;
 import com.jverbruggen.jrides.models.properties.TrackEnd;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.exception.SectionNotFoundException;
 import org.bukkit.Bukkit;
 import org.checkerframework.checker.nullness.qual.NonNull;

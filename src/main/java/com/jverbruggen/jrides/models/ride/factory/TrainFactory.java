@@ -21,7 +21,7 @@ import com.jverbruggen.jrides.models.ride.coaster.train.SimpleCart;
 import com.jverbruggen.jrides.models.ride.coaster.train.SimpleTrain;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
-import com.jverbruggen.jrides.models.ride.section.SectionProvider;
+import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Bukkit;

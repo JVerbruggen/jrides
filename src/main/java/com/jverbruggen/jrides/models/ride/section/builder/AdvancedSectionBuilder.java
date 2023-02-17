@@ -1,8 +1,8 @@
-package com.jverbruggen.jrides.models.ride.section;
+package com.jverbruggen.jrides.models.ride.section.builder;
 
-import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
-import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
+import com.jverbruggen.jrides.models.ride.section.Section;
+import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,15 +61,7 @@ public class AdvancedSectionBuilder {
         // --- Initialize section objects
         Map<SectionReference, Section> sections = new HashMap<>();
         for(SectionReference sectionReference : sectionReferences.values()){
-            Frame startFrame = sectionReference.getStartFrame();
-            Frame endFrame = sectionReference.getEndFrame();
-            TrackBehaviour trackBehaviour = sectionReference.getTrackBehaviour();
-            boolean jumpAtStart = sectionReference.isJumpAtStart();
-            boolean jumpAtEnd = sectionReference.isJumpAtEnd();
-
-            SimpleSection section = new SimpleSection(startFrame, endFrame, trackBehaviour, jumpAtStart, jumpAtEnd);
-            section.setName(sectionReference.getSectionIdentifier());
-            sections.put(sectionReference, section);
+            sections.put(sectionReference, sectionReference.makeSection());
         }
 
         // --- Link section ends together

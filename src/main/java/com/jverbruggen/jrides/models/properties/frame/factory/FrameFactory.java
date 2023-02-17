@@ -4,7 +4,7 @@ import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.frame.SimpleFrame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.section.Section;
-import com.jverbruggen.jrides.models.ride.section.SectionProvider;
+import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 
 public class FrameFactory {

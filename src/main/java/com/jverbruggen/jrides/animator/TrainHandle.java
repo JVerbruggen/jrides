@@ -4,7 +4,6 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovement;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
-import com.jverbruggen.jrides.effect.EffectTrigger;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
 import com.jverbruggen.jrides.logging.LogType;
@@ -16,9 +15,7 @@ import com.jverbruggen.jrides.models.properties.TrainEnd;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import com.jverbruggen.jrides.models.ride.section.Section;
-import com.jverbruggen.jrides.models.ride.section.SectionProvider;
-import org.bukkit.Bukkit;
+import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
 import org.bukkit.SoundCategory;
 
 import java.util.Iterator;

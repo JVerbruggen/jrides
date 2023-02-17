@@ -1,4 +1,6 @@
-package com.jverbruggen.jrides.models.ride.section;
+package com.jverbruggen.jrides.models.ride.section.builder;
+
+import com.jverbruggen.jrides.models.ride.section.Section;
 
 import java.util.ArrayList;
 import java.util.List;

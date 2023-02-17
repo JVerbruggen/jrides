@@ -19,7 +19,7 @@ import com.jverbruggen.jrides.models.entity.EntityIdFactory;
 import com.jverbruggen.jrides.models.message.MessageFactory;
 import com.jverbruggen.jrides.models.properties.frame.factory.FrameFactory;
 import com.jverbruggen.jrides.models.ride.factory.*;
-import com.jverbruggen.jrides.models.ride.section.SectionProvider;
+import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.PacketSender_1_19_2;
 import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener;

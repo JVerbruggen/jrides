@@ -10,6 +10,8 @@ import com.jverbruggen.jrides.animator.trackbehaviour.transfer.TrainDisplacerTra
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.*;
+import com.jverbruggen.jrides.config.coaster.objects.section.base.PointSectionConfig;
+import com.jverbruggen.jrides.config.coaster.objects.section.base.RangedSectionConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.transfer.TransferSectionPositionSpecConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.transfer.TransferSectionSpecConfig;
 import com.jverbruggen.jrides.config.gates.GateConfig;
@@ -64,11 +66,11 @@ public class TrackBehaviourFactory {
         return new FreeMovementTrackBehaviour(cartMovementFactory, gravityConstant, dragConstant);
     }
 
-    public TrackBehaviour getBlockBrakeBehaviour(SectionConfig sectionConfig, int totalFrames){
-        BlockSectionSpecConfig blockSectionSpecConfig = sectionConfig.getBlockSectionSpec();
+    public TrackBehaviour getBlockBrakeBehaviour(RangedSectionConfig rangedSectionConfig, int totalFrames){
+        BlockSectionSpecConfig blockSectionSpecConfig = rangedSectionConfig.getBlockSectionSpec();
         double engagePercentage = blockSectionSpecConfig.getEngage();
-        Frame lowerRange = new SimpleFrame(sectionConfig.getLowerRange());
-        Frame upperRange = new SimpleFrame(sectionConfig.getUpperRange());
+        Frame lowerRange = new SimpleFrame(rangedSectionConfig.getLowerRange());
+        Frame upperRange = new SimpleFrame(rangedSectionConfig.getUpperRange());
         boolean canSpawn = blockSectionSpecConfig.canSpawn();
         double driveSpeed = blockSectionSpecConfig.getDriveSpeed();
         double acceleration = blockSectionSpecConfig.getAcceleration();
@@ -87,7 +89,7 @@ public class TrackBehaviourFactory {
         return new LaunchTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, acceleration, waitTicks, engageFrame, launchAcceleration, launchMaxSpeed, launchEffectTriggers);
     }
 
-    public TrackBehaviour getStationBehaviour(Frame blockBrakeEngageFrame, CoasterHandle coasterHandle, SectionConfig sectionConfig, GateOwnerConfigSpec gateSpec){
+    public TrackBehaviour getStationBehaviour(Frame blockBrakeEngageFrame, CoasterHandle coasterHandle, RangedSectionConfig rangedSectionConfig, GateOwnerConfigSpec gateSpec){
         int stationNr = coasterHandle.getStationHandles().size() + 1;
         String rideIdentifier = coasterHandle.getRide().getIdentifier();
         String stationName = rideIdentifier + "_station_" + stationNr;
@@ -118,7 +120,7 @@ public class TrackBehaviourFactory {
                 new GateTrigger(gatesGenericLock),
                 new RestraintTrigger(restraintLock));
 
-        StationSpecConfig stationSpecConfig = sectionConfig.getStationSectionSpec();
+        StationSpecConfig stationSpecConfig = rangedSectionConfig.getStationSectionSpec();
         int minimumWaitingTime = stationSpecConfig.getMinimumWaitIntervalSeconds();
         int maximumWaitingTime = stationSpecConfig.getMaximumWaitIntervalSeconds();
 
@@ -138,43 +140,43 @@ public class TrackBehaviourFactory {
                 stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock, restraintLock, driveSpeed);
     }
 
-    public TrackBehaviour getTrackBehaviourFor(CoasterHandle coasterHandle, CoasterConfig coasterConfig, SectionConfig sectionConfig, int totalFrames){
-        String type = sectionConfig.getType();
+    public TrackBehaviour getTrackBehaviourFor(CoasterHandle coasterHandle, CoasterConfig coasterConfig, RangedSectionConfig rangedSectionConfig, int totalFrames){
+        String type = rangedSectionConfig.getType();
         TrackConfig trackConfig = coasterConfig.getTrack();
-        String identifier = sectionConfig.getIdentifier();
+        String identifier = rangedSectionConfig.getIdentifier();
 
         if(type.equalsIgnoreCase("track")){
             double gravityConstant = coasterConfig.getGravityConstant();
             double dragConstant = coasterConfig.getDragConstant();
             return getTrackBehaviour(gravityConstant, dragConstant);
         }else if(type.equalsIgnoreCase("blocksection")){
-            return getBlockBrakeBehaviour(sectionConfig, totalFrames);
+            return getBlockBrakeBehaviour(rangedSectionConfig, totalFrames);
         }else if(type.equalsIgnoreCase("station")){
-            StationSpecConfig stationSectionSpecConfig = sectionConfig.getStationSectionSpec();
+            StationSpecConfig stationSectionSpecConfig = rangedSectionConfig.getStationSectionSpec();
             GateOwnerConfigSpec gateSpec = coasterConfig.getGates().getGateOwnerSpec(identifier);
 
             double engagePercentage = stationSectionSpecConfig.getEngage();
-            Frame lowerRange = new SimpleFrame(sectionConfig.getLowerRange());
-            Frame upperRange = new SimpleFrame(sectionConfig.getUpperRange());
+            Frame lowerRange = new SimpleFrame(rangedSectionConfig.getLowerRange());
+            Frame upperRange = new SimpleFrame(rangedSectionConfig.getUpperRange());
 
             Frame blockBrakeEngageFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
-            return getStationBehaviour(blockBrakeEngageFrame, coasterHandle, sectionConfig, gateSpec);
+            return getStationBehaviour(blockBrakeEngageFrame, coasterHandle, rangedSectionConfig, gateSpec);
         }else if(type.equalsIgnoreCase("brake")){
-            BrakeSectionSpecConfig brakeSectionSpecConfig = sectionConfig.getBrakeSectionSpec();
+            BrakeSectionSpecConfig brakeSectionSpecConfig = rangedSectionConfig.getBrakeSectionSpec();
             double driveSpeed = brakeSectionSpecConfig.getDriveSpeed();
             double deceleration = brakeSectionSpecConfig.getDeceleration();
             return new BrakeAndDriveTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, deceleration);
         }else if(type.equalsIgnoreCase("drive")){
-            DriveSectionSpecConfig driveSectionSpecConfig = sectionConfig.getDriveSectionSpec();
+            DriveSectionSpecConfig driveSectionSpecConfig = rangedSectionConfig.getDriveSectionSpec();
             double driveSpeed = driveSectionSpecConfig.getDriveSpeed();
             double acceleration = driveSectionSpecConfig.getAcceleration();
             double deceleration = driveSectionSpecConfig.getDeceleration();
             return new BrakeAndDriveTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, acceleration);
         }else if(type.equalsIgnoreCase("launch")){
-            LaunchSectionSpecConfig launchSectionSpecConfig = sectionConfig.getLaunchSectionSpecConfig();
+            LaunchSectionSpecConfig launchSectionSpecConfig = rangedSectionConfig.getLaunchSectionSpecConfig();
             double engagePercentage = launchSectionSpecConfig.getEngage();
-            Frame lowerRange = new SimpleFrame(sectionConfig.getLowerRange());
-            Frame upperRange = new SimpleFrame(sectionConfig.getUpperRange());
+            Frame lowerRange = new SimpleFrame(rangedSectionConfig.getLowerRange());
+            Frame upperRange = new SimpleFrame(rangedSectionConfig.getUpperRange());
             Frame engageFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
 
             double driveSpeed = launchSectionSpecConfig.getDriveSpeed();
@@ -187,12 +189,12 @@ public class TrackBehaviourFactory {
 
             return getLaunchBehaviour(coasterHandle, engageFrame, driveSpeed, acceleration, deceleration, waitTicks, launchAcceleration, launchMaxSpeed, launchEffectsString);
         }else if(type.equalsIgnoreCase("transfer")){
-            TransferSectionSpecConfig transferSectionSpecConfig = sectionConfig.getTransferSectionSpec();
+            TransferSectionSpecConfig transferSectionSpecConfig = rangedSectionConfig.getTransferSectionSpec();
 
             Vector3 origin = transferSectionSpecConfig.getOrigin();
             double engagePercentage = transferSectionSpecConfig.getEngage();
-            Frame lowerRange = new SimpleFrame(sectionConfig.getLowerRange());
-            Frame upperRange = new SimpleFrame(sectionConfig.getUpperRange());
+            Frame lowerRange = new SimpleFrame(rangedSectionConfig.getLowerRange());
+            Frame upperRange = new SimpleFrame(rangedSectionConfig.getUpperRange());
             Frame engageFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
             Vector3 modelOffsetPosition = transferSectionSpecConfig.getModelOffsetPosition();
             Vector3 modelOffsetRotation = transferSectionSpecConfig.getModelOffsetRotation();
@@ -227,5 +229,13 @@ public class TrackBehaviourFactory {
 
         JRidesPlugin.getLogger().severe("Unknown section type " + type);
         return null;
+    }
+
+    public TrackBehaviour getTrackBehaviourFor(CoasterHandle coasterHandle, CoasterConfig coasterConfig, PointSectionConfig pointSectionConfig) {
+        String type = pointSectionConfig.getType();
+        TrackConfig trackConfig = coasterConfig.getTrack();
+        String identifier = pointSectionConfig.getIdentifier();
+
+        throw new RuntimeException("Not implemented"); // TODO: do
     }
 }

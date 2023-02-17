@@ -1,12 +1,21 @@
-package com.jverbruggen.jrides.config.coaster.objects.section;
+package com.jverbruggen.jrides.config.coaster.objects.section.base;
 
-import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
+import com.jverbruggen.jrides.animator.CoasterHandle;
+import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
+import com.jverbruggen.jrides.animator.trackbehaviour.factory.TrackBehaviourFactory;
+import com.jverbruggen.jrides.config.coaster.CoasterConfig;
+import com.jverbruggen.jrides.config.coaster.objects.section.*;
 import com.jverbruggen.jrides.config.coaster.objects.section.transfer.TransferSectionSpecConfig;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
+import com.jverbruggen.jrides.models.properties.frame.SimpleFrame;
+import com.jverbruggen.jrides.models.ride.factory.track.TrackDescription;
+import com.jverbruggen.jrides.models.ride.section.reference.RangedSectionReference;
+import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
 
-public class SectionConfig extends BaseConfig {
+public class RangedSectionConfig extends SectionConfig {
     private final String identifier;
     private final int lowerRange;
     private final int upperRange;
@@ -23,11 +32,11 @@ public class SectionConfig extends BaseConfig {
     private final TransferSectionSpecConfig transferSectionSpec;
     private final LaunchSectionSpecConfig launchSectionSpecConfig;
 
-    public SectionConfig(String identifier, int lowerRange, int upperRange, boolean jumpAtStart, boolean jumpAtEnd, String trackSource, String type,
-                         String nextSection,
-                         BlockSectionSpecConfig blockSectionSpec, StationSpecConfig stationSectionSpec, BrakeSectionSpecConfig brakeSectionSpec,
-                         DriveSectionSpecConfig driveSectionSpec, StorageSectionSpecConfig storageSectionSpec, TransferSectionSpecConfig transferSectionSpec,
-                         LaunchSectionSpecConfig launchSectionSpecConfig) {
+    public RangedSectionConfig(String identifier, int lowerRange, int upperRange, boolean jumpAtStart, boolean jumpAtEnd, String trackSource, String type,
+                               String nextSection,
+                               BlockSectionSpecConfig blockSectionSpec, StationSpecConfig stationSectionSpec, BrakeSectionSpecConfig brakeSectionSpec,
+                               DriveSectionSpecConfig driveSectionSpec, StorageSectionSpecConfig storageSectionSpec, TransferSectionSpecConfig transferSectionSpec,
+                               LaunchSectionSpecConfig launchSectionSpecConfig) {
         this.identifier = identifier;
         this.lowerRange = lowerRange;
         this.upperRange = upperRange;
@@ -105,7 +114,14 @@ public class SectionConfig extends BaseConfig {
         return jumpAtEnd;
     }
 
-    public static SectionConfig fromConfigurationSection(ConfigurationSection configurationSection, String sectionIdentifier) {
+    public static boolean accepts(String type){
+        return switch (type) {
+            case "track", "drive", "brake", "station", "blocksection", "transfer", "launch" -> true;
+            default -> false;
+        };
+    }
+
+    public static RangedSectionConfig fromConfigurationSection(ConfigurationSection configurationSection, String sectionIdentifier) {
         List<?> range = configurationSection.getList("range");
 
         int lowerRange = (Integer)range.get(0);
@@ -147,7 +163,31 @@ public class SectionConfig extends BaseConfig {
         if(configurationSection.contains("launchSection"))
             launchSectionSpec = LaunchSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("launchSection"));
 
-        return new SectionConfig(sectionIdentifier, lowerRange, upperRange, jumpAtStart, jumpAtEnd, trackSource, type, nextSection, blockSectionSpec, stationSectionSpec, brakeSectionSpec, driveSectionSpec, storageSectionSpec, transferSectionSpec, launchSectionSpec);
+        return new RangedSectionConfig(sectionIdentifier, lowerRange, upperRange, jumpAtStart, jumpAtEnd, trackSource, type, nextSection, blockSectionSpec, stationSectionSpec, brakeSectionSpec, driveSectionSpec, storageSectionSpec, transferSectionSpec, launchSectionSpec);
+    }
+
+    @Override
+    public SectionReference build(TrackBehaviourFactory trackBehaviourFactory, List<TrackDescription> trackDescriptions, CoasterHandle coasterHandle,
+                                  CoasterConfig coasterConfig) {
+        String sectionIdentifier = getIdentifier();
+        String nextSectionIdentifier = getNextSection();
+        String parentTrackIdentifier = getParentTrackIdentifier();
+
+        boolean jumpAtStart = isJumpAtStart();
+        boolean jumpAtEnd = isJumpAtEnd();
+
+        TrackDescription trackDescription = trackDescriptions.stream()
+                .filter(d -> d.getIdentifier().equalsIgnoreCase(getParentTrackIdentifier()))
+                .findFirst().orElseThrow();
+
+        Frame startFrame = new SimpleFrame(getLowerRange());
+        Frame endFrame = new SimpleFrame(getUpperRange());
+
+        TrackBehaviour trackBehaviour = trackBehaviourFactory.getTrackBehaviourFor(coasterHandle, coasterConfig, this, trackDescription.getCycle());
+        if(trackBehaviour == null) return null;
+
+        return new RangedSectionReference(sectionIdentifier, startFrame, endFrame, trackBehaviour, nextSectionIdentifier, parentTrackIdentifier,
+                jumpAtStart, jumpAtEnd);
     }
 }
 
