@@ -129,8 +129,13 @@ public class TrainHandle {
             }
         }
 
+        sendPositionUpdatesToListeners(trainHeadOfTrainFrame);
         playEffects(trainHeadOfTrainFrame);
         playWindSounds();
+    }
+
+    private void sendPositionUpdatesToListeners(Frame currentFrame) {
+        train.sendPositionMessage(currentFrame.toString());
     }
 
     private void playEffects(Frame currentFrame){

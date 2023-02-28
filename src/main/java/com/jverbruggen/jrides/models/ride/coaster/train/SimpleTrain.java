@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.models.ride.coaster.train;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.common.permissions.Permissions;
+import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
@@ -34,6 +35,7 @@ public class SimpleTrain implements Train {
 
     private String statusMessage;
     private List<Player> statusMessageListeners;
+    private List<MessageReceiver> positionMessageListeners;
     private boolean debugMode;
     private boolean drivingTowardsPositiveDirection;
     private boolean forwards;
@@ -58,6 +60,7 @@ public class SimpleTrain implements Train {
         this.trainHandle = null;
         this.statusMessage = "";
         this.statusMessageListeners = new ArrayList<>();
+        this.positionMessageListeners = new ArrayList<>();
         this.debugMode = debugMode;
 
         this.drivingTowardsPositiveDirection = true;
@@ -308,6 +311,27 @@ public class SimpleTrain implements Train {
     @Override
     public void playDispatchSound() {
         playSound(trainHandle.getCoasterHandle().getDispatchSound());
+    }
+
+    @Override
+    public void sendPositionMessage(String positionMessage) {
+        if(positionMessageListeners == null || positionMessageListeners.size() == 0) return;
+        positionMessageListeners.forEach(r->r.sendMessage(positionMessage));
+    }
+
+    @Override
+    public void addPositionMessageListener(MessageReceiver messageReceiver) {
+        positionMessageListeners.add(messageReceiver);
+    }
+
+    @Override
+    public void removePositionMessageListener(MessageReceiver messageReceiver) {
+        positionMessageListeners.remove(messageReceiver);
+    }
+
+    @Override
+    public boolean positionMessageEnabled(MessageReceiver messageReceiver) {
+        return positionMessageListeners.contains(messageReceiver);
     }
 
     @Override

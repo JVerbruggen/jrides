@@ -23,4 +23,9 @@ public abstract class SectionReference {
     public abstract String getParentTrackIdentifier();
 
     public abstract Section makeSection();
+
+    @Override
+    public String toString() {
+        return "<SRef to " + getSectionIdentifier() + ">";
+    }
 }

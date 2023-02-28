@@ -3,7 +3,9 @@ package com.jverbruggen.jrides.models.ride.section.builder;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
+import org.bukkit.Bukkit;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +33,9 @@ public class AdvancedSectionBuilder {
 
         for(Map.Entry<String, SectionReference> existingSection : sectionReferences.entrySet()){
             SectionReference existingSectionReference = existingSection.getValue();
-            if(existingSectionReference.getNextSectionIdentifier().equalsIgnoreCase(sectionIdentifier)){
+            String existingNextSectionIdentifier = existingSectionReference.getNextSectionIdentifier();
+            if(existingNextSectionIdentifier != null
+                    && existingNextSectionIdentifier.equalsIgnoreCase(sectionIdentifier)){
                 sectionReference.setPreviousSectionIdentifier(existingSectionReference.getSectionIdentifier());
             }
         }
@@ -41,6 +45,8 @@ public class AdvancedSectionBuilder {
     }
 
     private Map.Entry<SectionReference, Section> findSection(Map<SectionReference, Section> sections, String sectionIdentifier){
+        if(sectionIdentifier == null) return null;
+
         Map.Entry<SectionReference, Section> found = null;
         for(Map.Entry<SectionReference, Section> entry : sections.entrySet()){
             if(entry.getKey().getSectionIdentifier().equalsIgnoreCase(sectionIdentifier)){
@@ -69,11 +75,14 @@ public class AdvancedSectionBuilder {
             SectionReference sectionReference = entry.getKey();
             Section section = entry.getValue();
 
-            Section nextSection = findSection(sections, sectionReference.getNextSectionIdentifier()).getValue();
-//            Section previousSection = findSection(sections, sectionReference.getPreviousSectionIdentifier()).getValue();
+            Map.Entry<SectionReference, Section> foundNextSectionEntry = findSection(sections, sectionReference.getNextSectionIdentifier());
+            Section nextSection = null;
+            if(foundNextSectionEntry != null)
+                nextSection = foundNextSectionEntry.getValue();
 
             section.setNext(nextSection);
-            nextSection.setPrevious(section);
+            if(nextSection != null)
+                nextSection.setPrevious(section);
         }
 
         this.result = sections;
@@ -83,6 +92,12 @@ public class AdvancedSectionBuilder {
     public void populateTransfers(List<Transfer> transfers){
         for(Transfer transfer : transfers){
             transfer.populateTransferPositionSections(result);
+        }
+    }
+
+    public void populateBehaviours(){
+        for(Section section : result.values()){
+            section.getTrackBehaviour().populateSectionReferences(result);
         }
     }
 

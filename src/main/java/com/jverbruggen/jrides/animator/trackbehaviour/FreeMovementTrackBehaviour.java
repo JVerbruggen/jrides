@@ -24,8 +24,6 @@ public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements Tr
     }
 
     public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Section section) {
-        // --- Constants
-
         // --- New mass middle calculation
         Train train = trainHandle.getTrain();
         Section backFacingSection = train.getBackFacingTrainFrame().getSection();

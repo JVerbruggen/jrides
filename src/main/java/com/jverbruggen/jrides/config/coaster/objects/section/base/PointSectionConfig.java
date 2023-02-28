@@ -4,39 +4,32 @@ import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.factory.TrackBehaviourFactory;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
-import com.jverbruggen.jrides.config.coaster.objects.section.*;
-import com.jverbruggen.jrides.config.coaster.objects.section.transfer.TransferSectionSpecConfig;
+import com.jverbruggen.jrides.config.coaster.objects.section.point.SwitchSectionSpecConfig;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.frame.SimpleFrame;
 import com.jverbruggen.jrides.models.ride.factory.track.TrackDescription;
 import com.jverbruggen.jrides.models.ride.section.reference.PointSectionReference;
-import com.jverbruggen.jrides.models.ride.section.reference.RangedSectionReference;
 import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
 
 public class PointSectionConfig extends SectionConfig {
-    private final String identifier;
     private final int point;
     private final String trackSource;
-    private final String type;
     private final String nextSection;
+    private final SwitchSectionSpecConfig switchSectionSpecConfig;
 
-    public PointSectionConfig(String identifier, int point, String trackSource, String type, String nextSection) {
-        this.identifier = identifier;
+    public PointSectionConfig(String identifier, int point, String trackSource, String type, String nextSection, SwitchSectionSpecConfig switchSectionSpecConfig) {
+        super(type, identifier);
         this.point = point;
         this.trackSource = trackSource;
-        this.type = type;
         this.nextSection = nextSection;
+        this.switchSectionSpecConfig = switchSectionSpecConfig;
     }
 
     public int getPoint() {
         return point;
-    }
-
-    public String getIdentifier() {
-        return identifier;
     }
 
     public String getNextSection() {
@@ -47,13 +40,13 @@ public class PointSectionConfig extends SectionConfig {
         return trackSource;
     }
 
-    public String getType() {
-        return type;
+    public SwitchSectionSpecConfig getSwitchSectionSpecConfig() {
+        return switchSectionSpecConfig;
     }
 
     public static boolean accepts(String type){
         return switch (type) {
-            case "track", "drive", "brake", "station", "blocksection", "transfer", "launch" -> true;
+            case "switch" -> true;
             default -> false;
         };
     }
@@ -68,7 +61,11 @@ public class PointSectionConfig extends SectionConfig {
         String type = configurationSection.getString("type");
         String nextSection = configurationSection.getString("nextSection");
 
-        return new PointSectionConfig(sectionIdentifier, point, trackSource, type, nextSection);
+        SwitchSectionSpecConfig switchSectionSpecConfig = null;
+        if(configurationSection.contains("switchSpec"))
+            switchSectionSpecConfig = SwitchSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("switchSpec"));
+
+        return new PointSectionConfig(sectionIdentifier, point, trackSource, type, nextSection, switchSectionSpecConfig);
     }
 
     @Override

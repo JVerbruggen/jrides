@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import org.bukkit.Bukkit;
 
 public class SimpleSection extends BaseSection {
     private Frame startFrame;
@@ -63,8 +64,8 @@ public class SimpleSection extends BaseSection {
         if(this.canBlock()) return true;
 
         Section next = next(train);
-        Section shouldBeThis = next.previous(train);
-        return shouldBeThis == this && next.isBlockSectionSafe(train);
+        return next.isPreviousSectionFor(train, this)
+                && next.isBlockSectionSafe(train);
     }
 
     @Override

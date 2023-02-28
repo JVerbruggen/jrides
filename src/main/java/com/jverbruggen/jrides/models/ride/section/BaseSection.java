@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.models.ride.section;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
+import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -10,6 +11,9 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class BaseSection implements Section{
     protected final TrackBehaviour trackBehaviour;
     protected Track parentTrack;
@@ -17,6 +21,7 @@ public abstract class BaseSection implements Section{
     private Train occupiedBy;
     private Section previousSection;
     private Section nextSection;
+    private List<Section> additionalPreviousSections;
 
     public BaseSection(TrackBehaviour trackBehaviour) {
         this.trackBehaviour = trackBehaviour;
@@ -24,6 +29,7 @@ public abstract class BaseSection implements Section{
         this.previousSection = null;
         this.nextSection = null;
         this.parentTrack = null;
+        this.additionalPreviousSections = new ArrayList<>();
     }
 
     @Override
@@ -38,7 +44,7 @@ public abstract class BaseSection implements Section{
 
     @Override
     public Vector3 getLocationFor(Frame frame) {
-        if(trackBehaviour.canMoveFromParentTrack()){
+        if(trackBehaviour.definesNextSection()){
             return trackBehaviour.getBehaviourDefinedPosition(parentTrack.getLocationFor(frame));
         }
 
@@ -47,7 +53,7 @@ public abstract class BaseSection implements Section{
 
     @Override
     public Quaternion getOrientationFor(Frame frame) {
-        if(trackBehaviour.canMoveFromParentTrack()){
+        if(trackBehaviour.definesNextSection()){
             return trackBehaviour.getBehaviourDefinedOrientation(parentTrack.getOrientationFor(frame));
         }
         return parentTrack.getOrientationFor(frame);
@@ -75,7 +81,7 @@ public abstract class BaseSection implements Section{
 
     @Override
     public Section next(Train train) {
-        if(trackBehaviour.canMoveFromParentTrack()){
+        if(trackBehaviour.definesNextSection()){
             return trackBehaviour.getSectionNext(train);
         }
 
@@ -84,13 +90,22 @@ public abstract class BaseSection implements Section{
 
     @Override
     public Section previous(Train train) {
-        if(trackBehaviour.canMoveFromParentTrack()){
+        if(trackBehaviour.definesNextSection()){
             return trackBehaviour.getSectionPrevious(train);
         }
 
         return previousSection;
     }
 
+    @Override
+    public boolean isNextSectionFor(Train train, Section section) {
+        return next(train) == section;
+    }
+
+    @Override
+    public boolean isPreviousSectionFor(Train train, Section section) {
+        return previous(train) == section || additionalPreviousSections.contains(section);
+    }
 
     @Override
     public void setNext(Section section) {
@@ -100,7 +115,11 @@ public abstract class BaseSection implements Section{
 
     @Override
     public void setPrevious(Section section) {
-        if(previousSection != null) throw new RuntimeException("Cannot set previous section twice! (Check if multiple sections point to the same singular section)");
+        if(previousSection != null){
+//            throw new RuntimeException("Cannot set previous section twice! (Check if multiple sections point to the same singular section)");
+            additionalPreviousSections.add(section);
+            return;
+        }
         previousSection = section;
     }
 
@@ -124,13 +143,13 @@ public abstract class BaseSection implements Section{
 
     @Override
     public boolean positiveDirectionToGoTo(Section section, Train forTrain) {
-        if(trackBehaviour.canMoveFromParentTrack()){
+        if(trackBehaviour.definesNextSection()){
             if(trackBehaviour.getSectionAtEnd(forTrain) == section) return true;
             else if(trackBehaviour.getSectionAtStart(forTrain) == section) return false;
             else throw new RuntimeException("Cannot determine behaviour-defined direction to go to section " + section + " for train " + forTrain);
         }else{
-            if(this.next(forTrain) == section) return true;
-            else if(this.previous(forTrain) == section) return false;
+            if(this.isNextSectionFor(forTrain, section)) return true;
+            else if(this.isPreviousSectionFor(forTrain, section)) return false;
             else throw new RuntimeException("Cannot determine direction to go to section " + section + " for train " + forTrain);
         }
     }

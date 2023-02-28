@@ -11,8 +11,10 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public abstract class BaseTrackBehaviour implements TrackBehaviour {
     protected final CartMovementFactory cartMovementFactory;
@@ -70,7 +72,7 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     }
 
     @Override
-    public boolean canMoveFromParentTrack() {
+    public boolean definesNextSection() {
         return false;
     }
 
@@ -97,5 +99,9 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     @Override
     public Section getSectionPrevious(Train train) {
         return getSectionAtStart(train);
+    }
+
+    @Override
+    public void populateSectionReferences(Map<SectionReference, Section> sectionMap) {
     }
 }

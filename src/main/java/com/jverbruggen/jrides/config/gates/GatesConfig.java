@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.config.gates;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
@@ -17,8 +18,10 @@ public class GatesConfig {
     }
 
     public GateOwnerConfigSpec getGateOwnerSpec(String ownerName){
-        if(gateOwnerSpecs == null || !gateOwnerSpecs.containsKey(ownerName))
-            throw new RuntimeException(ownerName + " has no gates!");
+        if(gateOwnerSpecs == null || !gateOwnerSpecs.containsKey(ownerName)){
+            JRidesPlugin.getLogger().warning(ownerName + " has no gates!");
+            return null;
+        }
 
         return gateOwnerSpecs.get(ownerName);
     }

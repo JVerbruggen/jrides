@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.config.coaster.objects;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +56,11 @@ public abstract class BaseConfig {
     protected static boolean getBoolean(ConfigurationSection configurationSection, String key) {
         assertPresence(configurationSection, key);
         return configurationSection.getBoolean(key);
+    }
+
+    protected static List<String> getStringList(ConfigurationSection configurationSection, String key){
+        assertPresence(configurationSection, key);
+        return configurationSection.getStringList(key);
     }
 
     protected static List<Double> getDoubleList(ConfigurationSection configurationSection, String key){

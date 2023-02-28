@@ -138,7 +138,7 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
     }
 
     @Override
-    public boolean canMoveFromParentTrack() {
+    public boolean definesNextSection() {
         return true;
     }
 

@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.models.ride.coaster.train;
 
 import com.jverbruggen.jrides.animator.TrainHandle;
+import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
@@ -69,6 +70,11 @@ public interface Train {
     void playRestraintOpenSound();
     void playRestraintCloseSound();
     void playDispatchSound();
+
+    void sendPositionMessage(String positionMessage);
+    void addPositionMessageListener(MessageReceiver messageReceiver);
+    void removePositionMessageListener(MessageReceiver messageReceiver);
+    boolean positionMessageEnabled(MessageReceiver messageReceiver);
 
     void setStatusMessage(String statusMessage);
     void addStatusMessageListener(Player player);

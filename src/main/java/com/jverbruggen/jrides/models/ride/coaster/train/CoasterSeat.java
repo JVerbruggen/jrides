@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.models.ride.coaster.train;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.event.player.PlayerSitDownEvent;
 import com.jverbruggen.jrides.event.player.PlayerStandUpEvent;
 import com.jverbruggen.jrides.models.entity.Player;
@@ -11,6 +12,9 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.state.ride.SoftEjector;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.inventory.ItemStack;
 
 public class CoasterSeat implements Seat {
     private Player passenger;
@@ -40,6 +44,8 @@ public class CoasterSeat implements Seat {
             passenger.clearSmoothAnimationRotation();
             parentCart.getParentTrain().onPlayerExit(passenger);
             PlayerStandUpEvent.send(passenger, parentCart.getParentTrain().getHandle().getCoasterHandle().getRide());
+
+            getParentCart().getParentTrain().removePositionMessageListener(passenger);
         }
 
         passenger = player;
@@ -48,6 +54,15 @@ public class CoasterSeat implements Seat {
             player.setSeatedOn(this);
             parentCart.getParentTrain().onPlayerEnter(player);
             PlayerSitDownEvent.send(passenger, parentCart.getParentTrain().getHandle().getCoasterHandle().getRide());
+
+            // Potentially rider wants to inspect frames
+            org.bukkit.entity.Player bukkitPlayer = player.getBukkitPlayer();
+            ItemStack itemInHand = bukkitPlayer.getInventory().getItemInMainHand();
+            if(bukkitPlayer.hasPermission(Permissions.STATUS_INSPECTION)
+                    && itemInHand.getItemMeta().getDisplayName().stripTrailing().equalsIgnoreCase("jrides:frame-inspect")){
+                getParentCart().getParentTrain().addPositionMessageListener(player);
+                player.sendMessage("Now inspecting frames");
+            }
         }
     }
 

@@ -49,11 +49,10 @@ public class TrackConfig {
 
             assert track != null;
             if(track.equalsIgnoreCase("spline")){
-                sections.add(RangedSectionConfig.fromConfigurationSection(sectionSpec, sectionKey));
+                sections.add(SectionConfig.fromConfigurationSection(sectionSpec, sectionKey));
             }else if(track.equalsIgnoreCase("straight")){
                 throw new RuntimeException("Straight track not implemented yet");
             }
-
         }
 
         return new TrackConfig(position, sections, parts);

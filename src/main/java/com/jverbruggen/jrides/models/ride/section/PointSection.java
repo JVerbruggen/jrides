@@ -47,18 +47,14 @@ public class PointSection extends BaseSection {
 
     @Override
     public boolean canBlock() {
-        return trackBehaviour.canBlock();
+        return false;
     }
 
     @Override
     public boolean isBlockSectionSafe(Train train) {
-        if(this.isOccupied()) return false;
-        if(!this.trackBehaviour.accepts(train)) return false;
-        if(this.canBlock()) return true;
-
         Section next = next(train);
-        Section shouldBeThis = next.previous(train);
-        return shouldBeThis == this && next.isBlockSectionSafe(train);
+        if(next == null) return false;
+        return next.isBlockSectionSafe(train);
     }
 
     @Override

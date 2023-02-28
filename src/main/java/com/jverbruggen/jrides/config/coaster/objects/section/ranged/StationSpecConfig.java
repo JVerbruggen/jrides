@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.config.coaster.objects.section;
+package com.jverbruggen.jrides.config.coaster.objects.section.ranged;
 
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;

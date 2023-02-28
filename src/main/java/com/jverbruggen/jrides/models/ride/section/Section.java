@@ -37,6 +37,8 @@ public interface Section {
     Section next(Train train);
     @Nullable
     Section previous(Train train);
+    boolean isNextSectionFor(Train train, Section section);
+    boolean isPreviousSectionFor(Train train, Section section);
     void setNext(Section section);
     void setPrevious(Section section);
     boolean spansOver(Train train);

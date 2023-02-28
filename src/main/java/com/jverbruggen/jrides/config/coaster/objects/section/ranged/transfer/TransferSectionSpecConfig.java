@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.config.coaster.objects.section.transfer;
+package com.jverbruggen.jrides.config.coaster.objects.section.ranged.transfer;
 
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.models.math.Vector3;

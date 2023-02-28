@@ -9,6 +9,9 @@ import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
+
+import java.util.Map;
 
 public interface TrackBehaviour {
     TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Section section);
@@ -29,8 +32,9 @@ public interface TrackBehaviour {
     Section getSectionAtEnd(Train train);
     boolean accepts(Train train);
 
-    boolean canMoveFromParentTrack();
+    boolean definesNextSection();
     Vector3 getBehaviourDefinedPosition(Vector3 originalPosition);
     Quaternion getBehaviourDefinedOrientation(Quaternion originalOrientation);
 
+    void populateSectionReferences(Map<SectionReference, Section> sectionMap);
 }

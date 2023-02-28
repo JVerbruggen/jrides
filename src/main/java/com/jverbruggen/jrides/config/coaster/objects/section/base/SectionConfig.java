@@ -11,6 +11,22 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.List;
 
 public abstract class SectionConfig extends BaseConfig {
+    protected final String type;
+    protected final String identifier;
+
+    protected SectionConfig(String type, String identifier) {
+        this.type = type;
+        this.identifier = identifier;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
     public abstract SectionReference build(TrackBehaviourFactory trackBehaviourFactory, List<TrackDescription> trackDescriptions, CoasterHandle coasterHandle,
                                            CoasterConfig coasterConfig);
 

@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.config.coaster.objects.section;
+package com.jverbruggen.jrides.config.coaster.objects.section.ranged;
 
 import org.bukkit.configuration.ConfigurationSection;
 
