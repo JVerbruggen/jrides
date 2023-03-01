@@ -1,9 +1,9 @@
 package com.jverbruggen.jrides.effect;
 
-import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 
 public interface EffectTrigger {
-    void execute(Train train);
-    void executeReversed(Train train);
     boolean finishedPlaying();
+    EffectTriggerHandle createHandle(Frame frame, boolean reversed);
 }

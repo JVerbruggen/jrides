@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.effect.music;
+package com.jverbruggen.jrides.effect.train.music;
 
 import com.jverbruggen.jrides.config.trigger.TriggerConfig;
 import com.jverbruggen.jrides.config.trigger.music.MusicTriggerConfig;

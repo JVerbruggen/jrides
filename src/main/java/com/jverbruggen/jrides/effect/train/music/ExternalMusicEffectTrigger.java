@@ -1,12 +1,13 @@
-package com.jverbruggen.jrides.effect.music;
+package com.jverbruggen.jrides.effect.train.music;
 
+import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
 import com.jverbruggen.jrides.event.ride.OnrideMusicTriggerEvent;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
-public class ExternalMusicEffectTrigger implements MusicEffectTrigger {
+public class ExternalMusicEffectTrigger extends BaseTrainEffectTrigger implements MusicEffectTrigger {
     private final PluginManager pluginManager;
     private final String resource;
     private final String descriptor;

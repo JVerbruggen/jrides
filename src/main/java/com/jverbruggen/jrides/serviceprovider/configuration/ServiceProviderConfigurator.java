@@ -11,7 +11,8 @@ import com.jverbruggen.jrides.config.trigger.TriggerConfigFactory;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.controller.ButtonUpdateController;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
-import com.jverbruggen.jrides.effect.music.MusicEffectTriggerFactory;
+import com.jverbruggen.jrides.effect.cart.rotation.CartRotationTriggerFactory;
+import com.jverbruggen.jrides.effect.train.music.MusicEffectTriggerFactory;
 import com.jverbruggen.jrides.effect.platform.MultiArmorstandMovementEffectTriggerFactory;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.logging.JRidesLogger;
@@ -59,6 +60,7 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(TriggerConfigFactory.class, new TriggerConfigFactory());
         ServiceProvider.register(MultiArmorstandMovementEffectTriggerFactory.class, new MultiArmorstandMovementEffectTriggerFactory());
         ServiceProvider.register(MusicEffectTriggerFactory.class, new MusicEffectTriggerFactory());
+        ServiceProvider.register(CartRotationTriggerFactory.class, new CartRotationTriggerFactory());
         ServiceProvider.register(ConfigManager.class, new ConfigManager(plugin));
         ServiceProvider.register(EffectTriggerFactory.class, new EffectTriggerFactory());
         ServiceProvider.register(MessageFactory.class, new MessageFactory());

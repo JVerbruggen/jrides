@@ -1,11 +1,14 @@
 package com.jverbruggen.jrides.effect.platform;
 
-import com.jverbruggen.jrides.effect.EffectTrigger;
+import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
+import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
+import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 import java.util.List;
 
-public class MultiArmorstandMovementEffectTrigger implements EffectTrigger {
+public class MultiArmorstandMovementEffectTrigger extends BaseTrainEffectTrigger {
     private List<ArmorstandMovementEffectTrigger> armorstandMovements;
 
     public MultiArmorstandMovementEffectTrigger(List<ArmorstandMovementEffectTrigger> armorstandMovements) {

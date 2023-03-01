@@ -132,7 +132,7 @@ public class RideManager {
         if(track == null) return;
         coasterHandle.setTrack(track);
 
-        EffectTriggerCollection effectTriggerCollection = effectTriggerFactory.getEffectTriggers(rideIdentifier, track);
+        EffectTriggerCollection effectTriggerCollection = effectTriggerFactory.getTrainEffectTriggers(rideIdentifier, track);
         coasterHandle.setEffectTriggerCollection(effectTriggerCollection);
 
         SectionProvider sectionProvider = new SectionProvider();

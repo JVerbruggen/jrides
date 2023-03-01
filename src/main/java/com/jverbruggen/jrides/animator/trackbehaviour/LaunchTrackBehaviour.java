@@ -3,7 +3,7 @@ package com.jverbruggen.jrides.animator.trackbehaviour;
 import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
-import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
+import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
@@ -20,12 +20,12 @@ public class LaunchTrackBehaviour extends BaseTrackBehaviour implements TrackBeh
     private final Frame engageFrame;
     private final double launchAcceleration;
     private final double launchMaxSpeed;
-    private final List<EffectTriggerHandle> launchEffectTriggers;
+    private final List<TrainEffectTriggerHandle> launchEffectTriggers;
 
     private int waitTicksState;
     private LaunchPhase phase;
 
-    public LaunchTrackBehaviour(CartMovementFactory cartMovementFactory, double driveSpeed, double deceleration, double acceleration, int waitTicks, Frame engageFrame, double launchAcceleration, double launchMaxSpeed, List<EffectTriggerHandle> launchEffectTriggers) {
+    public LaunchTrackBehaviour(CartMovementFactory cartMovementFactory, double driveSpeed, double deceleration, double acceleration, int waitTicks, Frame engageFrame, double launchAcceleration, double launchMaxSpeed, List<TrainEffectTriggerHandle> launchEffectTriggers) {
         super(cartMovementFactory);
         this.deceleration = deceleration;
         this.acceleration = acceleration;

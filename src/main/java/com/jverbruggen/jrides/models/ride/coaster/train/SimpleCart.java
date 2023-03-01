@@ -1,13 +1,13 @@
 package com.jverbruggen.jrides.models.ride.coaster.train;
 
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovement;
+import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
-import com.jverbruggen.jrides.models.properties.frame.LinkedFrame;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
@@ -23,7 +23,11 @@ public class SimpleCart implements Cart {
     private Frame frame;
     private Train parentTrain;
 
+    private boolean hasEffects;
+    private TrainEffectTriggerHandle nextEffect;
+
     private Quaternion currentOrientation;
+    private Vector3 orientationOffset;
 
     public SimpleCart(String name, List<Seat> seats, VirtualArmorstand modelArmorstand, Vector3 trackOffset, Frame frame) {
         this.name = name;
@@ -33,6 +37,9 @@ public class SimpleCart implements Cart {
         this.frame = frame;
         this.parentTrain = null;
         this.currentOrientation = new Quaternion(0,0,0,0);
+
+        this.nextEffect = null;
+        this.hasEffects = false;
 
         seats.forEach(s -> s.setParentCart(this));
     }
@@ -75,11 +82,28 @@ public class SimpleCart implements Cart {
         return currentOrientation;
     }
 
+    private void updateOrientationOffset(Vector3 orientationOffset){
+        this.orientationOffset = orientationOffset;
+        updateOrientation(calculateOrientationWithOffset(currentOrientation));
+    }
+
+    private Quaternion calculateOrientationWithOffset(Quaternion original){
+        Quaternion orientationWithOffset = original.clone();
+        if(this.orientationOffset != null)
+            orientationWithOffset.rotateYawPitchRoll(this.orientationOffset);
+
+        return orientationWithOffset;
+    }
+
+    private void updateOrientation(Quaternion orientation){
+        currentOrientation = orientation;
+        modelArmorstand.setHeadpose(ArmorStandPose.getArmorStandPose(currentOrientation));
+    }
+
     @Override
     public void setPosition(Vector3 position, Quaternion orientation) {
-        currentOrientation = orientation;
+        updateOrientation(calculateOrientationWithOffset(orientation));
         setPosition(position);
-        modelArmorstand.setHeadpose(ArmorStandPose.getArmorStandPose(orientation));
     }
 
     @Override
@@ -138,5 +162,17 @@ public class SimpleCart implements Cart {
     @Override
     public void setInvertedFrameAddition(boolean inverted) {
         frame.setInvertedFrameAddition(inverted);
+    }
+
+
+    @Override
+    public void setNextEffect(TrainEffectTriggerHandle nextEffect) {
+        this.nextEffect = nextEffect;
+        this.hasEffects = true;
+    }
+
+    @Override
+    public void playEffects() {
+
     }
 }

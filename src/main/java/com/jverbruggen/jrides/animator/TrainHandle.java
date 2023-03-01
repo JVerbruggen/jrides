@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovement;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
+import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -15,14 +16,9 @@ import com.jverbruggen.jrides.models.properties.TrainEnd;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.SoundCategory;
 
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,7 +31,7 @@ public class TrainHandle {
     private CoasterHandle coasterHandle;
 
     private boolean hasEffects;
-    private EffectTriggerHandle nextEffect;
+    private TrainEffectTriggerHandle nextEffect;
 
     private final int windSoundInterval;
     private int windSoundState;
@@ -60,38 +56,10 @@ public class TrainHandle {
     public void resetEffects(){
         if(!hasEffects) return;
 
-        LinkedList<EffectTriggerHandle> linkedList = coasterHandle.getEffectTriggerCollection().getLinkedList();
-        nextEffect = findNearestNextEffect(linkedList, train.getHeadOfTrainFrame()); // TODO: Check validity
-        Bukkit.broadcastMessage(ChatColor.GOLD + "Loaded next effect: " + nextEffect);
-    }
-
-    private EffectTriggerHandle findNearestNextEffect(LinkedList<EffectTriggerHandle> linkedList, Frame currentFrame){
-        if(linkedList == null || linkedList.size() == 0 || currentFrame == null)
-            return null;
-        else if(linkedList.size() == 1)
-            return linkedList.getFirst();
-        else{
-            EffectTriggerHandle selectedEffect = linkedList.getFirst();
-            if(shouldPlay(selectedEffect, currentFrame)){
-                Iterator<EffectTriggerHandle> iterator = linkedList.iterator();
-                while(iterator.hasNext()){
-                    EffectTriggerHandle comparing = iterator.next();
-                    if(!shouldPlay(comparing, currentFrame)){
-                        selectedEffect = comparing;
-                        break;
-                    }
-                }
-            }else{
-                Iterator<EffectTriggerHandle> iterator = linkedList.descendingIterator();
-                while(iterator.hasNext()){
-                    EffectTriggerHandle comparing = iterator.next();
-                    if(shouldPlay(comparing, currentFrame)){
-                        selectedEffect = comparing;
-                    }else break;
-                }
-            }
-            return selectedEffect;
-        }
+        nextEffect = (TrainEffectTriggerHandle) EffectTriggerHandle.FindNearestNextEffect(
+                coasterHandle.getEffectTriggerCollection().getLinkedList(),
+                h -> h instanceof TrainEffectTriggerHandle,
+                train.getHeadOfTrainFrame());
     }
 
     public void tick(){
@@ -130,6 +98,7 @@ public class TrainHandle {
                 Cart cart = cartMovement.getKey();
                 CartMovement movement = cartMovement.getValue();
                 cart.setPosition(movement);
+                cart.playEffects();
             }
         }
 
@@ -150,10 +119,8 @@ public class TrainHandle {
         }
     }
 
-    private boolean shouldPlay(EffectTriggerHandle effectTriggerHandle, Frame currentFrame){
-        Section headSection = train.getHeadSection();
-        return nextEffect.getFrame().getSection().equals(headSection)
-            && headSection.hasPassed(nextEffect.getFrame(), currentFrame);
+    private boolean shouldPlay(TrainEffectTriggerHandle trainEffectTriggerHandle, Frame currentFrame){
+        return trainEffectTriggerHandle.shouldPlay(currentFrame);
     }
 
     private void playWindSounds(){

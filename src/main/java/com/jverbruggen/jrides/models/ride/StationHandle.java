@@ -2,7 +2,7 @@ package com.jverbruggen.jrides.models.ride;
 
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
-import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
+import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
@@ -18,11 +18,11 @@ public class StationHandle {
     private final List<Gate> entryGates;
     private CoasterHandle coasterHandle;
     private final MinMaxWaitingTimer waitingTimer;
-    private final List<EffectTriggerHandle> entryEffectTriggers;
-    private final List<EffectTriggerHandle> exitEffectTriggers;
+    private final List<TrainEffectTriggerHandle> entryEffectTriggers;
+    private final List<TrainEffectTriggerHandle> exitEffectTriggers;
     private final PlayerLocation ejectLocation;
 
-    public StationHandle(CoasterHandle coasterHandle, String name, TriggerContext triggerContext, List<Gate> entryGates, MinMaxWaitingTimer waitingTimer, List<EffectTriggerHandle> entryEffectTriggers, List<EffectTriggerHandle> exitEffectTriggers, PlayerLocation ejectLocation){
+    public StationHandle(CoasterHandle coasterHandle, String name, TriggerContext triggerContext, List<Gate> entryGates, MinMaxWaitingTimer waitingTimer, List<TrainEffectTriggerHandle> entryEffectTriggers, List<TrainEffectTriggerHandle> exitEffectTriggers, PlayerLocation ejectLocation){
         this.coasterHandle = coasterHandle;
         this.triggerContext = triggerContext;
         this.entryGates = entryGates;
@@ -78,12 +78,12 @@ public class StationHandle {
 
     public boolean entryEffectTriggersDone(){
         if(entryEffectTriggers == null) return true;
-        return entryEffectTriggers.stream().allMatch(t -> t.getEffectTrigger().finishedPlaying());
+        return entryEffectTriggers.stream().allMatch(t -> t.getTrainEffectTrigger().finishedPlaying());
     }
 
     public boolean exitEffectTriggersDone(){
         if(exitEffectTriggers == null) return true;
-        return exitEffectTriggers.stream().allMatch(t -> t.getEffectTrigger().finishedPlaying());
+        return exitEffectTriggers.stream().allMatch(t -> t.getTrainEffectTrigger().finishedPlaying());
     }
 
     public void setStationaryTrain(Train train) {

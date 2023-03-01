@@ -1,13 +1,14 @@
 package com.jverbruggen.jrides.effect.platform;
 
 import com.jverbruggen.jrides.JRidesPlugin;
-import com.jverbruggen.jrides.effect.EffectTrigger;
+import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
+import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.bukkit.Bukkit;
 
-public class ArmorstandMovementEffectTrigger implements EffectTrigger {
+public class ArmorstandMovementEffectTrigger extends BaseTrainEffectTrigger {
     private final String identifier;
     private final VirtualArmorstand armorstand;
 

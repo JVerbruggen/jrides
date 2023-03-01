@@ -2,10 +2,17 @@ package com.jverbruggen.jrides.effect;
 
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.trigger.TriggerConfig;
-import com.jverbruggen.jrides.effect.handle.DefaultEffectTriggerHandle;
+import com.jverbruggen.jrides.effect.cart.CartEffectTrigger;
+import com.jverbruggen.jrides.effect.cart.rotation.CartRotationEffectTrigger;
+import com.jverbruggen.jrides.effect.cart.rotation.CartRotationTriggerFactory;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
-import com.jverbruggen.jrides.effect.handle.ReversedEffectTriggerHandle;
-import com.jverbruggen.jrides.effect.music.MusicEffectTriggerFactory;
+import com.jverbruggen.jrides.effect.handle.cart.CartEffectTriggerHandle;
+import com.jverbruggen.jrides.effect.handle.cart.DefaultCartEffectTriggerHandle;
+import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
+import com.jverbruggen.jrides.effect.handle.train.DefaultTrainEffectTriggerHandle;
+import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
+import com.jverbruggen.jrides.effect.handle.train.ReversedTrainEffectTriggerHandle;
+import com.jverbruggen.jrides.effect.train.music.MusicEffectTriggerFactory;
 import com.jverbruggen.jrides.effect.platform.MultiArmorstandMovementEffectTriggerFactory;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.frame.factory.FrameFactory;
@@ -14,10 +21,13 @@ import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class EffectTriggerFactory {
     private final MusicEffectTriggerFactory musicEffectTriggerFactory;
+    private final CartRotationTriggerFactory cartRotationTriggerFactory;
     private final MultiArmorstandMovementEffectTriggerFactory platformEffectTriggerFactory;
     private final ConfigManager configManager;
     private final Map<String, EffectTrigger> effectTriggerMap;
@@ -25,13 +35,14 @@ public class EffectTriggerFactory {
 
     public EffectTriggerFactory() {
         this.musicEffectTriggerFactory = ServiceProvider.getSingleton(MusicEffectTriggerFactory.class);
+        this.cartRotationTriggerFactory = ServiceProvider.getSingleton(CartRotationTriggerFactory.class);
         this.platformEffectTriggerFactory = ServiceProvider.getSingleton(MultiArmorstandMovementEffectTriggerFactory.class);
         this.configManager = ServiceProvider.getSingleton(ConfigManager.class);
         this.effectTriggerMap = new HashMap<>();
         this.frameFactory = ServiceProvider.getSingleton(FrameFactory.class);
     }
 
-    public EffectTriggerHandle getEffectTrigger(String rideIdentifier, String effectName, boolean reversed, Frame frame, TriggerConfig triggerConfig){
+    private <T extends EffectTriggerHandle> T getEffectTrigger(String rideIdentifier, String effectName, boolean reversed, Frame frame, TriggerConfig triggerConfig){
         if(triggerConfig == null) return null;
 
         EffectTrigger effectTrigger;
@@ -44,6 +55,9 @@ public class EffectTriggerFactory {
                 case MULTI_ARMORSTAND_MOVEMENT:
                     effectTrigger = platformEffectTriggerFactory.getMultiArmorstandMovementEffectTrigger(triggerConfig);
                     break;
+                case CART_ROTATE:
+                    effectTrigger = cartRotationTriggerFactory.getRotationEffectTrigger(triggerConfig);
+                    break;
                 default:
                     throw new RuntimeException("Cannot resolve trigger type when creating effect trigger");
             }
@@ -53,14 +67,18 @@ public class EffectTriggerFactory {
             effectTrigger = effectTriggerMap.get(mapKey);
         }
 
-        if(reversed) {
-            return new ReversedEffectTriggerHandle(frame, effectTrigger);
-        } else {
-            return new DefaultEffectTriggerHandle(frame, effectTrigger);
-        }
+        return (T) effectTrigger.createHandle(frame, reversed);
     }
 
-    public List<EffectTriggerHandle> getFramelessEffectTriggers(String rideIdentifier, List<String> effectNames){
+    public TrainEffectTriggerHandle getTrainEffectTrigger(String rideIdentifier, String effectName, boolean reversed, Frame frame, TriggerConfig triggerConfig){
+        return getEffectTrigger(rideIdentifier, effectName, reversed, frame, triggerConfig);
+    }
+
+    public CartEffectTriggerHandle getCartEffectTrigger(String rideIdentifier, String effectName, boolean reversed, Frame frame, TriggerConfig triggerConfig){
+        return getEffectTrigger(rideIdentifier, effectName, reversed, frame, triggerConfig);
+    }
+
+    public List<TrainEffectTriggerHandle> getFramelessEffectTriggers(String rideIdentifier, List<String> effectNames){
         if(effectNames == null) return null;
         return effectNames
                 .stream()
@@ -71,12 +89,12 @@ public class EffectTriggerFactory {
                     if(effectNameRawComponents.length == 2){
                         reversed = effectNameRawComponents[1].equalsIgnoreCase("reversed");
                     }
-                    return getEffectTrigger(rideIdentifier, effectName, reversed, null, configManager.getTriggerConfig(rideIdentifier, effectName));
+                    return getTrainEffectTrigger(rideIdentifier, effectName, reversed, null, configManager.getTriggerConfig(rideIdentifier, effectName));
                 })
                 .collect(Collectors.toList());
     }
 
-    public EffectTriggerCollection getEffectTriggers(String rideIdentifier, Track track){
+    private <T extends EffectTriggerHandle> EffectTriggerCollection<T> getEffectTriggerCollectionGeneric(String rideIdentifier, Track track, BiConsumer<T, T> setNextFunction){
         ConfigurationSection allEffectsConfigurationSection = configManager.getAllEffectsConfigSection(rideIdentifier, "default");
         if(allEffectsConfigurationSection == null)
             return null;
@@ -94,20 +112,28 @@ public class EffectTriggerFactory {
             lastFrameIndex = frameIndex;
         }
 
-        EffectTriggerHandle previous = null;
-        List<EffectTriggerHandle> effectTriggers = new ArrayList<>();
+        T previous = null;
+        List<T> effectTriggers = new ArrayList<>();
         for(Map.Entry<Frame, String> effect : effects.entrySet()){
             Frame frame = effect.getKey();
             String effectName = effect.getValue();
 
-            EffectTriggerHandle effectTrigger = getEffectTrigger(rideIdentifier, effectName, false, frame, configManager.getTriggerConfig(rideIdentifier, effectName));
+            T effectTrigger = getEffectTrigger(rideIdentifier, effectName, false, frame, configManager.getTriggerConfig(rideIdentifier, effectName));
             if(effectTrigger == null) return null;
-            if(previous != null) previous.setNext(effectTrigger);
+            if(previous != null) setNextFunction.accept(previous, effectTrigger);
             effectTriggers.add(effectTrigger);
 
             previous = effectTrigger;
         }
 
-        return new EffectTriggerCollection(effectTriggers);
+        return new EffectTriggerCollection<T>(effectTriggers);
+    }
+
+    public EffectTriggerCollection<TrainEffectTriggerHandle> getTrainEffectTriggers(String rideIdentifier, Track track){
+        return getEffectTriggerCollectionGeneric(rideIdentifier, track, TrainEffectTriggerHandle::setNext);
+    }
+
+    public EffectTriggerCollection<CartEffectTriggerHandle> getCartEffectTriggers(String rideIdentifier, Track track){
+        return getEffectTriggerCollectionGeneric(rideIdentifier, track, CartEffectTriggerHandle::setNext);
     }
 }
