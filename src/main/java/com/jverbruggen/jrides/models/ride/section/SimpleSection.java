@@ -43,8 +43,13 @@ public class SimpleSection extends BaseSection {
     }
 
     @Override
+    public boolean isInRawFrameRange(Frame frame) {
+        return Frame.isBetweenFrames(startFrame, endFrame, frame);
+    }
+
+    @Override
     public boolean isInSection(Frame frame) {
-        return parentTrack.equals(frame.getTrack()) && Frame.isBetweenFrames(startFrame, endFrame, frame);
+        return parentTrack.equals(frame.getTrack()) && isInRawFrameRange(frame);
     }
 
     @Override

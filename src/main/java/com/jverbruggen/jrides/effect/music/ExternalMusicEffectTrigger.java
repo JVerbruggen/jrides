@@ -8,19 +8,19 @@ import org.bukkit.plugin.PluginManager;
 
 public class ExternalMusicEffectTrigger implements MusicEffectTrigger {
     private final PluginManager pluginManager;
-    private final String musicResource;
-    private final String musicType;
+    private final String resource;
+    private final String descriptor;
 
-    public ExternalMusicEffectTrigger(String musicResource, String musicType) {
-        this.musicType = musicType;
+    public ExternalMusicEffectTrigger(String resource, String descriptor) {
         this.pluginManager = ServiceProvider.getSingleton(PluginManager.class);
-        this.musicResource = musicResource;
+        this.resource = resource;
+        this.descriptor = descriptor;
     }
 
     @Override
     public void execute(Train train) {
-        pluginManager.callEvent(new OnrideMusicTriggerEvent(musicResource, musicType, train.getPassengers()));
-        Bukkit.broadcastMessage(musicResource);
+        pluginManager.callEvent(new OnrideMusicTriggerEvent(train.getPassengers(), resource, descriptor));
+        Bukkit.broadcastMessage(resource);
     }
 
     @Override
@@ -35,6 +35,6 @@ public class ExternalMusicEffectTrigger implements MusicEffectTrigger {
 
     @Override
     public String toString() {
-        return "<MusicEffect " + musicResource + ">";
+        return "<MusicEffect " + resource + ">";
     }
 }

@@ -143,7 +143,6 @@ public class RideManager {
         StationHandle stationHandle = coasterHandle.getStationHandle(null);
 
         ControlModeFactory controlModeFactory = new ControlModeFactory();
-
         RideController rideController = new RideController(controlModeFactory, stationHandle);
         rideController.setRideHandle(coasterHandle);
         coasterHandle.setRideController(rideController);

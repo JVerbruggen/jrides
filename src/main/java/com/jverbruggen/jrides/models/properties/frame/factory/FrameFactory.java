@@ -18,10 +18,10 @@ public class FrameFactory {
         if(track == null)
             throw new RuntimeException("Track cannot be null");
 
-        SimpleFrame frame = new SimpleFrame(frameIndex);
+        SimpleFrame frame = new SimpleFrame(frameIndex, track);
         Section section = sectionProvider.findSectionInBulk(frame, track.getSections());
         if(section == null)
-            throw new RuntimeException("Could not found section for static frame " + frameIndex);
+            throw new RuntimeException("Could not find section for static frame " + frameIndex);
 
         frame.setTrack(track);
         frame.setSection(section);

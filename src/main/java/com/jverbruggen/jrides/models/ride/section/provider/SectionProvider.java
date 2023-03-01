@@ -189,7 +189,7 @@ public class SectionProvider {
         while(found == null && i < sections.size()){
             Section compare = sections.get(i);
 
-            if(compare.isInSection(frame)) found = compare;
+            if(compare.isInRawFrameRange(frame)) found = compare;
 
             i++;
         }

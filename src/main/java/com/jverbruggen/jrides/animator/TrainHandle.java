@@ -15,7 +15,10 @@ import com.jverbruggen.jrides.models.properties.TrainEnd;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.SoundCategory;
 
 import java.util.Iterator;
@@ -59,6 +62,7 @@ public class TrainHandle {
 
         LinkedList<EffectTriggerHandle> linkedList = coasterHandle.getEffectTriggerCollection().getLinkedList();
         nextEffect = findNearestNextEffect(linkedList, train.getHeadOfTrainFrame()); // TODO: Check validity
+        Bukkit.broadcastMessage(ChatColor.GOLD + "Loaded next effect: " + nextEffect);
     }
 
     private EffectTriggerHandle findNearestNextEffect(LinkedList<EffectTriggerHandle> linkedList, Frame currentFrame){
@@ -147,7 +151,9 @@ public class TrainHandle {
     }
 
     private boolean shouldPlay(EffectTriggerHandle effectTriggerHandle, Frame currentFrame){
-        return train.getHeadSection().hasPassed(nextEffect.getFrame(), currentFrame);
+        Section headSection = train.getHeadSection();
+        return nextEffect.getFrame().getSection().equals(headSection)
+            && headSection.hasPassed(nextEffect.getFrame(), currentFrame);
     }
 
     private void playWindSounds(){
@@ -174,8 +180,10 @@ public class TrainHandle {
         this.coasterHandle = coasterHandle;
 
         EffectTriggerCollection effectTriggerCollection = coasterHandle.getEffectTriggerCollection();
-        if(effectTriggerCollection != null && effectTriggerCollection.size() > 0)
+        if(effectTriggerCollection != null && effectTriggerCollection.size() > 0){
             hasEffects = true;
+            resetEffects();
+        }
     }
 
     public CoasterHandle getCoasterHandle() {

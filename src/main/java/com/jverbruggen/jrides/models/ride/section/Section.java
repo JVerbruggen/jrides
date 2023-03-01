@@ -15,6 +15,7 @@ public interface Section {
     Frame getStartFrame();
     Frame getEndFrame();
     boolean isInSection(Frame frame);
+    boolean isInRawFrameRange(Frame frame);
     Track getParentTrack();
     void setParentTrack(Track track);
     TrackBehaviour getTrackBehaviour();

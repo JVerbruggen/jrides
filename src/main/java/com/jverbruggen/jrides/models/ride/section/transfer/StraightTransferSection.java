@@ -38,6 +38,11 @@ public class StraightTransferSection extends BaseSection {
     }
 
     @Override
+    public boolean isInRawFrameRange(Frame frame) {
+        return false;
+    }
+
+    @Override
     public TrackBehaviour getTrackBehaviour() {
         return null;
     }

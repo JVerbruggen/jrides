@@ -7,21 +7,21 @@ import org.bukkit.configuration.ConfigurationSection;
 public class MusicTriggerConfig extends BaseTriggerConfig {
     private final MusicTriggerConfigHandler handler;
     private final String resource;
-    private final String musicType;
+    private final String descriptor;
 
-    public MusicTriggerConfig(MusicTriggerConfigHandler handler, String resource, String musicType) {
+    public MusicTriggerConfig(MusicTriggerConfigHandler handler, String resource, String descriptor) {
         super(TriggerType.MUSIC);
         this.handler = handler;
         this.resource = resource;
-        this.musicType = musicType;
+        this.descriptor = descriptor;
     }
 
     public MusicTriggerConfigHandler getHandler() {
         return handler;
     }
 
-    public String getMusicType() {
-        return musicType;
+    public String getDescriptor() {
+        return descriptor;
     }
 
     public String getResource() {
@@ -31,8 +31,8 @@ public class MusicTriggerConfig extends BaseTriggerConfig {
     public static MusicTriggerConfig fromConfigurationSection(ConfigurationSection configurationSection){
         MusicTriggerConfigHandler handler = MusicTriggerConfigHandler.fromString(getString(configurationSection, "handler"));
         String resource = getString(configurationSection, "resource");
-        String musicType = getString(configurationSection, "musicType", "default");
+        String descriptor = getString(configurationSection, "descriptor", "default");
 
-        return new MusicTriggerConfig(handler, resource, musicType);
+        return new MusicTriggerConfig(handler, resource, descriptor);
     }
 }

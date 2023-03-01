@@ -18,6 +18,11 @@ public class SimpleFrame implements Frame {
         this.frame = frame;
     }
 
+    public SimpleFrame(int frame, Track track) {
+        this.frame = frame;
+        this.track = track;
+    }
+
     @Override
     public int getValue() {
         return frame;

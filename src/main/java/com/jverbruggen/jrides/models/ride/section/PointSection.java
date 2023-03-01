@@ -37,6 +37,11 @@ public class PointSection extends BaseSection {
 
     @Override
     public boolean isInSection(Frame frame) {
+        return isInRawFrameRange(frame);
+    }
+
+    @Override
+    public boolean isInRawFrameRange(Frame frame) {
         return frame.getValue() == this.point.getValue();
     }
 

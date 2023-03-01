@@ -59,6 +59,7 @@ public class CoasterSeat implements Seat {
             org.bukkit.entity.Player bukkitPlayer = player.getBukkitPlayer();
             ItemStack itemInHand = bukkitPlayer.getInventory().getItemInMainHand();
             if(bukkitPlayer.hasPermission(Permissions.STATUS_INSPECTION)
+                    && itemInHand.getItemMeta() != null
                     && itemInHand.getItemMeta().getDisplayName().stripTrailing().equalsIgnoreCase("jrides:frame-inspect")){
                 getParentCart().getParentTrain().addPositionMessageListener(player);
                 player.sendMessage("Now inspecting frames");

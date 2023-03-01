@@ -33,4 +33,9 @@ public abstract class BaseEffectTriggerHandle implements EffectTriggerHandle {
     public EffectTriggerHandle next() {
         return nextEffectTriggerHandle;
     }
+
+    @Override
+    public String toString() {
+        return "<handle to " + effectTrigger + ">";
+    }
 }
