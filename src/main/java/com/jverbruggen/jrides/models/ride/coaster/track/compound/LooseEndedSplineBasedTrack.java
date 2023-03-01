@@ -64,7 +64,7 @@ public class LooseEndedSplineBasedTrack implements CompoundTrackPart {
     @Override
     public Vector3 getLocationFor(Frame frame) {
         if(!frame.getTrack().equals(this))
-            throw new RuntimeException("Cannot get frame location if the frame is not on this track");
+            throwTrackNotSameException(frame);
 
         if(frame.getValue() >= splinePositions.size())
             JRidesPlugin.getLogger().severe(frame + " out of bounds");
@@ -75,7 +75,7 @@ public class LooseEndedSplineBasedTrack implements CompoundTrackPart {
     @Override
     public Quaternion getOrientationFor(Frame frame) {
         if(!frame.getTrack().equals(this))
-            throw new RuntimeException("Cannot get frame location if the frame is not on this track");
+            throwTrackNotSameException(frame);
 
         return splinePositions.get(frame.getValue()).getOrientation();
     }
@@ -110,7 +110,7 @@ public class LooseEndedSplineBasedTrack implements CompoundTrackPart {
 
     @Override
     public String toString() {
-        return "<Track>";
+        return "<LESBTrack '" + getIdentifier() + "'>";
     }
 
     @Override
@@ -141,5 +141,11 @@ public class LooseEndedSplineBasedTrack implements CompoundTrackPart {
     @Override
     public Frame getEndFrame() {
         return endFrame;
+    }
+
+    private void throwTrackNotSameException(Frame frame){
+        throw new RuntimeException("Cannot get frame location if the frame is not on this track.\n" +
+                "This: " + this + ", other: " + frame.getTrack() + "\n" +
+                "Frame: " + frame);
     }
 }

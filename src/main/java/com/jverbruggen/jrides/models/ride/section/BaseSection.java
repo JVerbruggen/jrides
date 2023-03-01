@@ -85,7 +85,7 @@ public abstract class BaseSection implements Section{
             return trackBehaviour.getSectionNext(train);
         }
 
-        return nextSection;
+        return nextSection.acceptAsNext(train);
     }
 
     @Override
@@ -95,6 +95,15 @@ public abstract class BaseSection implements Section{
         }
 
         return previousSection;
+    }
+
+    @Override
+    public Section acceptAsNext(Train train) {
+        if(trackBehaviour.definesNextAccepting()){
+            return trackBehaviour.acceptAsNext(train);
+        }
+
+        return this;
     }
 
     @Override

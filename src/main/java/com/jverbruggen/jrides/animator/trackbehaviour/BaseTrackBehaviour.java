@@ -41,7 +41,8 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
         Frame newHeadOfTrainFrame = train.getHeadOfTrainFrame().clone().add(speedFrameIncrement);
         Frame newMiddleOfTrainFrame = train.getMiddleOfTrainFrame().clone().add(speedFrameIncrement);
         Frame newTailOfTrainFrame = train.getTailOfTrainFrame().clone().add(speedFrameIncrement);
-        Vector3 newTrainLocation = section.getLocationFor(newMiddleOfTrainFrame);
+
+        Vector3 newTrainLocation = newMiddleOfTrainFrame.getSection().getLocationFor(newMiddleOfTrainFrame);
 
         HashMap<Cart, CartMovement> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getHandle(), train.getCarts(), speedFrameIncrement, section);
 
@@ -103,5 +104,15 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
 
     @Override
     public void populateSectionReferences(Map<SectionReference, Section> sectionMap) {
+    }
+
+    @Override
+    public boolean definesNextAccepting() {
+        return false;
+    }
+
+    @Override
+    public Section acceptAsNext(Train train) {
+        return null;
     }
 }

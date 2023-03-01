@@ -33,6 +33,8 @@ public interface Section {
     Vector3 getLocationFor(Frame frame);
     Quaternion getOrientationFor(Frame frame);
 
+    Section acceptAsNext(Train train);
+
     @Nullable
     Section next(Train train);
     @Nullable

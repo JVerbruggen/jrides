@@ -21,17 +21,26 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
 
     private Section selectedDestination;
 
+    private int roundRobinState;
+
     public SwitchBehaviour(CartMovementFactory cartMovementFactory, List<SwitchPosition> destinations, SwitchPosition origin) {
         super(cartMovementFactory);
         this.destinations = destinations;
         this.origin = origin;
+        this.roundRobinState = 0;
+    }
+
+    private void updateRoundRobinState(){
+        if(++this.roundRobinState >= destinations.size())
+            this.roundRobinState = 0;
     }
 
     private void selectNewDestination(){
         if(destinations.size() == 0)
             throw new RuntimeException("Switch does not lead anywhere!");
 
-        selectedDestination = destinations.get(0).getDestination();
+        selectedDestination = destinations.get(this.roundRobinState).getDestination();
+        updateRoundRobinState();
     }
 
     @Override
@@ -41,7 +50,19 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
 
     @Override
     public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Section section) {
-        return selectedDestination.getTrackBehaviour().move(currentSpeed, trainHandle, section);
+        throw new RuntimeException("Should not move in point");
+    }
+
+    @Override
+    public boolean definesNextAccepting() {
+        return true;
+    }
+
+    @Override
+    public Section acceptAsNext(Train train) {
+        Section next = getSectionNext(train);
+        this.selectNewDestination();
+        return next;
     }
 
     @Override

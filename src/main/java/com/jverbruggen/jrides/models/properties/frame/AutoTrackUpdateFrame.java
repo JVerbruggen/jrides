@@ -55,7 +55,12 @@ public class AutoTrackUpdateFrame implements Frame {
     @Override
     public void setSection(Section section) {
         this.section = section;
-        JRidesPlugin.getLogger().info(LogType.SECTIONS, "Updated frame value " + getValue() + " to section " + section);
+
+        JRidesPlugin.getLogger().info(LogType.SECTIONS, "Updated frame " + this + " to section " + section);
+
+        if(section.getParentTrack() != this.getTrack()){
+            setTrack(section.getParentTrack());
+        }
     }
 
     @Override
@@ -70,6 +75,19 @@ public class AutoTrackUpdateFrame implements Frame {
     }
 
     private Frame updateTrack(int toFrame){
+        if(toFrame > track.getUpperFrame()){ // Going forwards and out of bounds
+            setValue(getTrack().getLowerFrame());
+            return addRaw(toFrame - track.getUpperFrame());
+        }else if(toFrame < track.getLowerFrame()){ // Going backwards and out of bounds
+            setValue(getTrack().getUpperFrame());
+            return addRaw(toFrame - track.getLowerFrame());
+        }else{ // Within bounds
+            setValue(toFrame);
+            return this;
+        }
+    }
+
+    private Frame updateTrackOld(int toFrame){
         if(toFrame > track.getUpperFrame()){ // Going forwards and out of bounds
             Track newTrack = track.getNextTrack();
             setTrack(newTrack);

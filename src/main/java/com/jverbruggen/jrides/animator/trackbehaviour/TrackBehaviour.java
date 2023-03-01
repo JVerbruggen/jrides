@@ -37,4 +37,7 @@ public interface TrackBehaviour {
     Quaternion getBehaviourDefinedOrientation(Quaternion originalOrientation);
 
     void populateSectionReferences(Map<SectionReference, Section> sectionMap);
+
+    boolean definesNextAccepting();
+    Section acceptAsNext(Train train);
 }
