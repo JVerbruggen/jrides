@@ -12,6 +12,7 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public abstract class BaseSection implements Section{
@@ -171,5 +172,15 @@ public abstract class BaseSection implements Section{
     @Override
     public boolean shouldJumpAtStart() {
         return false;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if(o instanceof Section){
+            Section otherSection = (Section) o;
+            if(this.getParentTrack().getIdentifier().compareTo(otherSection.getParentTrack().getIdentifier()) == 0)
+                return Integer.compare(getStartFrame().getValue(), otherSection.getStartFrame().getValue());
+        }
+        return 0;
     }
 }

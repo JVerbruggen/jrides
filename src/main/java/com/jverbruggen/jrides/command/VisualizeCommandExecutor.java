@@ -16,8 +16,8 @@ import java.util.List;
 public class VisualizeCommandExecutor extends BaseCommandExecutor {
     private final RideManager rideManager;
 
-    protected VisualizeCommandExecutor(int depth) {
-        super(depth);
+    protected VisualizeCommandExecutor() {
+        super(1);
         this.rideManager = ServiceProvider.getSingleton(RideManager.class);
     }
 

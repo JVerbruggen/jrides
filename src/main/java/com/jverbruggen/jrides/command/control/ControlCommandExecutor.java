@@ -13,8 +13,8 @@ import java.util.List;
 public class ControlCommandExecutor extends BaseCommandExecutor {
     private final RideManager rideManager;
 
-    public ControlCommandExecutor(int depth) {
-        super(depth);
+    public ControlCommandExecutor() {
+        super(1);
         rideManager = ServiceProvider.getSingleton(RideManager.class);
 
         registerSubCommand(new ControlMenuCommandExecutor(depth+2));

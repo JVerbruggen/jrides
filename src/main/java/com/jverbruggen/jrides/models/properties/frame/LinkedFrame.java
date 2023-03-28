@@ -22,6 +22,11 @@ public class LinkedFrame implements Frame {
     }
 
     @Override
+    public String getValueString() {
+        return String.valueOf(getValue());
+    }
+
+    @Override
     public void setValue(int frame) {
         if(!canSetValue)
             throw new RuntimeException("Cannot set value of this linked frame " + this);

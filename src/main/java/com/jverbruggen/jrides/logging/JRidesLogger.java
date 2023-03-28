@@ -22,7 +22,8 @@ public class JRidesLogger extends Logger {
         this.enabledLogTypes = new ArrayList<>();
 
         enableLogType(LogType.CRASH);
-//        enableLogType(LogType.SECTIONS);
+        enableLogType(LogType.SECTIONS);
+//        enableLogType(LogType.SECTIONS_DETAIL);
     }
 
     public void enableLogType(LogType logType){

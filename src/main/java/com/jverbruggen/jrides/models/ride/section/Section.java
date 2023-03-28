@@ -10,7 +10,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.annotation.Nullable;
 
-public interface Section {
+public interface Section extends Comparable {
     Frame getSpawnFrame();
     Frame getStartFrame();
     Frame getEndFrame();
@@ -22,7 +22,7 @@ public interface Section {
     boolean isOccupied();
     Train getOccupiedBy();
     boolean canBlock();
-    boolean isBlockSectionSafe(Train train);
+    boolean isBlockSectionSafe(@Nullable Train train);
     void addOccupation(@NonNull  Train train);
     void removeOccupation(@NonNull  Train train);
     boolean canTrainSpawnOn();

@@ -164,4 +164,8 @@ public class CoasterHandle implements RideHandle {
     public List<Transfer> getTransfers() {
         return transfers;
     }
+
+    public Track getTrack(){
+        return track;
+    }
 }

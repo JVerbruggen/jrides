@@ -22,6 +22,11 @@ public class CyclicFrame implements Frame {
     }
 
     @Override
+    public String getValueString() {
+        return String.valueOf(getValue());
+    }
+
+    @Override
     public void setValue(int frame) {
         this.frame = Frame.getCyclicFrameValue(frame, cycle);
     }

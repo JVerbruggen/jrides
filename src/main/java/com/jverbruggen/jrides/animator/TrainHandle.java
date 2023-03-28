@@ -82,7 +82,7 @@ public class TrainHandle {
         sectionProvider.addFramesWithSectionLogic(this, trainTailOfTrainFrame, result.getNewTailOfTrainFrame().getValue(),
                 true, TrainEnd.TAIL, "TAIL", false);
 
-        JRidesPlugin.getLogger().info(LogType.SECTIONS, trainHeadOfTrainFrame + " -= "
+        JRidesPlugin.getLogger().info(LogType.SECTIONS_DETAIL, trainHeadOfTrainFrame + " -= "
                 + trainMiddleOfTrainFrame + " =- " + trainTailOfTrainFrame);
 
         // --- Set new train location according to new frames

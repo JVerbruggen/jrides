@@ -8,6 +8,8 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.bukkit.Bukkit;
 
+import javax.annotation.Nullable;
+
 public class SimpleSection extends BaseSection {
     private Frame startFrame;
     private Frame endFrame;
@@ -63,12 +65,17 @@ public class SimpleSection extends BaseSection {
     }
 
     @Override
-    public boolean isBlockSectionSafe(Train train) {
+    public boolean isBlockSectionSafe(@Nullable Train train) {
         if(this.isOccupied()) return false;
         if(!this.trackBehaviour.accepts(train)) return false;
         if(this.canBlock()) return true;
 
         Section next = next(train);
+        if(next == null){
+            if(train == null) return false;
+            else throw new RuntimeException("Section was null for train when checking for block section safety");
+        }
+
         return next.isPreviousSectionFor(train, this)
                 && next.isBlockSectionSafe(train);
     }
@@ -136,7 +143,7 @@ public class SimpleSection extends BaseSection {
 
     @Override
     public String toString() {
-        return "<" + startFrame + "-" + endFrame + " " + trackBehaviour.getName() + " occ:" + isOccupied() + ">";
+        return "<" + startFrame.getValueString() + "-" + endFrame.getValueString() + " " + trackBehaviour.getName() + " occ:" + isOccupied() + ">";
     }
 
     @Override

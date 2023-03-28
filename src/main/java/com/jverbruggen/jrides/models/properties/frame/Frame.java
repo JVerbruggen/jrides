@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.models.ride.section.Section;
 
 public interface Frame {
     int getValue();
+    String getValueString();
 
     void setValue(int frame);
 

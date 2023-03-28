@@ -3,27 +3,33 @@ package com.jverbruggen.jrides.command;
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.command.context.CommandContext;
-import com.jverbruggen.jrides.common.permissions.Permissions;
+import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideManager;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-public class WarpCommandExecutor extends BaseCommandExecutor {
+public class BlockSectionCommandExecutor extends BaseCommandExecutor {
     private final RideManager rideManager;
 
-    protected WarpCommandExecutor() {
+    protected BlockSectionCommandExecutor() {
         super(1);
         this.rideManager = ServiceProvider.getSingleton(RideManager.class);
     }
 
     @Override
     public String getHelpMessageForParent() {
-        return "/jrides warp <identifier>";
+        return "/jrides "  + getCommand() + " <identifier>";
     }
 
     @Override
@@ -39,15 +45,28 @@ public class WarpCommandExecutor extends BaseCommandExecutor {
         }
 
         String identifier = args[1];
-
-        CoasterHandle coasterHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
-        Player player = playerManager.getPlayer((org.bukkit.entity.Player) commandSender);
-        if(!player.getBukkitPlayer().hasPermission(Permissions.RIDE_WARP)){
-            languageFile.sendMessage(player, languageFile.errorGeneralNoPermissionMessage);
-            return false;
+        if(identifier.equalsIgnoreCase("")){
+            languageFile.sendMessage(commandSender, getHelpMessageForSelf());
+            return true;
         }
 
-        player.teleport(coasterHandle.getRide().getWarpLocation());
+        CoasterHandle coasterHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
+        ArrayList<Section> sections = new ArrayList<>(coasterHandle.getTrack().getSections());
+        Collections.sort(sections);
+
+        languageFile.sendMessage(commandSender, "-- Block section occupations --");
+        for(Section section : sections){
+            boolean occupied = section.isOccupied();
+            boolean safe = section.isBlockSectionSafe(null);
+
+            ChatColor color = ChatColor.GREEN;
+            if(occupied) color = ChatColor.RED;
+            else if(!safe) color = ChatColor.YELLOW;
+
+            languageFile.sendMessage(commandSender, color + section.toString());
+        }
+
+
         return true;
     }
 
@@ -58,7 +77,7 @@ public class WarpCommandExecutor extends BaseCommandExecutor {
 
     @Override
     public String getCommand() {
-        return "warp";
+        return "blocksections";
     }
 
     @Override
