@@ -55,7 +55,7 @@ public class CoasterHandle implements RideHandle {
     public void setTrains(List<TrainHandle> trains) {
         this.trains = trains;
         trains.forEach(t -> t.setCoasterHandle(this));
-        this.visualisationTool = ParticleTrackVisualisationTool.fromTrack(world, track, 20);
+        this.visualisationTool = ParticleTrackVisualisationTool.fromTrack(world, track, 20, trains);
     }
 
     public void setTrack(Track track) {

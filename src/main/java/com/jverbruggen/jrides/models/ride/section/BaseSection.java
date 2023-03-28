@@ -11,6 +11,7 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -82,15 +83,25 @@ public abstract class BaseSection implements Section{
 
     @Override
     public Section next(Train train) {
+        return next(train, false);
+    }
+
+    @Override
+    public Section next(Train train, boolean processPassing) {
         if(trackBehaviour.definesNextSection()){
             return trackBehaviour.getSectionNext(train);
         }
 
-        return nextSection.acceptAsNext(train);
+        return nextSection.acceptAsNext(train, processPassing);
     }
 
     @Override
     public Section previous(Train train) {
+        return previous(train, false);
+    }
+
+    @Override
+    public Section previous(Train train, boolean processPassing) {
         if(trackBehaviour.definesNextSection()){
             return trackBehaviour.getSectionPrevious(train);
         }
@@ -99,9 +110,9 @@ public abstract class BaseSection implements Section{
     }
 
     @Override
-    public Section acceptAsNext(Train train) {
+    public Section acceptAsNext(Train train, boolean processPassing) {
         if(trackBehaviour.definesNextAccepting()){
-            return trackBehaviour.acceptAsNext(train);
+            return trackBehaviour.acceptAsNext(train, processPassing);
         }
 
         return this;

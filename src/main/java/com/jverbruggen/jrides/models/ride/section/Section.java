@@ -34,12 +34,17 @@ public interface Section extends Comparable {
     Vector3 getLocationFor(Frame frame);
     Quaternion getOrientationFor(Frame frame);
 
-    Section acceptAsNext(Train train);
+    Section acceptAsNext(Train train, boolean processPassing);
 
     @Nullable
     Section next(Train train);
     @Nullable
+    Section next(Train train, boolean processPassing);
+    @Nullable
     Section previous(Train train);
+    @Nullable
+    Section previous(Train train, boolean processPassing);
+
     boolean isNextSectionFor(Train train, Section section);
     boolean isPreviousSectionFor(Train train, Section section);
     void setNext(Section section);

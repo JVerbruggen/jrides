@@ -17,6 +17,7 @@ public interface TrackBehaviour {
     TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Section section);
     void trainExitedAtStart();
     void trainExitedAtEnd();
+    void trainPassed(Train train);
 
     String getName();
     boolean canBlock();
@@ -39,5 +40,5 @@ public interface TrackBehaviour {
     void populateSectionReferences(Map<SectionReference, Section> sectionMap);
 
     boolean definesNextAccepting();
-    Section acceptAsNext(Train train);
+    Section acceptAsNext(Train train, boolean canProcessPassed);
 }

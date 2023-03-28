@@ -92,23 +92,6 @@ public class AutoTrackUpdateFrame implements Frame {
         }
     }
 
-    private Frame updateTrackOld(int toFrame){
-        if(toFrame > track.getUpperFrame()){ // Going forwards and out of bounds
-            Track newTrack = track.getNextTrack();
-            setTrack(newTrack);
-            setValue(newTrack.getLowerFrame());
-            return addRaw(toFrame - track.getUpperFrame());
-        }else if(toFrame < track.getLowerFrame()){ // Going backwards and out of bounds
-            Track newTrack = track.getPreviousTrack();
-            setTrack(newTrack);
-            setValue(newTrack.getUpperFrame());
-            return addRaw(toFrame - track.getLowerFrame());
-        }else{ // Within bounds
-            setValue(toFrame);
-            return this;
-        }
-    }
-
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Frame clone(){

@@ -73,6 +73,11 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     }
 
     @Override
+    public void trainPassed(Train train) {
+
+    }
+
+    @Override
     public boolean definesNextSection() {
         return false;
     }
@@ -112,7 +117,7 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     }
 
     @Override
-    public Section acceptAsNext(Train train) {
+    public Section acceptAsNext(Train train, boolean canProcessPassed) {
         return null;
     }
 }

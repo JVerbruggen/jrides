@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,9 @@ public class CartMovementFactory {
             Frame cartFrame = cart.getFrame();
             Frame newShadedCartFrame = cartFrame.clone().add(speedFrameIncrement);
 
+            Bukkit.broadcastMessage("CART ---");
             sectionProvider.addFramesWithSectionLogic(trainHandle, cartFrame, newShadedCartFrame.getValue());
+            Bukkit.broadcastMessage("CART END ---");
 
             Section cartSection = cartFrame.getSection();
             Vector3 cartPositionOnTrack = cartSection.getLocationFor(cartFrame);

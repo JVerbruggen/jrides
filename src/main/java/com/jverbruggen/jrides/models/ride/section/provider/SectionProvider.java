@@ -32,11 +32,11 @@ public class SectionProvider {
 
         Train train = trainHandle.getTrain();
         boolean positiveDrivingDirection = train.isPositiveDrivingDirection();
-        Section toNewSection = getSectionFor(train, fromSection, fromFrame, toFrame);
+        Section toNewSection = getSectionFor(train, fromSection, fromFrame, toFrame, applyNewBehaviour);
 
         if(updateSectionOccupations){
             JRidesPlugin.getLogger().info(LogType.SECTIONS, debugName + ": " + trainEnd + "(" + positiveDrivingDirection);
-            JRidesPlugin.getLogger().info(LogType.SECTIONS, "to" + debugName + ": " + fromSection + " => " + toNewSection);
+            JRidesPlugin.getLogger().info(LogType.SECTIONS, "to " + debugName + ": " + fromSection + " => " + toNewSection);
             sectionOccupationLogic(trainHandle, fromSection, toNewSection, trainEnd, applyNewBehaviour);
         }
 
@@ -87,14 +87,14 @@ public class SectionProvider {
         JRidesPlugin.getLogger().warning(LogType.CRASH, section.toString());
     }
 
-    public @NonNull Section getSectionFor(Train train, Section fromSection, Frame fromFrame, Frame toFrame){
+    public @NonNull Section getSectionFor(Train train, Section fromSection, Frame fromFrame, Frame toFrame, boolean canProcess){
         if(fromSection.isInSection(toFrame)) return fromSection;
 
         if(fromFrame.getTrack() != toFrame.getTrack()){
-            return getSectionOnDifferentTrack(train, fromSection, toFrame);
+            return getSectionOnDifferentTrack(train, fromSection, toFrame, canProcess);
         }
 
-        final Section subsequentNextSection = fromSection.next(train);
+        final Section subsequentNextSection = fromSection.next(train, canProcess);
         final Section subsequentPreviousSection = fromSection.previous(train);
         if(subsequentNextSection != null){
             if(subsequentNextSection.isInSection(toFrame)) {
@@ -197,12 +197,12 @@ public class SectionProvider {
         return found;
     }
 
-    public Section getSectionOnDifferentTrack(Train train, Section currentSection, Frame toFrame){
+    public Section getSectionOnDifferentTrack(Train train, Section currentSection, Frame toFrame, boolean canProcess){
         Track newTrack = toFrame.getTrack();
         List<Section> newTrackSections = newTrack.getSections();
 
         // If rolling forwards
-        Section logicalNextSection = currentSection.next(train);
+        Section logicalNextSection = currentSection.next(train, canProcess);
         Section firstSectionNewTrack = newTrackSections.get(0);
         if(logicalNextSection.equals(firstSectionNewTrack)){
             return logicalNextSection;

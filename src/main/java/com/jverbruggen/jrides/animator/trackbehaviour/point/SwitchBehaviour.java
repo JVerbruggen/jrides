@@ -11,6 +11,7 @@ import com.jverbruggen.jrides.models.ride.coaster.trackswitch.SwitchPosition;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
+import org.bukkit.Bukkit;
 
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
             throw new RuntimeException("Switch does not lead anywhere!");
 
         selectedDestination = destinations.get(this.roundRobinState).getDestination();
+        Bukkit.broadcastMessage("Next destination for switch: " + selectedDestination);
         updateRoundRobinState();
     }
 
@@ -59,20 +61,23 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
     }
 
     @Override
-    public Section acceptAsNext(Train train) {
-        Section next = getSectionNext(train);
-        this.selectNewDestination();
-        return next;
+    public Section acceptAsNext(Train train, boolean canProcessPassed) {
+        if(canProcessPassed) trainPassed(train);
+
+        return getSectionAtEnd(train);
     }
 
     @Override
     public void trainExitedAtStart() {
-        this.selectNewDestination();
     }
 
     @Override
     public void trainExitedAtEnd() {
-        this.selectNewDestination();
+    }
+
+    @Override
+    public void trainPassed(Train train) {
+        selectNewDestination();
     }
 
     @Override
