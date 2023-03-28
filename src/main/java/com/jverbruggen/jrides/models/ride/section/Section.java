@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public interface Section extends Comparable {
     Frame getSpawnFrame();
@@ -23,6 +24,7 @@ public interface Section extends Comparable {
     Train getOccupiedBy();
     boolean canBlock();
     boolean isBlockSectionSafe(@Nullable Train train);
+    boolean isBlockSectionSafe(@Nullable Train train, boolean checkConflicts);
     void addOccupation(@NonNull  Train train);
     void removeOccupation(@NonNull  Train train);
     boolean canTrainSpawnOn();
@@ -30,6 +32,8 @@ public interface Section extends Comparable {
     boolean passesCycle();
     boolean shouldJumpAtStart();
     boolean shouldJumpAtEnd();
+
+    void setConflictSections(List<Section> sections);
 
     Vector3 getLocationFor(Frame frame);
     Quaternion getOrientationFor(Frame frame);

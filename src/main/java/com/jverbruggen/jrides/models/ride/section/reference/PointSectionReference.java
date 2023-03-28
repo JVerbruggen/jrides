@@ -5,6 +5,8 @@ import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.section.PointSection;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
+import java.util.List;
+
 public class PointSectionReference extends SectionReference {
     private final String sectionIdentifier;
     private final String nextSectionIdentifier;
@@ -55,5 +57,10 @@ public class PointSectionReference extends SectionReference {
     @Override
     public Section makeSection() {
         return new PointSection(trackBehaviour, point, sectionIdentifier);
+    }
+
+    @Override
+    public List<String> getConflictSectionStrings() {
+        return null;
     }
 }

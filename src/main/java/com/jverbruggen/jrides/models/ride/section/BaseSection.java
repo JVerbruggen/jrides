@@ -45,6 +45,11 @@ public abstract class BaseSection implements Section{
     }
 
     @Override
+    public boolean isBlockSectionSafe(@Nullable Train train) {
+        return isBlockSectionSafe(train, true);
+    }
+
+    @Override
     public Vector3 getLocationFor(Frame frame) {
         if(trackBehaviour.definesNextSection()){
             return trackBehaviour.getBehaviourDefinedPosition(parentTrack.getLocationFor(frame));
@@ -193,5 +198,10 @@ public abstract class BaseSection implements Section{
                 return Integer.compare(getStartFrame().getValue(), otherSection.getStartFrame().getValue());
         }
         return 0;
+    }
+
+    @Override
+    public void setConflictSections(List<Section> sections) {
+
     }
 }

@@ -9,6 +9,8 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.bukkit.Bukkit;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SimpleSection extends BaseSection {
     private Frame startFrame;
@@ -16,6 +18,7 @@ public class SimpleSection extends BaseSection {
     private final boolean jumpAtStart;
     private final boolean jumpAtEnd;
     private String name;
+    private List<Section> conflictSections;
 
     public SimpleSection(Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour, boolean jumpAtStart, boolean jumpAtEnd) {
         super(trackBehaviour);
@@ -24,6 +27,7 @@ public class SimpleSection extends BaseSection {
         this.jumpAtStart = jumpAtStart;
         this.jumpAtEnd = jumpAtEnd;
         this.name = null;
+        this.conflictSections = null;
     }
 
     @Override
@@ -65,9 +69,14 @@ public class SimpleSection extends BaseSection {
     }
 
     @Override
-    public boolean isBlockSectionSafe(@Nullable Train train) {
+    public boolean isBlockSectionSafe(@Nullable Train train, boolean checkConflicts) {
         if(this.isOccupied()) return false;
         if(!this.trackBehaviour.accepts(train)) return false;
+        if(checkConflicts
+                && conflictSections != null
+                && conflictSections.stream().anyMatch(s -> !s.isBlockSectionSafe(train, false)))
+            return false;
+
         if(this.canBlock()) return true;
 
         Section next = next(train);
@@ -115,6 +124,11 @@ public class SimpleSection extends BaseSection {
     @Override
     public boolean shouldJumpAtEnd() {
         return jumpAtEnd;
+    }
+
+    @Override
+    public void setConflictSections(List<Section> sections) {
+        this.conflictSections = sections;
     }
 
     @Override

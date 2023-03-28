@@ -63,6 +63,11 @@ public abstract class BaseConfig {
         return configurationSection.getStringList(key);
     }
 
+    protected static List<String> getStringList(ConfigurationSection configurationSection, String key, List<String> defaultValue){
+        if(!isPresent(configurationSection, key)) return defaultValue;
+        return configurationSection.getStringList(key);
+    }
+
     protected static List<Double> getDoubleList(ConfigurationSection configurationSection, String key){
         assertPresence(configurationSection, key);
 

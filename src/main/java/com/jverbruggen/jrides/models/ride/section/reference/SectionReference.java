@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.models.ride.section.reference;
 
 import com.jverbruggen.jrides.models.ride.section.Section;
 
+import java.util.List;
 import java.util.Map;
 
 public abstract class SectionReference {
@@ -23,6 +24,8 @@ public abstract class SectionReference {
     public abstract String getParentTrackIdentifier();
 
     public abstract Section makeSection();
+
+    public abstract List<String> getConflictSectionStrings();
 
     @Override
     public String toString() {

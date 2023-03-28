@@ -7,6 +7,9 @@ import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
+import javax.annotation.Nullable;
+import java.util.List;
+
 public class PointSection extends BaseSection {
     private final Frame point;
     private String name;
@@ -56,10 +59,10 @@ public class PointSection extends BaseSection {
     }
 
     @Override
-    public boolean isBlockSectionSafe(Train train) {
+    public boolean isBlockSectionSafe(@Nullable Train train, boolean checkConflicts) {
         Section next = next(train);
         if(next == null) return false;
-        return next.isBlockSectionSafe(train);
+        return next.isBlockSectionSafe(train, true);
     }
 
     @Override
@@ -88,6 +91,11 @@ public class PointSection extends BaseSection {
     @Override
     public boolean shouldJumpAtEnd() {
         return false;
+    }
+
+    @Override
+    public void setConflictSections(List<Section> sections) {
+
     }
 
     @Override

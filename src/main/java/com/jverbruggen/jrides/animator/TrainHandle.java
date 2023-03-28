@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.animator;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovement;
+import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
@@ -17,6 +18,7 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.SoundCategory;
 
 import java.util.Map;
@@ -28,6 +30,7 @@ public class TrainHandle {
     private Speed speedBPS;
     private TrackBehaviour trackBehaviour;
     private final SectionProvider sectionProvider;
+    private final CartMovementFactory cartMovementFactory;
     private CoasterHandle coasterHandle;
 
     private boolean hasEffects;
@@ -38,6 +41,7 @@ public class TrainHandle {
 
     public TrainHandle(SectionProvider sectionProvider, Train train, Track track) {
         this.sectionProvider = sectionProvider;
+        this.cartMovementFactory = ServiceProvider.getSingleton(CartMovementFactory.class);
         this.train = train;
         this.track = track;
         this.trackBehaviour = train.getHeadSection().getTrackBehaviour();
@@ -92,7 +96,7 @@ public class TrainHandle {
         train.setCurrentLocation(headLocation, middleLocation, tailLocation);
 
         // --- Move carts according to instructions
-        Set<Map.Entry<Cart, CartMovement>> cartMovements = result.getCartMovements();
+        Set<Map.Entry<Cart, CartMovement>> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getHandle(), train.getCarts(), result.getNewSpeed().getFrameIncrement(), null).entrySet();
         if(cartMovements != null){
             for(Map.Entry<Cart, CartMovement> cartMovement : cartMovements){
                 Cart cart = cartMovement.getKey();

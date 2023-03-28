@@ -44,9 +44,8 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
 
         Vector3 newTrainLocation = newMiddleOfTrainFrame.getSection().getLocationFor(newMiddleOfTrainFrame);
 
-        HashMap<Cart, CartMovement> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getHandle(), train.getCarts(), speedFrameIncrement, section);
 
-        return new TrainMovement(speed, newHeadOfTrainFrame, newMiddleOfTrainFrame, newTailOfTrainFrame, newTrainLocation, cartMovements);
+        return new TrainMovement(speed, newHeadOfTrainFrame, newMiddleOfTrainFrame, newTailOfTrainFrame, newTrainLocation, null);
     }
 
     protected abstract void setParentTrackOnFrames(Track parentTrack);

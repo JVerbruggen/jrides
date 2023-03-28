@@ -5,10 +5,7 @@ import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
 import org.bukkit.Bukkit;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AdvancedSectionBuilder {
@@ -64,10 +61,28 @@ public class AdvancedSectionBuilder {
         if(calculated)
             throw new RuntimeException("Already calculated");
 
+        List<SectionReference> allSectionReferences = new ArrayList<>(sectionReferences.values());
+
         // --- Initialize section objects
         Map<SectionReference, Section> sections = new HashMap<>();
-        for(SectionReference sectionReference : sectionReferences.values()){
+        for(SectionReference sectionReference : allSectionReferences){
             sections.put(sectionReference, sectionReference.makeSection());
+        }
+
+        // --- Populate conflicting sections
+        for(Map.Entry<SectionReference, Section> entry : sections.entrySet()){
+            SectionReference sectionReference = entry.getKey();
+            Section section = entry.getValue();
+
+            List<String> conflictSectionStrings = sectionReference.getConflictSectionStrings();
+            if(conflictSectionStrings == null) continue;
+
+            List<Section> conflictingSections = sections.values().stream()
+                    .filter(s -> conflictSectionStrings.contains(s.getName()))
+                    .collect(Collectors.toList());
+
+            section.setConflictSections(conflictingSections);
+            conflictingSections.forEach(other -> Bukkit.broadcastMessage(section.getName() + " conflicts with " + other));
         }
 
         // --- Link section ends together

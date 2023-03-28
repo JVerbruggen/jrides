@@ -27,9 +27,7 @@ public class CartMovementFactory {
             Frame cartFrame = cart.getFrame();
             Frame newShadedCartFrame = cartFrame.clone().add(speedFrameIncrement);
 
-            Bukkit.broadcastMessage("CART ---");
             sectionProvider.addFramesWithSectionLogic(trainHandle, cartFrame, newShadedCartFrame.getValue());
-            Bukkit.broadcastMessage("CART END ---");
 
             Section cartSection = cartFrame.getSection();
             Vector3 cartPositionOnTrack = cartSection.getLocationFor(cartFrame);

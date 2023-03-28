@@ -5,6 +5,9 @@ import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SimpleSection;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RangedSectionReference extends SectionReference {
     private final String sectionIdentifier;
     private final String nextSectionIdentifier;
@@ -16,13 +19,16 @@ public class RangedSectionReference extends SectionReference {
     private final boolean jumpAtStart;
     private final boolean jumpAtEnd;
 
+    private final List<String> conflictSectionsStrings;
+
     public RangedSectionReference(String sectionIdentifier, Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour, String nextSectionIdentifier,
-                                  String parentTrackIdentifier, boolean jumpAtStart, boolean jumpAtEnd) {
+                                  List<String> conflictSections, String parentTrackIdentifier, boolean jumpAtStart, boolean jumpAtEnd) {
         this.sectionIdentifier = sectionIdentifier;
         this.startFrame = startFrame;
         this.endFrame = endFrame;
         this.trackBehaviour = trackBehaviour;
         this.nextSectionIdentifier = nextSectionIdentifier;
+        this.conflictSectionsStrings = conflictSections;
         this.jumpAtStart = jumpAtStart;
         this.jumpAtEnd = jumpAtEnd;
         this.previousSectionIdentifier = null;
@@ -77,6 +83,11 @@ public class RangedSectionReference extends SectionReference {
         SimpleSection section = new SimpleSection(startFrame, endFrame, trackBehaviour, jumpAtStart, jumpAtEnd);
         section.setName(getSectionIdentifier());
         return section;
+    }
+
+    @Override
+    public List<String> getConflictSectionStrings() {
+        return conflictSectionsStrings;
     }
 
     public boolean isJumpAtEnd() {
