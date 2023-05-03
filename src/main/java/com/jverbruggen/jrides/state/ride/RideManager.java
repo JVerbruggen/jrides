@@ -140,12 +140,12 @@ public class RideManager {
         List<TrainHandle> trainHandles = createTrains(track, coasterConfig, sectionProvider, rideIdentifier, trainCount);
         coasterHandle.setTrains(trainHandles);
 
-        StationHandle stationHandle = coasterHandle.getStationHandle(null);
+        StationHandle stationHandle = coasterHandle.getStationHandle(null); // TODO: Support multiple stations in controller here!!!
 
         ControlModeFactory controlModeFactory = new ControlModeFactory();
         RideController rideController = new RideController(controlModeFactory, stationHandle);
         rideController.setRideHandle(coasterHandle);
-        coasterHandle.setRideController(rideController);
+        coasterHandle.setRideController(rideController); // TODO: Implement
 
         this.addRideHandle(coasterHandle);
     }

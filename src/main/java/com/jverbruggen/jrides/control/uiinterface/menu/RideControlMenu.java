@@ -1,6 +1,5 @@
 package com.jverbruggen.jrides.control.uiinterface.menu;
 
-import com.jverbruggen.jrides.control.RideController;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
 import com.jverbruggen.jrides.models.entity.Player;
 import org.bukkit.Bukkit;
@@ -9,12 +8,10 @@ import org.bukkit.inventory.Inventory;
 import java.util.*;
 
 public class RideControlMenu {
-    private final RideController controller;
     private final HashMap<UUID, RideControlButton> buttons;
     private final Map<Player, Inventory> sessions;
 
-    public RideControlMenu(RideController controller) {
-        this.controller = controller;
+    public RideControlMenu() {
         this.buttons = new HashMap<>();
         this.sessions = new HashMap<>();
     }

@@ -12,6 +12,7 @@ import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.common.BlinkingButtonVisual;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.common.CabinOccupationVisual;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.common.StaticButtonVisual;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.factory.RideControlButtonFactory;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileTags;
@@ -27,13 +28,15 @@ import java.util.*;
 public class RideControlMenuFactory {
     private final Map<Player, RideControlMenu> openRideControlMenus;
     private final LanguageFile languageFile;
+    private final RideControlButtonFactory rideControlButtonFactory;
 
     public RideControlMenuFactory() {
         this.openRideControlMenus = new HashMap<>();
         this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
+        this.rideControlButtonFactory = ServiceProvider.getSingleton(RideControlButtonFactory.class);
     }
 
-    public RideControlMenu getControlMenu(RideController rideController){
+    public RideControlMenu getSimpleControlMenu(RideController rideController){
         if(!rideController.isActive())
             return null;
 
@@ -44,69 +47,13 @@ public class RideControlMenuFactory {
         StationTrigger gateTrigger = rideController.getTriggerContext().getGateTrigger();
         StationTrigger restraintTrigger = rideController.getTriggerContext().getRestraintTrigger();
 
-        RideControlButton claimOperatingButton = new SimpleRideControlButton(
-                rideIdentifier,
-                new CabinOccupationVisual(rideController, new StaticButtonVisual(Material.BLACK_CONCRETE_POWDER, ChatColor.GOLD, languageFile.buttonClaimCabin),
-                        languageFile.buttonCabinClaimed),
-                4, new RunnableButtonWithContextAction((p, b) -> {
-                    if(p.equals(rideController.getOperator())){
-                        p.setOperating(null);
-                        languageFile.sendMessage(p, languageFile.notificationRideControlInactive,
-                                builder -> builder.add(LanguageFileTags.rideIdentifier, rideIdentifier));
-                    }else{
-                        boolean set = p.setOperating(rideController);
-                        if(set)
-                            languageFile.sendMessage(p, languageFile.notificationRideControlActive,
-                                    builder -> builder.add(LanguageFileTags.rideIdentifier, rideIdentifier));
-                    }
-        }));
+        RideControlButton claimOperatingButton = rideControlButtonFactory.createClaimRideButton(rideController, rideIdentifier);
+        RideControlButton dispatchButton = rideControlButtonFactory.createDispatchButton(rideIdentifier, dispatchTrigger);
+        RideControlButton problemList = rideControlButtonFactory.createProblemList(rideIdentifier, dispatchLockCollection);
+        RideControlButton gateButton = rideControlButtonFactory.createGateButton(rideIdentifier, gateTrigger);
+        RideControlButton restraintButton = rideControlButtonFactory.createRestraintButton(rideIdentifier, restraintTrigger);
 
-        RideControlButton dispatchButton = new LockResembledControlButton(
-                rideIdentifier,
-                new StaticButtonVisual(Material.GREEN_CONCRETE, ChatColor.DARK_GREEN,
-                        languageFile.buttonDispatchState, List.of(ChatColor.GRAY + languageFile.buttonDispatchProblemState)),
-                new BlinkingButtonVisual(
-                        new StaticButtonVisual(Material.LIME_CONCRETE, ChatColor.GREEN, languageFile.buttonDispatchState),
-                        new StaticButtonVisual(Material.GREEN_CONCRETE, ChatColor.DARK_GREEN, languageFile.buttonDispatchState)
-                ),
-                10, dispatchTrigger.getDispatchLockCollection(), new RunnableButtonAction(dispatchTrigger::execute));
-
-        RideControlButton problemList = new SimpleRideControlButton(
-                rideIdentifier,
-                new StaticButtonVisual(Material.ITEM_FRAME, ChatColor.RED, languageFile.buttonProblemsState),
-                11, null);
-        problemList.changeLore(dispatchLockCollection.getProblems(1));
-
-        RideControlButton gateButton = new LockResembledControlButton(
-                rideIdentifier,
-                new BlinkingButtonVisual(
-                        new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, languageFile.buttonGatesOpenState),
-                        new StaticButtonVisual(Material.LIGHT_GRAY_CONCRETE, ChatColor.GRAY, languageFile.buttonGatesOpenState)
-                ),
-                new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, languageFile.buttonGatesClosedState),
-                15, gateTrigger.getLock(), new RunnableButtonAction(gateTrigger::execute));
-        RideControlButton restraintButton = new LockResembledControlButton(
-                rideIdentifier,
-                new BlinkingButtonVisual(
-                        new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, languageFile.buttonRestraintsOpenState),
-                        new StaticButtonVisual(Material.LIGHT_GRAY_CONCRETE, ChatColor.GRAY, languageFile.buttonRestraintsOpenState)
-                ),
-                new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, languageFile.buttonRestraintsClosedState),
-                16, restraintTrigger.getLock(), new RunnableButtonAction(restraintTrigger::execute));
-
-        dispatchLockCollection.addEventListener(lock -> {
-            List<String> problems = dispatchLockCollection.getProblems(1);
-            if(problems.size() == 0){
-                problemList.setVisible(false);
-            }else{
-                problemList.setVisible(true);
-                problemList.changeLore(problems);
-            }
-
-            problemList.sendUpdate();
-        });
-
-        RideControlMenu rideControlMenu = new RideControlMenu(rideController);
+        RideControlMenu rideControlMenu = new RideControlMenu();
         rideControlMenu.addButton(claimOperatingButton);
         rideControlMenu.addButton(dispatchButton);
         rideControlMenu.addButton(problemList);
@@ -114,6 +61,10 @@ public class RideControlMenuFactory {
         rideControlMenu.addButton(restraintButton);
 
         return rideControlMenu;
+    }
+
+    public RideControlMenu getDualControlMenu(RideController rideControllerLeft, RideController rideControllerRight){
+        throw new RuntimeException("Not implemented");
     }
 
     public void addOpenRideControlMenu(Player player, RideControlMenu rideControlMenu, Inventory inventory){
@@ -135,13 +86,5 @@ public class RideControlMenuFactory {
 
     public boolean hasOpenRideControlMenu(Player player){
         return openRideControlMenus.containsKey(player);
-    }
-
-    private ItemStack getItemStack(Material material, String displayName){
-        return ItemStackFactory.getRideControlButtonStack(material, displayName);
-    }
-
-    private ItemStack getItemStack(Material material, String displayName, List<String> lore){
-        return ItemStackFactory.getRideControlButtonStack(material, displayName, lore);
     }
 }

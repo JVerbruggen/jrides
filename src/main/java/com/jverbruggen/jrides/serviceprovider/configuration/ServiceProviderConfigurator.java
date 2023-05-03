@@ -10,6 +10,7 @@ import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.trigger.TriggerConfigFactory;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.controller.ButtonUpdateController;
+import com.jverbruggen.jrides.control.uiinterface.menu.button.factory.RideControlButtonFactory;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.effect.cart.rotation.CartRotationTriggerFactory;
 import com.jverbruggen.jrides.effect.train.music.MusicEffectTriggerFactory;
@@ -70,6 +71,7 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(CartMovementFactory.class, new CartMovementFactory());
         ServiceProvider.register(TrackBehaviourFactory.class, new TrackBehaviourFactory());
         ServiceProvider.register(RideManager.class, new RideManager(dataFolder));
+        ServiceProvider.register(RideControlButtonFactory.class, new RideControlButtonFactory());
         ServiceProvider.register(RideControlMenuFactory.class, new RideControlMenuFactory());
         ServiceProvider.register(VirtualEntityPacketListener.class, new VirtualEntityPacketListener());
     }

@@ -2,7 +2,6 @@ package com.jverbruggen.jrides.animator;
 
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.control.RideController;
-import com.jverbruggen.jrides.control.controlmode.ControlMode;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
@@ -80,7 +79,7 @@ public class CoasterHandle implements RideHandle {
     public void setRideController(RideController rideController) {
         this.rideController = rideController;
         this.rideControlMenu = ServiceProvider.getSingleton(RideControlMenuFactory.class)
-                .getControlMenu(rideController);
+                .getSimpleControlMenu(rideController);
     }
 
     @Override
