@@ -78,10 +78,9 @@ public class CoasterHandle implements RideHandle {
     }
 
     @Override
-    public void setRideController(RideController rideController) {
+    public void setRideController(RideController rideController, RideControlMenu rideControlMenu) {
         this.rideController = rideController;
-        this.rideControlMenu = ServiceProvider.getSingleton(RideControlMenuFactory.class)
-                .getSimpleControlMenu(rideController);
+        this.rideControlMenu = rideControlMenu;
     }
 
     @Override

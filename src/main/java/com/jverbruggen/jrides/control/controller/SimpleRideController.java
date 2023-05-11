@@ -31,11 +31,6 @@ public class SimpleRideController extends SingularRideController implements Ride
     }
 
     @Override
-    public TriggerContext getTriggerContext() {
-        return getRideHandle().getTriggerContext(null);
-    }
-
-    @Override
     public void changeMode(ControlMode newControlMode){
         if(newControlMode == null){
             setActive(false);

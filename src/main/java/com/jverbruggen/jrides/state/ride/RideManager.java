@@ -11,6 +11,8 @@ import com.jverbruggen.jrides.config.ride.RideConfig;
 import com.jverbruggen.jrides.config.ride.RideConfigObject;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.controller.RideControllerFactory;
+import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
+import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.logging.JRidesLogger;
@@ -51,6 +53,7 @@ public class RideManager {
     private final SeatFactory seatFactory;
     private final EffectTriggerFactory effectTriggerFactory;
     private final RideControllerFactory rideControllerFactory;
+    private final RideControlMenuFactory rideControlMenuFactory;
     private List<String> rideIdentifiers;
 
     public RideManager(File dataFolder) {
@@ -63,6 +66,7 @@ public class RideManager {
         this.seatFactory = ServiceProvider.getSingleton(SeatFactory.class);
         this.effectTriggerFactory = ServiceProvider.getSingleton(EffectTriggerFactory.class);
         this.rideControllerFactory = ServiceProvider.getSingleton(RideControllerFactory.class);
+        this.rideControlMenuFactory = ServiceProvider.getSingleton(RideControlMenuFactory.class);
         this.rideIdentifiers = new ArrayList<>();
     }
 
@@ -142,7 +146,8 @@ public class RideManager {
         coasterHandle.setTrains(trainHandles);
 
         RideController rideController = rideControllerFactory.createRideController(coasterHandle, coasterConfig.getControllerConfig());
-        coasterHandle.setRideController(rideController);
+        RideControlMenu rideControlMenu = rideControlMenuFactory.getSimpleControlMenu(rideController);
+        coasterHandle.setRideController(rideController, rideControlMenu);
 
         this.addRideHandle(coasterHandle);
     }

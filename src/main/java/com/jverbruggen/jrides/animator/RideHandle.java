@@ -16,7 +16,7 @@ public interface RideHandle {
     RideController getRideController();
     RideControlMenu getRideControlMenu();
 
-    void setRideController(RideController rideController);
+    void setRideController(RideController rideController, RideControlMenu rideControlMenu);
     DispatchTrigger getDispatchTrigger();
     TriggerContext getTriggerContext(String contextOwner);
 

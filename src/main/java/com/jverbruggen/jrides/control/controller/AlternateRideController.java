@@ -1,24 +1,20 @@
 package com.jverbruggen.jrides.control.controller;
 
 import com.jverbruggen.jrides.animator.RideHandle;
-import com.jverbruggen.jrides.control.controller.base.BaseRideController;
 import com.jverbruggen.jrides.control.controller.base.SingularRideController;
 import com.jverbruggen.jrides.control.controlmode.ControlMode;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.models.entity.Player;
-import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 public class AlternateRideController extends SingularRideController implements RideController {
-    private RideHandle rideHandle;
-    private RideController innerControllerA;
-    private RideController innerControllerB;
+    private TriggerContext leftStationTriggerContext;
+    private TriggerContext rightStationTriggerContext;
 
-    public AlternateRideController(RideHandle rideHandle, RideController innerControllerA, RideController innerControllerB) {
-        this.rideHandle = rideHandle;
-        this.innerControllerA = innerControllerA;
-        this.innerControllerB = innerControllerB;
+    public AlternateRideController(TriggerContext leftStationTriggerContext, TriggerContext rightStationTriggerContext) {
+        this.leftStationTriggerContext = leftStationTriggerContext;
+        this.rightStationTriggerContext = rightStationTriggerContext;
     }
 
     @Override
@@ -27,18 +23,8 @@ public class AlternateRideController extends SingularRideController implements R
     }
 
     @Override
-    public TriggerContext getTriggerContext() {
-        return rideHandle.getTriggerContext(null);
-    }
-
-    @Override
     public void changeMode(ControlMode newControlMode) {
 
-    }
-
-    @Override
-    public Ride getRide() {
-        return rideHandle.getRide();
     }
 
     @Override
@@ -62,4 +48,11 @@ public class AlternateRideController extends SingularRideController implements R
     }
 
 
+    public TriggerContext getLeftStationTriggerContext() {
+        return leftStationTriggerContext;
+    }
+
+    public TriggerContext getRightStationTriggerContext() {
+        return rightStationTriggerContext;
+    }
 }

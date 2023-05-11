@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.controlmode.ControlMode;
 import com.jverbruggen.jrides.control.controlmode.factory.ControlModeFactory;
+import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -20,6 +21,11 @@ public abstract class SingularRideController extends BaseRideController implemen
     @Override
     public RideHandle getRideHandle() {
         return rideHandle;
+    }
+
+    @Override
+    public TriggerContext getTriggerContext() {
+        return getRideHandle().getTriggerContext(null);
     }
 
     @Override

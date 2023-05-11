@@ -4,6 +4,9 @@ import com.jverbruggen.jrides.config.coaster.objects.controller.AlternateControl
 import org.bukkit.configuration.ConfigurationSection;
 
 public class ControllerConfig extends BaseConfig {
+    public static final String CONTROLLER_DEFAULT = "default";
+    public static final String CONTROLLER_ALTERNATE = "alternate";
+
     private String type;
     private AlternateControllerSpecConfig alternateControllerSpecConfig;
 
@@ -25,7 +28,7 @@ public class ControllerConfig extends BaseConfig {
         String type = getString(configurationSection, "type");
         AlternateControllerSpecConfig alternateControllerSpecConfig = null;
 
-        if(type.equalsIgnoreCase("alternate"))
+        if(type.equalsIgnoreCase(CONTROLLER_ALTERNATE))
             alternateControllerSpecConfig = AlternateControllerSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("spec"));
 
         return new ControllerConfig(type, alternateControllerSpecConfig);

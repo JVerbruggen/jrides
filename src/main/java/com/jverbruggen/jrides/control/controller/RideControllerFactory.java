@@ -7,11 +7,11 @@ import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 
 public class RideControllerFactory {
     public RideController createRideController(CoasterHandle coasterHandle, ControllerConfig controllerConfig){
-        if(controllerConfig == null || controllerConfig.getType().equalsIgnoreCase("default"))
+        if(controllerConfig == null || controllerConfig.getType().equalsIgnoreCase(ControllerConfig.CONTROLLER_DEFAULT))
             return createDefaultRideController(coasterHandle);
 
         String type = controllerConfig.getType();
-        if(type.equalsIgnoreCase("alternate"))
+        if(type.equalsIgnoreCase(ControllerConfig.CONTROLLER_ALTERNATE))
             return createAlternateRideController(coasterHandle, controllerConfig.getAlternateControllerSpecConfig());
 
         throw new RuntimeException("Ride controller type " + type + " is not supported");
@@ -24,10 +24,7 @@ public class RideControllerFactory {
         CoasterStationHandle stationHandleLeft = coasterHandle.getStationHandle(stationLeftName);
         CoasterStationHandle stationHandleRight = coasterHandle.getStationHandle(stationRightName);
 
-        RideController innerControllerLeft = new SimpleRideController(stationHandleLeft, coasterHandle);
-        RideController innerControllerRight = new SimpleRideController(stationHandleRight, coasterHandle);
-
-        throw new RuntimeException("Not implemented yet alternate ride controller");
+        return new AlternateRideController(stationHandleLeft.getTriggerContext(), stationHandleRight.getTriggerContext());
     }
 
     private RideController createDefaultRideController(CoasterHandle coasterHandle){
