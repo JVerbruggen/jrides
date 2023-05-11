@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface RideHandle {
@@ -18,7 +19,8 @@ public interface RideHandle {
 
     void setRideController(RideController rideController, RideControlMenu rideControlMenu);
     DispatchTrigger getDispatchTrigger();
-    TriggerContext getTriggerContext(String contextOwner);
+    TriggerContext getTriggerContext(@Nonnull String contextOwner);
+    TriggerContext getFirstTriggerContext();
 
     PlayerLocation getEjectLocation();
     List<StationHandle> getStationHandles();

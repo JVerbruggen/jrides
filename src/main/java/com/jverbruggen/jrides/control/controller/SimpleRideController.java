@@ -14,43 +14,9 @@ public class SimpleRideController extends SingularRideController implements Ride
 
     public SimpleRideController(CoasterStationHandle stationHandle, RideHandle rideHandle) {
         super();
-        this.setActive(false);
         this.stationHandle = stationHandle;
         this.changeMode(this.getControlModeFactory().getForWithoutOperator(rideHandle));
 
         this.setRideHandle(rideHandle);
-    }
-
-    @Override
-    public void setRideHandle(RideHandle rideHandle) {
-        super.setRideHandle(rideHandle);
-
-        if(getControlMode() == null) return;
-        getControlMode().setTriggerContext(getTriggerContext());
-        setActive(true);
-    }
-
-    @Override
-    public void changeMode(ControlMode newControlMode){
-        if(newControlMode == null){
-            setActive(false);
-        }else{
-            if(getRideHandle() != null){
-                newControlMode.setTriggerContext(getTriggerContext());
-                setActive(true);
-            }
-        }
-
-        setControlMode(newControlMode);
-    }
-
-    @Override
-    public void onTrainArrive(Train train, StationHandle stationHandle){
-        getControlMode().onVehicleArrive(train, stationHandle);
-    }
-
-    @Override
-    public void onTrainDepart(Train train, StationHandle stationHandle) {
-        getControlMode().onVehicleDepart(train, stationHandle);
     }
 }

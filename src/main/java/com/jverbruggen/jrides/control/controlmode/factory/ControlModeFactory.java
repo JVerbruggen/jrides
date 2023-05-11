@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.control.controlmode.AutomaticMode;
 import com.jverbruggen.jrides.control.controlmode.ControlMode;
 import com.jverbruggen.jrides.control.controlmode.SemiAutomaticMode;
+import com.jverbruggen.jrides.control.controlmode.advanced.ProxyControlMode;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.StationHandle;
@@ -21,7 +22,7 @@ public class ControlModeFactory {
         else if(size == 1)
             return getSingleForWithOperator(stationHandles.get(0));
         else{
-            throw new RuntimeException("No support for multiple stations yet for control mode");
+            throw new RuntimeException("No support for multiple stations yet for control mode ( with operator )");
         }
     }
 
@@ -35,7 +36,8 @@ public class ControlModeFactory {
         else if(size == 1)
             return getSingleForWithoutOperator(stationHandles.get(0));
         else{
-            throw new RuntimeException("No support for multiple stations yet for control mode");
+            // For dispatching 1 station at a time
+            return getAlternateForWithoutOperator(stationHandles);
         }
     }
 
@@ -57,5 +59,9 @@ public class ControlModeFactory {
                 stationHandle,
                 waitingTimer,
                 stationHandle.getTriggerContext().getDispatchTrigger().getDispatchLockCollection());
+    }
+
+    private ControlMode getAlternateForWithoutOperator(List<StationHandle> stationHandles){
+        return new ProxyControlMode(stationHandles.get(0).getWaitingTimer(), stationHandles);
     }
 }

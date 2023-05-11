@@ -11,6 +11,7 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 public interface ControlMode {
     void tick();
     void setTriggerContext(TriggerContext triggerContext);
+    TriggerContext getTriggerContext();
 
     void onVehicleArrive(Train train, StationHandle stationHandle);
     void onVehicleDepart(Train train, StationHandle stationHandle);
@@ -22,4 +23,5 @@ public interface ControlMode {
 
     MinMaxWaitingTimer getWaitingTimer();
     Player getOperator();
+    StationHandle getStationHandle();
 }

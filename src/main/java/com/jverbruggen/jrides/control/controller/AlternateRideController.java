@@ -12,19 +12,12 @@ public class AlternateRideController extends SingularRideController implements R
     private TriggerContext leftStationTriggerContext;
     private TriggerContext rightStationTriggerContext;
 
-    public AlternateRideController(TriggerContext leftStationTriggerContext, TriggerContext rightStationTriggerContext) {
+    public AlternateRideController(TriggerContext leftStationTriggerContext, TriggerContext rightStationTriggerContext, RideHandle rideHandle) {
         this.leftStationTriggerContext = leftStationTriggerContext;
         this.rightStationTriggerContext = rightStationTriggerContext;
-    }
 
-    @Override
-    public void setRideHandle(RideHandle rideHandle) {
-        throw new RuntimeException("Cannot change ride handle for alternate ride controller");
-    }
-
-    @Override
-    public void changeMode(ControlMode newControlMode) {
-
+        this.changeMode(this.getControlModeFactory().getForWithoutOperator(rideHandle));
+        this.setRideHandle(rideHandle);
     }
 
     @Override

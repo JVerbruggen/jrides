@@ -134,7 +134,10 @@ public class RideManager {
         CoasterHandle coasterHandle = new CoasterHandle(ride, world, dispatchSound, restraintOpenSound, restraintCloseSound, windSound);
 
         Track track = loadCoasterTrackFromConfig(coasterHandle, coasterConfig, offsetX, offsetY, offsetZ);
-        if(track == null) return;
+        if(track == null){
+            logger.severe("Track was null, so coaster " + rideIdentifier + " could not be loaded");
+            return;
+        }
         coasterHandle.setTrack(track);
 
         EffectTriggerCollection effectTriggerCollection = effectTriggerFactory.getTrainEffectTriggers(rideIdentifier, track);
@@ -146,7 +149,7 @@ public class RideManager {
         coasterHandle.setTrains(trainHandles);
 
         RideController rideController = rideControllerFactory.createRideController(coasterHandle, coasterConfig.getControllerConfig());
-        RideControlMenu rideControlMenu = rideControlMenuFactory.getSimpleControlMenu(rideController);
+        RideControlMenu rideControlMenu = rideControlMenuFactory.getRideControlMenu(rideController, coasterConfig.getControllerConfig());
         coasterHandle.setRideController(rideController, rideControlMenu);
 
         this.addRideHandle(coasterHandle);

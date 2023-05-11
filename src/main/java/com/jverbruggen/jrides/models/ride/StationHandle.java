@@ -10,13 +10,15 @@ import java.util.List;
 
 public class StationHandle {
     private String name;
+    private String shortName;
     private final List<Gate> entryGates;
     private final PlayerLocation ejectLocation;
     private final MinMaxWaitingTimer waitingTimer;
     private TriggerContext triggerContext;
 
-    public StationHandle(String name, List<Gate> entryGates, PlayerLocation ejectLocation, MinMaxWaitingTimer waitingTimer, TriggerContext triggerContext) {
+    public StationHandle(String name, String shortName, List<Gate> entryGates, PlayerLocation ejectLocation, MinMaxWaitingTimer waitingTimer, TriggerContext triggerContext) {
         this.name = name;
+        this.shortName = shortName;
         this.entryGates = entryGates;
         this.ejectLocation = ejectLocation;
         this.waitingTimer = waitingTimer;
@@ -37,6 +39,10 @@ public class StationHandle {
 
     public String getName() {
         return name;
+    }
+
+    public String getShortName() {
+        return shortName;
     }
 
     public void openEntryGates(){

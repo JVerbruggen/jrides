@@ -14,7 +14,7 @@ public class AutomaticMode extends BaseControlMode implements ControlMode{
     private DebounceCall dispatchDebounce;
 
     public AutomaticMode(StationHandle stationHandle, MinMaxWaitingTimer waitingTimer, DispatchLockCollection dispatchLockCollection) {
-        super(stationHandle, waitingTimer, dispatchLockCollection);
+        super(stationHandle, waitingTimer, dispatchLockCollection, stationHandle.hasVehicle());
 
         this.dispatchDebounce = new DebounceCall(20);
     }
@@ -39,7 +39,7 @@ public class AutomaticMode extends BaseControlMode implements ControlMode{
         stationHandle.closeEntryGates();
         stationHandle.closeRestraints();
 
-        if(!dispatchLockCollection.allUnlocked()) return;
+        if(dispatchLockCollection != null && !dispatchLockCollection.allUnlocked()) return;
 
         dispatchDebounce.run(() -> triggerContext.getDispatchTrigger().execute(null));
     }

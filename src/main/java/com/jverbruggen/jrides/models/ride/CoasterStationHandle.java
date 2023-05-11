@@ -18,8 +18,8 @@ public class CoasterStationHandle extends StationHandle {
     private final List<TrainEffectTriggerHandle> entryEffectTriggers;
     private final List<TrainEffectTriggerHandle> exitEffectTriggers;
 
-    public CoasterStationHandle(CoasterHandle coasterHandle, String name, TriggerContext triggerContext, List<Gate> entryGates, MinMaxWaitingTimer waitingTimer, List<TrainEffectTriggerHandle> entryEffectTriggers, List<TrainEffectTriggerHandle> exitEffectTriggers, PlayerLocation ejectLocation){
-        super(name, entryGates, ejectLocation, waitingTimer, triggerContext);
+    public CoasterStationHandle(CoasterHandle coasterHandle, String name, String shortName, TriggerContext triggerContext, List<Gate> entryGates, MinMaxWaitingTimer waitingTimer, List<TrainEffectTriggerHandle> entryEffectTriggers, List<TrainEffectTriggerHandle> exitEffectTriggers, PlayerLocation ejectLocation){
+        super(name, shortName, entryGates, ejectLocation, waitingTimer, triggerContext);
         this.coasterHandle = coasterHandle;
         this.entryEffectTriggers = entryEffectTriggers;
         this.exitEffectTriggers = exitEffectTriggers;

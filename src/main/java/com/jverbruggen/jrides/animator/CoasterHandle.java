@@ -1,11 +1,11 @@
 package com.jverbruggen.jrides.animator;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
-import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
@@ -13,9 +13,9 @@ import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
-import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.World;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -89,10 +89,15 @@ public class CoasterHandle implements RideHandle {
     }
 
     @Override
-    public TriggerContext getTriggerContext(String contextOwner) {
+    public TriggerContext getTriggerContext(@Nonnull String contextOwner) {
         CoasterStationHandle stationHandle = getStationHandle(contextOwner);
         if(stationHandle == null) return null;
         return stationHandle.getTriggerContext();
+    }
+
+    @Override
+    public TriggerContext getFirstTriggerContext() {
+        return getStationHandles().get(0).getTriggerContext();
     }
 
     @Override
@@ -116,13 +121,19 @@ public class CoasterHandle implements RideHandle {
         return stationHandles;
     }
 
-    public CoasterStationHandle getStationHandle(String identifier){
-        if(getStationHandles().size() == 0) return null;
+    public CoasterStationHandle getStationHandle(String shortName){
+        if(getStationHandles().size() == 0){
+            JRidesPlugin.getLogger().severe("Looked for station with short name " + shortName + " but size was 0");
+            return null;
+        }
 
         return stationHandles.stream()
-                .filter(s -> s.getName().equalsIgnoreCase(identifier))
+                .filter(s -> s.getShortName().equalsIgnoreCase(shortName))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Station " + identifier + " did not exist"));
+                .orElseThrow(() -> {
+                    String options = stationHandles.stream().map(StationHandle::getShortName).collect(Collectors.joining(", "));
+                    return new RuntimeException("Station short name " + shortName + " did not exist. Existing stations: " + options);
+                });
     }
 
     public CoasterStationHandle getStationHandle(int index){

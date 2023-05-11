@@ -24,7 +24,10 @@ public class RideControllerFactory {
         CoasterStationHandle stationHandleLeft = coasterHandle.getStationHandle(stationLeftName);
         CoasterStationHandle stationHandleRight = coasterHandle.getStationHandle(stationRightName);
 
-        return new AlternateRideController(stationHandleLeft.getTriggerContext(), stationHandleRight.getTriggerContext());
+        if(stationHandleLeft == null) throw new RuntimeException("Could not find station " + stationLeftName + " to make ride controller");
+        else if(stationHandleRight == null) throw new RuntimeException("Could not find station " + stationRightName + " to make ride controller");
+
+        return new AlternateRideController(stationHandleLeft.getTriggerContext(), stationHandleRight.getTriggerContext(), coasterHandle);
     }
 
     private RideController createDefaultRideController(CoasterHandle coasterHandle){

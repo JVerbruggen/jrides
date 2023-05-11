@@ -11,6 +11,7 @@ public class ControllerConfig extends BaseConfig {
     private AlternateControllerSpecConfig alternateControllerSpecConfig;
 
     public ControllerConfig(String type, AlternateControllerSpecConfig alternateControllerSpecConfig) {
+        this.type = type;
         this.alternateControllerSpecConfig = alternateControllerSpecConfig;
     }
 
@@ -25,7 +26,7 @@ public class ControllerConfig extends BaseConfig {
     public static ControllerConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         if(configurationSection == null) return null;
 
-        String type = getString(configurationSection, "type");
+        String type = getString(configurationSection, "type", "default");
         AlternateControllerSpecConfig alternateControllerSpecConfig = null;
 
         if(type.equalsIgnoreCase(CONTROLLER_ALTERNATE))

@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.animator.trackbehaviour.factory.TrackBehaviourFact
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.trigger.TriggerConfigFactory;
+import com.jverbruggen.jrides.control.controller.RideControllerFactory;
 import com.jverbruggen.jrides.control.controlmode.factory.ControlModeFactory;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.controller.ButtonUpdateController;
@@ -49,8 +50,12 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(Logger.class, logger);
 
         ServiceProvider.register(PluginManager.class, Bukkit.getPluginManager());
-        ServiceProvider.register(ControlModeFactory.class, new ControlModeFactory());
         ServiceProvider.register(LanguageFile.class, new LanguageFile());
+
+        ServiceProvider.register(ControlModeFactory.class, new ControlModeFactory());
+        ServiceProvider.register(RideControllerFactory.class, new RideControllerFactory());
+        ServiceProvider.register(RideControlButtonFactory.class, new RideControlButtonFactory());
+        ServiceProvider.register(RideControlMenuFactory.class, new RideControlMenuFactory());
         ServiceProvider.register(SectionProvider.class, new SectionProvider());
         ServiceProvider.register(ButtonUpdateController.class, new ButtonUpdateController());
         ServiceProvider.register(ProtocolManager.class, ProtocolLibrary.getProtocolManager());
@@ -73,8 +78,7 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(CartMovementFactory.class, new CartMovementFactory());
         ServiceProvider.register(TrackBehaviourFactory.class, new TrackBehaviourFactory());
         ServiceProvider.register(RideManager.class, new RideManager(dataFolder));
-        ServiceProvider.register(RideControlButtonFactory.class, new RideControlButtonFactory());
-        ServiceProvider.register(RideControlMenuFactory.class, new RideControlMenuFactory());
+
         ServiceProvider.register(VirtualEntityPacketListener.class, new VirtualEntityPacketListener());
     }
 }

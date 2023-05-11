@@ -94,9 +94,9 @@ public class TrackBehaviourFactory {
     }
 
     public TrackBehaviour getStationBehaviour(Frame blockBrakeEngageFrame, CoasterHandle coasterHandle, RangedSectionConfig rangedSectionConfig, GateOwnerConfigSpec gateSpec){
-        int stationNr = coasterHandle.getStationHandles().size() + 1;
         String rideIdentifier = coasterHandle.getRide().getIdentifier();
-        String stationName = rideIdentifier + "_station_" + stationNr;
+        String shortStationName = rangedSectionConfig.getIdentifier();
+        String stationName = rideIdentifier + "_station_" + shortStationName;
         World world = JRidesPlugin.getWorld();
 
         DispatchLockCollection dispatchLockCollection = new DispatchLockCollection("Main locks");
@@ -139,7 +139,7 @@ public class TrackBehaviourFactory {
 
         MinMaxWaitingTimer waitingTimer = new MinMaxWaitingTimer(minimumWaitingTime, maximumWaitingTime, minimumWaitTimeDispatchLock);
 
-        CoasterStationHandle stationHandle = new CoasterStationHandle(coasterHandle, stationName, triggerContext, gates, waitingTimer,
+        CoasterStationHandle stationHandle = new CoasterStationHandle(coasterHandle, stationName, shortStationName, triggerContext, gates, waitingTimer,
                 entryEffectTriggers, exitEffectTriggers, ejectLocation);
 
         return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, true, triggerContext,
