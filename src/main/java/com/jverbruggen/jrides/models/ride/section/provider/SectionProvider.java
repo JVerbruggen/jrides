@@ -73,7 +73,7 @@ public class SectionProvider {
         }else{
             // .. occupy it
             if(toSection.getReservedBy() != train)
-                throw new RuntimeException("Logic error: Section was not reserved in section occupation logic!");
+                throw new RuntimeException("Logic error: Section " + toSection.getName() + " was not reserved in section occupation logic!");
 
             toSection.addOccupation(train);
             train.addCurrentSection(toSection, onTrainEnd);

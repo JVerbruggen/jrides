@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import org.bukkit.Bukkit;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.annotation.Nonnull;
@@ -57,13 +58,11 @@ public abstract class BaseSection implements Section{
 
     @Override
     public void setEntireBlockReservation(@Nonnull Train train) {
-        boolean wasNull = getReservedBy() == null; // For loop references
-
-        if(canReserveLocally(train)){
+        if(getReservedBy() == null){
             setLocalReservation(train);
-        }
+        }else throw new RuntimeException("Could not make reservation although committed to it");
 
-        if(wasNull && !canBlock()) nextSection.setEntireBlockReservation(train);
+        if(!canBlock()) nextSection.setEntireBlockReservation(train);
     }
 
     @Override
@@ -97,11 +96,13 @@ public abstract class BaseSection implements Section{
             throw new RuntimeException("Cannot reserve an already-reserved section!");
 
         reservedBy = train;
+        Bukkit.broadcastMessage("Set reservation " + getName());
     }
 
     @Override
     public void clearLocalReservation() {
         reservedBy = null;
+        Bukkit.broadcastMessage("Cleared reservation " + getName());
     }
 
     @Override

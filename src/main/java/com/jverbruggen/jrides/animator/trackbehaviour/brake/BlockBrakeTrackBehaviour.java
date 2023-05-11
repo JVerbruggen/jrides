@@ -49,22 +49,12 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
             switch (phase){
                 case IDLE:
                     train.setStatusMessage("Idle");
-                    if(isNextSectionSafe(train) && minWaitTicks <= 0)
-                        phase = BlockBrakePhase.PASSING_THROUGH;
-                    else
-                        phase = BlockBrakePhase.DRIVING_UNTIL_STOP;
-                    goIntoSwitch = true;
-                    break;
-                case PASSING_THROUGH:
-                    train.setStatusMessage("Passing through");
-                    if(newSpeed.getSpeedPerTick() > driveSpeed){
-                        newSpeed.minus(deceleration, driveSpeed);
-                    }
-                    else{
+                    if(isNextSectionSafe(train) && minWaitTicks <= 0){
                         phase = BlockBrakePhase.DRIVING;
                         train.getNextSection().setEntireBlockReservation(train);
-                        goIntoSwitch = true;
-                    }
+                    } else
+                        phase = BlockBrakePhase.DRIVING_UNTIL_STOP;
+                    goIntoSwitch = true;
                     break;
                 case DRIVING_UNTIL_STOP:
                     train.setStatusMessage("Driving until stop");
@@ -155,7 +145,6 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
 
 enum BlockBrakePhase{
     IDLE,
-    PASSING_THROUGH,
     DRIVING_UNTIL_STOP,
     STOPPING,
     WAITING,
