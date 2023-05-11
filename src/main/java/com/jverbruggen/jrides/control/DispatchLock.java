@@ -10,6 +10,8 @@ public interface DispatchLock {
 
     void unlock();
 
+    void setStatus(String status);
+
     boolean isUnlocked();
 
     void setLocked(boolean locked);

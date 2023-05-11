@@ -123,6 +123,7 @@ public class TrainFactory {
 
         Train train = new SimpleTrain(trainIdentifier, carts, headOfTrainFrame, middleOfTrainFrame, tailOfTrainFrame,
                 headLocation, middleLocation, tailLocation, spawnSection, debugMode);
+        spawnSection.setLocalReservation(train);
         spawnSection.addOccupation(train);
 
         return train;

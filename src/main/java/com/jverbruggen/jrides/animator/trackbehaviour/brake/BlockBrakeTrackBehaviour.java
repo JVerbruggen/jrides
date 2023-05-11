@@ -62,6 +62,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
                     }
                     else{
                         phase = BlockBrakePhase.DRIVING;
+                        train.getNextSection().setEntireBlockReservation(train);
                         goIntoSwitch = true;
                     }
                     break;
@@ -70,6 +71,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
                     if(train.getHeadSection().hasPassed(stopFrame, train.getHeadOfTrainFrame())){
                         if(isNextSectionSafe(train) && minWaitTicks <= 0){
                             phase = BlockBrakePhase.DRIVING;
+                            train.getNextSection().setEntireBlockReservation(train);
                         }else{
                             phase = BlockBrakePhase.STOPPING;
                         }
@@ -90,6 +92,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour implements Trac
                     train.setStatusMessage("Waiting \n" + train.getHeadSection() + "\n"
                         + train.getHeadSection().next(train));
                     if(isNextSectionSafe(train) && isMinWaitTimerFinished()){
+                        train.getNextSection().setEntireBlockReservation(train);
                         resetMinWaitTimer();
                         phase = BlockBrakePhase.DRIVING;
                         goIntoSwitch = true;

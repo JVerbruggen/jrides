@@ -70,6 +70,7 @@ public class SimpleSection extends BaseSection {
 
     @Override
     public boolean isBlockSectionSafe(@Nullable Train train, boolean checkConflicts) {
+        if(!this.canReserveLocally(train)) return false;
         if(this.isOccupied()) return false;
         if(!this.trackBehaviour.accepts(train)) return false;
         if(checkConflicts

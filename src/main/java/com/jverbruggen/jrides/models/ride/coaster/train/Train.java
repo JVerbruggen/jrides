@@ -30,6 +30,7 @@ public interface Train extends Vehicle {
     Vector3 getMassMiddlePoint();
 
     List<Section> getCurrentSections();
+    Section getNextSection();
     Section getHeadSection();
     Section getTailSection();
     void addCurrentSection(Section section);

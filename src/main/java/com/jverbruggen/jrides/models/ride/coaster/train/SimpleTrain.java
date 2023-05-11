@@ -141,6 +141,11 @@ public class SimpleTrain implements Train {
     }
 
     @Override
+    public Section getNextSection() {
+        return getHeadSection().next(this);
+    }
+
+    @Override
     public Section getHeadSection() {
         if(currentSections.size() == 0) throw new RuntimeException("Train occupies 0 sections");
         return currentSections.get(0);

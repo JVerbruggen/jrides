@@ -63,6 +63,8 @@ public class SectionProvider {
                     fromSection.removeOccupation(train);
                     train.removeCurrentSection(fromSection);
                     fromSection.getTrackBehaviour().trainExitedAtEnd();
+
+                    if(fromSection.canBlock()) fromSection.clearEntireBlockReservation();
                 }else{
                     JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Yes spans over");
                 }
@@ -70,6 +72,9 @@ public class SectionProvider {
             // else if the section is free
         }else{
             // .. occupy it
+            if(toSection.getReservedBy() != train)
+                throw new RuntimeException("Logic error: Section was not reserved in section occupation logic!");
+
             toSection.addOccupation(train);
             train.addCurrentSection(toSection, onTrainEnd);
             if(applyNewBehaviour){

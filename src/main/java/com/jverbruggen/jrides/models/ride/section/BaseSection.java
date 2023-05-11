@@ -2,7 +2,6 @@ package com.jverbruggen.jrides.models.ride.section;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
-import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -11,15 +10,16 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public abstract class BaseSection implements Section{
     protected final TrackBehaviour trackBehaviour;
     protected Track parentTrack;
 
+    private Train reservedBy;
     private Train occupiedBy;
     private Section previousSection;
     private Section nextSection;
@@ -27,11 +27,81 @@ public abstract class BaseSection implements Section{
 
     public BaseSection(TrackBehaviour trackBehaviour) {
         this.trackBehaviour = trackBehaviour;
+        this.reservedBy = null;
         this.occupiedBy = null;
         this.previousSection = null;
         this.nextSection = null;
         this.parentTrack = null;
         this.additionalPreviousSections = new ArrayList<>();
+    }
+
+    @Nullable
+    @Override
+    public Train getReservedBy() {
+        return reservedBy;
+    }
+
+    @Override
+    public boolean canReserveLocally(@Nonnull Train train) {
+        return reservedBy == null || reservedBy == train;
+    }
+
+    @Override
+    public boolean canReserveEntireBlock(@Nonnull Train train) {
+        boolean canReserveLocally = canReserveLocally(train);
+        if(!canReserveLocally) return false;
+
+        if(canBlock()) return true;
+        else return nextSection.canReserveEntireBlock(train);
+    }
+
+    @Override
+    public void setEntireBlockReservation(@Nonnull Train train) {
+        boolean wasNull = getReservedBy() == null; // For loop references
+
+        if(canReserveLocally(train)){
+            setLocalReservation(train);
+        }
+
+        if(wasNull && !canBlock()) nextSection.setEntireBlockReservation(train);
+    }
+
+    @Override
+    public void clearEntireBlockReservation() {
+        clearEntireBlockReservation(new ArrayList<>());
+    }
+
+    @Override
+    public void clearEntireBlockReservation(List<Section> done) {
+        clearLocalReservation();
+        done.add(this);
+
+        if(!canBlock() && !done.contains(nextSection)) nextSection.clearEntireBlockReservation(done);
+
+        clearPreviousSectionReservation(done, previousSection);
+        if(!additionalPreviousSections.isEmpty())
+            additionalPreviousSections.forEach(s-> clearPreviousSectionReservation(done,s));
+    }
+
+    private void clearPreviousSectionReservation(List<Section> done, Section previousSection){
+        if(!previousSection.canBlock() && !done.contains(previousSection)){
+            previousSection.clearEntireBlockReservation(done);
+        }else{
+            previousSection.clearLocalReservation();
+        }
+    }
+
+    @Override
+    public void setLocalReservation(@Nonnull Train train) {
+        if(reservedBy != null)
+            throw new RuntimeException("Cannot reserve an already-reserved section!");
+
+        reservedBy = train;
+    }
+
+    @Override
+    public void clearLocalReservation() {
+        reservedBy = null;
     }
 
     @Override
@@ -70,6 +140,10 @@ public abstract class BaseSection implements Section{
     public void addOccupation(@NonNull Train train) {
         if( occupiedBy != null && occupiedBy != train) throw new RuntimeException("Two trains cannot be in same section! "
                 + train.toString() + " trying to enter section with " + occupiedBy.toString());
+
+        if(reservedBy == null || reservedBy != train)
+            throw new RuntimeException("Train should reserve section before trying to occupy it!");
+
         occupiedBy = train;
 
         JRidesPlugin.getLogger().info(LogType.SECTIONS,"Section " + this.toString() + " occupied by " + train);

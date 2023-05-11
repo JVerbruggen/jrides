@@ -11,12 +11,14 @@ public class SimpleDispatchLock implements DispatchLock {
     private boolean locked;
     private String description;
     private final List<Consumer<DispatchLock>> eventListeners;
+    private String status;
 
     public SimpleDispatchLock(DispatchLockCollection parentCollection, String description, boolean initLocked) {
         this.parentCollection = parentCollection;
         this.description = description;
         this.locked = initLocked;
         this.eventListeners = new ArrayList<>();
+        this.status = "";
 
         this.parentCollection.addDispatchLock(this);
     }
@@ -27,12 +29,16 @@ public class SimpleDispatchLock implements DispatchLock {
     }
 
     @Override
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
     public void lock(){
         if(locked) return;
         locked = true;
         parentCollection.onLock(this);
         eventListeners.forEach(l -> l.accept(this));
-
     }
 
     @Override
@@ -57,7 +63,8 @@ public class SimpleDispatchLock implements DispatchLock {
     @Override
     public List<String> getProblems(int detailLevel) {
         if(detailLevel <= 0) return List.of();
-        return List.of(ChatColor.GRAY + "- " + this.getDescription());
+        String statusSpec = status.equals("") ? "" : " (" + status + ")";
+        return List.of(ChatColor.GRAY + "- " + this.getDescription() + statusSpec);
     }
 
     @Override

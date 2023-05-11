@@ -26,9 +26,15 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     }
 
     protected boolean isNextSectionSafe(Train train){
-        Section nextSection = train.getHeadSection().next(train);
+        Section nextSection = train.getNextSection();
         if(nextSection == null) return false;
         return nextSection.isBlockSectionSafe(train);
+    }
+
+    protected boolean shouldReserveNextSection(Train train){
+        Section nextSection = train.getNextSection();
+        if(nextSection == null) return false;
+        return nextSection.getReservedBy() != train;
     }
 
     protected TrainMovement calculateTrainMovement(Train train, Section section, Speed speed){

@@ -21,7 +21,7 @@ public abstract class BaseControlMode implements ControlMode {
     protected MinMaxWaitingTimer waitingTimer;
     protected Player operator;
 
-    private final long tickInterval;
+    protected final long tickInterval;
     private boolean dispatchIntervalActive;
     private boolean started;
 
@@ -49,6 +49,10 @@ public abstract class BaseControlMode implements ControlMode {
         }
         tickIntervalState = 0;
 
+        incrementWaitingTimer();
+    }
+
+    protected void incrementWaitingTimer(){
         if(dispatchIntervalActive) waitingTimer.increment(tickInterval);
     }
 

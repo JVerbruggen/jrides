@@ -57,10 +57,12 @@ public class BlockSectionCommandExecutor extends BaseCommandExecutor {
         languageFile.sendMessage(commandSender, "-- Block section occupations --");
         for(Section section : sections){
             boolean occupied = section.isOccupied();
+            boolean reserved = section.getReservedBy() != null;
             boolean safe = section.isBlockSectionSafe(null);
 
             ChatColor color = ChatColor.GREEN;
             if(occupied) color = ChatColor.RED;
+            else if(reserved) color = ChatColor.DARK_AQUA;
             else if(!safe) color = ChatColor.YELLOW;
 
             languageFile.sendMessage(commandSender, color + section.toString());

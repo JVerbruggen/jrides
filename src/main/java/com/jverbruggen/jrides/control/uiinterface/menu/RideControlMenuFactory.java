@@ -69,7 +69,6 @@ public class RideControlMenuFactory {
         if(!rideController.isActive())
             return null;
 
-        DispatchLockCollection dispatchLockCollection = rideController.getTriggerContext().getDispatchLockCollection();
         String rideIdentifier = rideController.getRide().getIdentifier();
 
         TriggerContext leftStationTriggerContext    = rideController.getLeftStationTriggerContext();
@@ -82,20 +81,22 @@ public class RideControlMenuFactory {
         StationTrigger rightRestraintTrigger        = rightStationTriggerContext.getRestraintTrigger();
 
         RideControlButton claimOperatingButton      = rideControlButtonFactory.createClaimRideButton(rideController, rideIdentifier, 4);
-        RideControlButton problemList               = rideControlButtonFactory.createProblemList(rideIdentifier, dispatchLockCollection, 6);
+        RideControlButton leftProblemList           = rideControlButtonFactory.createProblemList(rideIdentifier, leftStationTriggerContext.getDispatchLockCollection(), 18);
         RideControlButton leftDispatchButton        = rideControlButtonFactory.createDispatchButton(rideIdentifier, leftDispatchTrigger, 9);
         RideControlButton leftGateButton            = rideControlButtonFactory.createGateButton(rideIdentifier, leftGateTrigger, 10);
         RideControlButton leftRestraintButton       = rideControlButtonFactory.createRestraintButton(rideIdentifier, leftRestraintTrigger, 11);
+        RideControlButton rightProblemList          = rideControlButtonFactory.createProblemList(rideIdentifier, rightStationTriggerContext.getDispatchLockCollection(), 24);
         RideControlButton rightDispatchButton       = rideControlButtonFactory.createDispatchButton(rideIdentifier, rightDispatchTrigger, 15);
         RideControlButton rightGateButton           = rideControlButtonFactory.createGateButton(rideIdentifier, rightGateTrigger, 16);
         RideControlButton rightRestraintButton      = rideControlButtonFactory.createRestraintButton(rideIdentifier, rightRestraintTrigger, 17);
 
         RideControlMenu rideControlMenu = new RideControlMenu();
         rideControlMenu.addButton(claimOperatingButton);
-        rideControlMenu.addButton(problemList);
+        rideControlMenu.addButton(leftProblemList);
         rideControlMenu.addButton(leftDispatchButton);
         rideControlMenu.addButton(leftGateButton);
         rideControlMenu.addButton(leftRestraintButton);
+        rideControlMenu.addButton(rightProblemList);
         rideControlMenu.addButton(rightDispatchButton);
         rideControlMenu.addButton(rightGateButton);
         rideControlMenu.addButton(rightRestraintButton);

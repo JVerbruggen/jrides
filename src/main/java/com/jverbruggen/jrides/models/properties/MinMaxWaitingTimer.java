@@ -56,6 +56,7 @@ public class MinMaxWaitingTimer {
 
     public void increment(long tickInterval){
         waitingTimerState += (double)tickInterval/20d;
+        this.lock.setStatus((int)waitingTimerState + "s waiting");
 
         if(reachedFunction()){
             this.lock.unlock();

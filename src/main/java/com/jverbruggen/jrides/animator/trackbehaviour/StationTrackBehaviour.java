@@ -141,7 +141,9 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                     }
                     break;
                 case WAITING:
-                    if(isNextSectionSafe(train)){
+                    Section nextSection = train.getNextSection();
+                    if(nextSection != null && nextSection.isBlockSectionSafe(train)){
+                        nextSection.setEntireBlockReservation(train);
                         phase = StationPhase.DEPARTING;
                         blockSectionOccupiedDispatchLock.lock();
                         coasterHandle.getRideController().onTrainDepart(train, stationHandle);

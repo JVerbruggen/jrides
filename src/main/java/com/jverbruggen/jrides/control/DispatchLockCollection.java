@@ -117,6 +117,11 @@ public class DispatchLockCollection implements DispatchLock {
     }
 
     @Override
+    public void setStatus(String status) {
+
+    }
+
+    @Override
     public boolean isUnlocked() {
         return allUnlocked();
     }
