@@ -1,13 +1,14 @@
 package com.jverbruggen.jrides.animator;
 
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
-import com.jverbruggen.jrides.control.RideController;
+import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
+import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
@@ -17,6 +18,7 @@ import org.bukkit.World;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CoasterHandle implements RideHandle {
     private Ride ride;
@@ -25,7 +27,7 @@ public class CoasterHandle implements RideHandle {
     private Track track;
     private World world;
     private ParticleTrackVisualisationTool visualisationTool;
-    private List<StationHandle> stationHandles;
+    private List<CoasterStationHandle> stationHandles;
     private List<TrainHandle> trains;
     private List<Transfer> transfers;
     private EffectTriggerCollection effectTriggerCollection;
@@ -89,7 +91,7 @@ public class CoasterHandle implements RideHandle {
 
     @Override
     public TriggerContext getTriggerContext(String contextOwner) {
-        StationHandle stationHandle = getStationHandle(contextOwner);
+        CoasterStationHandle stationHandle = getStationHandle(contextOwner);
         if(stationHandle == null) return null;
         return stationHandle.getTriggerContext();
     }
@@ -102,17 +104,31 @@ public class CoasterHandle implements RideHandle {
                 .findFirst().orElse(null);
     }
 
-    public void addStationHandle(StationHandle stationHandle) {
+    @Override
+    public List<StationHandle> getStationHandles() {
+        return stationHandles.stream().map(h->(StationHandle)h).collect(Collectors.toList());
+    }
+
+    public void addStationHandle(CoasterStationHandle stationHandle) {
         stationHandles.add(stationHandle);
     }
 
-    public List<StationHandle> getStationHandles() {
+    public List<CoasterStationHandle> getCoasterStationHandles() {
         return stationHandles;
     }
 
-    public StationHandle getStationHandle(String identifier){
+    public CoasterStationHandle getStationHandle(String identifier){
         if(getStationHandles().size() == 0) return null;
-        return getStationHandles().get(0); // TODO: actually implement this
+
+        return stationHandles.stream()
+                .filter(s -> s.getName().equalsIgnoreCase(identifier))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Station " + identifier + " did not exist"));
+    }
+
+    public CoasterStationHandle getStationHandle(int index){
+        if(getStationHandles().size() <= index) return null;
+        return getCoasterStationHandles().get(index);
     }
 
     @Override

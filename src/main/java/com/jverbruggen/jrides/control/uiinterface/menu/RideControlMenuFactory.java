@@ -1,27 +1,15 @@
 package com.jverbruggen.jrides.control.uiinterface.menu;
 
 import com.jverbruggen.jrides.control.DispatchLockCollection;
-import com.jverbruggen.jrides.control.RideController;
+import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.StationTrigger;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.LockResembledControlButton;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.SimpleRideControlButton;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.action.RunnableButtonAction;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.action.RunnableButtonWithContextAction;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.common.BlinkingButtonVisual;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.common.CabinOccupationVisual;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.common.StaticButtonVisual;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.factory.RideControlButtonFactory;
-import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.language.LanguageFile;
-import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 

@@ -1,41 +1,26 @@
 package com.jverbruggen.jrides.models.ride;
 
-import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
-import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
-import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
-import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
 
 import java.util.List;
 
 public class StationHandle {
-    private TriggerContext triggerContext;
-    private Train stationaryTrain;
     private String name;
     private final List<Gate> entryGates;
-    private CoasterHandle coasterHandle;
-    private final MinMaxWaitingTimer waitingTimer;
-    private final List<TrainEffectTriggerHandle> entryEffectTriggers;
-    private final List<TrainEffectTriggerHandle> exitEffectTriggers;
     private final PlayerLocation ejectLocation;
+    private final MinMaxWaitingTimer waitingTimer;
+    private TriggerContext triggerContext;
 
-    public StationHandle(CoasterHandle coasterHandle, String name, TriggerContext triggerContext, List<Gate> entryGates, MinMaxWaitingTimer waitingTimer, List<TrainEffectTriggerHandle> entryEffectTriggers, List<TrainEffectTriggerHandle> exitEffectTriggers, PlayerLocation ejectLocation){
-        this.coasterHandle = coasterHandle;
-        this.triggerContext = triggerContext;
-        this.entryGates = entryGates;
-        this.waitingTimer = waitingTimer;
-        this.entryEffectTriggers = entryEffectTriggers;
-        this.exitEffectTriggers = exitEffectTriggers;
-        this.stationaryTrain = null;
+    public StationHandle(String name, List<Gate> entryGates, PlayerLocation ejectLocation, MinMaxWaitingTimer waitingTimer, TriggerContext triggerContext) {
         this.name = name;
+        this.entryGates = entryGates;
         this.ejectLocation = ejectLocation;
-
-        triggerContext.getRestraintTrigger().setStationHandle(this);
-        triggerContext.getGateTrigger().setStationHandle(this);
-        coasterHandle.addStationHandle(this);
+        this.waitingTimer = waitingTimer;
+        this.triggerContext = triggerContext;
     }
 
     public PlayerLocation getEjectLocation() {
@@ -46,57 +31,12 @@ public class StationHandle {
         return entryGates;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public TriggerContext getTriggerContext() {
         return triggerContext;
     }
 
-    public boolean hasTrain(){
-        return stationaryTrain != null;
-    }
-
-    public Train getStationaryTrain(){
-        return stationaryTrain;
-    }
-
-    public CoasterHandle getCoasterHandle() {
-        return coasterHandle;
-    }
-
-    public void runEntryEffectTriggers(Train train){
-        if(entryEffectTriggers == null) return;
-        entryEffectTriggers.forEach(t -> t.execute(train));
-    }
-
-    public void runExitEffectTriggers(Train train){
-        if(exitEffectTriggers == null) return;
-        exitEffectTriggers.forEach(t -> t.execute(train));
-    }
-
-    public boolean entryEffectTriggersDone(){
-        if(entryEffectTriggers == null) return true;
-        return entryEffectTriggers.stream().allMatch(t -> t.getTrainEffectTrigger().finishedPlaying());
-    }
-
-    public boolean exitEffectTriggersDone(){
-        if(exitEffectTriggers == null) return true;
-        return exitEffectTriggers.stream().allMatch(t -> t.getTrainEffectTrigger().finishedPlaying());
-    }
-
-    public void setStationaryTrain(Train train) {
-        if(train == null){
-            if(this.stationaryTrain != null)
-                this.stationaryTrain.setStationaryAt(null);
-            this.stationaryTrain = null;
-            return;
-        }
-
-        if(stationaryTrain != null) throw new RuntimeException("Two trains cannot be in the same station!");
-        this.stationaryTrain = train;
-        train.setStationaryAt(this);
+    public String getName() {
+        return name;
     }
 
     public void openEntryGates(){
@@ -112,31 +52,19 @@ public class StationHandle {
         return entryGates.stream().noneMatch(Gate::isOpen);
     }
 
-    public void closeRestraints(){
-        if(stationaryTrain == null) return;
-
-        if(stationaryTrain.getRestraintState()) return;
-
-        stationaryTrain.setRestraintForAll(true);
-        triggerContext.getRestraintTrigger().getLock().setLocked(false);
-    }
-
-    public void onPlayerEnter(Player player){
-        int passengerCount = getStationaryTrain().getPassengers().size();
-        if(passengerCount == 1){
-            getCoasterHandle().getRideController().getControlMode().getWaitingTimer().setPreferredWaitingTimeFromNow(15);
-        }
-    }
-
     public MinMaxWaitingTimer getWaitingTimer() {
         return waitingTimer;
     }
 
-    public boolean shouldEject(){
-        return true;
+    public void closeRestraints() {
+        triggerContext.getRestraintTrigger().getLock().setLocked(false);
     }
 
-    public boolean isExit(){
-        return true;
+    public boolean hasVehicle(){
+        throw new RuntimeException("Has vehicle is not implemented yet for non-coaster station handle");
+    }
+
+    public Vehicle getStationaryVehicle(){
+        throw new RuntimeException("Get vehicle is not implemented yet for non-coaster station handle");
     }
 }

@@ -7,12 +7,12 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.TrackEnd;
 import com.jverbruggen.jrides.models.properties.TrainEnd;
-import com.jverbruggen.jrides.models.ride.StationHandle;
+import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
 import java.util.List;
 
-public interface Train {
+public interface Train extends Vehicle {
     String getName();
     List<Cart> getCarts();
     int size();
@@ -52,11 +52,10 @@ public interface Train {
 
     void onPlayerEnter(Player player);
     void onPlayerExit(Player player);
-    List<Player> getPassengers();
 
-    void setStationaryAt(StationHandle stationaryAt);
-    boolean isStationary();
-    StationHandle getStationaryAt();
+    void setStationaryAt(CoasterStationHandle stationaryAt);
+
+    CoasterStationHandle getStationaryAt();
 
     void setHandle(TrainHandle trainHandle);
     TrainHandle getHandle();
@@ -64,12 +63,6 @@ public interface Train {
     static Vector3 calculateMassMiddlePoint(Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation){
         return Vector3.average(headLocation, middleLocation, middleLocation, tailLocation); // Middle is twice as heavy as sides
     }
-
-    void ejectPassengers();
-
-    void playRestraintOpenSound();
-    void playRestraintCloseSound();
-    void playDispatchSound();
 
     void sendPositionMessage(String positionMessage);
     void addPositionMessageListener(MessageReceiver messageReceiver);

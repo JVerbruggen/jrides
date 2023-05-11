@@ -9,8 +9,8 @@ import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.config.ride.RideConfig;
 import com.jverbruggen.jrides.config.ride.RideConfigObject;
-import com.jverbruggen.jrides.control.RideController;
-import com.jverbruggen.jrides.control.controlmode.factory.ControlModeFactory;
+import com.jverbruggen.jrides.control.controller.RideController;
+import com.jverbruggen.jrides.control.controller.RideControllerFactory;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.logging.JRidesLogger;
@@ -19,7 +19,6 @@ import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.properties.frame.SimpleFrame;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.identifier.RideIdentifier;
-import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.*;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
@@ -51,6 +50,7 @@ public class RideManager {
     private final TrainFactory trainFactory;
     private final SeatFactory seatFactory;
     private final EffectTriggerFactory effectTriggerFactory;
+    private final RideControllerFactory rideControllerFactory;
     private List<String> rideIdentifiers;
 
     public RideManager(File dataFolder) {
@@ -62,6 +62,7 @@ public class RideManager {
         this.trainFactory = ServiceProvider.getSingleton(TrainFactory.class);
         this.seatFactory = ServiceProvider.getSingleton(SeatFactory.class);
         this.effectTriggerFactory = ServiceProvider.getSingleton(EffectTriggerFactory.class);
+        this.rideControllerFactory = ServiceProvider.getSingleton(RideControllerFactory.class);
         this.rideIdentifiers = new ArrayList<>();
     }
 
@@ -140,12 +141,8 @@ public class RideManager {
         List<TrainHandle> trainHandles = createTrains(track, coasterConfig, sectionProvider, rideIdentifier, trainCount);
         coasterHandle.setTrains(trainHandles);
 
-        StationHandle stationHandle = coasterHandle.getStationHandle(null); // TODO: Support multiple stations in controller here!!!
-
-        ControlModeFactory controlModeFactory = new ControlModeFactory();
-        RideController rideController = new RideController(controlModeFactory, stationHandle);
-        rideController.setRideHandle(coasterHandle);
-        coasterHandle.setRideController(rideController); // TODO: Implement
+        RideController rideController = rideControllerFactory.createRideController(coasterHandle, coasterConfig.getControllerConfig());
+        coasterHandle.setRideController(rideController);
 
         this.addRideHandle(coasterHandle);
     }

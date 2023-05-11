@@ -9,9 +9,8 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.TrackEnd;
 import com.jverbruggen.jrides.models.properties.TrainEnd;
-import com.jverbruggen.jrides.models.ride.StationHandle;
+import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.section.Section;
-import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class SimpleTrain implements Train {
     private Vector3 tailLocation;
     private List<Player> passengers;
 
-    private StationHandle onStation;
+    private CoasterStationHandle onStation;
     private TrainHandle trainHandle;
 
     private String statusMessage;
@@ -269,7 +268,7 @@ public class SimpleTrain implements Train {
     }
 
     @Override
-    public void setStationaryAt(StationHandle stationaryAt) {
+    public void setStationaryAt(CoasterStationHandle stationaryAt) {
         this.onStation = stationaryAt;
     }
 
@@ -279,7 +278,7 @@ public class SimpleTrain implements Train {
     }
 
     @Override
-    public StationHandle getStationaryAt() {
+    public CoasterStationHandle getStationaryAt() {
         return onStation;
     }
 

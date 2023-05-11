@@ -2,7 +2,7 @@ package com.jverbruggen.jrides.models.entity;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimationSupport;
-import com.jverbruggen.jrides.control.RideController;
+import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.models.math.Quaternion;

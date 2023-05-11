@@ -4,11 +4,11 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
-import com.jverbruggen.jrides.models.ride.StationHandle;
+import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 public class GateTrigger implements StationTrigger{
-    private StationHandle stationHandle;
+    private CoasterStationHandle stationHandle;
     private final DispatchLock gatesLock;
     private final LanguageFile languageFile;
 
@@ -19,7 +19,7 @@ public class GateTrigger implements StationTrigger{
     }
 
     @Override
-    public void setStationHandle(StationHandle stationHandle) {
+    public void setStationHandle(CoasterStationHandle stationHandle) {
         this.stationHandle = stationHandle;
     }
 

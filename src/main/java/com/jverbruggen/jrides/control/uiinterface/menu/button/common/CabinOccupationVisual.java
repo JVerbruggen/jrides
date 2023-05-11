@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.control.uiinterface.menu.button.common;
 
-import com.jverbruggen.jrides.control.RideController;
+import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.models.entity.Player;
 import org.bukkit.ChatColor;

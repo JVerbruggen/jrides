@@ -5,16 +5,16 @@ import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.DebounceCall;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
-import com.jverbruggen.jrides.models.ride.Seat;
+import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import org.bukkit.Bukkit;
+import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 
 public class AutomaticMode extends BaseControlMode implements ControlMode{
     private DebounceCall dispatchDebounce;
 
-    public AutomaticMode(StationHandle stationHandle, DispatchLockCollection dispatchLockCollection) {
-        super(stationHandle, dispatchLockCollection);
+    public AutomaticMode(StationHandle stationHandle, MinMaxWaitingTimer waitingTimer, DispatchLockCollection dispatchLockCollection) {
+        super(stationHandle, waitingTimer, dispatchLockCollection);
 
         this.dispatchDebounce = new DebounceCall(20);
     }
@@ -29,11 +29,11 @@ public class AutomaticMode extends BaseControlMode implements ControlMode{
     private void stationTick(){
         MinMaxWaitingTimer waitingTimer = getWaitingTimer();
 
-        Train stationaryTrain = stationHandle.getStationaryTrain();
-        if(stationaryTrain == null) return;
+        Vehicle stationaryVehicle = stationHandle.getStationaryVehicle();
+        if(stationaryVehicle == null) return;
 
         int visualTime = waitingTimer.getVisualDispatchTime(waitingTimer.timeUntilPreferredWaitingTime());
-        waitingTimer.sendTimeWaitingNotification(stationaryTrain.getPassengers(), visualTime);
+        waitingTimer.sendTimeWaitingNotification(stationaryVehicle.getPassengers(), visualTime);
 
         if(!waitingTimer.reachedFunction()) return;
         stationHandle.closeEntryGates();
@@ -45,34 +45,19 @@ public class AutomaticMode extends BaseControlMode implements ControlMode{
     }
 
     @Override
-    public void onTrainArrive(Train train) {
-        super.onTrainArrive(train);
+    public void onVehicleArrive(Train train, StationHandle stationHandle) {
+        super.onVehicleArrive(train, stationHandle);
 
         dispatchDebounce.reset();
         stationHandle.openEntryGates();
     }
 
     @Override
-    public void onTrainDepart(Train train) {
-        super.onTrainDepart(train);
+    public void onVehicleDepart(Train train, StationHandle stationHandle) {
+        super.onVehicleDepart(train, stationHandle);
 
         dispatchDebounce.reset();
         stationHandle.closeEntryGates();
-    }
-
-    @Override
-    public void onPlayerEnter(Seat seat, Player player) {
-
-    }
-
-    @Override
-    public void onPlayerExit(Seat seat, Player player) {
-
-    }
-
-    @Override
-    public void onDispatch() {
-        dispatchDebounce.reset();
     }
 
     @Override

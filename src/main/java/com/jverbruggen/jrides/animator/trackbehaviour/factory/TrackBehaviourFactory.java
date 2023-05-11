@@ -38,7 +38,7 @@ import com.jverbruggen.jrides.models.properties.*;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.frame.FrameRange;
 import com.jverbruggen.jrides.models.properties.frame.SimpleFrame;
-import com.jverbruggen.jrides.models.ride.StationHandle;
+import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.trackswitch.SwitchPosition;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.TransferPosition;
@@ -139,7 +139,7 @@ public class TrackBehaviourFactory {
 
         MinMaxWaitingTimer waitingTimer = new MinMaxWaitingTimer(minimumWaitingTime, maximumWaitingTime, minimumWaitTimeDispatchLock);
 
-        StationHandle stationHandle = new StationHandle(coasterHandle, stationName, triggerContext, gates, waitingTimer,
+        CoasterStationHandle stationHandle = new CoasterStationHandle(coasterHandle, stationName, triggerContext, gates, waitingTimer,
                 entryEffectTriggers, exitEffectTriggers, ejectLocation);
 
         return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, true, triggerContext,

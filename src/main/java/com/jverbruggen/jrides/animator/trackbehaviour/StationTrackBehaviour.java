@@ -12,7 +12,7 @@ import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
-import com.jverbruggen.jrides.models.ride.StationHandle;
+import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
@@ -30,7 +30,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
     private final Frame stopFrame;
     private final boolean canSpawn;
     private TriggerContext triggerContext;
-    private final StationHandle stationHandle;
+    private final CoasterStationHandle stationHandle;
     private final DispatchLock trainInStationDispatchLock;
     private final DispatchLock blockSectionOccupiedDispatchLock;
     private final DispatchLock restraintsLock;
@@ -38,7 +38,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
     private boolean dispatching;
 
     public StationTrackBehaviour(CoasterHandle coasterHandle, CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, TriggerContext triggerContext,
-                                 StationHandle stationHandle, DispatchLock trainInStationDispatchLock, DispatchLock blockSectionOccupiedDispatchLock,
+                                 CoasterStationHandle stationHandle, DispatchLock trainInStationDispatchLock, DispatchLock blockSectionOccupiedDispatchLock,
                                  DispatchLock restraintsLock, double driveSpeed) {
         super(cartMovementFactory);
         this.coasterHandle = coasterHandle;
@@ -103,7 +103,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                         if(stationHandle.isExit())
                             PlayerFinishedRideEvent.sendFinishedRideEvent(train.getPassengers(), coasterHandle.getRide());
 
-                        coasterHandle.getRideController().onTrainArrive(train);
+                        coasterHandle.getRideController().onTrainArrive(train, stationHandle);
                         trainInStationDispatchLock.unlock();
                         restraintsLock.setLocked(true);
                         train.setRestraintForAll(false);
@@ -144,7 +144,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                     if(isNextSectionSafe(train)){
                         phase = StationPhase.DEPARTING;
                         blockSectionOccupiedDispatchLock.lock();
-                        coasterHandle.getRideController().onTrainDepart(train);
+                        coasterHandle.getRideController().onTrainDepart(train, stationHandle);
                         stationHandle.setStationaryTrain(null);
                         train.playDispatchSound();
                         goIntoSwitch = true;

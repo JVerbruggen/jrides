@@ -8,19 +8,20 @@ import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
+import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 
 public class SemiAutomaticMode extends BaseControlMode implements ControlMode {
     private Player operator;
     private final LanguageFile languageFile;
 
-    public SemiAutomaticMode(StationHandle stationHandle, DispatchLockCollection dispatchLockCollection) {
-        super(stationHandle, dispatchLockCollection);
+    public SemiAutomaticMode(StationHandle stationHandle, MinMaxWaitingTimer waitingTimer, DispatchLockCollection dispatchLockCollection) {
+        super(stationHandle, waitingTimer, dispatchLockCollection);
         languageFile = JRidesPlugin.getLanguageFile();
 
-        MinMaxWaitingTimer waitingTimer = stationHandle.getWaitingTimer();
         waitingTimer.setReachedTimeFunction(waitingTimer::reachedMinimum);
 
         this.operator = null;
@@ -32,25 +33,10 @@ public class SemiAutomaticMode extends BaseControlMode implements ControlMode {
 
         MinMaxWaitingTimer waitingTimer = getWaitingTimer();
 
-        Train stationaryTrain = stationHandle.getStationaryTrain();
-        if(stationaryTrain != null){
-            waitingTimer.sendGenericWaitingNotification(stationaryTrain.getPassengers());
+        Vehicle stationaryVehicle = stationHandle.getStationaryVehicle();
+        if(stationaryVehicle != null){
+            waitingTimer.sendGenericWaitingNotification(stationaryVehicle.getPassengers());
         }
-    }
-
-    @Override
-    public void onPlayerEnter(Seat seat, Player player) {
-
-    }
-
-    @Override
-    public void onPlayerExit(Seat seat, Player player) {
-
-    }
-
-    @Override
-    public void onDispatch() {
-
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.control.uiinterface.menu.button.factory;
 
 import com.jverbruggen.jrides.control.DispatchLockCollection;
-import com.jverbruggen.jrides.control.RideController;
+import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.StationTrigger;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.LockResembledControlButton;
