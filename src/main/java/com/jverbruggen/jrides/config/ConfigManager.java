@@ -12,7 +12,9 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class ConfigManager {
@@ -24,12 +26,17 @@ public class ConfigManager {
         this.triggerConfigFactory = ServiceProvider.getSingleton(TriggerConfigFactory.class);
     }
 
-    public YamlConfiguration getYamlConfiguration(String fileName){
+    private File getFile(String fileName){
         File rootFolder = plugin.getDataFolder();
         File file = new File(rootFolder, fileName);
         if(!file.exists()){
             file.getParentFile().mkdirs();
         }
+        return file;
+    }
+
+    public YamlConfiguration getYamlConfiguration(String fileName){
+        File file = getFile(fileName);
 
         YamlConfiguration configuration = new YamlConfiguration();
         try {
@@ -38,6 +45,73 @@ public class ConfigManager {
             return null;
         }
         return configuration;
+    }
+
+    public String getPluginName() {
+        return this.plugin.getDescription().getName();
+    }
+
+    private String prepareConfigString(String configString) {
+        int lastLine = 0;
+        int headerLine = 0;
+
+        String[] lines = configString.split("\n");
+        StringBuilder config = new StringBuilder("");
+        String[] arrayOfString1;
+        int j = (arrayOfString1 = lines).length;
+        for (int i = 0; i < j; i++) {
+            String line = arrayOfString1[i];
+            if (line.startsWith(getPluginName() + "_COMMENT")) {
+                String comment = "#" + line.trim().substring(line.indexOf(":") + 1);
+                if (comment.startsWith("# +-")) {
+                    if (headerLine == 0) {
+                        config.append(comment + "\n");
+                        lastLine = 0;
+                        headerLine = 1;
+                    } else if (headerLine == 1) {
+                        config.append(comment + "\n\n");
+                        lastLine = 0;
+                        headerLine = 0;
+                    }
+                } else {
+                    String normalComment;
+                    if (comment.startsWith("# ' ")) {
+                        normalComment =
+
+                                comment.substring(0, comment.length() - 1).replaceFirst("# ' ", "# ");
+                    } else {
+                        normalComment = comment;
+                    }
+                    if (lastLine == 0) {
+                        config.append(normalComment + "\n");
+                    } else if (lastLine == 1) {
+                        config.append("\n" + normalComment + "\n");
+                    }
+                    lastLine = 0;
+                }
+            } else {
+                config.append(line + "\n");
+                lastLine = 1;
+            }
+        }
+        return config.toString();
+    }
+
+    public void saveConfig(String configString, File file) {
+        String configuration = prepareConfigString(configString);
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            writer.write(configuration);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveConfig(YamlConfiguration configuration, String fileName){
+        File file = getFile(fileName);
+        saveConfig(configuration.saveToString(), file);
     }
 
     public String getFolder(String rideIdentifier){

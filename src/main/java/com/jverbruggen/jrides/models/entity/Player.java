@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Seat;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -25,14 +26,20 @@ public class Player implements MessageReceiver {
     private LanguageFile languageFile;
     private RideController operating;
     private List<VirtualEntity> viewing;
+    private RideCounterRecordCollection rideCounters;
 
-    public Player(org.bukkit.entity.Player bukkitPlayer) {
+    public Player(org.bukkit.entity.Player bukkitPlayer, RideCounterRecordCollection rideCounters) {
         this.bukkitPlayer = bukkitPlayer;
         this.seatedOn = null;
         this.smoothAnimationSupport = SmoothAnimationSupport.UNKNOWN;
         this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
         this.operating = null;
         this.viewing = new ArrayList<>();
+        this.rideCounters = rideCounters;
+    }
+
+    public RideCounterRecordCollection getRideCounters() {
+        return rideCounters;
     }
 
     public Vector3 getLocation(){
@@ -103,6 +110,10 @@ public class Player implements MessageReceiver {
 
     public String getName() {
         return bukkitPlayer.getName();
+    }
+
+    public String getIdentifier(){
+        return bukkitPlayer.getUniqueId().toString();
     }
 
     public boolean equals(Player other) {

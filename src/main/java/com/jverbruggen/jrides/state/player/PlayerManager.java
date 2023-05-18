@@ -1,6 +1,8 @@
 package com.jverbruggen.jrides.state.player;
 
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
+import org.bukkit.Bukkit;
 
 import java.util.*;
 
@@ -14,7 +16,9 @@ public class PlayerManager {
     }
 
     public Player registerPlayer(org.bukkit.entity.Player bukkitPlayer){
-        Player player = new Player(bukkitPlayer);
+        RideCounterRecordCollection rideCounters = RideCounterRecordCollection.loadRideCounters(bukkitPlayer.getUniqueId().toString());
+
+        Player player = new Player(bukkitPlayer, rideCounters);
 
         UUID uuid = bukkitPlayer.getUniqueId();
         players.put(uuid, player);
@@ -36,6 +40,14 @@ public class PlayerManager {
         }
         Player player = players.remove(uuid);
         if(isOperator(player)) unregisterOperator(player);
+    }
+
+    public Player fromIdentifier(String playerIdentifier){
+        UUID uuid = UUID.fromString(playerIdentifier);
+        org.bukkit.entity.Player bukkitPlayer = Bukkit.getPlayer(uuid);
+        if(bukkitPlayer == null) return null;
+
+        return getPlayer(bukkitPlayer);
     }
 
     public Collection<Player> getPlayers(){

@@ -6,6 +6,8 @@ import com.jverbruggen.jrides.common.startup.StartMessage;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.event.ButtonClickEventListener;
 import com.jverbruggen.jrides.control.uiinterface.menu.open.SignMenuListener;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecord;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
 import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.serviceprovider.configuration.ServiceProviderConfigurator;
@@ -17,6 +19,7 @@ import com.jverbruggen.jrides.state.viewport.ViewportListener;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -40,6 +43,8 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new ButtonClickEventListener(), this);
         pluginManager.registerEvents(new SignMenuListener("Click me!"), this);
 
+        ConfigurationSerialization.registerClass(RideCounterRecord.class);
+        ConfigurationSerialization.registerClass(RideCounterRecordCollection.class);
 
         MainCommandExecutor commandExecutor = new MainCommandExecutor();
         getServer().getPluginCommand("jrides").setTabCompleter(commandExecutor);
