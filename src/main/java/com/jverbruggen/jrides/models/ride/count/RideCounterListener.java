@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.models.ride.count;
 
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
+import com.jverbruggen.jrides.event.player.PlayerQuitEvent;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideCounterManager;
@@ -27,5 +28,12 @@ public class RideCounterListener implements Listener {
         player.sendMessage("Nieuwe ridecount voor " + record.getRide().getDisplayName() + ": " + record.getRideCount());
 
         rideCounterManager.saveToFile(player.getIdentifier(), collection);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event){
+        Player player = event.getPlayer();
+
+        rideCounterManager.saveAndUnload(player.getIdentifier());
     }
 }
