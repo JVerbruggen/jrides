@@ -23,6 +23,7 @@ public class SimpleTrain implements Train {
     private Frame headOfTrainFrame;
     private Frame tailOfTrainFrame;
     private List<Section> currentSections;
+    private List<Section> reservedSections;
     private boolean crashed;
     private Vector3 headLocation;
     private Vector3 middleLocation;
@@ -53,6 +54,8 @@ public class SimpleTrain implements Train {
         this.headLocation = headLocation;
         this.middleLocation = middleLocation;
         this.tailLocation = tailLocation;
+
+        this.reservedSections = new ArrayList<>();
 
         this.passengers = new ArrayList<>();
         this.onStation = null;
@@ -133,6 +136,21 @@ public class SimpleTrain implements Train {
     @Override
     public Vector3 getMassMiddlePoint() {
         return Train.calculateMassMiddlePoint(headLocation, middleLocation, tailLocation);
+    }
+
+    @Override
+    public List<Section> getReservedSections() {
+        return reservedSections;
+    }
+
+    @Override
+    public void addReservedSection(Section section) {
+        reservedSections.add(section);
+    }
+
+    @Override
+    public void removeReservedSection(Section section) {
+        reservedSections.remove(section);
     }
 
     @Override

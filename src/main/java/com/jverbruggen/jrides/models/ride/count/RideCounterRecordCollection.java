@@ -1,25 +1,44 @@
 package com.jverbruggen.jrides.models.ride.count;
 
-import com.jverbruggen.jrides.config.ConfigManager;
+import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import org.bukkit.configuration.file.YamlConfiguration;
+import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RideCounterRecordCollection implements ConfigurationSerializable {
-    private List<RideCounterRecord> records;
+    private Map<String, RideCounterRecord> records;
     private String playerIdentifier;
 
-    public RideCounterRecordCollection(List<RideCounterRecord> records, String playerIdentifier) {
+    public RideCounterRecordCollection(Map<String, RideCounterRecord> records, String playerIdentifier) {
         this.records = records;
         this.playerIdentifier = playerIdentifier;
     }
 
-    public List<RideCounterRecord> getRecords() {
+    public RideCounterRecordCollection(String playerIdentifier) {
+        this.records = new HashMap<>();
+        this.playerIdentifier = playerIdentifier;
+    }
+
+    public RideCounterRecord findOrCreate(String rideIdentifier){
+        RideCounterRecord record = this.records.get(rideIdentifier);
+        if(record == null){
+            Ride ride = ServiceProvider.getSingleton(RideManager.class)
+                    .getRideHandle(rideIdentifier)
+                    .getRide();
+
+            record = new RideCounterRecord(ride, 0);
+            this.records.put(rideIdentifier, record);
+        }
+
+        return record;
+    }
+
+    public Map<String, RideCounterRecord> getRecords() {
         return records;
     }
 
@@ -27,46 +46,23 @@ public class RideCounterRecordCollection implements ConfigurationSerializable {
         return playerIdentifier;
     }
 
-    public void saveToFile(){
-        String fileName = getRideCounterFile(playerIdentifier);
-        ConfigManager configManager = ServiceProvider.getSingleton(ConfigManager.class);
-
-        YamlConfiguration configuration = configManager.getYamlConfiguration(fileName);
-        configuration.set(ROOT_CONFIG_KEY, this);
-
-        configManager.saveConfig(configuration, fileName);
-    }
-
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> config = new HashMap<>();
 
-        config.put("records", this.records);
+        config.put("records", List.of(this.records.values().toArray()));
         config.put("playerIdentifier", this.playerIdentifier);
 
         return config;
     }
 
     public static RideCounterRecordCollection deserialize(Map<String, Object> config){
-        List<RideCounterRecord> records = (List<RideCounterRecord>) config.get("records");
+        List<RideCounterRecord> recordsList = (List<RideCounterRecord>) config.get("records");
         String playerIdentifier = (String) config.get("playerIdentifier");
 
+        Map<String, RideCounterRecord> records = recordsList.stream()
+                .collect(Collectors.toMap(RideCounterRecord::getRideIdentifier, r->r));
+
         return new RideCounterRecordCollection(records, playerIdentifier);
-    }
-
-    private static String ROOT_CONFIG_KEY = "counters";
-
-    private static String getRideCounterFile(String playerIdentifier){
-        return "ridecounters/" + playerIdentifier + ".yml";
-    }
-
-    public static RideCounterRecordCollection loadRideCounters(String playerIdentifier){
-        String fileName = getRideCounterFile(playerIdentifier);
-        YamlConfiguration configuration = ServiceProvider.getSingleton(ConfigManager.class).getYamlConfiguration(fileName);
-
-        if(!configuration.contains(ROOT_CONFIG_KEY))
-            return new RideCounterRecordCollection(new ArrayList<>(), playerIdentifier);
-
-        return (RideCounterRecordCollection) configuration.get(ROOT_CONFIG_KEY);
     }
 }

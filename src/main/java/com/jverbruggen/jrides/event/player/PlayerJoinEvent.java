@@ -1,30 +1,23 @@
 package com.jverbruggen.jrides.event.player;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.models.entity.Player;
-import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
 
-import java.util.List;
-
-public class PlayerFinishedRideEvent extends Event {
+public class PlayerJoinEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
     private final Player player;
-    private final String rideIdentifier;
 
-    public PlayerFinishedRideEvent(Player player, String rideIdentifier) {
+    public PlayerJoinEvent(Player player) {
         this.player = player;
-        this.rideIdentifier = rideIdentifier;
     }
 
     public Player getPlayer() {
         return player;
-    }
-
-    public String getRideIdentifier() {
-        return rideIdentifier;
     }
 
     public static HandlerList getHandlerList() {
@@ -36,9 +29,9 @@ public class PlayerFinishedRideEvent extends Event {
         return HANDLERS;
     }
 
-    public static void sendFinishedRideEvent(List<Player> players, Ride ride){
+    public static void send(Player player){
         PluginManager pluginManager = ServiceProvider.getSingleton(PluginManager.class);
-        players.forEach(p -> pluginManager.callEvent(new PlayerFinishedRideEvent(p, ride.getIdentifier())));
+        Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(),
+                () -> pluginManager.callEvent(new PlayerJoinEvent(player)));
     }
-
 }

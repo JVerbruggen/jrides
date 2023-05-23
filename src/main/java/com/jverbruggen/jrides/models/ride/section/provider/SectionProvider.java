@@ -64,7 +64,7 @@ public class SectionProvider {
                     train.removeCurrentSection(fromSection);
                     fromSection.getTrackBehaviour().trainExitedAtEnd();
 
-                    if(fromSection.canBlock()) fromSection.clearEntireBlockReservation();
+                    if(fromSection.canBlock()) fromSection.clearEntireBlockReservation(train);
                 }else{
                     JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Yes spans over");
                 }

@@ -28,12 +28,12 @@ public interface Section extends Comparable {
     boolean isBlockSectionSafe(@Nullable Train train, boolean checkConflicts);
 
     void setLocalReservation(@Nonnull Train train);
-    void clearLocalReservation();
+    void clearLocalReservation(@Nonnull Train authority);
     boolean canReserveLocally(@Nonnull Train train);
     boolean canReserveEntireBlock(@Nonnull Train train);
     void setEntireBlockReservation(@Nonnull Train train);
-    void clearEntireBlockReservation();
-    void clearEntireBlockReservation(List<Section> done);
+    void clearEntireBlockReservation(@Nonnull Train authority);
+    void clearEntireBlockReservation(@Nonnull Train authority, List<Section> done);
     @Nullable Train getReservedBy();
 
     void addOccupation(@NonNull  Train train);

@@ -66,27 +66,29 @@ public abstract class BaseSection implements Section{
     }
 
     @Override
-    public void clearEntireBlockReservation() {
-        clearEntireBlockReservation(new ArrayList<>());
+    public void clearEntireBlockReservation(@Nonnull Train authority) {
+        clearEntireBlockReservation(authority, new ArrayList<>());
     }
 
     @Override
-    public void clearEntireBlockReservation(List<Section> done) {
-        clearLocalReservation();
+    public void clearEntireBlockReservation(@Nonnull Train authority, List<Section> done) {
+        clearLocalReservation(authority);
         done.add(this);
 
-        if(!canBlock() && !done.contains(nextSection)) nextSection.clearEntireBlockReservation(done);
+        if(!canBlock() && !done.contains(nextSection)) nextSection.clearEntireBlockReservation(authority, done);
 
-        clearPreviousSectionReservation(done, previousSection);
+        clearPreviousSectionReservation(authority, done, previousSection);
         if(!additionalPreviousSections.isEmpty())
-            additionalPreviousSections.forEach(s-> clearPreviousSectionReservation(done,s));
+            additionalPreviousSections.forEach(s-> clearPreviousSectionReservation(authority, done,s));
     }
 
-    private void clearPreviousSectionReservation(List<Section> done, Section previousSection){
+    private void clearPreviousSectionReservation(@Nonnull Train authority, List<Section> done, Section previousSection){
+        if(previousSection == null) return;
+
         if(!previousSection.canBlock() && !done.contains(previousSection)){
-            previousSection.clearEntireBlockReservation(done);
+            previousSection.clearEntireBlockReservation(authority, done);
         }else{
-            previousSection.clearLocalReservation();
+            previousSection.clearLocalReservation(authority);
         }
     }
 
@@ -96,11 +98,21 @@ public abstract class BaseSection implements Section{
             throw new RuntimeException("Cannot reserve an already-reserved section!");
 
         reservedBy = train;
+        reservedBy.addReservedSection(this);
         Bukkit.broadcastMessage("Set reservation " + getName());
     }
 
     @Override
-    public void clearLocalReservation() {
+    public void clearLocalReservation(@Nonnull Train authority) {
+        if(reservedBy == null)
+            return;
+
+        if(reservedBy != authority){
+            Bukkit.broadcastMessage("Not authorised to clear reservation!");
+            return;
+        }
+
+        reservedBy.removeReservedSection(this);
         reservedBy = null;
         Bukkit.broadcastMessage("Cleared reservation " + getName());
     }

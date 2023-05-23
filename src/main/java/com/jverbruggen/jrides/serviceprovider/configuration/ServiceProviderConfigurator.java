@@ -28,6 +28,7 @@ import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.PacketSender_1_19_2;
 import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import com.jverbruggen.jrides.state.ride.RideCounterManager;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import com.jverbruggen.jrides.state.viewport.ViewportManagerFactory;
 import com.jverbruggen.jrides.state.player.PlayerManager;
@@ -52,6 +53,7 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(PluginManager.class, Bukkit.getPluginManager());
         ServiceProvider.register(LanguageFile.class, new LanguageFile());
 
+        ServiceProvider.register(RideCounterManager.class, new RideCounterManager());
         ServiceProvider.register(ControlModeFactory.class, new ControlModeFactory());
         ServiceProvider.register(RideControllerFactory.class, new RideControllerFactory());
         ServiceProvider.register(RideControlButtonFactory.class, new RideControlButtonFactory());

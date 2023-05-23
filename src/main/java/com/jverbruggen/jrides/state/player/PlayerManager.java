@@ -2,6 +2,8 @@ package com.jverbruggen.jrides.state.player;
 
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import com.jverbruggen.jrides.state.ride.RideCounterManager;
 import org.bukkit.Bukkit;
 
 import java.util.*;
@@ -9,14 +11,16 @@ import java.util.*;
 public class PlayerManager {
     private final HashMap<UUID, Player> players;
     private final List<Player> operators;
+    private final RideCounterManager rideCounterManager;
 
     public PlayerManager(){
         players = new HashMap<>();
         operators = new ArrayList<>();
+        rideCounterManager = ServiceProvider.getSingleton(RideCounterManager.class);
     }
 
     public Player registerPlayer(org.bukkit.entity.Player bukkitPlayer){
-        RideCounterRecordCollection rideCounters = RideCounterRecordCollection.loadRideCounters(bukkitPlayer.getUniqueId().toString());
+        RideCounterRecordCollection rideCounters = rideCounterManager.getCollection(bukkitPlayer.getUniqueId().toString());
 
         Player player = new Player(bukkitPlayer, rideCounters);
 

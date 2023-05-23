@@ -11,6 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -45,6 +46,23 @@ public class ConfigManager {
             return null;
         }
         return configuration;
+    }
+
+    public YamlConfiguration getOrCreateConfiguration(String fileName){
+        YamlConfiguration found = getYamlConfiguration(fileName);
+        if(found != null) return found;
+
+        found = new YamlConfiguration();
+        File file = getFile(fileName);
+        try {
+            file.createNewFile();
+            found.load(file);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+            JRidesPlugin.getLogger().severe("Could not create configuration file with name '" + fileName + "'!!");
+        }
+
+        return found;
     }
 
     public String getPluginName() {

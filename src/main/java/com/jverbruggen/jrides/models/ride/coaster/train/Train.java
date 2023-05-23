@@ -29,6 +29,10 @@ public interface Train extends Vehicle {
     void setCurrentLocation(Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation);
     Vector3 getMassMiddlePoint();
 
+    List<Section> getReservedSections();
+    void addReservedSection(Section section);
+    void removeReservedSection(Section section);
+
     List<Section> getCurrentSections();
     Section getNextSection();
     Section getHeadSection();

@@ -21,8 +21,16 @@ public class RideCounterRecord implements ConfigurationSerializable {
         return ride;
     }
 
+    public String getRideIdentifier(){
+        return ride.getIdentifier();
+    }
+
     public int getRideCount() {
         return rideCount;
+    }
+
+    public void addOne(){
+        rideCount++;
     }
 
     @Override
