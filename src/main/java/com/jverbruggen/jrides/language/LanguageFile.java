@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.language;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.models.entity.SimpleMessageReceiver;
 import org.bukkit.ChatColor;
@@ -14,7 +15,7 @@ public class LanguageFile {
     private FeedbackType defaultFeedbackType = FeedbackType.INFO;
     private Map<LanguageFileFields, String> language;
 
-    public LanguageFile() {
+    public LanguageFile(Map<String, String> languageOverrides) {
         this.language = new HashMap<>();
 
         setLanguageDefault(LanguageFileFields.CHAT_FEEDBACK_PREFIX, "[jrides] ");
@@ -66,10 +67,28 @@ public class LanguageFile {
         setLanguageDefault(LanguageFileFields.BUTTON_GATES_CLOSED_STATE, "Gates are closed");
         setLanguageDefault(LanguageFileFields.BUTTON_RESTRAINTS_OPEN_STATE, "Restraints are open");
         setLanguageDefault(LanguageFileFields.BUTTON_RESTRAINTS_CLOSED_STATE, "Restraints are closed");
+
+        fillOverrides(languageOverrides);
     }
 
     private void setLanguageDefault(LanguageFileFields field, String _default){
         language.put(field, _default);
+    }
+
+    private void fillOverrides(Map<String, String> languageOverrides){
+        for(Map.Entry<String, String> entry : languageOverrides.entrySet()){
+            String keyString = entry.getKey();
+            LanguageFileFields field;
+            try{
+                field = LanguageFileFields.valueOf(keyString);
+            }catch (IllegalArgumentException e){
+                JRidesPlugin.getLogger().severe("Could not override language field " + keyString + " because it does not exist.");
+                return;
+            }
+
+            String overrideValue = entry.getValue();
+            language.put(field, overrideValue);
+        }
     }
 
     public @Nonnull String get(@Nonnull LanguageFileFields field){

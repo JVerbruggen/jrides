@@ -39,6 +39,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,7 +52,7 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(Logger.class, logger);
 
         ServiceProvider.register(PluginManager.class, Bukkit.getPluginManager());
-        ServiceProvider.register(LanguageFile.class, new LanguageFile());
+        ServiceProvider.register(LanguageFile.class, new LanguageFile(new HashMap<>()));
 
         ServiceProvider.register(RideCounterManager.class, new RideCounterManager());
         ServiceProvider.register(ControlModeFactory.class, new ControlModeFactory());
