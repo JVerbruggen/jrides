@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.command;
 
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.models.entity.SimpleMessageReceiver;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -51,7 +52,7 @@ public abstract class BaseCommandExecutor implements JRidesCommandExecutor {
             return true;
         }
 
-        languageFile.sendMessage(commandSender, languageFile.errorUnknownCommandMessage);
+        languageFile.sendMessage(commandSender, LanguageFileFields.ERROR_UNKNOWN_COMMAND_MESSAGE);
         return false;
     }
 

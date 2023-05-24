@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.event.player.PlayerSitDownEvent;
 import com.jverbruggen.jrides.event.player.PlayerStandUpEvent;
+import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
@@ -87,7 +88,7 @@ public class CoasterSeat implements Seat {
             return true;
         }else{
             SoftEjector.addTimer(passenger);
-            JRidesPlugin.getLanguageFile().sendMessage(passenger, JRidesPlugin.getLanguageFile().notificationShiftExitConfirmation);
+            JRidesPlugin.getLanguageFile().sendMessage(passenger, LanguageFileFields.NOTIFICATION_SHIFT_EXIT_CONFIRMATION);
             return false;
         }
     }

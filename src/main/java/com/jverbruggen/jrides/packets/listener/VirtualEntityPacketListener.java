@@ -7,6 +7,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimation;
 import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
@@ -94,10 +95,10 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
 
         if(seat.restraintsActive()){
             if(!player.getBukkitPlayer().hasPermission(Permissions.SEAT_RESTRAINT_OVERRIDE)){
-                languageFile.sendMessage(player, languageFile.notificationRestraintOnEnterAttempt);
+                languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_RESTRAINT_ON_ENTER_ATTEMPT);
                 return;
             }
-            languageFile.sendMessage(player, languageFile.notificationRestraintEnterOverride);
+            languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_RESTRAINT_ENTER_OVERRIDE);
         }
 
         player.setSmoothAnimationSupport(smoothAnimation.isEnabled(player));
@@ -135,7 +136,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
                 Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> {
                     boolean ejected = seat.ejectPassengerSoft(false);
                     if(ejected){
-                        languageFile.sendMessage(player, languageFile.notificationShiftExitConfirmed);
+                        languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_SHIFT_EXIT_CONFIRMED);
                         player.teleport(Vector3.add(entity.getLocation(), CoasterSeat.getHeightCompensation()), teleportYaw);
                     }
                 });
@@ -145,7 +146,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
                 return;
             }
 
-            languageFile.sendMessage(player, languageFile.notificationRestraintOnExitAttempt);
+            languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_RESTRAINT_ON_EXIT_ATTEMPT);
             return;
         }
 

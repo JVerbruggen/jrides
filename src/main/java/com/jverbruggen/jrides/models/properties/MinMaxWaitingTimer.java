@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.models.properties;
 
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.language.StringReplacementBuilder;
 import com.jverbruggen.jrides.models.entity.Player;
@@ -111,13 +112,13 @@ public class MinMaxWaitingTimer {
 
         String waitingTimeNotification = new StringReplacementBuilder()
                 .add(LanguageFileTags.time, visualDispatchTime + "")
-                .apply(languageFile.notificationDispatchWaitSpecific);
+                .apply(languageFile.get(LanguageFileFields.NOTIFICATION_DISPATCH_WAIT_SPECIFIC));
 
         players.forEach(p -> p.sendActionbarMessage(ChatColor.GOLD + waitingTimeNotification));
     }
 
     public void sendGenericWaitingNotification(List<Player> players){
-        players.forEach(p -> p.sendActionbarMessage(ChatColor.GOLD + languageFile.notificationDispatchWaitGeneric));
+        players.forEach(p -> p.sendActionbarMessage(ChatColor.GOLD + languageFile.get(LanguageFileFields.NOTIFICATION_DISPATCH_WAIT_GENERIC)));
     }
 
     @Override

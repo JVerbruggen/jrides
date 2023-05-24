@@ -1,7 +1,11 @@
 package com.jverbruggen.jrides.state.ride;
 
 import com.jverbruggen.jrides.config.ConfigManager;
+import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileFields;
+import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecord;
 import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,10 +16,19 @@ import java.util.Map;
 public class RideCounterManager {
     private static String ROOT_CONFIG_KEY = "counters";
 
+    private final LanguageFile languageFile;
     private Map<String, RideCounterRecordCollection> cached;
 
     public RideCounterManager() {
+        this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
         this.cached = new HashMap<>();
+    }
+
+    public void sendRideCounterUpdateMessage(Player player, RideCounterRecord record){
+        languageFile.sendMultilineMessage(player, LanguageFileFields.NOTIFICATION_RIDE_COUNTER_UPDATE,
+                builder -> builder
+                        .add(LanguageFileTags.rideCount, record.getRideCount() + "")
+                        .add(LanguageFileTags.rideIdentifier, record.getRideIdentifier()));
     }
 
     public RideCounterRecordCollection getCollection(Player player){

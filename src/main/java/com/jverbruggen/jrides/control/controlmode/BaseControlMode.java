@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.control.ControlAction;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
@@ -71,7 +72,7 @@ public abstract class BaseControlMode implements ControlMode {
         }
         if(newOperator.getBukkitPlayer().hasPermission(Permissions.OPERATOR_OVERRIDE)){
             operator.getBukkitPlayer().closeInventory();
-            languageFile.sendMessage(operator, languageFile.elevatedOperatorOverrideVictimMessage,
+            languageFile.sendMessage(operator, LanguageFileFields.ELEVATED_OPERATOR_OVERRIDE_VICTIM_MESSAGE,
                     b -> b.add(LanguageFileTags.player, newOperator.getName()));
             operator.clearOperating();
             operator = newOperator;

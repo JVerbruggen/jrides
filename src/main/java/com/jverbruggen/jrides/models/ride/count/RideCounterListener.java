@@ -25,8 +25,7 @@ public class RideCounterListener implements Listener {
 
         record.addOne();
 
-        player.sendMessage("Nieuwe ridecount voor " + record.getRide().getDisplayName() + ": " + record.getRideCount());
-
+        rideCounterManager.sendRideCounterUpdateMessage(player, record);
         rideCounterManager.saveToFile(player.getIdentifier(), collection);
     }
 

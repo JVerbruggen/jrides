@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.control.trigger;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 
@@ -21,7 +22,7 @@ public class DispatchTrigger implements Trigger {
     public boolean execute(MessageReceiver messageReceiver){
         if(!dispatchLockCollection.allUnlocked()){
             if(messageReceiver != null){
-                languageFile.sendMessage(messageReceiver, languageFile.notificationRideDispatchProblems, FeedbackType.CONFLICT);
+                languageFile.sendMessage(messageReceiver, LanguageFileFields.NOTIFICATION_RIDE_DISPATCH_PROBLEMS, FeedbackType.CONFLICT);
                 dispatchLockCollection.getProblems(Integer.MAX_VALUE)
                         .forEach(p -> languageFile.sendMessage(messageReceiver, p));
             }

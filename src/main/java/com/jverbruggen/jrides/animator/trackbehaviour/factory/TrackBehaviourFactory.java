@@ -29,6 +29,7 @@ import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.ArmorStandPose;
@@ -101,11 +102,16 @@ public class TrackBehaviourFactory {
 
         DispatchLockCollection dispatchLockCollection = new DispatchLockCollection("Main locks");
 
-        DispatchLock trainInStationDispatchLock = new SimpleDispatchLock(dispatchLockCollection, languageFile.notificationRideNoTrainPresent, true);
-        DispatchLock blockSectionOccupiedDispatchLock = new SimpleDispatchLock(dispatchLockCollection, languageFile.notificationRideNextBlockOccupied, true);
-        DispatchLock minimumWaitTimeDispatchLock = new SimpleDispatchLock(dispatchLockCollection, languageFile.notificationRideWaitingTime, true);
-        DispatchLock restraintLock = new SimpleDispatchLock(dispatchLockCollection, languageFile.notificationRideRestraintsNotClosed, true);
-        DispatchLockCollection gatesGenericLock = new DispatchLockCollection(languageFile.notificationRideGatesNotClosed, dispatchLockCollection);
+        DispatchLock trainInStationDispatchLock = new SimpleDispatchLock(dispatchLockCollection,
+                languageFile.get(LanguageFileFields.NOTIFICATION_RIDE_NO_TRAIN_PRESENT), true);
+        DispatchLock blockSectionOccupiedDispatchLock = new SimpleDispatchLock(dispatchLockCollection,
+                languageFile.get(LanguageFileFields.NOTIFICATION_RIDE_NEXT_BLOCK_OCCUPIED), true);
+        DispatchLock minimumWaitTimeDispatchLock = new SimpleDispatchLock(dispatchLockCollection,
+                languageFile.get(LanguageFileFields.NOTIFICATION_RIDE_WAITING_TIME), true);
+        DispatchLock restraintLock = new SimpleDispatchLock(dispatchLockCollection,
+                languageFile.get(LanguageFileFields.NOTIFICATION_RIDE_RESTRAINTS_NOT_CLOSED), true);
+        DispatchLockCollection gatesGenericLock = new DispatchLockCollection(
+                languageFile.get(LanguageFileFields.NOTIFICATION_RIDE_GATES_NOT_CLOSED), dispatchLockCollection);
 
         List<Gate> gates = new ArrayList<>();
         if(gateSpec != null){
@@ -115,7 +121,9 @@ public class TrackBehaviourFactory {
                 String gateName = stationName + "_gate_" + i;
                 Vector3 location = gateConfig.getLocation();
                 gates.add(new FenceGate(gateName,
-                        new SimpleDispatchLock(gatesGenericLock, languageFile.notificationRideGateNotClosed, false),
+                        new SimpleDispatchLock(gatesGenericLock,
+                                languageFile.get(LanguageFileFields.NOTIFICATION_RIDE_GATE_NOT_CLOSED),
+                                false),
                         location.toBukkitLocation(world).getBlock()));
             }
         }

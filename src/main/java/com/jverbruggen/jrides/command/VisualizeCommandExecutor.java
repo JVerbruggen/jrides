@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.command;
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.command.context.CommandContext;
+import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -29,7 +30,7 @@ public class VisualizeCommandExecutor extends BaseCommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String arg, String[] args, CommandContext context) {
         if(!(commandSender instanceof org.bukkit.entity.Player)){
-            languageFile.sendMessage(commandSender, languageFile.errorPlayerCommandOnlyMessage);
+            languageFile.sendMessage(commandSender, LanguageFileFields.ERROR_PLAYER_COMMAND_ONLY_MESSAGE);
             return true;
         }
 
@@ -52,12 +53,12 @@ public class VisualizeCommandExecutor extends BaseCommandExecutor {
         if(tool.isViewer(player)){
             tool.removeViewer(player);
 
-            languageFile.sendMessage(player, languageFile.commandVisualizeRemovedViewer,
+            languageFile.sendMessage(player, LanguageFileFields.COMMAND_VISUALIZE_REMOVED_VIEWER,
                     b -> b.add(LanguageFileTags.rideIdentifier, actualIdentifier));
         }else{
             tool.addViewer(player);
 
-            languageFile.sendMessage(player, languageFile.commandVisualizeAddedViewer,
+            languageFile.sendMessage(player, LanguageFileFields.COMMAND_VISUALIZE_ADDED_VIEWER,
                     b -> b.add(LanguageFileTags.rideIdentifier, actualIdentifier));
         }
 

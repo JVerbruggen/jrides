@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimationSupport;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
@@ -94,7 +95,7 @@ public class Player implements MessageReceiver {
 
         this.smoothAnimationSupport = (smoothAnimationSupport ? SmoothAnimationSupport.AVAILABLE : SmoothAnimationSupport.UNAVAILABLE);
         if(!smoothAnimationSupport){
-            languageFile.sendMessage(bukkitPlayer, languageFile.errorSmoothCoastersDisabled, FeedbackType.WARNING);
+            languageFile.sendMessage(bukkitPlayer, LanguageFileFields.ERROR_SMOOTH_COASTERS_DISABLED, FeedbackType.WARNING);
         }
     }
 
@@ -133,7 +134,7 @@ public class Player implements MessageReceiver {
 
         boolean set = rideController.setOperator(this);
         if(!set){
-            languageFile.sendMessage(this, languageFile.errorOperatingCabinOccupied, FeedbackType.CONFLICT);
+            languageFile.sendMessage(this, LanguageFileFields.ERROR_OPERATING_CABIN_OCCUPIED, FeedbackType.CONFLICT);
             return false;
         }
 

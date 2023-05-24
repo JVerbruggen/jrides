@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.command.BaseCommandExecutor;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
+import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.models.entity.SimpleMessageReceiver;
@@ -25,7 +26,7 @@ public class ControlDispatchCommandExecutor extends BaseCommandExecutor {
 
         boolean dispatched = dispatchTrigger.execute(messageReceiver);
         if(dispatched)
-            languageFile.sendMessage(messageReceiver, languageFile.commandRideDispatchedMessage,
+            languageFile.sendMessage(messageReceiver, LanguageFileFields.COMMAND_RIDE_DISPATCHED_MESSAGE,
                     b -> b.add(LanguageFileTags.rideIdentifier, rideHandle.getRide().getIdentifier()));
 
         return true;

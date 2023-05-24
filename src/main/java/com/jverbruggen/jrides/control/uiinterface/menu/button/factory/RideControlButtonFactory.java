@@ -13,6 +13,7 @@ import com.jverbruggen.jrides.control.uiinterface.menu.button.common.BlinkingBut
 import com.jverbruggen.jrides.control.uiinterface.menu.button.common.CabinOccupationVisual;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.common.StaticButtonVisual;
 import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.ChatColor;
@@ -30,17 +31,20 @@ public class RideControlButtonFactory {
     public RideControlButton createClaimRideButton(RideController rideController, String rideIdentifier, int slot){
         return new SimpleRideControlButton(
                 rideIdentifier,
-                new CabinOccupationVisual(rideController, new StaticButtonVisual(Material.BLACK_CONCRETE_POWDER, ChatColor.GOLD, languageFile.buttonClaimCabin),
-                        languageFile.buttonCabinClaimed),
+                new CabinOccupationVisual(rideController,
+                        new StaticButtonVisual(Material.BLACK_CONCRETE_POWDER,
+                            ChatColor.GOLD,
+                            languageFile.get(LanguageFileFields.BUTTON_CLAIM_CABIN)),
+                            languageFile.get(LanguageFileFields.BUTTON_CABIN_CLAIMED)),
                 slot, new RunnableButtonWithContextAction((p, b) -> {
             if(p.equals(rideController.getOperator())){
                 p.setOperating(null);
-                languageFile.sendMessage(p, languageFile.notificationRideControlInactive,
+                languageFile.sendMessage(p, LanguageFileFields.NOTIFICATION_RIDE_CONTROL_INACTIVE,
                         builder -> builder.add(LanguageFileTags.rideIdentifier, rideIdentifier));
             }else{
                 boolean set = p.setOperating(rideController);
                 if(set)
-                    languageFile.sendMessage(p, languageFile.notificationRideControlActive,
+                    languageFile.sendMessage(p, LanguageFileFields.NOTIFICATION_RIDE_CONTROL_ACTIVE,
                             builder -> builder.add(LanguageFileTags.rideIdentifier, rideIdentifier));
             }
         }));
@@ -50,10 +54,13 @@ public class RideControlButtonFactory {
         return new LockResembledControlButton(
                 rideIdentifier,
                 new BlinkingButtonVisual(
-                        new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, languageFile.buttonRestraintsOpenState),
-                        new StaticButtonVisual(Material.LIGHT_GRAY_CONCRETE, ChatColor.GRAY, languageFile.buttonRestraintsOpenState)
+                        new StaticButtonVisual(Material.WHITE_CONCRETE,
+                                ChatColor.WHITE, languageFile.get(LanguageFileFields.BUTTON_RESTRAINTS_OPEN_STATE)),
+                        new StaticButtonVisual(Material.LIGHT_GRAY_CONCRETE,
+                                ChatColor.GRAY, languageFile.get(LanguageFileFields.BUTTON_RESTRAINTS_OPEN_STATE))
                 ),
-                new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, languageFile.buttonRestraintsClosedState),
+                new StaticButtonVisual(Material.WHITE_CONCRETE,
+                        ChatColor.WHITE, languageFile.get(LanguageFileFields.BUTTON_RESTRAINTS_CLOSED_STATE)),
                 slot, restraintTrigger.getLock(), new RunnableButtonAction(restraintTrigger::execute));
     }
 
@@ -61,17 +68,21 @@ public class RideControlButtonFactory {
         return new LockResembledControlButton(
                 rideIdentifier,
                 new BlinkingButtonVisual(
-                        new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, languageFile.buttonGatesOpenState),
-                        new StaticButtonVisual(Material.LIGHT_GRAY_CONCRETE, ChatColor.GRAY, languageFile.buttonGatesOpenState)
+                        new StaticButtonVisual(Material.WHITE_CONCRETE,
+                                ChatColor.WHITE, languageFile.get(LanguageFileFields.BUTTON_GATES_OPEN_STATE)),
+                        new StaticButtonVisual(Material.LIGHT_GRAY_CONCRETE,
+                                ChatColor.GRAY, languageFile.get(LanguageFileFields.BUTTON_GATES_OPEN_STATE))
                 ),
-                new StaticButtonVisual(Material.WHITE_CONCRETE, ChatColor.WHITE, languageFile.buttonGatesClosedState),
+                new StaticButtonVisual(Material.WHITE_CONCRETE,
+                        ChatColor.WHITE, languageFile.get(LanguageFileFields.BUTTON_GATES_CLOSED_STATE)),
                 slot, gateTrigger.getLock(), new RunnableButtonAction(gateTrigger::execute));
     }
 
     public RideControlButton createProblemList(String rideIdentifier, DispatchLockCollection dispatchLockCollection, int slot){
         RideControlButton problemList = new SimpleRideControlButton(
                 rideIdentifier,
-                new StaticButtonVisual(Material.ITEM_FRAME, ChatColor.RED, languageFile.buttonProblemsState),
+                new StaticButtonVisual(Material.ITEM_FRAME,
+                        ChatColor.RED, languageFile.get(LanguageFileFields.BUTTON_PROBLEMS_STATE)),
                 slot, null);
         problemList.changeLore(dispatchLockCollection.getProblems(1));
 
@@ -94,10 +105,13 @@ public class RideControlButtonFactory {
         return new LockResembledControlButton(
                 rideIdentifier,
                 new StaticButtonVisual(Material.GREEN_CONCRETE, ChatColor.DARK_GREEN,
-                        languageFile.buttonDispatchState, List.of(ChatColor.GRAY + languageFile.buttonDispatchProblemState)),
+                        languageFile.get(LanguageFileFields.BUTTON_DISPATCH_STATE),
+                        List.of(ChatColor.GRAY + languageFile.get(LanguageFileFields.BUTTON_DISPATCH_PROBLEM_STATE))),
                 new BlinkingButtonVisual(
-                        new StaticButtonVisual(Material.LIME_CONCRETE, ChatColor.GREEN, languageFile.buttonDispatchState),
-                        new StaticButtonVisual(Material.GREEN_CONCRETE, ChatColor.DARK_GREEN, languageFile.buttonDispatchState)
+                        new StaticButtonVisual(Material.LIME_CONCRETE,
+                                ChatColor.GREEN, languageFile.get(LanguageFileFields.BUTTON_DISPATCH_STATE)),
+                        new StaticButtonVisual(Material.GREEN_CONCRETE,
+                                ChatColor.DARK_GREEN, languageFile.get(LanguageFileFields.BUTTON_DISPATCH_STATE))
                 ),
                 slot, dispatchTrigger.getDispatchLockCollection(), new RunnableButtonAction(dispatchTrigger::execute));
     }
