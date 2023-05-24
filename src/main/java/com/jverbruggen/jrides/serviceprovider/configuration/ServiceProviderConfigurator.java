@@ -20,6 +20,8 @@ import com.jverbruggen.jrides.effect.platform.MultiArmorstandMovementEffectTrigg
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.entity.EntityIdFactory;
+import com.jverbruggen.jrides.models.map.rideoverview.RideOverviewMapFactory;
+import com.jverbruggen.jrides.models.map.rideoverview.SectionVisualFactory;
 import com.jverbruggen.jrides.models.message.MessageFactory;
 import com.jverbruggen.jrides.models.properties.frame.factory.FrameFactory;
 import com.jverbruggen.jrides.models.ride.factory.*;
@@ -54,6 +56,8 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(PluginManager.class, Bukkit.getPluginManager());
         ServiceProvider.register(LanguageFile.class, new LanguageFile(new HashMap<>()));
 
+        ServiceProvider.register(SectionVisualFactory.class, new SectionVisualFactory());
+        ServiceProvider.register(RideOverviewMapFactory.class, new RideOverviewMapFactory());
         ServiceProvider.register(RideCounterManager.class, new RideCounterManager());
         ServiceProvider.register(ControlModeFactory.class, new ControlModeFactory());
         ServiceProvider.register(RideControllerFactory.class, new RideControllerFactory());

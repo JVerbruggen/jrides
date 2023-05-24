@@ -140,4 +140,8 @@ public class AutoTrackUpdateFrame implements Frame {
         if(obj instanceof Frame) return equals((Frame) obj);
         return super.equals(obj);
     }
+
+    public static AutoTrackUpdateFrame of(Frame frame){
+        return new AutoTrackUpdateFrame(frame.getValue(), frame.getTrack(), frame.getSection());
+    }
 }

@@ -113,14 +113,16 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
 
     @Override
     public Section getSectionAtEnd(Train train) {
-        List<Section> matchingInReservation = train.getReservedSections().stream()
-                .filter(s -> destinations.stream()
-                        .anyMatch(d -> d.getDestination().equals(s)))
-                .collect(Collectors.toList());
+        if(train != null){
+            List<Section> matchingInReservation = train.getReservedSections().stream()
+                    .filter(s -> destinations.stream()
+                            .anyMatch(d -> d.getDestination().equals(s)))
+                    .collect(Collectors.toList());
 
-        if(matchingInReservation.size() > 0){
-            Bukkit.broadcastMessage("Matches in reservation: " + matchingInReservation.get(0));
-            return matchingInReservation.get(0);
+            if(matchingInReservation.size() > 0){
+                Bukkit.broadcastMessage("Matches in reservation: " + matchingInReservation.get(0));
+                return matchingInReservation.get(0);
+            }
         }
 
         return selectedDestination;

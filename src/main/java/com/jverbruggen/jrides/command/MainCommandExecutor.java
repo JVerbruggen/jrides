@@ -7,6 +7,7 @@ public class MainCommandExecutor extends BaseCommandExecutor {
     private BlockSectionCommandExecutor blockSectionCommandExecutor;
     private ControlCommandExecutor controlCommandExecutor;
     private WarpCommandExecutor warpCommandExecutor;
+    private RideOverviewMapCommandExecutor rideOverviewMapCommandExecutor;
 
     public MainCommandExecutor() {
         super(0);
@@ -14,6 +15,7 @@ public class MainCommandExecutor extends BaseCommandExecutor {
         this.visualizeCommandExecutor = registerSubCommand(new VisualizeCommandExecutor());
         this.controlCommandExecutor = registerSubCommand(new ControlCommandExecutor());
         this.warpCommandExecutor = registerSubCommand(new WarpCommandExecutor());
+        this.rideOverviewMapCommandExecutor = registerSubCommand(new RideOverviewMapCommandExecutor());
     }
 
     @Override
@@ -26,6 +28,7 @@ public class MainCommandExecutor extends BaseCommandExecutor {
         return visualizeCommandExecutor.getHelpMessageForParent() + "\n" +
                 blockSectionCommandExecutor.getHelpMessageForParent() + "\n" +
                 controlCommandExecutor.getHelpMessageForParent() + "\n" +
-                warpCommandExecutor.getHelpMessageForParent();
+                warpCommandExecutor.getHelpMessageForParent() + "\n" +
+                rideOverviewMapCommandExecutor.getHelpMessageForParent();
     }
 }
