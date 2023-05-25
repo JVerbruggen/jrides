@@ -37,7 +37,7 @@ public class SectionVisualFactory {
         int minZ = Integer.MAX_VALUE;
         int maxX = Integer.MIN_VALUE;
         int maxZ = Integer.MIN_VALUE;
-        int borderPadding = 10;
+        int borderPadding = 14;
 
         List<SectionVectorCombi> locations3D = new ArrayList<>();
         for(Section section : sections){
@@ -45,7 +45,7 @@ public class SectionVisualFactory {
             Frame endFrame = section.getEndFrame().clone();
 
             int distance = getForwardDistance(startFrame.getTrack(), startFrame, endFrame);
-            int interval = 200;
+            int interval = 100;
             int amount = Math.floorDiv(distance, interval);
 
             locations3D.add(new SectionVectorCombi(section, section.getLocationFor(startFrame)));
