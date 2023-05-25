@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.control.uiinterface.menu.button.event.ButtonClickE
 import com.jverbruggen.jrides.control.uiinterface.menu.open.SignMenuListener;
 import com.jverbruggen.jrides.event.player.BukkitPlayerJoinEventListener;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.map.rideoverview.RideOverviewMapListener;
 import com.jverbruggen.jrides.models.ride.count.RideCounterListener;
 import com.jverbruggen.jrides.models.ride.count.RideCounterRecord;
 import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
@@ -46,6 +47,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new ButtonClickEventListener(), this);
         pluginManager.registerEvents(new SignMenuListener("Click me!"), this);
         pluginManager.registerEvents(new RideCounterListener(), this);
+        pluginManager.registerEvents(new RideOverviewMapListener(), this);
 
         ConfigurationSerialization.registerClass(RideCounterRecord.class);
         ConfigurationSerialization.registerClass(RideCounterRecordCollection.class);

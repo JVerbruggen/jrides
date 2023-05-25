@@ -28,6 +28,8 @@ public class LanguageFile {
         setLanguageDefault(LanguageFileFields.COMMAND_VISUALIZE_ADDED_VIEWER, "You are now viewing %" + LanguageFileTags.rideIdentifier + "% in visualize mode");
         setLanguageDefault(LanguageFileFields.COMMAND_VISUALIZE_REMOVED_VIEWER, "You are no longer viewing %" + LanguageFileTags.rideIdentifier + "% in visualize mode");
 
+        setLanguageDefault(LanguageFileFields.NOTIFICATION_PLUGIN_STILL_LOADING, "Please try again later when jrides is loaded");
+
         setLanguageDefault(LanguageFileFields.NOTIFICATION_RIDE_CONTROL_ACTIVE, "You are now controlling %" + LanguageFileTags.rideIdentifier + "%");
         setLanguageDefault(LanguageFileFields.NOTIFICATION_RIDE_CONTROL_INACTIVE, "You are no longer controlling %" + LanguageFileTags.rideIdentifier + "%");
 
@@ -57,6 +59,7 @@ public class LanguageFile {
         setLanguageDefault(LanguageFileFields.ERROR_UNKNOWN_COMMAND_MESSAGE, "Unknown jrides command. Type /jrides for help");
         setLanguageDefault(LanguageFileFields.ERROR_OPERATING_CABIN_OCCUPIED, "You can not take this operating cabin since it is already in use by another operator");
         setLanguageDefault(LanguageFileFields.ERROR_RIDE_CONTROL_MENU_NOT_FOUND, "Ride control menu was not found");
+        setLanguageDefault(LanguageFileFields.ERROR_RIDE_OVERVIEW_MAP_NOT_FOUND, "Could not retrieve map for ride %" + LanguageFileTags.rideIdentifier + "%. Was the map id configured?");
 
         setLanguageDefault(LanguageFileFields.BUTTON_CLAIM_CABIN, "Claim operating cabin");
         setLanguageDefault(LanguageFileFields.BUTTON_CABIN_CLAIMED, "Claim operating cabin");
@@ -116,7 +119,7 @@ public class LanguageFile {
 
     public void sendMessage(MessageReceiver messageReceiver, LanguageFileFields field, FeedbackType feedbackType, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
         String content = get(field);
-        sendMessage(messageReceiver, content, feedbackType, null);
+        sendMessage(messageReceiver, content, feedbackType, builder);
     }
 
     public void sendMessage(MessageReceiver messageReceiver, String content, FeedbackType feedbackType, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
@@ -145,7 +148,7 @@ public class LanguageFile {
     }
 
     public void sendMultilineMessage(CommandSender commandSender, LanguageFileFields field, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
-        sendMultilineMessage(new SimpleMessageReceiver(commandSender), field);
+        sendMultilineMessage(new SimpleMessageReceiver(commandSender), get(field), defaultFeedbackType, builder);
     }
 
     public void sendMultilineMessage(CommandSender commandSender, String content){
@@ -153,7 +156,7 @@ public class LanguageFile {
     }
 
     public void sendMultilineMessage(CommandSender commandSender, String content, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
-        sendMultilineMessage(new SimpleMessageReceiver(commandSender), content);
+        sendMultilineMessage(new SimpleMessageReceiver(commandSender), content, defaultFeedbackType, builder);
     }
 
     public void sendMultilineMessage(MessageReceiver messageReceiver, LanguageFileFields field){

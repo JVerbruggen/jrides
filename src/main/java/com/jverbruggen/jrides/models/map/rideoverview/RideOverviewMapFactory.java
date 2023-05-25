@@ -2,61 +2,101 @@ package com.jverbruggen.jrides.models.map.rideoverview;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.CoasterHandle;
+import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileFields;
+import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.models.entity.Player;
-import com.jverbruggen.jrides.models.math.Vector2;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import dev.cerus.maps.api.ClientsideMap;
-import dev.cerus.maps.api.graphics.ClientsideMapGraphics;
-import dev.cerus.maps.api.graphics.ColorCache;
-import dev.cerus.maps.version.VersionAdapterFactory;
+import com.jverbruggen.jrides.state.player.PlayerManager;
+import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapView;
 
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RideOverviewMapFactory {
+    private static final long MAP_UPDATE_INTERVAL_TICKS = 1;
+
     private final SectionVisualFactory sectionVisualFactory;
-    private final MapView defaultView = Bukkit.createMap(JRidesPlugin.getWorld());
+    private final TrainVisualFactory trainVisualFactory;
+    private @Nullable Map<String, RideOverviewMap> rideOverviewMaps;
+    private final PlayerManager playerManager;
+    private final RideManager rideManager;
+    private final LanguageFile languageFile;
 
     public RideOverviewMapFactory(){
         sectionVisualFactory = ServiceProvider.getSingleton(SectionVisualFactory.class);
+        trainVisualFactory = ServiceProvider.getSingleton(TrainVisualFactory.class);
+        playerManager = ServiceProvider.getSingleton(PlayerManager.class);
+        rideManager = ServiceProvider.getSingleton(RideManager.class);
+        languageFile = ServiceProvider.getSingleton(LanguageFile.class);
+        rideOverviewMaps = null;
+    }
+
+    public void initializeMaps(){
+        rideOverviewMaps = new HashMap<>();
+
+        for(CoasterHandle coasterHandle : rideManager.getCoasterHandles()){
+            String rideIdentifier = coasterHandle.getRide().getIdentifier();
+            int mapId = coasterHandle.getRideOverviewMapId();
+            if(mapId == -1){
+                JRidesPlugin.getLogger().warning("No ride overview map id configured for " + rideIdentifier + ", so skipping");
+                continue;
+            }
+
+            MapView mapView = Bukkit.getMap(mapId);
+            if(mapView == null){
+                JRidesPlugin.getLogger().severe("Configured ride overview map id for ride " + rideIdentifier + " did not exist, first create the map and assign the ID to the coaster afterwards");
+                continue;
+            }
+            mapView.getRenderers().forEach(mapView::removeRenderer);
+            mapView.setLocked(true);
+            mapView.setTrackingPosition(false);
+
+            MapScope mapScope = new MapScope();
+
+            List<SectionVisual> sectionVisuals = sectionVisualFactory.createVisuals(coasterHandle, mapScope);
+            List<TrainVisual> trainVisuals = trainVisualFactory.createVisuals(coasterHandle, mapScope);
+
+            RideOverviewMap map = new RideOverviewMap(coasterHandle, mapView, sectionVisuals, trainVisuals);
+            rideOverviewMaps.put(rideIdentifier, map);
+        }
+
+        startUpdateCycle();
+    }
+
+    private void startUpdateCycle(){
+        Bukkit.getScheduler().runTaskTimer(JRidesPlugin.getBukkitPlugin(),
+            () -> {
+                if(rideOverviewMaps == null) return;
+                Collection<Player> players = playerManager.getPlayers();
+
+                rideOverviewMaps.values()
+                        .forEach(m -> {
+                            m.updateVisuals();
+                            m.sendUpdate(players);
+                        });
+            }, MAP_UPDATE_INTERVAL_TICKS, MAP_UPDATE_INTERVAL_TICKS);
     }
 
     public void giveMap(Player player, CoasterHandle coasterHandle){
-        List<SectionVisual> sectionVisuals = sectionVisualFactory.createVisuals(coasterHandle);
-
-        ItemStack itemStack = new ItemStack(Material.FILLED_MAP, 1);
-        MapMeta mapMeta = (MapMeta) itemStack.getItemMeta();
-        mapMeta.setMapView(defaultView);
-        itemStack.setItemMeta(mapMeta);
-
-        player.getBukkitPlayer().getInventory().addItem(itemStack);
-
-        int mapId = mapMeta.getMapView().getId();
-
-        ClientsideMap clientsideMap = new ClientsideMap(mapId);
-        ClientsideMapGraphics graphics = new ClientsideMapGraphics();
-
-        graphics.fillComplete(ColorCache.rgbToMap(255,255,255));
-        for(SectionVisual sectionVisual : sectionVisuals){
-            List<Vector2> drawPoints = sectionVisual.getDrawPoints();
-            if(drawPoints.size() <= 1) continue;
-            Vector2 prev = drawPoints.get(0);
-            for(int i = 1; i < drawPoints.size(); i++){
-                Vector2 cur = drawPoints.get(i);
-
-                graphics.drawLine((int)prev.x, (int)prev.y, (int)cur.x, (int)cur.y, ColorCache.rgbToMap(0,0,0), 1f);
-
-                prev = cur;
-            }
+        if(rideOverviewMaps == null){
+            languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_PLUGIN_STILL_LOADING);
+            return;
         }
 
-        clientsideMap.draw(graphics);
-        clientsideMap.sendTo(new VersionAdapterFactory().makeAdapter(), player.getBukkitPlayer());
+        String rideIdentifier = coasterHandle.getRide().getIdentifier();
+        RideOverviewMap map = rideOverviewMaps.get(rideIdentifier);
+        if(map == null){
+            languageFile.sendMessage(player, LanguageFileFields.ERROR_RIDE_OVERVIEW_MAP_NOT_FOUND,
+                    builder -> builder.add(LanguageFileTags.rideIdentifier, rideIdentifier));
+            return;
+        }
 
-        player.sendMessage("Given map");
+        map.give(player);
     }
 }

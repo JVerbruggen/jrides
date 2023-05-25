@@ -15,6 +15,7 @@ import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
+import com.jverbruggen.jrides.event.ride.RideInitializedEvent;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
@@ -82,6 +83,10 @@ public class RideManager {
         return rideIdentifiers;
     }
 
+    public List<CoasterHandle> getCoasterHandles() {
+        return coasterHandles;
+    }
+
     public CoasterHandle getRideHandle(String identifier){
         return this.coasterHandles
                 .stream()
@@ -111,6 +116,7 @@ public class RideManager {
         }
 
         start();
+        RideInitializedEvent.send();
     }
 
     private void loadCoaster(World world, String rideIdentifier){
@@ -120,6 +126,7 @@ public class RideManager {
         String displayName = coasterConfig.getDisplayName();
         PlayerLocation warpLocation = coasterConfig.getWarpLocation();
         Ride ride = new SimpleCoaster(rideIdentifier, displayName, warpLocation);
+        int rideOverviewMapId = coasterConfig.getRideOverviewMapId();
         List<Float> offset = coasterConfig.getTrack().getPosition();
         float offsetX = offset.get(0);
         float offsetY = offset.get(1);
@@ -131,7 +138,8 @@ public class RideManager {
         String restraintCloseSound = sounds.getRestraintClose();
         String windSound = sounds.getOnrideWind();
 
-        CoasterHandle coasterHandle = new CoasterHandle(ride, world, dispatchSound, restraintOpenSound, restraintCloseSound, windSound);
+        CoasterHandle coasterHandle = new CoasterHandle(ride, world, dispatchSound, restraintOpenSound,
+                restraintCloseSound, windSound, rideOverviewMapId);
 
         Track track = loadCoasterTrackFromConfig(coasterHandle, coasterConfig, offsetX, offsetY, offsetZ);
         if(track == null){

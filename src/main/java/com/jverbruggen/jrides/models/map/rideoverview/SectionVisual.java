@@ -26,8 +26,4 @@ public class SectionVisual {
     public void addDrawPoint(Vector2 point){
         drawPoints.add(point);
     }
-
-    public void draw(){
-
-    }
 }

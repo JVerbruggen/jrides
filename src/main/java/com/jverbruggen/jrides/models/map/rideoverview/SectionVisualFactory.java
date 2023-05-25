@@ -1,7 +1,6 @@
 package com.jverbruggen.jrides.models.map.rideoverview;
 
 import com.jverbruggen.jrides.animator.CoasterHandle;
-import com.jverbruggen.jrides.models.math.MathUtil;
 import com.jverbruggen.jrides.models.math.Vector2;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.AutoTrackUpdateFrame;
@@ -10,7 +9,6 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 class SectionVectorCombi{
     private final Section section;
@@ -31,9 +29,8 @@ class SectionVectorCombi{
 }
 
 public class SectionVisualFactory {
-    public List<SectionVisual> createVisuals(CoasterHandle handle){
+    public List<SectionVisual> createVisuals(CoasterHandle handle, MapScope mapScope){
         List<Section> sections = handle.getTrack().getSections();
-        Track track = handle.getTrack();
 
         // For normalization
         int minX = Integer.MAX_VALUE;
@@ -48,8 +45,10 @@ public class SectionVisualFactory {
             Frame endFrame = section.getEndFrame().clone();
 
             int distance = getForwardDistance(startFrame.getTrack(), startFrame, endFrame);
-            int interval = 50;
-            int amount = distance/interval;
+            int interval = 200;
+            int amount = Math.floorDiv(distance, interval);
+
+            locations3D.add(new SectionVectorCombi(section, section.getLocationFor(startFrame)));
 
             AutoTrackUpdateFrame walkingFrame = AutoTrackUpdateFrame.of(startFrame);
             for(int i = 0; i < amount; i++){
@@ -69,6 +68,8 @@ public class SectionVisualFactory {
                 if(z < minZ) minZ = z;
                 else if(z > maxZ) maxZ = z;
             }
+
+            locations3D.add(new SectionVectorCombi(section, section.getLocationFor(endFrame)));
         }
 
         minX -= borderPadding;
@@ -76,14 +77,16 @@ public class SectionVisualFactory {
         maxX += borderPadding;
         maxZ += borderPadding;
 
+        mapScope.setNew(minX, minZ, maxX, maxZ);
+
         // Normalize to 2d
         Map<Section, SectionVisual> sectionVisuals = new HashMap<>();
         for(SectionVectorCombi pack : locations3D){
             Vector3 location3D = pack.getVector3();
             Section section = pack.getSection();
 
-            int x = (int) MathUtil.map(location3D.getX(), minX, maxX, 0, 127);
-            int z = (int) MathUtil.map(location3D.getZ(), minZ, maxZ, 0, 127);
+            int x = mapScope.toScreenX((int)location3D.getX());
+            int z = mapScope.toScreenZ((int)location3D.getZ());
 
             SectionVisual visual = sectionVisuals.get(section);
             if(visual == null){
@@ -94,7 +97,6 @@ public class SectionVisualFactory {
             visual.addDrawPoint(new Vector2(x, z));
         }
 
-        // make visuals
         return new ArrayList<>(sectionVisuals.values());
     }
 
@@ -102,7 +104,7 @@ public class SectionVisualFactory {
         int fromValue = from.getValue();
         int toValue = toForwards.getValue();
 
-        if(toValue > fromValue) return toValue - fromValue;
+        if(toValue >= fromValue) return toValue - fromValue;
 
         int beforeCycleDistance = track.getUpperFrame() - fromValue;
         int afterCycleDistance = toValue - track.getLowerFrame();

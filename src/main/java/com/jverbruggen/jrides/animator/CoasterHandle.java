@@ -35,8 +35,10 @@ public class CoasterHandle implements RideHandle {
     private final String restraintOpenSound;
     private final String restraintCloseSound;
     private final String windSound;
+    private int rideOverviewMapId;
 
-    public CoasterHandle(Ride ride, World world, String dispatchSound, String restraintOpenSound, String restraintCloseSound, String windSound) {
+    public CoasterHandle(Ride ride, World world, String dispatchSound, String restraintOpenSound,
+                         String restraintCloseSound, String windSound, int rideOverviewMapId) {
         this.ride = ride;
         this.world = world;
         this.dispatchSound = dispatchSound;
@@ -51,12 +53,26 @@ public class CoasterHandle implements RideHandle {
         this.visualisationTool = null;
         this.track = null;
         this.effectTriggerCollection = null;
+        this.rideOverviewMapId = rideOverviewMapId;
+    }
+
+    public int getRideOverviewMapId(){
+        return this.rideOverviewMapId;
+    }
+
+    public void setRideOverviewMapId(int rideOverviewMapId) {
+        if(rideOverviewMapId<0) throw new RuntimeException("Cannot set ride overview map id to a negative value");
+        this.rideOverviewMapId = rideOverviewMapId;
     }
 
     public void setTrains(List<TrainHandle> trains) {
         this.trains = trains;
         trains.forEach(t -> t.setCoasterHandle(this));
         this.visualisationTool = ParticleTrackVisualisationTool.fromTrack(world, track, 20, trains);
+    }
+
+    public List<TrainHandle> getTrains() {
+        return trains;
     }
 
     public void setTrack(Track track) {
