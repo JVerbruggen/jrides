@@ -93,6 +93,11 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
 
         if(player.isSeated()) return;
 
+        if(!seat.getParentRideHandle().canEnter(player)){
+            languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_CANNOT_ENTER_RIDE);
+            return;
+        }
+
         if(seat.restraintsActive()){
             if(!player.getBukkitPlayer().hasPermission(Permissions.SEAT_RESTRAINT_OVERRIDE)){
                 languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_RESTRAINT_ON_ENTER_ATTEMPT);

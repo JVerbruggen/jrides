@@ -4,6 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class BaseConfig {
@@ -13,9 +14,20 @@ public abstract class BaseConfig {
         }
     }
 
+    private static void assertPresence(Map<String, Object> config, String key){
+        if(config == null || !config.containsKey(key)){
+            throw new RuntimeException("Missing key in config: " + key);
+        }
+    }
+
     private static boolean isPresent(ConfigurationSection configurationSection, String key){
         if(configurationSection == null) return false;
         return configurationSection.contains(key);
+    }
+
+    private static boolean isPresent(Map<String, Object> config, String key){
+        if(config == null) return false;
+        return config.containsKey(key);
     }
 
     protected static double getDouble(ConfigurationSection configurationSection, String key){
@@ -38,9 +50,19 @@ public abstract class BaseConfig {
         return configurationSection.getInt(key);
     }
 
+    protected static String getString(Map<String, Object> config, String key, String defaultValue){
+        if(!isPresent(config, key)) return defaultValue;
+        return (String) config.get(key);
+    }
+
     protected static String getString(ConfigurationSection configurationSection, String key, String defaultValue){
         if(!isPresent(configurationSection, key)) return defaultValue;
         return configurationSection.getString(key);
+    }
+
+    protected static String getString(Map<String, Object> config, String key){
+        assertPresence(config, key);
+        return (String) config.get(key);
     }
 
     protected static String getString(ConfigurationSection configurationSection, String key){

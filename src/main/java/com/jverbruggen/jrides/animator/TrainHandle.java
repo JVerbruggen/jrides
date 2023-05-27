@@ -76,6 +76,17 @@ public class TrainHandle {
         // --- Apply movement: new head frame and speed
         speedBPS.setSpeed(result.getNewSpeed().getSpeedPerTick());
 
+        // --- Move carts according to instructions
+        Set<Map.Entry<Cart, CartMovement>> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getHandle(), train.getCarts(), result.getNewSpeed().getFrameIncrement(), null).entrySet();
+        if(cartMovements != null){
+            for(Map.Entry<Cart, CartMovement> cartMovement : cartMovements){
+                Cart cart = cartMovement.getKey();
+                CartMovement movement = cartMovement.getValue();
+                cart.setPosition(movement);
+                cart.playEffects();
+            }
+        }
+
         Frame trainHeadOfTrainFrame = train.getHeadOfTrainFrame();
         Frame trainMiddleOfTrainFrame = train.getMiddleOfTrainFrame();
         Frame trainTailOfTrainFrame = train.getTailOfTrainFrame();
@@ -94,17 +105,6 @@ public class TrainHandle {
         Vector3 middleLocation = track.getLocationFor(trainMiddleOfTrainFrame);
         Vector3 tailLocation = track.getLocationFor(trainTailOfTrainFrame);
         train.setCurrentLocation(headLocation, middleLocation, tailLocation);
-
-        // --- Move carts according to instructions
-        Set<Map.Entry<Cart, CartMovement>> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getHandle(), train.getCarts(), result.getNewSpeed().getFrameIncrement(), null).entrySet();
-        if(cartMovements != null){
-            for(Map.Entry<Cart, CartMovement> cartMovement : cartMovements){
-                Cart cart = cartMovement.getKey();
-                CartMovement movement = cartMovement.getValue();
-                cart.setPosition(movement);
-                cart.playEffects();
-            }
-        }
 
         sendPositionUpdatesToListeners(trainHeadOfTrainFrame);
         playEffects(trainHeadOfTrainFrame);

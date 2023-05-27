@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.models.ride.coaster.train;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.event.player.PlayerSitDownEvent;
 import com.jverbruggen.jrides.event.player.PlayerStandUpEvent;
@@ -13,18 +14,18 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.state.ride.SoftEjector;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
 public class CoasterSeat implements Seat {
+    private final RideHandle parentRideHandle;
     private Player passenger;
     private final VirtualArmorstand virtualArmorstand;
     private final Vector3 offset;
     private boolean restraintLocked;
     private Cart parentCart;
 
-    public CoasterSeat(VirtualArmorstand virtualArmorstand, Vector3 offset) {
+    public CoasterSeat(RideHandle parentRideHandle, VirtualArmorstand virtualArmorstand, Vector3 offset) {
+        this.parentRideHandle = parentRideHandle;
         this.passenger = null;
         this.virtualArmorstand = virtualArmorstand;
         this.offset = offset;
@@ -136,5 +137,10 @@ public class CoasterSeat implements Seat {
 
     public static Vector3 getHeightCompensation(){
         return new Vector3(0, 1.5, 0);
+    }
+
+    @Override
+    public RideHandle getParentRideHandle() {
+        return parentRideHandle;
     }
 }

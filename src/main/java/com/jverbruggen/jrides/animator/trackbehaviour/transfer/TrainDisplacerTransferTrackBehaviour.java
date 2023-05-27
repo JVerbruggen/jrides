@@ -15,8 +15,13 @@ import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
+import com.jverbruggen.jrides.models.ride.coaster.transfer.TransferPosition;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import org.bukkit.Bukkit;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
     private final double deceleration;
@@ -90,6 +95,7 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
 
                         train.setFacingForwards(currentlyFacingForwards == positiveTrainDirection);
                         train.setDrivingDirection(positiveTrainDirection);
+                        nextSection.setEntireBlockReservation(train);
                     }
                     break;
                 case DRIVING:
@@ -179,6 +185,27 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
             return null;
         }
         return transfer.getCurrentTransferPosition().getSectionAtEnd();
+    }
+
+    @Override
+    public Collection<Section> getAllNextSections(Train train) {
+        return getAllNeighbors(train);
+    }
+
+    @Override
+    public Collection<Section> getAllPreviousSections(Train train) {
+        return getAllNeighbors(train);
+    }
+
+    private Collection<Section> getAllNeighbors(Train train){
+        List<Section> sections = new ArrayList<>();
+        for(TransferPosition transferPosition : transfer.getPossiblePositions()){
+            Section start = transferPosition.getSectionAtStart();
+            Section end = transferPosition.getSectionAtEnd();
+            if(start != null) sections.add(start);
+            if(end != null) sections.add(end);
+        }
+        return sections;
     }
 
     @Override

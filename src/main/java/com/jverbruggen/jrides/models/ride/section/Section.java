@@ -10,6 +10,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 
 public interface Section extends Comparable {
@@ -59,6 +60,9 @@ public interface Section extends Comparable {
     Section previous(Train train);
     @Nullable
     Section previous(Train train, boolean processPassing);
+
+    Collection<Section> allNextSections(Train train);
+    Collection<Section> allPreviousSections(Train train);
 
     boolean isNextSectionFor(Train train, Section section);
     boolean isPreviousSectionFor(Train train, Section section);

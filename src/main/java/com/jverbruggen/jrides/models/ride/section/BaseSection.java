@@ -14,6 +14,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public abstract class BaseSection implements Section{
@@ -99,7 +100,7 @@ public abstract class BaseSection implements Section{
 
         reservedBy = train;
         reservedBy.addReservedSection(this);
-        Bukkit.broadcastMessage("Set reservation " + getName());
+//        Bukkit.broadcastMessage("Set reservation " + getName());
     }
 
     @Override
@@ -108,13 +109,13 @@ public abstract class BaseSection implements Section{
             return;
 
         if(reservedBy != authority){
-            Bukkit.broadcastMessage("Not authorised to clear reservation!");
+//            Bukkit.broadcastMessage("Not authorised to clear reservation!");
             return;
         }
 
         reservedBy.removeReservedSection(this);
         reservedBy = null;
-        Bukkit.broadcastMessage("Cleared reservation " + getName());
+//        Bukkit.broadcastMessage("Cleared reservation " + getName());
     }
 
     @Override
@@ -199,6 +200,20 @@ public abstract class BaseSection implements Section{
         }
 
         return previousSection;
+    }
+
+    @Override
+    public Collection<Section> allNextSections(Train train) {
+        if(trackBehaviour.definesNextSection())
+            return trackBehaviour.getAllNextSections(train);
+        return List.of(next(train, false));
+    }
+
+    @Override
+    public Collection<Section> allPreviousSections(Train train) {
+        if(trackBehaviour.definesNextSection())
+            return trackBehaviour.getAllPreviousSections(train);
+        return List.of(previous(train, false));
     }
 
     @Override

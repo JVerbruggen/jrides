@@ -389,6 +389,7 @@ public class SimpleTrain implements Train {
 
     @Override
     public String toString() {
-        return "<Train " + getName() + " at position " + getHeadOfTrainFrame() + ">";
+        String forwards_indicator = forwards ? "F" : "B";
+        return "<Train " + getName() + "[" + forwards_indicator + "] at position " + getHeadOfTrainFrame() + ">";
     }
 }

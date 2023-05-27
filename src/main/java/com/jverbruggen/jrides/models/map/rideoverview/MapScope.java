@@ -3,6 +3,9 @@ package com.jverbruggen.jrides.models.map.rideoverview;
 import com.jverbruggen.jrides.models.math.MathUtil;
 
 public class MapScope {
+    private static final int DRAW_SCREEN_SIZE = 128;
+    private static final int DRAW_MARKER_SIZE = 256;
+
     private int worldMinX;
     private int worldMinZ;
     private int worldMaxX;
@@ -17,7 +20,7 @@ public class MapScope {
             worldMinZ -= delta/2;
             worldMaxZ += delta/2;
         }else if(dZ > dX){
-            int delta = dX - dZ;
+            int delta = dZ - dX;
             worldMinX -= delta/2;
             worldMaxX += delta/2;
         }
@@ -29,18 +32,19 @@ public class MapScope {
     }
 
     public int toScreenX(int mapX){
-        return (int)MathUtil.map(mapX, worldMinX, worldMaxX, 0, 127);
+        return (int)MathUtil.map(mapX, worldMinX, worldMaxX, 0, DRAW_SCREEN_SIZE-1);
     }
 
     public int toScreenZ(int mapZ){
-        return (int)MathUtil.map(mapZ, worldMinZ, worldMaxZ, 0, 127);
+        return (int)MathUtil.map(mapZ, worldMinZ, worldMaxZ, 0, DRAW_SCREEN_SIZE-1);
     }
 
     public int toScreenXMarker(int mapX){
-        return (int)MathUtil.map(mapX, worldMinX, worldMaxX, 0, 255);
+        // TODO: Check out of bounds
+        return (int)MathUtil.map(mapX, worldMinX, worldMaxX, 0, DRAW_MARKER_SIZE-1);
     }
 
     public int toScreenZMarker(int mapZ){
-        return (int)MathUtil.map(mapZ, worldMinZ, worldMaxZ, 0, 255);
+        return (int)MathUtil.map(mapZ, worldMinZ, worldMaxZ, 0, DRAW_MARKER_SIZE-1);
     }
 }

@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.config;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.ride.RideConfig;
+import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.config.trigger.TriggerConfig;
 import com.jverbruggen.jrides.config.trigger.TriggerConfigFactory;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -13,10 +14,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.yaml.snakeyaml.Yaml;
 
+import javax.swing.text.html.Option;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Optional;
 
 public class ConfigManager {
     private final JavaPlugin plugin;
@@ -182,5 +185,31 @@ public class ConfigManager {
         }
 
         return RideConfig.fromConfigurationSection(yamlConfiguration.getConfigurationSection("config"));
+    }
+
+    public void updateConfigFile(String configFile, String yamlRootKey, Object object){
+        YamlConfiguration configuration = getOrCreateConfiguration(configFile);
+
+        configuration.set(yamlRootKey, object);
+
+        saveConfig(configuration, configFile);
+    }
+
+    public <T> Optional<T> getConfigFileObject(String configFile, String yamlRootKey, Class<T> clazz){
+        YamlConfiguration configuration = getOrCreateConfiguration(configFile);
+
+        if(!configuration.contains(yamlRootKey))
+            return Optional.empty();
+
+        Object tObject = configuration.get(yamlRootKey);
+        T t;
+        try{
+            t = clazz.cast(tObject);
+        }catch(ClassCastException exception){
+            throw new RuntimeException("Config file " + configFile + " did not contain object of type " + clazz.getTypeName());
+        }
+
+        assert t != null;
+        return Optional.of(t);
     }
 }

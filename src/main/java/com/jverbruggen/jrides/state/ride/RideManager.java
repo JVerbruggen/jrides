@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.config.ride.RideConfig;
 import com.jverbruggen.jrides.config.ride.RideConfigObject;
+import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.controller.RideControllerFactory;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
@@ -16,6 +17,7 @@ import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.event.ride.RideInitializedEvent;
+import com.jverbruggen.jrides.event.ride.RideStateUpdatedEvent;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
@@ -153,28 +155,31 @@ public class RideManager {
 
         SectionProvider sectionProvider = new SectionProvider();
         int trainCount = coasterConfig.getVehicles().getTrains();
-        List<TrainHandle> trainHandles = createTrains(track, coasterConfig, sectionProvider, rideIdentifier, trainCount);
+        List<TrainHandle> trainHandles = createTrains(coasterHandle, track, coasterConfig, sectionProvider, rideIdentifier, trainCount);
         coasterHandle.setTrains(trainHandles);
 
         RideController rideController = rideControllerFactory.createRideController(coasterHandle, coasterConfig.getControllerConfig());
         RideControlMenu rideControlMenu = rideControlMenuFactory.getRideControlMenu(rideController, coasterConfig.getControllerConfig());
         coasterHandle.setRideController(rideController, rideControlMenu);
 
+        RideState rideState = RideState.load(rideIdentifier);
+        coasterHandle.setState(rideState);
+
         this.addRideHandle(coasterHandle);
     }
 
-    private TrainHandle createTrain(Track track, CoasterConfig coasterConfig, SectionProvider sectionProvider, String trainIdentifier){
-        Train train = trainFactory.createEquallyDistributedTrain(track, coasterConfig, trainIdentifier);
+    private TrainHandle createTrain(CoasterHandle coasterHandle, Track track, CoasterConfig coasterConfig, SectionProvider sectionProvider, String trainIdentifier){
+        Train train = trainFactory.createEquallyDistributedTrain(coasterHandle, track, coasterConfig, trainIdentifier);
         if(train == null) return null;
 
         return new TrainHandle(sectionProvider, train, track);
     }
 
-    private List<TrainHandle> createTrains(Track track, CoasterConfig coasterConfig, SectionProvider sectionProvider, String rideIdentifier, int count){
+    private List<TrainHandle> createTrains(CoasterHandle coasterHandle, Track track, CoasterConfig coasterConfig, SectionProvider sectionProvider, String rideIdentifier, int count){
         List<TrainHandle> trains = new ArrayList<>();
         for(int i = 0; i < count; i++){
             String trainName = rideIdentifier + ":train_" + (i+1);
-            TrainHandle trainHandle = createTrain(track, coasterConfig, sectionProvider, trainName);
+            TrainHandle trainHandle = createTrain(coasterHandle, track, coasterConfig, sectionProvider, trainName);
             if(trainHandle != null)
                 trains.add(trainHandle);
             else throw new RuntimeException("TrainHandle was null!");

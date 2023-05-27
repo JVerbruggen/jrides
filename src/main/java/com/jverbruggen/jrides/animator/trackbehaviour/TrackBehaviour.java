@@ -11,6 +11,7 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
 
+import java.util.Collection;
 import java.util.Map;
 
 public interface TrackBehaviour {
@@ -32,6 +33,9 @@ public interface TrackBehaviour {
     Section getSectionAtStart(Train train);
     Section getSectionAtEnd(Train train);
     boolean accepts(Train train);
+
+    Collection<Section> getAllNextSections(Train train);
+    Collection<Section> getAllPreviousSections(Train train);
 
     boolean definesNextSection();
     Vector3 getBehaviourDefinedPosition(Vector3 originalPosition);

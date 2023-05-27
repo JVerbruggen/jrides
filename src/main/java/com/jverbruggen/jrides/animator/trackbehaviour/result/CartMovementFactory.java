@@ -35,6 +35,8 @@ public class CartMovementFactory {
             if(cartFrame.isInvertedFrameAddition())
                 orientation.rotateY(180);
 
+//            Bukkit.broadcastMessage("cart:" + cartFrame);
+
             Vector3 cartPosition = Cart.calculateLocation(cartPositionOnTrack, cart.getTrackOffset(), orientation);
 
             cartMovements.put(cart, new CartMovement(cartPosition, orientation));

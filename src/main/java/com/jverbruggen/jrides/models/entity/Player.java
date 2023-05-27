@@ -177,5 +177,9 @@ public class Player implements MessageReceiver {
         World world = bukkitPlayer.getWorld();
         bukkitPlayer.teleport(location.toBukkitLocation(world, yaw));
     }
+
+    public boolean hasPermission(String permission){
+        return bukkitPlayer.hasPermission(permission);
+    }
 }
 

@@ -50,6 +50,7 @@ public class LanguageFile {
         setLanguageDefault(LanguageFileFields.NOTIFICATION_RESTRAINT_ON_EXIT_ATTEMPT, "The restraints are closed");
         setLanguageDefault(LanguageFileFields.NOTIFICATION_RESTRAINT_ON_ENTER_ATTEMPT, "The restraints are closed");
         setLanguageDefault(LanguageFileFields.NOTIFICATION_RESTRAINT_ENTER_OVERRIDE, "You just entered the ride while the restraints were closed");
+        setLanguageDefault(LanguageFileFields.NOTIFICATION_CANNOT_ENTER_RIDE, "You currently cannot enter this ride. Try again later.");
 
         setLanguageDefault(LanguageFileFields.ELEVATED_OPERATOR_OVERRIDE_VICTIM_MESSAGE, "Player %" + LanguageFileTags.player + "% took over control of the operating cabin");
 

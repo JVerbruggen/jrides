@@ -2,17 +2,23 @@ package com.jverbruggen.jrides.animator;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
+import com.jverbruggen.jrides.common.permissions.Permissions;
+import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
+import com.jverbruggen.jrides.event.ride.RideStateUpdatedEvent;
+import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
+import com.jverbruggen.jrides.models.ride.state.OpenState;
 import org.bukkit.World;
 
 import javax.annotation.Nonnull;
@@ -36,6 +42,8 @@ public class CoasterHandle implements RideHandle {
     private final String restraintCloseSound;
     private final String windSound;
     private int rideOverviewMapId;
+    private List<RideCounterRecordCollection> topRideCounters;
+    private RideState rideState;
 
     public CoasterHandle(Ride ride, World world, String dispatchSound, String restraintOpenSound,
                          String restraintCloseSound, String windSound, int rideOverviewMapId) {
@@ -54,6 +62,8 @@ public class CoasterHandle implements RideHandle {
         this.track = null;
         this.effectTriggerCollection = null;
         this.rideOverviewMapId = rideOverviewMapId;
+        this.topRideCounters = new ArrayList<>();
+        this.rideState = null;
     }
 
     public int getRideOverviewMapId(){
@@ -208,5 +218,33 @@ public class CoasterHandle implements RideHandle {
 
     public Track getTrack(){
         return track;
+    }
+
+    @Override
+    public List<RideCounterRecordCollection> getTopRideCounters() {
+        return topRideCounters;
+    }
+
+    @Override
+    public void setState(RideState state) {
+        assert state != null;
+
+        this.rideState = state;
+        RideStateUpdatedEvent.send(ride, rideState);
+    }
+
+    @Override
+    public RideState getState() {
+        return rideState;
+    }
+
+    @Override
+    public boolean canEnter(Player player) {
+        if(getState().getOpenState() == OpenState.OPEN)
+            return true;
+        if(player.hasPermission(Permissions.RIDE_CLOSED_ENTER_OVERRIDE))
+            return true;
+
+        return false;
     }
 }

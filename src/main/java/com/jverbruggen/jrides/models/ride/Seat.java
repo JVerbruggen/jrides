@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.models.ride;
 
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
@@ -21,4 +22,6 @@ public interface Seat {
 
     void setParentCart(Cart cart);
     Cart getParentCart();
+
+    RideHandle getParentRideHandle();
 }

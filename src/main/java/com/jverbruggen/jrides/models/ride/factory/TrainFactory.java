@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.models.ride.factory;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.CartSpecConfig;
 import com.jverbruggen.jrides.config.coaster.objects.VehiclesConfig;
@@ -43,7 +44,7 @@ public class TrainFactory {
         this.debugMode = false; // TODO: add to a config
     }
 
-    public Train createEquallyDistributedTrain(Track track, CoasterConfig coasterConfig, String trainIdentifier){
+    public Train createEquallyDistributedTrain(CoasterHandle coasterHandle, Track track, CoasterConfig coasterConfig, String trainIdentifier){
         final Section spawnSection = track.getNextSpawnSection();
         if(spawnSection == null){
             JRidesPlugin.getLogger().severe("No spawn section available on track " + track.toString() + " for train to spawn!");
@@ -98,7 +99,7 @@ public class TrainFactory {
             Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> armorStand.setHeadpose(ArmorStandPose.getArmorStandPose(orientation)));
 
             List<Vector3> seatOffsets = cartTypeSpecConfig.getSeats().getPositions();
-            List<Seat> seats = seatFactory.createSeats(seatOffsets, cartLocation, orientation);
+            List<Seat> seats = seatFactory.createSeats(coasterHandle, seatOffsets, cartLocation, orientation);
 
             Section cartSection = spawnSection;
             if(!cartSection.isInSection(cartFrame)){

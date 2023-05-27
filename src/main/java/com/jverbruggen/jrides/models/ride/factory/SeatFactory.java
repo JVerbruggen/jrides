@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.models.ride.factory;
 
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Matrix4x4;
 import com.jverbruggen.jrides.models.math.Quaternion;
@@ -19,7 +20,7 @@ public class SeatFactory {
         this.viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
     }
 
-    public List<Seat> createSeats(List<Vector3> seatOffsets, Vector3 cartLocation, Quaternion orientation){
+    public List<Seat> createSeats(RideHandle rideHandle, List<Vector3> seatOffsets, Vector3 cartLocation, Quaternion orientation){
         List<Seat> seats = new ArrayList<>();
         Matrix4x4 rotationMatrix = new Matrix4x4();
         rotationMatrix.rotate(orientation);
@@ -30,7 +31,7 @@ public class SeatFactory {
 
             double yawRotation = orientation.getPacketYaw();
             VirtualArmorstand seatArmorStand = viewportManager.spawnVirtualArmorstand(absoluteSeatLocation, yawRotation);
-            Seat seat = new CoasterSeat(seatArmorStand, seatOffset);
+            Seat seat = new CoasterSeat(rideHandle, seatArmorStand, seatOffset);
             seatArmorStand.setHostSeat(seat);
             seats.add(seat);
         }

@@ -1,19 +1,18 @@
 package com.jverbruggen.jrides.animator.trackbehaviour;
 
-import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovement;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
-import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
 
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public abstract class BaseTrackBehaviour implements TrackBehaviour {
@@ -110,6 +109,16 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     @Override
     public Section getSectionPrevious(Train train) {
         return getSectionAtStart(train);
+    }
+
+    @Override
+    public Collection<Section> getAllNextSections(Train train) {
+        return List.of(getSectionNext(train));
+    }
+
+    @Override
+    public Collection<Section> getAllPreviousSections(Train train) {
+        return List.of(getSectionPrevious(train));
     }
 
     @Override

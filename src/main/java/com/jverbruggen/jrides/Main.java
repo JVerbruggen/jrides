@@ -3,6 +3,7 @@ package com.jverbruggen.jrides;
 import com.comphenix.protocol.ProtocolManager;
 import com.jverbruggen.jrides.command.MainCommandExecutor;
 import com.jverbruggen.jrides.common.startup.StartMessage;
+import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.event.ButtonClickEventListener;
 import com.jverbruggen.jrides.control.uiinterface.menu.open.SignMenuListener;
 import com.jverbruggen.jrides.event.player.BukkitPlayerJoinEventListener;
@@ -51,6 +52,7 @@ public class Main extends JavaPlugin {
 
         ConfigurationSerialization.registerClass(RideCounterRecord.class);
         ConfigurationSerialization.registerClass(RideCounterRecordCollection.class);
+        ConfigurationSerialization.registerClass(RideState.class);
 
         MainCommandExecutor commandExecutor = new MainCommandExecutor();
         getServer().getPluginCommand("jrides").setTabCompleter(commandExecutor);
