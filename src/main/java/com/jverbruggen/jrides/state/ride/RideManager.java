@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.state.ride;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
@@ -87,6 +88,10 @@ public class RideManager {
 
     public List<CoasterHandle> getCoasterHandles() {
         return coasterHandles;
+    }
+
+    public List<RideHandle> getRideHandles(){
+        return new ArrayList<>(coasterHandles);
     }
 
     public CoasterHandle getRideHandle(String identifier){

@@ -28,6 +28,7 @@ import com.jverbruggen.jrides.models.properties.frame.factory.FrameFactory;
 import com.jverbruggen.jrides.models.ride.factory.*;
 import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
 import com.jverbruggen.jrides.packets.PacketSender;
+import com.jverbruggen.jrides.packets.PacketSenderFactory;
 import com.jverbruggen.jrides.packets.PacketSender_1_19_2;
 import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -53,9 +54,11 @@ public class ServiceProviderConfigurator {
         Logger logger = plugin.getLogger();
         logger.setLevel(Level.CONFIG);
         ServiceProvider.register(Logger.class, logger);
+        ServiceProvider.register(JRidesLogger.class, new JRidesLogger(logger, true));
 
         ServiceProvider.register(PluginManager.class, Bukkit.getPluginManager());
-        ServiceProvider.register(LanguageFile.class, new LanguageFile(new HashMap<>()));
+        ServiceProvider.register(ConfigManager.class, new ConfigManager(plugin));
+        ServiceProvider.register(LanguageFile.class, new LanguageFile());
 
         ServiceProvider.register(RideCounterManager.class, new RideCounterManager());
         ServiceProvider.register(ControlModeFactory.class, new ControlModeFactory());
@@ -66,8 +69,7 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(ButtonUpdateController.class, new ButtonUpdateController());
         ServiceProvider.register(ProtocolManager.class, ProtocolLibrary.getProtocolManager());
         ServiceProvider.register(EntityIdFactory.class, new EntityIdFactory(1_500_000, Integer.MAX_VALUE));
-        ServiceProvider.register(JRidesLogger.class, new JRidesLogger(logger, true));
-        ServiceProvider.register(PacketSender.class, new PacketSender_1_19_2());
+        ServiceProvider.register(PacketSender.class, PacketSenderFactory.getPacketSender());
         ServiceProvider.register(ViewportManager.class, new ViewportManagerFactory().createViewportManager(true));
         ServiceProvider.register(FrameFactory.class, new FrameFactory());
         ServiceProvider.register(SmoothAnimation.class, new SmoothCoastersSmoothAnimation(new SmoothCoastersAPI(plugin)));
@@ -75,7 +77,6 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(MultiArmorstandMovementEffectTriggerFactory.class, new MultiArmorstandMovementEffectTriggerFactory());
         ServiceProvider.register(MusicEffectTriggerFactory.class, new MusicEffectTriggerFactory());
         ServiceProvider.register(CartRotationTriggerFactory.class, new CartRotationTriggerFactory());
-        ServiceProvider.register(ConfigManager.class, new ConfigManager(plugin));
         ServiceProvider.register(EffectTriggerFactory.class, new EffectTriggerFactory());
         ServiceProvider.register(MessageFactory.class, new MessageFactory());
         ServiceProvider.register(PlayerManager.class, new PlayerManager());

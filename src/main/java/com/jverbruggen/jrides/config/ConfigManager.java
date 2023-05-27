@@ -3,31 +3,28 @@ package com.jverbruggen.jrides.config;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.ride.RideConfig;
-import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.config.trigger.TriggerConfig;
 import com.jverbruggen.jrides.config.trigger.TriggerConfigFactory;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.yaml.snakeyaml.Yaml;
 
-import javax.swing.text.html.Option;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class ConfigManager {
     private final JavaPlugin plugin;
-    private final TriggerConfigFactory triggerConfigFactory;
 
     public ConfigManager(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.triggerConfigFactory = ServiceProvider.getSingleton(TriggerConfigFactory.class);
     }
 
     private File getFile(String fileName){
@@ -162,6 +159,7 @@ public class ConfigManager {
             return null;
         }
 
+        TriggerConfigFactory triggerConfigFactory = ServiceProvider.getSingleton(TriggerConfigFactory.class);
         return triggerConfigFactory.fromConfigurationSection(rideIdentifier, effectName, yamlConfiguration.getConfigurationSection("trigger"));
     }
 
@@ -211,5 +209,20 @@ public class ConfigManager {
 
         assert t != null;
         return Optional.of(t);
+    }
+
+    public Map<String, String> getLanguageFile() {
+        YamlConfiguration yamlConfiguration = getYamlConfiguration("language.yml");
+        if(yamlConfiguration == null) return null;
+
+        ConfigurationSection configurationSection = yamlConfiguration.getConfigurationSection("language");
+        Set<String> keys = configurationSection.getKeys(false);
+        Map<String, String> result = new HashMap<>();
+
+        for(String key : keys){
+            result.put(key, configurationSection.getString(key));
+        }
+
+        return result;
     }
 }

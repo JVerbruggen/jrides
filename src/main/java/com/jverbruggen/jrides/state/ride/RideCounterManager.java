@@ -28,7 +28,7 @@ public class RideCounterManager {
         languageFile.sendMultilineMessage(player, LanguageFileFields.NOTIFICATION_RIDE_COUNTER_UPDATE,
                 builder -> builder
                         .add(LanguageFileTags.rideCount, record.getRideCount() + "")
-                        .add(LanguageFileTags.rideIdentifier, record.getRideIdentifier()));
+                        .add(LanguageFileTags.rideDisplayName, record.getRide().getDisplayName()));
     }
 
     public RideCounterRecordCollection getCollection(Player player){

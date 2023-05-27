@@ -1,8 +1,11 @@
 package com.jverbruggen.jrides.language;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.config.ConfigManager;
+import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.models.entity.SimpleMessageReceiver;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -12,10 +15,14 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class LanguageFile {
+    private final ConfigManager configManager;
+    private final JRidesLogger logger;
     private FeedbackType defaultFeedbackType = FeedbackType.INFO;
     private Map<LanguageFileFields, String> language;
 
-    public LanguageFile(Map<String, String> languageOverrides) {
+    public LanguageFile() {
+        this.configManager = ServiceProvider.getSingleton(ConfigManager.class);
+        this.logger = ServiceProvider.getSingleton(JRidesLogger.class);
         this.language = new HashMap<>();
 
         setLanguageDefault(LanguageFileFields.CHAT_FEEDBACK_PREFIX, "[jrides] ");
@@ -41,7 +48,7 @@ public class LanguageFile {
         setLanguageDefault(LanguageFileFields.NOTIFICATION_RIDE_GATES_NOT_CLOSED, "Not all gates are closed");
         setLanguageDefault(LanguageFileFields.NOTIFICATION_RIDE_GATE_NOT_CLOSED, "Gate %" + LanguageFileTags.name + "% is not closed");
 
-        setLanguageDefault(LanguageFileFields.NOTIFICATION_RIDE_COUNTER_UPDATE, "\nYou've ridden %" + LanguageFileTags.rideIdentifier + "% %" + LanguageFileTags.rideCount + "% times now\n");
+        setLanguageDefault(LanguageFileFields.NOTIFICATION_RIDE_COUNTER_UPDATE, "\nYou've ridden %" + LanguageFileTags.rideDisplayName + "% %" + LanguageFileTags.rideCount + "% times now\n");
 
         setLanguageDefault(LanguageFileFields.NOTIFICATION_SHIFT_EXIT_CONFIRMATION, "Press shift again within 2 seconds to confirm exiting the ride");
         setLanguageDefault(LanguageFileFields.NOTIFICATION_SHIFT_EXIT_CONFIRMED, "You just exited the ride while the restraints were closed");
@@ -72,33 +79,43 @@ public class LanguageFile {
         setLanguageDefault(LanguageFileFields.BUTTON_RESTRAINTS_OPEN_STATE, "Restraints are open");
         setLanguageDefault(LanguageFileFields.BUTTON_RESTRAINTS_CLOSED_STATE, "Restraints are closed");
 
-        fillOverrides(languageOverrides);
+        fillOverrides();
     }
 
     private void setLanguageDefault(LanguageFileFields field, String _default){
-        language.put(field, _default);
+        this.language.put(field, _default);
     }
 
-    private void fillOverrides(Map<String, String> languageOverrides){
+    private void fillOverrides(){
+        Map<String, String> languageOverrides = configManager.getLanguageFile();
+        if(languageOverrides == null){
+            logger.info("language.yml file was not found.");
+            return;
+        }
+
         for(Map.Entry<String, String> entry : languageOverrides.entrySet()){
             String keyString = entry.getKey();
             LanguageFileFields field;
             try{
                 field = LanguageFileFields.valueOf(keyString);
             }catch (IllegalArgumentException e){
-                JRidesPlugin.getLogger().severe("Could not override language field " + keyString + " because it does not exist.");
+                JRidesPlugin.getLogger().severe("Could not override language field " + keyString + " because it does not exist");
                 return;
             }
 
             String overrideValue = entry.getValue();
+            overrideValue = ChatColor.translateAlternateColorCodes('&', overrideValue);
+
             language.put(field, overrideValue);
         }
+
+        this.logger.info("Loaded language file with " + languageOverrides.size() + " overrides");
     }
 
     public @Nonnull String get(@Nonnull LanguageFileFields field){
         String value = language.get(field);
         if(value == null)
-            throw new RuntimeException("Language value for language field " + field.toString() + " could not be found!");
+            throw new RuntimeException("Language value for language field " + field.toString() + " could not be found");
         return value;
     }
 
