@@ -21,9 +21,19 @@
 ![](assets/banner-3.gif)
 
 
+## 🚠 *Go sideways - hypermobile transfers*
+* Besides going forward, your coaster can go sideways, if you want! Use transfers to push a train sideways, upwards, or even roll it on its side.
 
-## 😵‍💫 *SmoothCoasters - Go upside down!*
+![](assets/banner-4.gif)
+
+## 😵‍💫 *SmoothCoasters - upside down POV camera*
 With built-in support for the [smooth-coasters client](https://www.curseforge.com/minecraft/mc-mods/smoothcoasters), you can go upside down! 
+
+## ✨ And so much more!
+* Double stations
+* Multi track support, redirect your trains left or right
+
+---
 
 ## **Download**
 
@@ -33,9 +43,20 @@ Version | Link
 --- | ---
 1.19.2 | <>
 
-## Visit out live demo!
-Try it out for yourself! Join our demo server at [server.greekcraft.nl](https://greekcraft.nl).
-
-*Created by MeneerPinguin*
+### Warning - jrides is currently in beta. Please report issues
 
 ---
+
+## Visit our live demo!
+Try it out for yourself! Join our demo server at [server.greekcraft.nl](https://greekcraft.nl).
+
+<br>
+
+**Trailer video**
+
+[![GreekCraft trailer](https://img.youtube.com/vi/pJAwFTujA9M/0.jpg)](https://www.youtube.com/watch?v=pJAwFTujA9M)
+
+
+---
+
+*jrides - created by [MeneerPinguin](https://github.com/JVerbruggen)*
