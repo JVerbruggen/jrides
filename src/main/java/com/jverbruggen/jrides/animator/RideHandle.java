@@ -33,4 +33,7 @@ public interface RideHandle {
     void setState(RideState state);
     RideState getState();
     boolean canEnter(Player player);
+
+    void open(Player authority);
+    void close(Player authority);
 }

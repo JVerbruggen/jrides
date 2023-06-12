@@ -21,7 +21,7 @@ public class ExternalMusicEffectTrigger extends BaseTrainEffectTrigger implement
     @Override
     public void execute(Train train) {
         pluginManager.callEvent(new OnrideMusicTriggerEvent(train.getPassengers(), resource, descriptor));
-        Bukkit.broadcastMessage(resource);
+//        Bukkit.broadcastMessage(resource);
     }
 
     @Override

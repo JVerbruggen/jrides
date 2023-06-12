@@ -18,7 +18,7 @@ import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
-import com.jverbruggen.jrides.models.ride.state.OpenState;
+import org.bukkit.Sound;
 import org.bukkit.World;
 
 import javax.annotation.Nonnull;
@@ -240,11 +240,25 @@ public class CoasterHandle implements RideHandle {
 
     @Override
     public boolean canEnter(Player player) {
-        if(getState().getOpenState() == OpenState.OPEN)
+        if(getState().getOpenState().isOpen())
             return true;
         if(player.hasPermission(Permissions.RIDE_CLOSED_ENTER_OVERRIDE))
             return true;
 
         return false;
+    }
+
+    @Override
+    public void open(Player authority) {
+        boolean opened = getState().setStateOpened();
+        if(opened) authority.playSound(Sound.BLOCK_FENCE_GATE_OPEN);
+        else authority.playSound(Sound.UI_BUTTON_CLICK);
+    }
+
+    @Override
+    public void close(Player authority) {
+        boolean closed = getState().setStateClosed();
+        if(closed) authority.playSound(Sound.BLOCK_FENCE_GATE_CLOSE);
+        else authority.playSound(Sound.UI_BUTTON_CLICK);
     }
 }

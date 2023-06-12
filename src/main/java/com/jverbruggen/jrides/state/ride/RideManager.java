@@ -18,7 +18,6 @@ import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.event.ride.RideInitializedEvent;
-import com.jverbruggen.jrides.event.ride.RideStateUpdatedEvent;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
@@ -127,6 +126,12 @@ public class RideManager {
     }
 
     private void loadCoaster(World world, String rideIdentifier){
+        RideState rideState = RideState.load(rideIdentifier);
+        if(!rideState.shouldLoadRide()){
+            logger.warning("Not loading ride " + rideIdentifier);
+            return;
+        }
+
         CoasterConfig coasterConfig = configManager.getCoasterConfig(rideIdentifier);
         if(coasterConfig == null) return;
 
@@ -167,7 +172,6 @@ public class RideManager {
         RideControlMenu rideControlMenu = rideControlMenuFactory.getRideControlMenu(rideController, coasterConfig.getControllerConfig());
         coasterHandle.setRideController(rideController, rideControlMenu);
 
-        RideState rideState = RideState.load(rideIdentifier);
         coasterHandle.setState(rideState);
 
         this.addRideHandle(coasterHandle);

@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.control.uiinterface.menu.button.factory;
 
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
@@ -114,5 +115,23 @@ public class RideControlButtonFactory {
                                 ChatColor.DARK_GREEN, languageFile.get(LanguageFileFields.BUTTON_DISPATCH_STATE))
                 ),
                 slot, dispatchTrigger.getDispatchLockCollection(), new RunnableButtonAction(dispatchTrigger::execute));
+    }
+
+    public RideControlButton createStateOpenRideButton(RideHandle rideHandle, int slot){
+        return new SimpleRideControlButton(
+                rideHandle.getRide().getIdentifier(),
+                new StaticButtonVisual(Material.GREEN_CONCRETE, ChatColor.DARK_GREEN, "Open ride"),
+                slot,
+                new RunnableButtonAction(rideHandle::open)
+        );
+    }
+
+    public RideControlButton createStateCloseRideButton(RideHandle rideHandle, int slot){
+        return new SimpleRideControlButton(
+                rideHandle.getRide().getIdentifier(),
+                new StaticButtonVisual(Material.RED_CONCRETE, ChatColor.RED, "Close ride"),
+                slot,
+                new RunnableButtonAction(rideHandle::close)
+        );
     }
 }

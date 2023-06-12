@@ -117,4 +117,5 @@ public abstract class BaseConfig {
             return ((Integer)object).doubleValue();
         }else throw new RuntimeException("Cannot convert " + object + " to double");
     }
+
 }

@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.control.uiinterface.menu;
 
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.config.coaster.objects.ControllerConfig;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.controller.AlternateRideController;
@@ -21,10 +22,14 @@ public class RideControlMenuFactory {
     private final LanguageFile languageFile;
     private final RideControlButtonFactory rideControlButtonFactory;
 
+    private final Map<RideController, RideControlMenu> adminRideControlMenus;
+
     public RideControlMenuFactory() {
         this.openRideControlMenus = new HashMap<>();
         this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
         this.rideControlButtonFactory = ServiceProvider.getSingleton(RideControlButtonFactory.class);
+
+        this.adminRideControlMenus = new HashMap<>();
     }
 
     public RideControlMenu getRideControlMenu(RideController rideController, ControllerConfig controllerConfig){
@@ -49,11 +54,11 @@ public class RideControlMenuFactory {
         StationTrigger gateTrigger = rideController.getTriggerContext().getGateTrigger();
         StationTrigger restraintTrigger = rideController.getTriggerContext().getRestraintTrigger();
 
-        RideControlButton claimOperatingButton = rideControlButtonFactory.createClaimRideButton(rideController, rideIdentifier, 4);
-        RideControlButton dispatchButton = rideControlButtonFactory.createDispatchButton(rideIdentifier, dispatchTrigger, 10);
-        RideControlButton problemList = rideControlButtonFactory.createProblemList(rideIdentifier, dispatchLockCollection, 11);
-        RideControlButton gateButton = rideControlButtonFactory.createGateButton(rideIdentifier, gateTrigger, 15);
-        RideControlButton restraintButton = rideControlButtonFactory.createRestraintButton(rideIdentifier, restraintTrigger, 16);
+        RideControlButton claimOperatingButton  = rideControlButtonFactory.createClaimRideButton(rideController, rideIdentifier, 4);
+        RideControlButton dispatchButton        = rideControlButtonFactory.createDispatchButton(rideIdentifier, dispatchTrigger, 10);
+        RideControlButton problemList           = rideControlButtonFactory.createProblemList(rideIdentifier, dispatchLockCollection, 11);
+        RideControlButton gateButton            = rideControlButtonFactory.createGateButton(rideIdentifier, gateTrigger, 15);
+        RideControlButton restraintButton       = rideControlButtonFactory.createRestraintButton(rideIdentifier, restraintTrigger, 16);
 
         RideControlMenu rideControlMenu = new RideControlMenu();
         rideControlMenu.addButton(claimOperatingButton);
@@ -102,6 +107,26 @@ public class RideControlMenuFactory {
         rideControlMenu.addButton(rightRestraintButton);
 
         return rideControlMenu;
+    }
+
+    public RideControlMenu getAdminMenu(RideController rideController){
+        if(!rideController.isActive())
+            return null;
+        if(adminRideControlMenus.containsKey(rideController))
+            return adminRideControlMenus.get(rideController);
+
+        RideHandle rideHandle = rideController.getRideHandle();
+
+        RideControlButton openRideButton        = rideControlButtonFactory.createStateOpenRideButton(rideHandle, 3);
+        RideControlButton closeRideButton       = rideControlButtonFactory.createStateCloseRideButton(rideHandle, 5);
+
+        RideControlMenu adminRideControlMenu = new RideControlMenu();
+        adminRideControlMenu.addButton(openRideButton);
+        adminRideControlMenu.addButton(closeRideButton);
+
+        adminRideControlMenus.put(rideController, adminRideControlMenu);
+
+        return adminRideControlMenu;
     }
 
     public void addOpenRideControlMenu(Player player, RideControlMenu rideControlMenu, Inventory inventory){

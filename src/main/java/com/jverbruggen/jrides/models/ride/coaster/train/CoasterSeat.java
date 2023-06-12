@@ -40,7 +40,7 @@ public class CoasterSeat implements Seat {
 
     @Override
     public void setPassenger(Player player) {
-        if(passenger != null){ // Overtaking seat
+        if(passenger != null){ // Overtaking seat or player = null
             passenger.setSeatedOn(null);
             virtualArmorstand.setPassenger(null);
             passenger.clearSmoothAnimationRotation();

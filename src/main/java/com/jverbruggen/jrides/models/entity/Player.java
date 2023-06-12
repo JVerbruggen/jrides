@@ -15,6 +15,7 @@ import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.World;
 
 import java.util.ArrayList;
@@ -180,6 +181,10 @@ public class Player implements MessageReceiver {
 
     public boolean hasPermission(String permission){
         return bukkitPlayer.hasPermission(permission);
+    }
+
+    public void playSound(Sound sound){
+        bukkitPlayer.playSound(bukkitPlayer.getLocation(), sound, 1, 1);
     }
 }
 

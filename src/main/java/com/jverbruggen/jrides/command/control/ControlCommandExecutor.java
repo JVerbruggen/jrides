@@ -18,6 +18,7 @@ public class ControlCommandExecutor extends BaseCommandExecutor {
         rideManager = ServiceProvider.getSingleton(RideManager.class);
 
         registerSubCommand(new ControlMenuCommandExecutor(depth+2));
+        registerSubCommand(new ControlAdminMenuCommandExecutor(depth+2));
         registerSubCommand(new ControlDispatchCommandExecutor(depth+2));
     }
 

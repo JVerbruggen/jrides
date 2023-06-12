@@ -24,6 +24,24 @@ public class RideState extends BaseConfig implements ConfigurationSerializable {
         return openState;
     }
 
+    public boolean setStateOpened(){
+        if(openState.isOpen() || openState.isOpening())
+            return false;
+        OpenState newState = openState.open();
+        boolean changed = newState != this.openState;
+        this.openState = newState;
+        return changed;
+    }
+
+    public boolean setStateClosed(){
+        if(!openState.isOpen())
+            return false;
+        OpenState newState = openState.close();
+        boolean changed = newState != this.openState;
+        this.openState = newState;
+        return changed;
+    }
+
     public Map<String, Object> serialize() {
         Map<String, Object> serialized = new HashMap<>();
         serialized.put("rideIdentifier", rideIdentifier);
@@ -37,6 +55,10 @@ public class RideState extends BaseConfig implements ConfigurationSerializable {
         OpenState openState = OpenState.valueOf(getString(config, "openState", "MAINTENANCE"));
 
         return new RideState(rideIdentifier, openState);
+    }
+
+    public boolean shouldLoadRide(){
+        return openState != OpenState.DISABLED;
     }
 
     public void save(){
