@@ -1,9 +1,9 @@
 ![](assets/banner-1.gif)
 
-# **jrides** - Brings your coasters to your Minecraft server!
+# **jrides** - Bring coasters to your Minecraft server!
 'jrides' is an open-source rollercoaster animator for Minecraft Spigot. Super-smoothly animated coasters within the snap of a finger. 
 
-**No mods required!**
+✨ **No mods required!** ✨
 
 ## 🎢 *Ride - go inside your own rides*
 * With jrides, you can enter any ride you create. Whether it is a launched, inverted or water coaster.
@@ -35,7 +35,7 @@ With built-in support for the [smooth-coasters client](https://www.curseforge.co
 
 ---
 
-## **Download**
+## Download
 
 Click one of the versions below to start your download! Thank you and enjoy!
 
@@ -47,7 +47,7 @@ Version | Link
 
 ---
 
-## Visit our live demo!
+## 🎡 **Visit our live demo!** server.greekcraft.nl
 Try it out for yourself! Join our demo server at [server.greekcraft.nl](https://greekcraft.nl).
 
 <br>
@@ -55,7 +55,6 @@ Try it out for yourself! Join our demo server at [server.greekcraft.nl](https://
 **Trailer video**
 
 [![GreekCraft trailer](https://img.youtube.com/vi/pJAwFTujA9M/0.jpg)](https://www.youtube.com/watch?v=pJAwFTujA9M)
-
 
 ---
 
