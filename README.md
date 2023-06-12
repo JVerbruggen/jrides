@@ -45,6 +45,12 @@ Version | Link
 
 ### Warning - jrides is currently in beta. Please report issues
 
+<br>
+
+## Configuration
+Refer to [docs/config.md](./docs/config.md) for configuration.
+
+
 ---
 
 ## 🎡 **Visit our live demo!** server.greekcraft.nl
