@@ -1,6 +1,9 @@
 ![](assets/banner-1.gif)
 
 # **jrides** - Bring coasters to your Minecraft server!
+![Maven build](https://github.com/JVerbruggen/jrides/workflows/Maven%20build/badge.svg) 
+
+
 'jrides' is an open-source rollercoaster animator for Minecraft Spigot. Super-smoothly animated coasters within the snap of a finger. 
 
 ✨ **No mods required!** ✨
