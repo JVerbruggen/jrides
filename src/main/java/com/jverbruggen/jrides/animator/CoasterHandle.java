@@ -7,10 +7,10 @@ import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
-import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.event.ride.RideStateUpdatedEvent;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.Ride;
@@ -22,13 +22,14 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CoasterHandle implements RideHandle {
     private Ride ride;
-    private RideControlMenu rideControlMenu;
+    private Menu rideControlMenu;
     private RideController rideController;
     private Track track;
     private World world;
@@ -104,7 +105,7 @@ public class CoasterHandle implements RideHandle {
     }
 
     @Override
-    public void setRideController(RideController rideController, RideControlMenu rideControlMenu) {
+    public void setRideController(RideController rideController, Menu rideControlMenu) {
         this.rideController = rideController;
         this.rideControlMenu = rideControlMenu;
     }
@@ -168,7 +169,7 @@ public class CoasterHandle implements RideHandle {
     }
 
     @Override
-    public RideControlMenu getRideControlMenu() {
+    public Menu getRideControlMenu() {
         return rideControlMenu;
     }
 
@@ -226,6 +227,13 @@ public class CoasterHandle implements RideHandle {
     }
 
     @Override
+    public List<Player> getPassengers() {
+        return getTrains().stream()
+                .flatMap(trainHandle -> trainHandle.getTrain().getPassengers().stream())
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
     public void setState(RideState state) {
         assert state != null;
 
@@ -257,8 +265,36 @@ public class CoasterHandle implements RideHandle {
 
     @Override
     public void close(Player authority) {
-        boolean closed = getState().setStateClosed();
-        if(closed) authority.playSound(Sound.BLOCK_FENCE_GATE_CLOSE);
-        else authority.playSound(Sound.UI_BUTTON_CLICK);
+        boolean closed = attemptClose(authority);
+    }
+
+    private boolean attemptClose(@Nullable Player authority){
+        if(getState().getOpenState().isOpen()){
+            boolean closed = getState().setStateClosed();
+
+            if(authority != null){
+                if(!closed){
+                    authority.playSound(Sound.UI_BUTTON_CLICK);
+                }else{
+                    authority.playSound(Sound.BLOCK_FENCE_GATE_CLOSE);
+                }
+            }
+        }
+
+        Player currentOperator = rideController.getOperator();
+        if(currentOperator != null) currentOperator.setOperating(null);
+
+        if(getState().getOpenState().isClosing()){
+            if(canFullyClose()){
+                rideState.setStateFullyClosed();
+            }else return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean canFullyClose() {
+        return getPassengers().size() == 0 && getRideController().getOperator() == null;
     }
 }

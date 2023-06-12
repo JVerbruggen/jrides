@@ -12,7 +12,6 @@ public class SimpleCoaster implements Coaster {
     private String displayName;
     private PlayerLocation warpLocation;
 
-
     public SimpleCoaster(String identifier, String displayName, PlayerLocation warpLocation) {
         this.identifier = identifier;
         this.displayName = displayName;

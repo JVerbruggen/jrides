@@ -1,8 +1,9 @@
 package com.jverbruggen.jrides.control.uiinterface.menu.button;
 
-import com.jverbruggen.jrides.control.uiinterface.menu.button.common.ButtonVisual;
+import com.jverbruggen.jrides.models.menu.ButtonVisual;
+import com.jverbruggen.jrides.models.menu.MenuButton;
 
-public abstract class BaseRideControlButton implements RideControlButton {
+public abstract class BaseRideControlButton implements MenuButton {
     protected void setButtonVisual(ButtonVisual visual){
         visual.clearUpdate();
 

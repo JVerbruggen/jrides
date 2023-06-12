@@ -1,19 +1,20 @@
 package com.jverbruggen.jrides.control.uiinterface.menu.button.action;
 
-import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.menu.MenuButton;
+import com.jverbruggen.jrides.models.menu.MenuButtonAction;
 
 import java.util.function.BiConsumer;
 
-public class RunnableButtonWithContextAction implements RideControlButtonAction {
-    private BiConsumer<Player, RideControlButton> consumerFunction;
+public class RunnableButtonWithContextAction implements MenuButtonAction {
+    private BiConsumer<Player, MenuButton> consumerFunction;
 
-    public RunnableButtonWithContextAction(BiConsumer<Player, RideControlButton> consumerFunction) {
+    public RunnableButtonWithContextAction(BiConsumer<Player, MenuButton> consumerFunction) {
         this.consumerFunction = consumerFunction;
     }
 
     @Override
-    public void run(Player player, RideControlButton button) {
+    public void run(Player player, MenuButton button) {
         consumerFunction.accept(player, button);
     }
 }

@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.control.uiinterface.menu.button.controller;
 
 import com.jverbruggen.jrides.JRidesPlugin;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
+import com.jverbruggen.jrides.models.menu.MenuButton;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class ButtonUpdateController {
         Bukkit.getScheduler().runTaskTimer(JRidesPlugin.getBukkitPlugin(), this::tick, 1L, 1L).getTaskId();
     }
 
-    public void addButton(RideControlButton button, int interval){
+    public void addButton(MenuButton button, int interval){
         buttonUpdateStateList.add(new ButtonUpdateState(button, interval));
     }
 
@@ -25,11 +25,11 @@ public class ButtonUpdateController {
 }
 
 class ButtonUpdateState{
-    private final RideControlButton button;
+    private final MenuButton button;
     private final int interval;
     private int intervalState;
 
-    ButtonUpdateState(RideControlButton button, int interval) {
+    ButtonUpdateState(MenuButton button, int interval) {
         this.button = button;
         this.interval = interval;
         this.intervalState = 0;

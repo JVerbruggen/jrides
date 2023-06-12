@@ -13,6 +13,11 @@ public enum OpenState {
         }
 
         @Override
+        public boolean isClosing() {
+            return false;
+        }
+
+        @Override
         public OpenState open() {
             return this;
         }
@@ -26,6 +31,11 @@ public enum OpenState {
         public boolean canUnload() {
             return false;
         }
+
+        @Override
+        public OpenState getSaveState() {
+            return this;
+        }
     },
     CLOSED {
         @Override
@@ -35,6 +45,11 @@ public enum OpenState {
 
         @Override
         public boolean isOpening() {
+            return false;
+        }
+
+        @Override
+        public boolean isClosing() {
             return false;
         }
 
@@ -52,6 +67,11 @@ public enum OpenState {
         public boolean canUnload() {
             return true;
         }
+
+        @Override
+        public OpenState getSaveState() {
+            return this;
+        }
     },
     MAINTENANCE {
         @Override
@@ -61,6 +81,11 @@ public enum OpenState {
 
         @Override
         public boolean isOpening() {
+            return false;
+        }
+
+        @Override
+        public boolean isClosing() {
             return false;
         }
 
@@ -77,6 +102,11 @@ public enum OpenState {
         @Override
         public boolean canUnload() {
             return true;
+        }
+
+        @Override
+        public OpenState getSaveState() {
+            return this;
         }
     },
     HIDDEN {
@@ -91,6 +121,11 @@ public enum OpenState {
         }
 
         @Override
+        public boolean isClosing() {
+            return false;
+        }
+
+        @Override
         public OpenState open() {
             return this;
         }
@@ -103,6 +138,11 @@ public enum OpenState {
         @Override
         public boolean canUnload() {
             return true;
+        }
+
+        @Override
+        public OpenState getSaveState() {
+            return this;
         }
     },
     DISABLED {
@@ -117,6 +157,11 @@ public enum OpenState {
         }
 
         @Override
+        public boolean isClosing() {
+            return false;
+        }
+
+        @Override
         public OpenState open() {
             return this;
         }
@@ -129,6 +174,11 @@ public enum OpenState {
         @Override
         public boolean canUnload() {
             return true;
+        }
+
+        @Override
+        public OpenState getSaveState() {
+            return this;
         }
     },
     TRANSITION_TO_CLOSE {
@@ -143,28 +193,7 @@ public enum OpenState {
         }
 
         @Override
-        public OpenState open() {
-            return this;
-        }
-
-        @Override
-        public OpenState close() {
-            return this;
-        }
-
-        @Override
-        public boolean canUnload() {
-            return false;
-        }
-    },
-    TRANSITION_TO_OPEN {
-        @Override
-        public boolean isOpen() {
-            return false;
-        }
-
-        @Override
-        public boolean isOpening() {
+        public boolean isClosing() {
             return true;
         }
 
@@ -182,11 +211,54 @@ public enum OpenState {
         public boolean canUnload() {
             return false;
         }
+
+        @Override
+        public OpenState getSaveState() {
+            return CLOSED;
+        }
+    },
+    TRANSITION_TO_OPEN {
+        @Override
+        public boolean isOpen() {
+            return false;
+        }
+
+        @Override
+        public boolean isOpening() {
+            return true;
+        }
+
+        @Override
+        public boolean isClosing() {
+            return false;
+        }
+
+        @Override
+        public OpenState open() {
+            return this;
+        }
+
+        @Override
+        public OpenState close() {
+            return this;
+        }
+
+        @Override
+        public boolean canUnload() {
+            return false;
+        }
+
+        @Override
+        public OpenState getSaveState() {
+            return OPEN;
+        }
     };
 
     public abstract boolean isOpen();
     public abstract boolean isOpening();
+    public abstract boolean isClosing();
     public abstract OpenState open();
     public abstract OpenState close();
     public abstract boolean canUnload();
+    public abstract OpenState getSaveState();
 }

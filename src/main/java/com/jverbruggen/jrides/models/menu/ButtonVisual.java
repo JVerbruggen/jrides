@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.control.uiinterface.menu.button.common;
+package com.jverbruggen.jrides.models.menu;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

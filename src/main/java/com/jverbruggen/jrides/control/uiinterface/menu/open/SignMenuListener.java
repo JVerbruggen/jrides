@@ -1,9 +1,9 @@
 package com.jverbruggen.jrides.control.uiinterface.menu.open;
 
 import com.jverbruggen.jrides.animator.RideHandle;
-import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.ride.RideManager;
@@ -52,7 +52,7 @@ public class SignMenuListener implements Listener {
         RideHandle rideHandle = rideManager.getRideHandle(identifier);
         if(rideHandle == null) return;
 
-        RideControlMenu rideControlMenu = rideHandle.getRideControlMenu();
+        Menu rideControlMenu = rideHandle.getRideControlMenu();
         Inventory inventory = rideControlMenu.getInventoryFor(player);
 
         rideControlMenuFactory.addOpenRideControlMenu(player, rideControlMenu, inventory);

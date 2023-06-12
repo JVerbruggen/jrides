@@ -1,11 +1,10 @@
 package com.jverbruggen.jrides.control.uiinterface.menu.button.event;
 
-import com.jverbruggen.jrides.animator.RideHandle;
-import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.SimpleRideControlButton;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.menu.Menu;
+import com.jverbruggen.jrides.models.menu.MenuButton;
+import com.jverbruggen.jrides.models.menu.SimpleMenuButton;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.ride.RideManager;
@@ -43,7 +42,7 @@ public class ButtonClickEventListener implements Listener {
         Player player = playerManager.getPlayer((org.bukkit.entity.Player) event.getWhoClicked());
         if(!rideControlMenuFactory.hasOpenRideControlMenu(player)) return;
 
-        RideControlMenu menu = rideControlMenuFactory.getOpenRideControlMenu(player);
+        Menu menu = rideControlMenuFactory.getOpenRideControlMenu(player);
         if(menu.getSessions().get(player) != clickedInventory) return;
 
         ItemStack item = event.getCurrentItem();
@@ -52,12 +51,12 @@ public class ButtonClickEventListener implements Listener {
 
         NBTItem nbtItem = new NBTItem(item);
 
-        if(!nbtItem.hasTag(SimpleRideControlButton.BUTTON_UUID_KEY)) return;
+        if(!nbtItem.hasTag(SimpleMenuButton.BUTTON_UUID_KEY)) return;
 
-        String buttonUUIDString = nbtItem.getString(SimpleRideControlButton.BUTTON_UUID_KEY);
+        String buttonUUIDString = nbtItem.getString(SimpleMenuButton.BUTTON_UUID_KEY);
         UUID buttonUUID = UUID.fromString(buttonUUIDString);
 
-        RideControlButton button = menu.getButton(buttonUUID);
+        MenuButton button = menu.getButton(buttonUUID);
         button.press(player);
 
         event.setCancelled(true);

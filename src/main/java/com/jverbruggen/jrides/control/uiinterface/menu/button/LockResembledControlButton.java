@@ -1,11 +1,8 @@
 package com.jverbruggen.jrides.control.uiinterface.menu.button;
 
 import com.jverbruggen.jrides.control.DispatchLock;
-import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.SimpleRideControlButton;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.action.RideControlButtonAction;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.common.ButtonVisual;
+import com.jverbruggen.jrides.models.menu.*;
+import com.jverbruggen.jrides.models.menu.ButtonVisual;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.controller.ButtonUpdateController;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -16,21 +13,21 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.UUID;
 
-public class LockResembledControlButton extends BaseRideControlButton implements RideControlButton {
-    private RideControlButton parentButton;
+public class LockResembledControlButton extends BaseRideControlButton implements MenuButton {
+    private MenuButton parentButton;
     private boolean buttonOkState;
     private final ButtonVisual buttonBlockedVisual;
     private final ButtonVisual buttonOkVisual;
     private final DispatchLock lock;
 
-    public LockResembledControlButton(String rideIdentifier, ButtonVisual buttonBlockedVisual, ButtonVisual buttonOkVisual, int slot, DispatchLock lock, RideControlButtonAction action) {
+    public LockResembledControlButton(ButtonVisual buttonBlockedVisual, ButtonVisual buttonOkVisual, int slot, DispatchLock lock, MenuButtonAction action) {
         this.buttonBlockedVisual = buttonBlockedVisual;
         this.buttonOkVisual = buttonOkVisual;
         this.lock = lock;
         this.buttonOkState = isLockOk();
 
-        this.parentButton = new SimpleRideControlButton(
-                rideIdentifier, getActiveVisual(), slot, action);
+        this.parentButton = new SimpleMenuButton(
+                getActiveVisual(), slot, action);
 
         this.lock.addEventListener(this::onLockEvent);
         ServiceProvider.getSingleton(ButtonUpdateController.class).addButton(this, 10);
@@ -76,11 +73,11 @@ public class LockResembledControlButton extends BaseRideControlButton implements
         parentButton.setVisible(visible);
     }
 
-    public void setParentMenu(RideControlMenu parentMenu) {
+    public void setParentMenu(Menu parentMenu) {
         parentButton.setParentMenu(parentMenu);
     }
 
-    public RideControlMenu getParentMenu() {
+    public Menu getParentMenu() {
         return parentButton.getParentMenu();
     }
 

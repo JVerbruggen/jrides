@@ -23,6 +23,7 @@ public class MinMaxWaitingTimer {
 
     private double preferredWaitingTime;
     private double waitingTimerState;
+    private int waitingTimerInt;
     private Supplier<Boolean> reachedTimeFunction;
 
     public MinMaxWaitingTimer(int minimumWaitingTime, int maximumWaitingTime, DispatchLock lock) {
@@ -57,7 +58,11 @@ public class MinMaxWaitingTimer {
 
     public void increment(long tickInterval){
         waitingTimerState += (double)tickInterval/20d;
-        this.lock.setStatus((int)waitingTimerState + "s waiting");
+
+        if(waitingTimerInt != (int)waitingTimerState){
+            waitingTimerInt = (int) waitingTimerState;
+            sendStatusMessage();
+        }
 
         if(reachedFunction()){
             this.lock.unlock();
@@ -66,8 +71,14 @@ public class MinMaxWaitingTimer {
 
     public void reset(){
         waitingTimerState = 0d;
+        waitingTimerInt = 0;
         preferredWaitingTime = minimumWaitingTime;
+        sendStatusMessage();
         this.lock.lock();
+    }
+
+    private void sendStatusMessage(){
+        this.lock.setStatus(waitingTimerInt + "s / " + (int)preferredWaitingTime + "s waited");
     }
 
     public int timeUntilMinimum(){

@@ -13,12 +13,12 @@ import com.jverbruggen.jrides.config.ride.RideConfigObject;
 import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.controller.RideControllerFactory;
-import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.event.ride.RideInitializedEvent;
 import com.jverbruggen.jrides.logging.JRidesLogger;
+import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.properties.frame.SimpleFrame;
@@ -169,7 +169,7 @@ public class RideManager {
         coasterHandle.setTrains(trainHandles);
 
         RideController rideController = rideControllerFactory.createRideController(coasterHandle, coasterConfig.getControllerConfig());
-        RideControlMenu rideControlMenu = rideControlMenuFactory.getRideControlMenu(rideController, coasterConfig.getControllerConfig());
+        Menu rideControlMenu = rideControlMenuFactory.getRideControlMenu(rideController, coasterConfig.getControllerConfig());
         coasterHandle.setRideController(rideController, rideControlMenu);
 
         coasterHandle.setState(rideState);

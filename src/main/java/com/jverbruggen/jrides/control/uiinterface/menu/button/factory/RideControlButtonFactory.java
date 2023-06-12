@@ -6,8 +6,6 @@ import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.StationTrigger;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.LockResembledControlButton;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.SimpleRideControlButton;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.action.RunnableButtonAction;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.action.RunnableButtonWithContextAction;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.common.BlinkingButtonVisual;
@@ -16,6 +14,8 @@ import com.jverbruggen.jrides.control.uiinterface.menu.button.common.StaticButto
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.language.LanguageFileTags;
+import com.jverbruggen.jrides.models.menu.MenuButton;
+import com.jverbruggen.jrides.models.menu.SimpleMenuButton;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,9 +29,8 @@ public class RideControlButtonFactory {
         this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
     }
 
-    public RideControlButton createClaimRideButton(RideController rideController, String rideIdentifier, int slot){
-        return new SimpleRideControlButton(
-                rideIdentifier,
+    public MenuButton createClaimRideButton(RideController rideController, int slot){
+        return new SimpleMenuButton(
                 new CabinOccupationVisual(rideController,
                         new StaticButtonVisual(Material.BLACK_CONCRETE_POWDER,
                             ChatColor.GOLD,
@@ -40,20 +39,14 @@ public class RideControlButtonFactory {
                 slot, new RunnableButtonWithContextAction((p, b) -> {
             if(p.equals(rideController.getOperator())){
                 p.setOperating(null);
-                languageFile.sendMessage(p, LanguageFileFields.NOTIFICATION_RIDE_CONTROL_INACTIVE,
-                        builder -> builder.add(LanguageFileTags.rideIdentifier, rideIdentifier));
             }else{
-                boolean set = p.setOperating(rideController);
-                if(set)
-                    languageFile.sendMessage(p, LanguageFileFields.NOTIFICATION_RIDE_CONTROL_ACTIVE,
-                            builder -> builder.add(LanguageFileTags.rideIdentifier, rideIdentifier));
+                p.setOperating(rideController);
             }
         }));
     }
 
-    public RideControlButton createRestraintButton(String rideIdentifier, StationTrigger restraintTrigger, int slot){
+    public MenuButton createRestraintButton(StationTrigger restraintTrigger, int slot){
         return new LockResembledControlButton(
-                rideIdentifier,
                 new BlinkingButtonVisual(
                         new StaticButtonVisual(Material.WHITE_CONCRETE,
                                 ChatColor.WHITE, languageFile.get(LanguageFileFields.BUTTON_RESTRAINTS_OPEN_STATE)),
@@ -65,9 +58,8 @@ public class RideControlButtonFactory {
                 slot, restraintTrigger.getLock(), new RunnableButtonAction(restraintTrigger::execute));
     }
 
-    public RideControlButton createGateButton(String rideIdentifier, StationTrigger gateTrigger, int slot){
+    public MenuButton createGateButton(StationTrigger gateTrigger, int slot){
         return new LockResembledControlButton(
-                rideIdentifier,
                 new BlinkingButtonVisual(
                         new StaticButtonVisual(Material.WHITE_CONCRETE,
                                 ChatColor.WHITE, languageFile.get(LanguageFileFields.BUTTON_GATES_OPEN_STATE)),
@@ -79,9 +71,8 @@ public class RideControlButtonFactory {
                 slot, gateTrigger.getLock(), new RunnableButtonAction(gateTrigger::execute));
     }
 
-    public RideControlButton createProblemList(String rideIdentifier, DispatchLockCollection dispatchLockCollection, int slot){
-        RideControlButton problemList = new SimpleRideControlButton(
-                rideIdentifier,
+    public MenuButton createProblemList(DispatchLockCollection dispatchLockCollection, int slot){
+        MenuButton problemList = new SimpleMenuButton(
                 new StaticButtonVisual(Material.ITEM_FRAME,
                         ChatColor.RED, languageFile.get(LanguageFileFields.BUTTON_PROBLEMS_STATE)),
                 slot, null);
@@ -102,9 +93,8 @@ public class RideControlButtonFactory {
         return problemList;
     }
 
-    public RideControlButton createDispatchButton(String rideIdentifier, DispatchTrigger dispatchTrigger, int slot){
+    public MenuButton createDispatchButton(DispatchTrigger dispatchTrigger, int slot){
         return new LockResembledControlButton(
-                rideIdentifier,
                 new StaticButtonVisual(Material.GREEN_CONCRETE, ChatColor.DARK_GREEN,
                         languageFile.get(LanguageFileFields.BUTTON_DISPATCH_STATE),
                         List.of(ChatColor.GRAY + languageFile.get(LanguageFileFields.BUTTON_DISPATCH_PROBLEM_STATE))),
@@ -117,18 +107,16 @@ public class RideControlButtonFactory {
                 slot, dispatchTrigger.getDispatchLockCollection(), new RunnableButtonAction(dispatchTrigger::execute));
     }
 
-    public RideControlButton createStateOpenRideButton(RideHandle rideHandle, int slot){
-        return new SimpleRideControlButton(
-                rideHandle.getRide().getIdentifier(),
+    public MenuButton createStateOpenRideButton(RideHandle rideHandle, int slot){
+        return new SimpleMenuButton(
                 new StaticButtonVisual(Material.GREEN_CONCRETE, ChatColor.DARK_GREEN, "Open ride"),
                 slot,
                 new RunnableButtonAction(rideHandle::open)
         );
     }
 
-    public RideControlButton createStateCloseRideButton(RideHandle rideHandle, int slot){
-        return new SimpleRideControlButton(
-                rideHandle.getRide().getIdentifier(),
+    public MenuButton createStateCloseRideButton(RideHandle rideHandle, int slot){
+        return new SimpleMenuButton(
                 new StaticButtonVisual(Material.RED_CONCRETE, ChatColor.RED, "Close ride"),
                 slot,
                 new RunnableButtonAction(rideHandle::close)

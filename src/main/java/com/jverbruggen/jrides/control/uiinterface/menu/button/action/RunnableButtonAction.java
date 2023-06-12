@@ -1,11 +1,12 @@
 package com.jverbruggen.jrides.control.uiinterface.menu.button.action;
 
-import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.menu.MenuButton;
+import com.jverbruggen.jrides.models.menu.MenuButtonAction;
 
 import java.util.function.Consumer;
 
-public class RunnableButtonAction implements RideControlButtonAction {
+public class RunnableButtonAction implements MenuButtonAction {
     private Consumer<Player> consumerFunction;
 
     public RunnableButtonAction(Consumer<Player> consumerFunction) {
@@ -13,7 +14,7 @@ public class RunnableButtonAction implements RideControlButtonAction {
     }
 
     @Override
-    public void run(Player player, RideControlButton button) {
+    public void run(Player player, MenuButton button) {
         consumerFunction.accept(player);
     }
 }

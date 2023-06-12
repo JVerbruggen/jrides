@@ -31,6 +31,8 @@ public class SimpleDispatchLock implements DispatchLock {
     @Override
     public void setStatus(String status) {
         this.status = status;
+        eventListeners.forEach(l -> l.accept(this));
+        parentCollection.onStatusUpdate(this);
     }
 
     @Override

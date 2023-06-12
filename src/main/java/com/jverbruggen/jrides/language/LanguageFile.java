@@ -30,15 +30,15 @@ public class LanguageFile {
         setLanguageDefault(LanguageFileFields.CHAT_FEEDBACK_WARNING_COLOR, ChatColor.YELLOW + "");
         setLanguageDefault(LanguageFileFields.CHAT_FEEDBACK_SEVERE_COLOR, ChatColor.RED + "");
 
-        setLanguageDefault(LanguageFileFields.COMMAND_RIDE_DISPATCHED_MESSAGE, "Ride %" + LanguageFileTags.rideIdentifier + "% was dispatched!");
+        setLanguageDefault(LanguageFileFields.COMMAND_RIDE_DISPATCHED_MESSAGE, "Ride %" + LanguageFileTags.rideDisplayName + "% was dispatched!");
 
         setLanguageDefault(LanguageFileFields.COMMAND_VISUALIZE_ADDED_VIEWER, "You are now viewing %" + LanguageFileTags.rideIdentifier + "% in visualize mode");
         setLanguageDefault(LanguageFileFields.COMMAND_VISUALIZE_REMOVED_VIEWER, "You are no longer viewing %" + LanguageFileTags.rideIdentifier + "% in visualize mode");
 
         setLanguageDefault(LanguageFileFields.NOTIFICATION_PLUGIN_STILL_LOADING, "Please try again later when jrides is loaded");
 
-        setLanguageDefault(LanguageFileFields.NOTIFICATION_RIDE_CONTROL_ACTIVE, "You are now controlling %" + LanguageFileTags.rideIdentifier + "%");
-        setLanguageDefault(LanguageFileFields.NOTIFICATION_RIDE_CONTROL_INACTIVE, "You are no longer controlling %" + LanguageFileTags.rideIdentifier + "%");
+        setLanguageDefault(LanguageFileFields.NOTIFICATION_RIDE_CONTROL_ACTIVE, "You are now controlling %" + LanguageFileTags.rideDisplayName + "%");
+        setLanguageDefault(LanguageFileFields.NOTIFICATION_RIDE_CONTROL_INACTIVE, "You are no longer controlling %" + LanguageFileTags.rideDisplayName + "%");
 
         setLanguageDefault(LanguageFileFields.NOTIFICATION_RIDE_DISPATCH_PROBLEMS, "Cannot dispatch due to the following problems:");
         setLanguageDefault(LanguageFileFields.NOTIFICATION_RIDE_NO_TRAIN_PRESENT, "No train present in station");
@@ -66,6 +66,7 @@ public class LanguageFile {
         setLanguageDefault(LanguageFileFields.ERROR_PLAYER_COMMAND_ONLY_MESSAGE, "Only players can execute this command");
         setLanguageDefault(LanguageFileFields.ERROR_UNKNOWN_COMMAND_MESSAGE, "Unknown jrides command. Type /jrides for help");
         setLanguageDefault(LanguageFileFields.ERROR_OPERATING_CABIN_OCCUPIED, "You can not take this operating cabin since it is already in use by another operator");
+        setLanguageDefault(LanguageFileFields.ERROR_OPERATING_NO_PERMISSION, "You are not allowed to operate this ride");
         setLanguageDefault(LanguageFileFields.ERROR_RIDE_CONTROL_MENU_NOT_FOUND, "Ride control menu was not found");
         setLanguageDefault(LanguageFileFields.ERROR_RIDE_OVERVIEW_MAP_NOT_FOUND, "Could not retrieve map for ride %" + LanguageFileTags.rideIdentifier + "%. Was the map id configured?");
 

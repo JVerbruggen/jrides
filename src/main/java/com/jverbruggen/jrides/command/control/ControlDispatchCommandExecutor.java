@@ -27,7 +27,7 @@ public class ControlDispatchCommandExecutor extends BaseCommandExecutor {
         boolean dispatched = dispatchTrigger.execute(messageReceiver);
         if(dispatched)
             languageFile.sendMessage(messageReceiver, LanguageFileFields.COMMAND_RIDE_DISPATCHED_MESSAGE,
-                    b -> b.add(LanguageFileTags.rideIdentifier, rideHandle.getRide().getIdentifier()));
+                    b -> b.add(LanguageFileTags.rideDisplayName, rideHandle.getRide().getDisplayName()));
 
         return true;
     }

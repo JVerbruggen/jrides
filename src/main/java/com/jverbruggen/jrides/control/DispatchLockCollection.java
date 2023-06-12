@@ -101,6 +101,11 @@ public class DispatchLockCollection implements DispatchLock {
         if(parentCollection != null) parentCollection.onUnlock(lock);
     }
 
+    public void onStatusUpdate(DispatchLock lock){
+        unlockEventListeners.forEach(l -> l.accept(lock));
+        if(parentCollection != null) parentCollection.onStatusUpdate(lock);
+    }
+
     @Override
     public String getDescription() {
         return description;
@@ -118,7 +123,7 @@ public class DispatchLockCollection implements DispatchLock {
 
     @Override
     public void setStatus(String status) {
-
+        unlockEventListeners.forEach(l -> l.accept(this));
     }
 
     @Override

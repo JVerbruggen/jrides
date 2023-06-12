@@ -42,6 +42,14 @@ public class RideState extends BaseConfig implements ConfigurationSerializable {
         return changed;
     }
 
+    public boolean setStateFullyClosed(){
+        if(openState != OpenState.TRANSITION_TO_CLOSE){
+            return false;
+        }
+        this.openState = OpenState.CLOSED;
+        return true;
+    }
+
     public Map<String, Object> serialize() {
         Map<String, Object> serialized = new HashMap<>();
         serialized.put("rideIdentifier", rideIdentifier);

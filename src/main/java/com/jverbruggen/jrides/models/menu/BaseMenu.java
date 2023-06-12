@@ -1,17 +1,22 @@
-package com.jverbruggen.jrides.control.uiinterface.menu;
+package com.jverbruggen.jrides.models.menu;
 
-import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
 import com.jverbruggen.jrides.models.entity.Player;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-public class RideControlMenu {
-    private final HashMap<UUID, RideControlButton> buttons;
+public class BaseMenu implements Menu {
+    private final HashMap<UUID, MenuButton> buttons;
     private final Map<Player, Inventory> sessions;
+    private final int inventoryRows;
+    private final String inventoryTitle;
 
-    public RideControlMenu() {
+    public BaseMenu(int inventoryRows, String inventoryTitle) {
+        this.inventoryRows = inventoryRows;
+        this.inventoryTitle = inventoryTitle;
         this.buttons = new HashMap<>();
         this.sessions = new HashMap<>();
     }
@@ -29,22 +34,23 @@ public class RideControlMenu {
     }
 
     public Inventory getInventoryFor(Player player){
-        Inventory inventory = Bukkit.createInventory(player.getBukkitPlayer(), 9*3, "Ride control menu");
+        Inventory inventory = Bukkit.createInventory(player.getBukkitPlayer(), 9*inventoryRows, inventoryTitle);
 
-        for(RideControlButton button : buttons.values()){
+        for(MenuButton button : buttons.values()){
             inventory.setItem(button.getSlot(), button.getItemStack());
         }
 
         return inventory;
     }
 
-    public RideControlMenu addButton(RideControlButton button){
+    @Override
+    public Menu addButton(MenuButton button) {
         buttons.put(button.getUuid(), button);
         button.setParentMenu(this);
         return this;
     }
 
-    public RideControlButton getButton(UUID buttonUUID){
+    public MenuButton getButton(UUID buttonUUID){
         return buttons.get(buttonUUID);
     }
 }

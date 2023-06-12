@@ -2,10 +2,12 @@ package com.jverbruggen.jrides.models.entity;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimationSupport;
+import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileFields;
+import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
@@ -127,11 +129,18 @@ public class Player implements MessageReceiver {
         if(rideController != null && rideController.getOperator() == this && operating == rideController) return true;
 
         if(operating != null){
+            languageFile.sendMessage(this, LanguageFileFields.NOTIFICATION_RIDE_CONTROL_INACTIVE,
+                    (b) -> b.add(LanguageFileTags.rideDisplayName, operating.getRide().getDisplayName()));
             operating.setOperator(null);
             operating = null;
         }
 
         if(rideController == null) return true;
+
+        if(!hasPermission(Permissions.CABIN_OPERATE)){
+            languageFile.sendMessage(this, LanguageFileFields.ERROR_OPERATING_NO_PERMISSION, FeedbackType.CONFLICT);
+            return false;
+        }
 
         boolean set = rideController.setOperator(this);
         if(!set){
@@ -140,6 +149,9 @@ public class Player implements MessageReceiver {
         }
 
         operating = rideController;
+
+        languageFile.sendMessage(this, LanguageFileFields.NOTIFICATION_RIDE_CONTROL_ACTIVE,
+                builder -> builder.add(LanguageFileTags.rideDisplayName, operating.getRide().getDisplayName()));
         return true;
     }
 

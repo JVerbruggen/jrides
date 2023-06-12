@@ -1,9 +1,5 @@
-package com.jverbruggen.jrides.control.uiinterface.menu.button;
+package com.jverbruggen.jrides.models.menu;
 
-import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenu;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.action.RideControlButtonAction;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.RideControlButton;
-import com.jverbruggen.jrides.control.uiinterface.menu.button.common.ButtonVisual;
 import com.jverbruggen.jrides.models.entity.Player;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.ChatColor;
@@ -14,19 +10,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 import java.util.UUID;
 
-public class SimpleRideControlButton extends BaseRideControlButton implements RideControlButton {
-    private final String rideIdentifier;
+public class SimpleMenuButton implements MenuButton {
     private final ButtonVisual buttonVisual;
     private ItemStack itemStack;
     private int slot;
     private UUID uuid;
-    private RideControlButtonAction action;
-    private RideControlMenu parentMenu;
+    private MenuButtonAction action;
+    private Menu parentMenu;
     private boolean visible;
     private boolean hasUpdate;
 
-    public SimpleRideControlButton(String rideIdentifier, ButtonVisual visual, int slot, RideControlButtonAction action) {
-        this.rideIdentifier = rideIdentifier;
+    public SimpleMenuButton(ButtonVisual visual, int slot, MenuButtonAction action) {
         this.slot = slot;
         this.action = action;
         this.visible = true;
@@ -107,7 +101,6 @@ public class SimpleRideControlButton extends BaseRideControlButton implements Ri
     public void setItemStack(ItemStack itemStack) {
         NBTItem nbtItem = new NBTItem(itemStack);
         nbtItem.setString(BUTTON_UUID_KEY, uuid.toString());
-        nbtItem.setString(BUTTON_RIDE_IDENTIFIER_KEY, rideIdentifier);
 
         this.itemStack = nbtItem.getItem();
 
@@ -122,12 +115,12 @@ public class SimpleRideControlButton extends BaseRideControlButton implements Ri
     }
 
     @Override
-    public void setParentMenu(RideControlMenu parentMenu) {
+    public void setParentMenu(Menu parentMenu) {
         this.parentMenu = parentMenu;
     }
 
     @Override
-    public RideControlMenu getParentMenu() {
+    public Menu getParentMenu() {
         return parentMenu;
     }
 
@@ -158,6 +151,18 @@ public class SimpleRideControlButton extends BaseRideControlButton implements Ri
         setItemStack(buttonVisual.toItemStack());
     }
 
+    private void setButtonVisual(ButtonVisual visual){
+        visual.clearUpdate();
+
+        if(visual.needsFullItemStackReload()){
+            setItemStack(visual.toItemStack());
+            return;
+        }
+
+        changeMaterial(visual.getButtonMaterial());
+        changeDisplayName(visual.getButtonDisplayNameColor() + visual.getValue());
+        changeLore(visual.getLore());
+    }
+
     public static String BUTTON_UUID_KEY = "jrides-button-uuid";
-    public static String BUTTON_RIDE_IDENTIFIER_KEY = "jrides-button-ride-identifier";
 }
