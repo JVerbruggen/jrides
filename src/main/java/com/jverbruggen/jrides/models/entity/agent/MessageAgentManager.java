@@ -20,4 +20,8 @@ public class MessageAgentManager {
         return existing;
     }
 
+    public void removeMessageAgent(String name){
+        cache.remove(name);
+    }
+
 }

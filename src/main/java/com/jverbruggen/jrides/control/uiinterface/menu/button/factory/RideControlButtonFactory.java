@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.control.uiinterface.menu.button.factory;
 
 import com.jverbruggen.jrides.animator.RideHandle;
+import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
@@ -21,6 +22,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class RideControlButtonFactory {
     private final LanguageFile languageFile;
@@ -37,6 +39,7 @@ public class RideControlButtonFactory {
                             languageFile.get(LanguageFileFields.BUTTON_CLAIM_CABIN)),
                             languageFile.get(LanguageFileFields.BUTTON_CABIN_CLAIMED)),
                 slot, new RunnableButtonWithContextAction((p, b) -> {
+            if(!p.hasPermission(Permissions.CABIN_OPERATE)) return;
             if(p.equals(rideController.getOperator())){
                 p.setOperating(null);
             }else{

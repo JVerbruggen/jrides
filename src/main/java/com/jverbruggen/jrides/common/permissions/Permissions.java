@@ -16,6 +16,7 @@ public class Permissions {
     public static final String ELEVATED_RESTRAINT_OVERRIDE = "jrides.elevated.restraint_override"; // Allow to override restraint lock
     public static final String ELEVATED_OPERATOR_OVERRIDE = "jrides.elevated.operator_override"; // Allow to take over an operator in a cabin
     public static final String ELEVATED_RIDE_CLOSED_ENTER_OVERRIDE = "jrides.elevated.closed_ride_enter_override"; // Allow to override closed ride entering
+    public static final String ELEVATED_RIDE_OPEN_STATE_CHANGE = "jrides.elevated.open_state_change"; // Allow to open or close a ride
     public static final String COMMAND_ELEVATED_BASE = "jrides.command.elevated"; // Base for elevated commands (for admins)
     public static final String COMMAND_ELEVATED_ADMIN_MENU = "jrides.command.elevated.admin_menu"; // Allow to open ride admin menu
     public static final String COMMAND_ELEVATED_RIDE_OVERVIEW = "jrides.command.elevated.ride_overview"; // Allow for generating a ride overview map

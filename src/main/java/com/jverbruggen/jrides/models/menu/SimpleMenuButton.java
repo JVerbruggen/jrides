@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.models.entity.Player;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -138,6 +139,7 @@ public class SimpleMenuButton implements MenuButton {
     public void press(Player player){
         if(action == null) return;
         action.run(player, this);
+        player.playSound(getPressedSound());
         sendUpdate();
     }
 
@@ -149,6 +151,11 @@ public class SimpleMenuButton implements MenuButton {
     @Override
     public void updateVisual() {
         setItemStack(buttonVisual.toItemStack());
+    }
+
+    @Override
+    public Sound getPressedSound() {
+        return Sound.UI_BUTTON_CLICK;
     }
 
     private void setButtonVisual(ButtonVisual visual){

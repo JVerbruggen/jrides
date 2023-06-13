@@ -1,10 +1,11 @@
 package com.jverbruggen.jrides.control.trigger;
 
+import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileFields;
-import com.jverbruggen.jrides.models.entity.MessageReceiver;
+import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 
 public class DispatchTrigger implements Trigger {
@@ -19,15 +20,20 @@ public class DispatchTrigger implements Trigger {
     }
 
     @Override
-    public boolean execute(MessageReceiver messageReceiver){
+    public boolean execute(MessageAgent messageAgent){
         if(!dispatchLockCollection.allUnlocked()){
-            if(messageReceiver != null){
-                languageFile.sendMessage(messageReceiver, LanguageFileFields.NOTIFICATION_RIDE_DISPATCH_PROBLEMS, FeedbackType.CONFLICT);
+            if(messageAgent != null){
+                languageFile.sendMessage(messageAgent, LanguageFileFields.NOTIFICATION_RIDE_DISPATCH_PROBLEMS, FeedbackType.CONFLICT);
                 dispatchLockCollection.getProblems(Integer.MAX_VALUE)
-                        .forEach(p -> languageFile.sendMessage(messageReceiver, p));
+                        .forEach(p -> languageFile.sendMessage(messageAgent, p));
             }
             return false;
         }
+        if(messageAgent != null && !messageAgent.hasPermission(Permissions.CABIN_OPERATE)){
+            languageFile.sendMessage(messageAgent, LanguageFileFields.ERROR_OPERATING_NO_PERMISSION);
+            return false;
+        }
+
         active = true;
 
         return true;

@@ -1,13 +1,17 @@
 package com.jverbruggen.jrides.control.uiinterface.menu.open;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.RideHandle;
+import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
+import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
@@ -31,6 +35,16 @@ public class SignMenuListener implements Listener {
         this.rideControlMenuFactory = ServiceProvider.getSingleton(RideControlMenuFactory.class);
     }
 
+    /**
+     * Sign format:
+     * <br/>---
+     * <br/>
+     * <br/>[< ride_identifier >]
+     * <br/>Control panel
+     * <br/>
+     * <br/>---
+     * @param event
+     */
     @EventHandler
     public void onSignClick(PlayerInteractEvent event){
         if(!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
@@ -43,12 +57,19 @@ public class SignMenuListener implements Listener {
         Sign sign = (Sign) block.getState();
         String lineText = ChatColor.stripColor(sign.getLine(2));
         if(!lineText.equalsIgnoreCase(secondLineTriggerText)) return;
+
         String identifierRaw = sign.getLine(1);
         String identifier = identifierRaw
                 .replace("[", "")
                 .replace("]", "");
 
         Player player = playerManager.getPlayer(event.getPlayer());
+        if(!player.hasPermission(Permissions.CABIN_OPERATE)){
+            JRidesPlugin.getLanguageFile().sendMessage(player, LanguageFileFields.ERROR_OPERATING_NO_PERMISSION);
+            return;
+        }
+
+
         RideHandle rideHandle = rideManager.getRideHandle(identifier);
         if(rideHandle == null) return;
 
@@ -57,5 +78,6 @@ public class SignMenuListener implements Listener {
 
         rideControlMenuFactory.addOpenRideControlMenu(player, rideControlMenu, inventory);
         player.getBukkitPlayer().openInventory(inventory);
+        player.playSound(Sound.UI_BUTTON_CLICK);
     }
 }

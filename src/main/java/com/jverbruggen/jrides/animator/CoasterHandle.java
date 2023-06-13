@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.event.ride.RideStateUpdatedEvent;
+import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
@@ -258,6 +259,11 @@ public class CoasterHandle implements RideHandle {
 
     @Override
     public void open(Player authority) {
+        if(!authority.hasPermission(Permissions.ELEVATED_RIDE_OPEN_STATE_CHANGE)){
+            JRidesPlugin.getLanguageFile().sendMessage(authority, LanguageFileFields.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
+            return;
+        }
+
         boolean opened = getState().setStateOpened();
         if(opened) authority.playSound(Sound.BLOCK_FENCE_GATE_OPEN);
         else authority.playSound(Sound.UI_BUTTON_CLICK);
@@ -265,10 +271,20 @@ public class CoasterHandle implements RideHandle {
 
     @Override
     public void close(Player authority) {
+        if(!authority.hasPermission(Permissions.ELEVATED_RIDE_OPEN_STATE_CHANGE)){
+            JRidesPlugin.getLanguageFile().sendMessage(authority, LanguageFileFields.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
+            return;
+        }
+
         boolean closed = attemptClose(authority);
     }
 
     private boolean attemptClose(@Nullable Player authority){
+        if(!authority.hasPermission(Permissions.ELEVATED_RIDE_OPEN_STATE_CHANGE)){
+            JRidesPlugin.getLanguageFile().sendMessage(authority, LanguageFileFields.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
+            return false;
+        }
+
         if(getState().getOpenState().isOpen()){
             boolean closed = getState().setStateClosed();
 

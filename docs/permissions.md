@@ -24,6 +24,7 @@ Permission | Description
 jrides.elevated.restraint_override | Allow to override restraint lock
 jrides.elevated.operator_override | Allow to take over an operator in a cabin
 jrides.elevated.closed_ride_enter_override | Allow to override closed ride entering
+jrides.elevated.open_state_change | Allow to open or close a ride
 jrides.command.elevated | Base for elevated commands (for admins)
 jrides.command.elevated.admin_menu | Allow to open ride admin menu
 jrides.command.elevated.ride_overview | Allow for generating a ride overview map

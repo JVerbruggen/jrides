@@ -8,12 +8,14 @@ import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.language.LanguageFileTags;
+import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import com.jverbruggen.jrides.state.player.PlayerManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
@@ -23,7 +25,7 @@ import org.bukkit.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player implements MessageReceiver {
+public class Player implements MessageAgent {
     private org.bukkit.entity.Player bukkitPlayer;
     private Seat seatedOn;
     private SmoothAnimationSupport smoothAnimationSupport;
@@ -138,13 +140,14 @@ public class Player implements MessageReceiver {
         if(rideController == null) return true;
 
         if(!hasPermission(Permissions.CABIN_OPERATE)){
-            languageFile.sendMessage(this, LanguageFileFields.ERROR_OPERATING_NO_PERMISSION, FeedbackType.CONFLICT);
+            languageFile.sendMessage(this, LanguageFileFields.ERROR_OPERATING_NO_PERMISSION);
             return false;
         }
 
         boolean set = rideController.setOperator(this);
         if(!set){
-            languageFile.sendMessage(this, LanguageFileFields.ERROR_OPERATING_CABIN_OCCUPIED, FeedbackType.CONFLICT);
+            languageFile.sendMessage(this, LanguageFileFields.ERROR_OPERATING_CABIN_OCCUPIED);
+            bukkitPlayer.closeInventory();
             return false;
         }
 
@@ -195,7 +198,18 @@ public class Player implements MessageReceiver {
         return bukkitPlayer.hasPermission(permission);
     }
 
+    @Override
+    public boolean isPlayer() {
+        return true;
+    }
+
+    @Override
+    public Player getPlayer(PlayerManager playerManager) {
+        return this;
+    }
+
     public void playSound(Sound sound){
+        if(sound == null) return;
         bukkitPlayer.playSound(bukkitPlayer.getLocation(), sound, 1, 1);
     }
 }

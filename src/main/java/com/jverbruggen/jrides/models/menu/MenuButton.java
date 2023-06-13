@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.models.menu;
 import com.jverbruggen.jrides.models.entity.Player;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -37,4 +38,5 @@ public interface MenuButton {
 
     ButtonVisual getActiveVisual();
     void updateVisual();
+    Sound getPressedSound();
 }
