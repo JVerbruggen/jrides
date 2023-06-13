@@ -30,6 +30,7 @@ import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileFields;
+import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.ArmorStandPose;
@@ -120,9 +121,11 @@ public class TrackBehaviourFactory {
                 GateConfig gateConfig = gateConfigs.get(i);
                 String gateName = stationName + "_gate_" + i;
                 Vector3 location = gateConfig.getLocation();
+                final String gateDisplayName = "" + i;
                 gates.add(new FenceGate(gateName,
                         new SimpleDispatchLock(gatesGenericLock,
-                                languageFile.get(LanguageFileFields.NOTIFICATION_RIDE_GATE_NOT_CLOSED),
+                                languageFile.get(LanguageFileFields.NOTIFICATION_RIDE_GATE_NOT_CLOSED,
+                                        b -> b.add(LanguageFileTags.name, gateDisplayName)),
                                 false),
                         location.toBukkitLocation(world).getBlock()));
             }

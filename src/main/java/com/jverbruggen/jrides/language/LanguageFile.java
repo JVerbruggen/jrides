@@ -115,9 +115,19 @@ public class LanguageFile {
     }
 
     public @Nonnull String get(@Nonnull LanguageFileFields field){
+        return get(field, null);
+    }
+
+    public @Nonnull String get(@Nonnull LanguageFileFields field, Function<StringReplacementBuilder, StringReplacementBuilder> builderFunction){
+        StringReplacementBuilder builder = new StringReplacementBuilder();
+        if(builderFunction != null) builder = builderFunction.apply(builder);
+
         String value = language.get(field);
         if(value == null)
-            throw new RuntimeException("Language value for language field " + field.toString() + " could not be found");
+            throw new RuntimeException("Language value for language field " + field + " could not be found");
+
+        value = builder.apply(value);
+
         return value;
     }
 
