@@ -10,6 +10,7 @@ public class Permissions {
     public static final String OPERATOR_OVERRIDE = "jrides.elevated.operator_override";
     public static final String RIDE_CLOSED_ENTER_OVERRIDE = "jrides.elevated.closed_ride_enter_override";
 
+    public static final String COMMAND_BASE = "jrides.command";
     public static final String COMMAND_DISPATCH = "jrides.command.dispatch";
     public static final String COMMAND_MENU = "jrides.command.menu";
     public static final String COMMAND_ADMIN_MENU = "jrides.command.adminmenu";

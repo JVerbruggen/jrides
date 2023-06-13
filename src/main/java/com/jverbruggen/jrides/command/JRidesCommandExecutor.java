@@ -12,4 +12,6 @@ public interface JRidesCommandExecutor extends CommandExecutor, TabCompleter {
     String getHelpMessageForSelf();
     boolean onCommand(CommandSender commandSender, Command command, String s, String[] args, CommandContext commandContext);
 
+    String getPermission();
+
 }

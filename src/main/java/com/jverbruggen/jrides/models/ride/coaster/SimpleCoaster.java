@@ -43,4 +43,9 @@ public class SimpleCoaster implements Coaster {
     public PlayerLocation getWarpLocation() {
         return warpLocation;
     }
+
+    @Override
+    public boolean isLoaded() {
+        return true;
+    }
 }

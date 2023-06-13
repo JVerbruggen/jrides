@@ -75,7 +75,7 @@ public class Main extends JavaPlugin {
 
         SoftEjector.startClock(this);
 
-        StartMessage.sendEnabledMessage("1.0.0");
+        StartMessage.sendEnabledMessage();
     }
 
     @Override
@@ -89,6 +89,6 @@ public class Main extends JavaPlugin {
 
         viewportManager.despawnAll();
 
-        StartMessage.sendDisabledMessage("1.0.0");
+        StartMessage.sendDisabledMessage();
     }
 }

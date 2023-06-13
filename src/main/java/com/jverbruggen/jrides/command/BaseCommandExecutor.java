@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.command;
 
 import com.jverbruggen.jrides.command.context.CommandContext;
+import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
@@ -10,6 +11,7 @@ import com.jverbruggen.jrides.state.player.PlayerManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,11 @@ public abstract class BaseCommandExecutor implements JRidesCommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
+        if(!commandSender.hasPermission(getPermission()) && !canEveryoneRun()){
+            languageFile.sendMessage(commandSender, LanguageFileFields.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
+            return true;
+        }
+
         return onCommand(commandSender, command, s, args, new CommandContext());
     }
 
@@ -48,6 +55,11 @@ public abstract class BaseCommandExecutor implements JRidesCommandExecutor {
     protected boolean runSubCommand(CommandSender commandSender, Command command, String s, String[] args, String subCommand, CommandContext commandContext){
         JRidesCommandExecutor firstCommand = findSubCommand(subCommand);
         if(firstCommand != null) {
+            if(!commandSender.hasPermission(firstCommand.getPermission())){
+                languageFile.sendMessage(commandSender, LanguageFileFields.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
+                return true;
+            }
+
             firstCommand.onCommand(commandSender, command, s, args, commandContext);
             return true;
         }
@@ -71,6 +83,9 @@ public abstract class BaseCommandExecutor implements JRidesCommandExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        String permission = getPermission();
+        if(permission != null && !commandSender.hasPermission(permission)) return Collections.emptyList();
+
         if(strings.length <= depth+1){
             return getCommandSuggestions();
         }else{
@@ -85,5 +100,14 @@ public abstract class BaseCommandExecutor implements JRidesCommandExecutor {
         return subCommands.values().stream()
                 .map(JRidesCommandExecutor::getHelpMessageForParent)
                 .collect(Collectors.joining("\n"));
+    }
+
+    @Override
+    public String getPermission() {
+        return Permissions.COMMAND_BASE;
+    }
+
+    public boolean canEveryoneRun(){
+        return false;
     }
 }

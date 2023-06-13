@@ -64,4 +64,12 @@ public class JRidesPlugin {
     public static World getWorld() {
         return world;
     }
+
+    private static String getBukkitVersion(){
+        return "1.19.2";
+    }
+
+    public static String getVersion() {
+        return getBukkitVersion() + "-j0.0";
+    }
 }

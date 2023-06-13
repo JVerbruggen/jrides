@@ -36,6 +36,7 @@ import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -93,12 +94,12 @@ public class RideManager {
         return new ArrayList<>(coasterHandles);
     }
 
-    public CoasterHandle getRideHandle(String identifier){
+    public @Nullable CoasterHandle getRideHandle(String identifier){
         return this.coasterHandles
                 .stream()
                 .filter(ch -> ch.getRide().getIdentifier().equalsIgnoreCase(identifier))
                 .findFirst()
-                .orElseThrow();
+                .orElse(null);
     }
 
     public void initAllRides(World world){

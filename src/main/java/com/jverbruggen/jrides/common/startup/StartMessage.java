@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.common.startup;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.ChatColor;
 
@@ -18,16 +19,16 @@ public class StartMessage {
     private static String enabled = "        E N A B L E D";
     private static String disabled = "        D I S A B L E D";
 
-    public static void sendEnabledMessage(String version){
+    public static void sendEnabledMessage(){
         Logger logger = ServiceProvider.getSingleton(Logger.class);
         sendSplash(logger);
-        logger.info("\u001b[32m" + enabled + " - " + version);
+        logger.info("\u001b[32m" + enabled + " - " + JRidesPlugin.getVersion());
     }
 
-    public static void sendDisabledMessage(String version){
+    public static void sendDisabledMessage(){
         Logger logger = ServiceProvider.getSingleton(Logger.class);
         sendSplash(logger);
-        logger.info("\u001b[31m" + disabled + " - " + version);
+        logger.info("\u001b[31m" + disabled + " - " + JRidesPlugin.getVersion());
     }
 
     private static void sendSplash(Logger logger){

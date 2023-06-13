@@ -7,4 +7,5 @@ public interface Ride {
     String getDisplayName();
 
     PlayerLocation getWarpLocation();
+    boolean isLoaded();
 }
