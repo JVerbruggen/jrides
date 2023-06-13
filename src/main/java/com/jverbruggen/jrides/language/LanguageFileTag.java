@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.language;
 
-public class LanguageFileTags {
+public class LanguageFileTag {
     public static final String name = "NAME";
     public static final String rideIdentifier = "RIDE_IDENTIFIER";
     public static final String rideDisplayName = "RIDE_DISPLAY_NAME";

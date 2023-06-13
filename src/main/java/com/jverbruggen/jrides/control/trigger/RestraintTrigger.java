@@ -4,7 +4,7 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.language.LanguageFile;
-import com.jverbruggen.jrides.language.LanguageFileFields;
+import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
@@ -33,7 +33,7 @@ public class RestraintTrigger implements StationTrigger {
     @Override
     public boolean execute(MessageAgent messageAgent) {
         if(messageAgent != null && !messageAgent.hasPermission(Permissions.CABIN_OPERATE)){
-            languageFile.sendMessage(messageAgent, LanguageFileFields.ERROR_OPERATING_NO_PERMISSION);
+            languageFile.sendMessage(messageAgent, LanguageFileField.ERROR_OPERATING_NO_PERMISSION);
             return false;
         }
 
@@ -44,7 +44,7 @@ public class RestraintTrigger implements StationTrigger {
 
         Train stationaryTrain = stationHandle.getStationaryTrain();
         if(stationaryTrain == null) {
-            languageFile.sendMessage(messageAgent, LanguageFileFields.NOTIFICATION_RIDE_NO_TRAIN_PRESENT);
+            languageFile.sendMessage(messageAgent, LanguageFileField.NOTIFICATION_RIDE_NO_TRAIN_PRESENT);
             return false;
         }
 

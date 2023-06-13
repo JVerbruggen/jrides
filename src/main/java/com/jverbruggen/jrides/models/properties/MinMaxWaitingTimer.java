@@ -2,17 +2,15 @@ package com.jverbruggen.jrides.models.properties;
 
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.language.LanguageFile;
-import com.jverbruggen.jrides.language.LanguageFileFields;
-import com.jverbruggen.jrides.language.LanguageFileTags;
+import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.language.StringReplacementBuilder;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class MinMaxWaitingTimer {
@@ -122,14 +120,14 @@ public class MinMaxWaitingTimer {
         }
 
         String waitingTimeNotification = new StringReplacementBuilder()
-                .add(LanguageFileTags.time, visualDispatchTime + "")
-                .apply(languageFile.get(LanguageFileFields.NOTIFICATION_DISPATCH_WAIT_SPECIFIC));
+                .add(LanguageFileTag.time, visualDispatchTime + "")
+                .apply(languageFile.get(LanguageFileField.NOTIFICATION_DISPATCH_WAIT_SPECIFIC));
 
         players.forEach(p -> p.sendActionbarMessage(ChatColor.GOLD + waitingTimeNotification));
     }
 
     public void sendGenericWaitingNotification(List<Player> players){
-        players.forEach(p -> p.sendActionbarMessage(ChatColor.GOLD + languageFile.get(LanguageFileFields.NOTIFICATION_DISPATCH_WAIT_GENERIC)));
+        players.forEach(p -> p.sendActionbarMessage(ChatColor.GOLD + languageFile.get(LanguageFileField.NOTIFICATION_DISPATCH_WAIT_GENERIC)));
     }
 
     @Override

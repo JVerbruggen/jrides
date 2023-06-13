@@ -20,7 +20,7 @@ public class ControlModeFactory {
         if(size == 0)
             return null;
         else if(size == 1)
-            return getSingleForWithOperator(stationHandles.get(0));
+            return getSingleForWithOperator(rideHandle, stationHandles.get(0));
         else{
             throw new RuntimeException("No support for multiple stations yet for control mode ( with operator )");
         }
@@ -34,34 +34,36 @@ public class ControlModeFactory {
         if(size == 0)
             return null;
         else if(size == 1)
-            return getSingleForWithoutOperator(stationHandles.get(0));
+            return getSingleForWithoutOperator(rideHandle, stationHandles.get(0));
         else{
             // For dispatching 1 station at a time
-            return getAlternateForWithoutOperator(stationHandles);
+            return getAlternateForWithoutOperator(rideHandle, stationHandles);
         }
     }
 
-    private ControlMode getSingleForWithOperator(StationHandle stationHandle){
+    private ControlMode getSingleForWithOperator(RideHandle rideHandle, StationHandle stationHandle){
         if(stationHandle == null) return null;
         MinMaxWaitingTimer waitingTimer = stationHandle.getWaitingTimer();
 
         return new SemiAutomaticMode(
+                rideHandle,
                 stationHandle,
                 waitingTimer,
                 stationHandle.getTriggerContext().getDispatchTrigger().getDispatchLockCollection());
     }
 
-    private ControlMode getSingleForWithoutOperator(StationHandle stationHandle){
+    private ControlMode getSingleForWithoutOperator(RideHandle rideHandle, StationHandle stationHandle){
         if(stationHandle == null) return null;
         MinMaxWaitingTimer waitingTimer = stationHandle.getWaitingTimer();
 
         return new AutomaticMode(
+                rideHandle,
                 stationHandle,
                 waitingTimer,
                 stationHandle.getTriggerContext().getDispatchTrigger().getDispatchLockCollection());
     }
 
-    private ControlMode getAlternateForWithoutOperator(List<StationHandle> stationHandles){
-        return new ProxyControlMode(stationHandles.get(0).getWaitingTimer(), stationHandles);
+    private ControlMode getAlternateForWithoutOperator(RideHandle rideHandle, List<StationHandle> stationHandles){
+        return new ProxyControlMode(rideHandle, stationHandles.get(0).getWaitingTimer(), stationHandles);
     }
 }

@@ -3,7 +3,7 @@ package com.jverbruggen.jrides.command;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.language.LanguageFile;
-import com.jverbruggen.jrides.language.LanguageFileFields;
+import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgentManager;
@@ -33,7 +33,7 @@ public abstract class BaseCommandExecutor implements JRidesCommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if(getPermission() != null && !commandSender.hasPermission(getPermission()) && !canEveryoneRun()){
-            languageFile.sendMessage(commandSender, LanguageFileFields.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
+            languageFile.sendMessage(commandSender, LanguageFileField.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
             return true;
         }
 
@@ -56,7 +56,7 @@ public abstract class BaseCommandExecutor implements JRidesCommandExecutor {
         JRidesCommandExecutor firstCommand = findSubCommand(subCommand);
         if(firstCommand != null) {
             if(!commandSender.hasPermission(firstCommand.getPermission())){
-                languageFile.sendMessage(commandSender, LanguageFileFields.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
+                languageFile.sendMessage(commandSender, LanguageFileField.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
                 return true;
             }
 
@@ -64,7 +64,7 @@ public abstract class BaseCommandExecutor implements JRidesCommandExecutor {
             return true;
         }
 
-        languageFile.sendMessage(commandSender, LanguageFileFields.ERROR_UNKNOWN_COMMAND_MESSAGE);
+        languageFile.sendMessage(commandSender, LanguageFileField.ERROR_UNKNOWN_COMMAND_MESSAGE);
         return false;
     }
 

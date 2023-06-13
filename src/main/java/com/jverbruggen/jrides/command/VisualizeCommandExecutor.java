@@ -4,15 +4,13 @@ import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;
-import com.jverbruggen.jrides.language.LanguageFileFields;
-import com.jverbruggen.jrides.language.LanguageFileTags;
+import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideManager;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +31,7 @@ public class VisualizeCommandExecutor extends BaseCommandExecutor {
     @Override
     public boolean onCommand(MessageAgent messageAgent, Command command, String arg, String[] args, CommandContext context) {
         if(!messageAgent.isPlayer()){
-            languageFile.sendMessage(messageAgent, LanguageFileFields.ERROR_PLAYER_COMMAND_ONLY_MESSAGE);
+            languageFile.sendMessage(messageAgent, LanguageFileField.ERROR_PLAYER_COMMAND_ONLY_MESSAGE);
             return true;
         }
 
@@ -56,13 +54,13 @@ public class VisualizeCommandExecutor extends BaseCommandExecutor {
         if(tool.isViewer(player)){
             tool.removeViewer(player);
 
-            languageFile.sendMessage(player, LanguageFileFields.COMMAND_VISUALIZE_REMOVED_VIEWER,
-                    b -> b.add(LanguageFileTags.rideIdentifier, actualIdentifier));
+            languageFile.sendMessage(player, LanguageFileField.COMMAND_VISUALIZE_REMOVED_VIEWER,
+                    b -> b.add(LanguageFileTag.rideIdentifier, actualIdentifier));
         }else{
             tool.addViewer(player);
 
-            languageFile.sendMessage(player, LanguageFileFields.COMMAND_VISUALIZE_ADDED_VIEWER,
-                    b -> b.add(LanguageFileTags.rideIdentifier, actualIdentifier));
+            languageFile.sendMessage(player, LanguageFileField.COMMAND_VISUALIZE_ADDED_VIEWER,
+                    b -> b.add(LanguageFileTag.rideIdentifier, actualIdentifier));
         }
 
         return true;

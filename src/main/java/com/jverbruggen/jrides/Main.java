@@ -84,11 +84,13 @@ public class Main extends JavaPlugin {
     public void onDisable() {
         PlayerManager playerManager = ServiceProvider.getSingleton(PlayerManager.class);
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
+        RideManager rideManager = ServiceProvider.getSingleton(RideManager.class);
 
         for(Player player : playerManager.getPlayers()){
             player.clearSmoothAnimationRotation();
         }
 
+        rideManager.unloadAllRides();
         viewportManager.despawnAll();
 
         StartMessage.sendDisabledMessage();

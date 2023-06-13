@@ -33,9 +33,15 @@ public interface RideHandle {
 
     void setState(RideState state);
     RideState getState();
-    boolean isOpen(Player player);
+    boolean isOpen();
 
     void open(Player authority);
     void close(Player authority);
     boolean canFullyClose();
+
+    void broadcastRideOpen();
+    void broadcastRideClose();
+
+    void unload();
+    boolean isLoaded();
 }

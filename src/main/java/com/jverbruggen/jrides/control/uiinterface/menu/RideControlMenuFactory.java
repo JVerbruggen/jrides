@@ -131,6 +131,7 @@ public class RideControlMenuFactory {
     public void addOpenRideControlMenu(Player player, Menu rideControlMenu, Inventory inventory){
         rideControlMenu.addSession(player, inventory);
         openRideControlMenus.put(player, rideControlMenu);
+        rideControlMenu.sendUpdate();
     }
 
     public Menu getOpenRideControlMenu(Player player){

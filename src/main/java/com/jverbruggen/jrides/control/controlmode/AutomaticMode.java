@@ -1,11 +1,11 @@
 package com.jverbruggen.jrides.control.controlmode;
 
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.control.ControlAction;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.DebounceCall;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
-import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
@@ -13,8 +13,8 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 public class AutomaticMode extends BaseControlMode implements ControlMode{
     private DebounceCall dispatchDebounce;
 
-    public AutomaticMode(StationHandle stationHandle, MinMaxWaitingTimer waitingTimer, DispatchLockCollection dispatchLockCollection) {
-        super(stationHandle, waitingTimer, dispatchLockCollection, stationHandle.hasVehicle());
+    public AutomaticMode(RideHandle rideHandle, StationHandle stationHandle, MinMaxWaitingTimer waitingTimer, DispatchLockCollection dispatchLockCollection) {
+        super(rideHandle, stationHandle, waitingTimer, dispatchLockCollection, stationHandle.hasVehicle());
 
         this.dispatchDebounce = new DebounceCall(20);
     }
@@ -27,6 +27,8 @@ public class AutomaticMode extends BaseControlMode implements ControlMode{
     }
 
     private void stationTick(){
+        if(!rideHandle.isOpen()) return;
+
         MinMaxWaitingTimer waitingTimer = getWaitingTimer();
 
         Vehicle stationaryVehicle = stationHandle.getStationaryVehicle();

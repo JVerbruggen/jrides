@@ -7,7 +7,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimation;
 import com.jverbruggen.jrides.language.LanguageFile;
-import com.jverbruggen.jrides.language.LanguageFileFields;
+import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
@@ -90,17 +90,18 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
 
         if(player.isSeated()) return;
 
-        if(!seat.getParentRideHandle().isOpen(player)){
-            languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_CANNOT_ENTER_RIDE_CLOSED);
+        if(!seat.getParentRideHandle().isOpen()
+                && !player.hasPermission(Permissions.ELEVATED_RIDE_CLOSED_ENTER_OVERRIDE)){
+            languageFile.sendMessage(player, LanguageFileField.NOTIFICATION_CANNOT_ENTER_RIDE_CLOSED);
             return;
         }
 
         if(seat.restraintsActive()){
             if(!player.getBukkitPlayer().hasPermission(Permissions.ELEVATED_RESTRAINT_OVERRIDE)){
-                languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_RESTRAINT_ON_ENTER_ATTEMPT);
+                languageFile.sendMessage(player, LanguageFileField.NOTIFICATION_RESTRAINT_ON_ENTER_ATTEMPT);
                 return;
             }
-            languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_RESTRAINT_ENTER_OVERRIDE);
+            languageFile.sendMessage(player, LanguageFileField.NOTIFICATION_RESTRAINT_ENTER_OVERRIDE);
         }
 
         player.setSmoothAnimationSupport(smoothAnimation.isEnabled(player));
@@ -139,7 +140,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
                 Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> {
                     boolean ejected = seat.ejectPassengerSoft(false);
                     if(ejected){
-                        languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_SHIFT_EXIT_CONFIRMED);
+                        languageFile.sendMessage(player, LanguageFileField.NOTIFICATION_SHIFT_EXIT_CONFIRMED);
                         player.teleport(Vector3.add(entity.getLocation(), CoasterSeat.getHeightCompensation()), teleportYaw);
                     }
                 });
@@ -149,7 +150,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
                 return;
             }
 
-            languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_RESTRAINT_ON_EXIT_ATTEMPT);
+            languageFile.sendMessage(player, LanguageFileField.NOTIFICATION_RESTRAINT_ON_EXIT_ATTEMPT);
             return;
         }
 

@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.config.ride;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.models.ride.state.OpenState;
@@ -24,19 +25,19 @@ public class RideState extends BaseConfig implements ConfigurationSerializable {
         return openState;
     }
 
-    public boolean setStateOpened(){
+    public boolean setStateOpened(RideHandle rideHandle){
         if(openState.isOpen() || openState.isOpening())
             return false;
-        OpenState newState = openState.open();
+        OpenState newState = openState.open(rideHandle);
         boolean changed = newState != this.openState;
         this.openState = newState;
         return changed;
     }
 
-    public boolean setStateClosed(){
+    public boolean setStateClosed(RideHandle rideHandle){
         if(!openState.isOpen())
             return false;
-        OpenState newState = openState.close();
+        OpenState newState = openState.close(rideHandle);
         boolean changed = newState != this.openState;
         this.openState = newState;
         return changed;

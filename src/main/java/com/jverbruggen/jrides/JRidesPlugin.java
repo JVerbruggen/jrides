@@ -3,6 +3,8 @@ package com.jverbruggen.jrides;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimation;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.logging.JRidesLogger;
+import com.jverbruggen.jrides.models.entity.BroadcastMessageReceiver;
+import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.World;
@@ -15,6 +17,7 @@ public class JRidesPlugin {
     private static SmoothAnimation smoothAnimation;
     private static LanguageFile languageFile;
     private static World world;
+    private static MessageReceiver broadcastMessageReceiver;
 
     public static ServiceProvider getServiceProvider(){
         return ServiceProvider.instance;
@@ -37,6 +40,7 @@ public class JRidesPlugin {
         smoothAnimation = ServiceProvider.getSingleton(SmoothAnimation.class);
         logger = ServiceProvider.getSingleton(JRidesLogger.class);
         languageFile = ServiceProvider.getSingleton(LanguageFile.class);
+        broadcastMessageReceiver = new BroadcastMessageReceiver();
 
 //        logger.enableLogType(LogType.SECTIONS);
     }
@@ -71,5 +75,9 @@ public class JRidesPlugin {
 
     public static String getVersion() {
         return getBukkitVersion() + "-j0.0";
+    }
+
+    public static MessageReceiver getBroadcastReceiver(){
+        return broadcastMessageReceiver;
     }
 }

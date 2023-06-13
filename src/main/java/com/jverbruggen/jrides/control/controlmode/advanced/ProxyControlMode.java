@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.control.controlmode.advanced;
 
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.control.controlmode.BaseControlMode;
 import com.jverbruggen.jrides.control.controlmode.ControlMode;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
@@ -12,8 +13,8 @@ public class ProxyControlMode extends BaseControlMode implements ControlMode {
     private List<ControlMode> targets;
     private List<StationHandle> stationHandles;
 
-    public ProxyControlMode(MinMaxWaitingTimer waitingTimer, List<StationHandle> stationHandles) {
-        super(null,
+    public ProxyControlMode(RideHandle rideHandle, MinMaxWaitingTimer waitingTimer, List<StationHandle> stationHandles) {
+        super(rideHandle, null,
                 waitingTimer,
                 null,
                 true);

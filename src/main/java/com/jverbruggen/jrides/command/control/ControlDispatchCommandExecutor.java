@@ -6,8 +6,8 @@ import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
-import com.jverbruggen.jrides.language.LanguageFileFields;
-import com.jverbruggen.jrides.language.LanguageFileTags;
+import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import org.bukkit.command.Command;
 
@@ -24,8 +24,8 @@ public class ControlDispatchCommandExecutor extends BaseCommandExecutor {
 
         boolean dispatched = dispatchTrigger.execute(messageAgent);
         if(dispatched)
-            languageFile.sendMessage(messageAgent, LanguageFileFields.COMMAND_RIDE_DISPATCHED_MESSAGE,
-                    b -> b.add(LanguageFileTags.rideDisplayName, rideHandle.getRide().getDisplayName()));
+            languageFile.sendMessage(messageAgent, LanguageFileField.COMMAND_RIDE_DISPATCHED_MESSAGE,
+                    b -> b.add(LanguageFileTag.rideDisplayName, rideHandle.getRide().getDisplayName()));
 
         return true;
     }

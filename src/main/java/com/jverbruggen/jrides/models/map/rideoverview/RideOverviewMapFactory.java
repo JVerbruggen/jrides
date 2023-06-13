@@ -3,8 +3,8 @@ package com.jverbruggen.jrides.models.map.rideoverview;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.language.LanguageFile;
-import com.jverbruggen.jrides.language.LanguageFileFields;
-import com.jverbruggen.jrides.language.LanguageFileTags;
+import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.player.PlayerManager;
@@ -85,15 +85,15 @@ public class RideOverviewMapFactory {
 
     public void giveMap(Player player, CoasterHandle coasterHandle){
         if(rideOverviewMaps == null){
-            languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_PLUGIN_STILL_LOADING);
+            languageFile.sendMessage(player, LanguageFileField.NOTIFICATION_PLUGIN_STILL_LOADING);
             return;
         }
 
         String rideIdentifier = coasterHandle.getRide().getIdentifier();
         RideOverviewMap map = rideOverviewMaps.get(rideIdentifier);
         if(map == null){
-            languageFile.sendMessage(player, LanguageFileFields.ERROR_RIDE_OVERVIEW_MAP_NOT_FOUND,
-                    builder -> builder.add(LanguageFileTags.rideIdentifier, rideIdentifier));
+            languageFile.sendMessage(player, LanguageFileField.ERROR_RIDE_OVERVIEW_MAP_NOT_FOUND,
+                    builder -> builder.add(LanguageFileTag.rideIdentifier, rideIdentifier));
             return;
         }
 

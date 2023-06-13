@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class BaseMenu implements Menu {
+public abstract class BaseMenu implements Menu {
     private final HashMap<UUID, MenuButton> buttons;
     private final Map<Player, Inventory> sessions;
     private final int inventoryRows;
@@ -53,4 +53,11 @@ public class BaseMenu implements Menu {
     public MenuButton getButton(UUID buttonUUID){
         return buttons.get(buttonUUID);
     }
+
+    @Override
+    public void sendUpdate() {
+        buttons.values().forEach(MenuButton::sendUpdate);
+    }
+
+
 }

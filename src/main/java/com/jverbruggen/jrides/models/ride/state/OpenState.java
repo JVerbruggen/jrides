@@ -1,5 +1,7 @@
 package com.jverbruggen.jrides.models.ride.state;
 
+import com.jverbruggen.jrides.animator.RideHandle;
+
 public enum OpenState {
     OPEN{
         @Override
@@ -18,12 +20,14 @@ public enum OpenState {
         }
 
         @Override
-        public OpenState open() {
+        public OpenState open(RideHandle rideHandle) {
             return this;
         }
 
         @Override
-        public OpenState close() {
+        public OpenState close(RideHandle rideHandle) {
+            rideHandle.broadcastRideClose();
+
             return TRANSITION_TO_CLOSE;
         }
 
@@ -54,12 +58,13 @@ public enum OpenState {
         }
 
         @Override
-        public OpenState open() {
-            return TRANSITION_TO_OPEN;
+        public OpenState open(RideHandle rideHandle) {
+            rideHandle.broadcastRideOpen();
+            return OPEN;
         }
 
         @Override
-        public OpenState close() {
+        public OpenState close(RideHandle rideHandle) {
             return this;
         }
 
@@ -90,12 +95,12 @@ public enum OpenState {
         }
 
         @Override
-        public OpenState open() {
+        public OpenState open(RideHandle rideHandle) {
             return this;
         }
 
         @Override
-        public OpenState close() {
+        public OpenState close(RideHandle rideHandle) {
             return this;
         }
 
@@ -126,12 +131,12 @@ public enum OpenState {
         }
 
         @Override
-        public OpenState open() {
+        public OpenState open(RideHandle rideHandle) {
             return this;
         }
 
         @Override
-        public OpenState close() {
+        public OpenState close(RideHandle rideHandle) {
             return this;
         }
 
@@ -162,12 +167,12 @@ public enum OpenState {
         }
 
         @Override
-        public OpenState open() {
+        public OpenState open(RideHandle rideHandle) {
             return this;
         }
 
         @Override
-        public OpenState close() {
+        public OpenState close(RideHandle rideHandle) {
             return this;
         }
 
@@ -198,12 +203,12 @@ public enum OpenState {
         }
 
         @Override
-        public OpenState open() {
+        public OpenState open(RideHandle rideHandle) {
             return this;
         }
 
         @Override
-        public OpenState close() {
+        public OpenState close(RideHandle rideHandle) {
             return this;
         }
 
@@ -234,12 +239,12 @@ public enum OpenState {
         }
 
         @Override
-        public OpenState open() {
+        public OpenState open(RideHandle rideHandle) {
             return this;
         }
 
         @Override
-        public OpenState close() {
+        public OpenState close(RideHandle rideHandle) {
             return this;
         }
 
@@ -257,8 +262,8 @@ public enum OpenState {
     public abstract boolean isOpen();
     public abstract boolean isOpening();
     public abstract boolean isClosing();
-    public abstract OpenState open();
-    public abstract OpenState close();
+    public abstract OpenState open(RideHandle rideHandle);
+    public abstract OpenState close(RideHandle rideHandle);
     public abstract boolean canUnload();
     public abstract OpenState getSaveState();
 }

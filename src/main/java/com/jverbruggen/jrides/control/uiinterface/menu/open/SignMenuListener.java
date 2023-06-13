@@ -4,7 +4,7 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
-import com.jverbruggen.jrides.language.LanguageFileFields;
+import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -65,7 +65,7 @@ public class SignMenuListener implements Listener {
 
         Player player = playerManager.getPlayer(event.getPlayer());
         if(!player.hasPermission(Permissions.CABIN_OPERATE)){
-            JRidesPlugin.getLanguageFile().sendMessage(player, LanguageFileFields.ERROR_OPERATING_NO_PERMISSION);
+            JRidesPlugin.getLanguageFile().sendMessage(player, LanguageFileField.ERROR_OPERATING_NO_PERMISSION);
             return;
         }
 

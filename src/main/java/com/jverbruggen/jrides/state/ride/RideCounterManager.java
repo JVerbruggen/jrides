@@ -2,8 +2,8 @@ package com.jverbruggen.jrides.state.ride;
 
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.language.LanguageFile;
-import com.jverbruggen.jrides.language.LanguageFileFields;
-import com.jverbruggen.jrides.language.LanguageFileTags;
+import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.ride.count.RideCounterRecord;
 import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
@@ -25,10 +25,10 @@ public class RideCounterManager {
     }
 
     public void sendRideCounterUpdateMessage(Player player, RideCounterRecord record){
-        languageFile.sendMultilineMessage(player, LanguageFileFields.NOTIFICATION_RIDE_COUNTER_UPDATE,
+        languageFile.sendMultilineMessage(player, LanguageFileField.NOTIFICATION_RIDE_COUNTER_UPDATE,
                 builder -> builder
-                        .add(LanguageFileTags.rideCount, record.getRideCount() + "")
-                        .add(LanguageFileTags.rideDisplayName, record.getRide().getDisplayName()));
+                        .add(LanguageFileTag.rideCount, record.getRideCount() + "")
+                        .add(LanguageFileTag.rideDisplayName, record.getRide().getDisplayName()));
     }
 
     public RideCounterRecordCollection getCollection(Player player){

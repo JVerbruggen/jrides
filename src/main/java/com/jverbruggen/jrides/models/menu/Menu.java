@@ -14,4 +14,5 @@ public interface Menu {
     Inventory getInventoryFor(Player player);
     Menu addButton(MenuButton button);
     MenuButton getButton(UUID buttonUUID);
+    void sendUpdate();
 }

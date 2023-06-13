@@ -5,7 +5,7 @@ import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.event.player.PlayerSitDownEvent;
 import com.jverbruggen.jrides.event.player.PlayerStandUpEvent;
-import com.jverbruggen.jrides.language.LanguageFileFields;
+import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
@@ -55,7 +55,7 @@ public class CoasterSeat implements Seat {
         virtualArmorstand.setPassenger(player);
         if(player != null){
             if(!player.hasPermission(Permissions.RIDE_ENTER)){
-                JRidesPlugin.getLanguageFile().sendMessage(player, LanguageFileFields.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
+                JRidesPlugin.getLanguageFile().sendMessage(player, LanguageFileField.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
                 return;
             }
 
@@ -95,7 +95,7 @@ public class CoasterSeat implements Seat {
             return true;
         }else{
             SoftEjector.addTimer(passenger);
-            JRidesPlugin.getLanguageFile().sendMessage(passenger, LanguageFileFields.NOTIFICATION_SHIFT_EXIT_CONFIRMATION);
+            JRidesPlugin.getLanguageFile().sendMessage(passenger, LanguageFileField.NOTIFICATION_SHIFT_EXIT_CONFIRMATION);
             return false;
         }
     }

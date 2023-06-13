@@ -1,7 +1,7 @@
 import re
 
 java_file_path = "src/main/java/com/jverbruggen/jrides/language/LanguageFile.java"
-expression = r"\);*\n?\s+setLanguageDefault\(LanguageFileFields."
+expression = r"\);*\n?\s+setLanguageDefault\(LanguageFileField."
 language_file_path = "docs/language.md"
 
 content = """

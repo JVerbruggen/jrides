@@ -1,19 +1,21 @@
 package com.jverbruggen.jrides.control.controlmode;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.ControlAction;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.language.LanguageFile;
-import com.jverbruggen.jrides.language.LanguageFileFields;
-import com.jverbruggen.jrides.language.LanguageFileTags;
+import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 public abstract class BaseControlMode implements ControlMode {
+    protected final RideHandle rideHandle;
     protected final StationHandle stationHandle;
     protected final LanguageFile languageFile;
     protected TriggerContext triggerContext;
@@ -27,7 +29,8 @@ public abstract class BaseControlMode implements ControlMode {
 
     private int tickIntervalState;
 
-    protected BaseControlMode(StationHandle stationHandle, MinMaxWaitingTimer waitingTimer, DispatchLockCollection dispatchLockCollection, boolean activeOnStart) {
+    protected BaseControlMode(RideHandle rideHandle, StationHandle stationHandle, MinMaxWaitingTimer waitingTimer, DispatchLockCollection dispatchLockCollection, boolean activeOnStart) {
+        this.rideHandle = rideHandle;
         this.languageFile = JRidesPlugin.getLanguageFile();
 
         this.stationHandle = stationHandle;
@@ -71,8 +74,8 @@ public abstract class BaseControlMode implements ControlMode {
         }
         if(newOperator.getBukkitPlayer().hasPermission(Permissions.ELEVATED_OPERATOR_OVERRIDE)){
             operator.getBukkitPlayer().closeInventory();
-            languageFile.sendMessage(operator, LanguageFileFields.ELEVATED_OPERATOR_OVERRIDE_VICTIM_MESSAGE,
-                    b -> b.add(LanguageFileTags.player, newOperator.getName()));
+            languageFile.sendMessage(operator, LanguageFileField.ELEVATED_OPERATOR_OVERRIDE_VICTIM_MESSAGE,
+                    b -> b.add(LanguageFileTag.player, newOperator.getName()));
             operator.clearOperating();
             operator = newOperator;
             return true;

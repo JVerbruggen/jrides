@@ -126,6 +126,10 @@ public class RideManager {
         RideInitializedEvent.send();
     }
 
+    public void unloadAllRides(){
+        getRideHandles().forEach(RideHandle::unload);
+    }
+
     private void loadCoaster(World world, String rideIdentifier){
         RideState rideState = RideState.load(rideIdentifier);
         if(!rideState.shouldLoadRide()){

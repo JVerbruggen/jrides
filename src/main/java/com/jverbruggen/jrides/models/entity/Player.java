@@ -6,8 +6,8 @@ import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFile;
-import com.jverbruggen.jrides.language.LanguageFileFields;
-import com.jverbruggen.jrides.language.LanguageFileTags;
+import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -100,7 +100,7 @@ public class Player implements MessageAgent {
 
         this.smoothAnimationSupport = (smoothAnimationSupport ? SmoothAnimationSupport.AVAILABLE : SmoothAnimationSupport.UNAVAILABLE);
         if(!smoothAnimationSupport){
-            languageFile.sendMessage(bukkitPlayer, LanguageFileFields.ERROR_SMOOTH_COASTERS_DISABLED, FeedbackType.WARNING);
+            languageFile.sendMessage(bukkitPlayer, LanguageFileField.ERROR_SMOOTH_COASTERS_DISABLED, FeedbackType.WARNING);
         }
     }
 
@@ -131,8 +131,8 @@ public class Player implements MessageAgent {
         if(rideController != null && rideController.getOperator() == this && operating == rideController) return true;
 
         if(operating != null){
-            languageFile.sendMessage(this, LanguageFileFields.NOTIFICATION_RIDE_CONTROL_INACTIVE,
-                    (b) -> b.add(LanguageFileTags.rideDisplayName, operating.getRide().getDisplayName()));
+            languageFile.sendMessage(this, LanguageFileField.NOTIFICATION_RIDE_CONTROL_INACTIVE,
+                    (b) -> b.add(LanguageFileTag.rideDisplayName, operating.getRide().getDisplayName()));
             operating.setOperator(null);
             operating = null;
         }
@@ -140,21 +140,21 @@ public class Player implements MessageAgent {
         if(rideController == null) return true;
 
         if(!hasPermission(Permissions.CABIN_OPERATE)){
-            languageFile.sendMessage(this, LanguageFileFields.ERROR_OPERATING_NO_PERMISSION);
+            languageFile.sendMessage(this, LanguageFileField.ERROR_OPERATING_NO_PERMISSION);
             return false;
         }
 
         boolean set = rideController.setOperator(this);
         if(!set){
-            languageFile.sendMessage(this, LanguageFileFields.ERROR_OPERATING_CABIN_OCCUPIED);
+            languageFile.sendMessage(this, LanguageFileField.ERROR_OPERATING_CABIN_OCCUPIED);
             bukkitPlayer.closeInventory();
             return false;
         }
 
         operating = rideController;
 
-        languageFile.sendMessage(this, LanguageFileFields.NOTIFICATION_RIDE_CONTROL_ACTIVE,
-                builder -> builder.add(LanguageFileTags.rideDisplayName, operating.getRide().getDisplayName()));
+        languageFile.sendMessage(this, LanguageFileField.NOTIFICATION_RIDE_CONTROL_ACTIVE,
+                builder -> builder.add(LanguageFileTag.rideDisplayName, operating.getRide().getDisplayName()));
         return true;
     }
 

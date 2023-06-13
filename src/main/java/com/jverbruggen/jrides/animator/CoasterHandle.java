@@ -9,7 +9,8 @@ import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.event.ride.RideStateUpdatedEvent;
-import com.jverbruggen.jrides.language.LanguageFileFields;
+import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
@@ -46,6 +47,7 @@ public class CoasterHandle implements RideHandle {
     private int rideOverviewMapId;
     private List<RideCounterRecordCollection> topRideCounters;
     private RideState rideState;
+    private boolean loaded;
 
     public CoasterHandle(Ride ride, World world, String dispatchSound, String restraintOpenSound,
                          String restraintCloseSound, String windSound, int rideOverviewMapId) {
@@ -66,6 +68,7 @@ public class CoasterHandle implements RideHandle {
         this.rideOverviewMapId = rideOverviewMapId;
         this.topRideCounters = new ArrayList<>();
         this.rideState = null;
+        this.loaded = true;
     }
 
     public int getRideOverviewMapId(){
@@ -248,23 +251,18 @@ public class CoasterHandle implements RideHandle {
     }
 
     @Override
-    public boolean isOpen(Player player) {
-        if(getState().getOpenState().isOpen())
-            return true;
-        if(player.hasPermission(Permissions.ELEVATED_RIDE_CLOSED_ENTER_OVERRIDE))
-            return true;
-
-        return false;
+    public boolean isOpen() {
+        return isLoaded() && getState().getOpenState().isOpen();
     }
 
     @Override
     public void open(Player authority) {
         if(!authority.hasPermission(Permissions.ELEVATED_RIDE_OPEN_STATE_CHANGE)){
-            JRidesPlugin.getLanguageFile().sendMessage(authority, LanguageFileFields.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
+            JRidesPlugin.getLanguageFile().sendMessage(authority, LanguageFileField.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
             return;
         }
 
-        boolean opened = getState().setStateOpened();
+        boolean opened = getState().setStateOpened(this);
         if(opened) authority.playSound(Sound.BLOCK_FENCE_GATE_OPEN);
         else authority.playSound(Sound.UI_BUTTON_CLICK);
     }
@@ -272,7 +270,7 @@ public class CoasterHandle implements RideHandle {
     @Override
     public void close(Player authority) {
         if(!authority.hasPermission(Permissions.ELEVATED_RIDE_OPEN_STATE_CHANGE)){
-            JRidesPlugin.getLanguageFile().sendMessage(authority, LanguageFileFields.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
+            JRidesPlugin.getLanguageFile().sendMessage(authority, LanguageFileField.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
             return;
         }
 
@@ -280,13 +278,13 @@ public class CoasterHandle implements RideHandle {
     }
 
     private boolean attemptClose(@Nullable Player authority){
-        if(!authority.hasPermission(Permissions.ELEVATED_RIDE_OPEN_STATE_CHANGE)){
-            JRidesPlugin.getLanguageFile().sendMessage(authority, LanguageFileFields.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
+        if(authority != null && !authority.hasPermission(Permissions.ELEVATED_RIDE_OPEN_STATE_CHANGE)){
+            JRidesPlugin.getLanguageFile().sendMessage(authority, LanguageFileField.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
             return false;
         }
 
         if(getState().getOpenState().isOpen()){
-            boolean closed = getState().setStateClosed();
+            boolean closed = getState().setStateClosed(this);
 
             if(authority != null){
                 if(!closed){
@@ -299,6 +297,7 @@ public class CoasterHandle implements RideHandle {
 
         Player currentOperator = rideController.getOperator();
         if(currentOperator != null) currentOperator.setOperating(null);
+        rideControlMenu.sendUpdate();
 
         if(getState().getOpenState().isClosing()){
             if(canFullyClose()){
@@ -312,5 +311,33 @@ public class CoasterHandle implements RideHandle {
     @Override
     public boolean canFullyClose() {
         return getPassengers().size() == 0 && getRideController().getOperator() == null;
+    }
+
+    @Override
+    public void broadcastRideOpen() {
+        JRidesPlugin.getLanguageFile().sendMessage(
+                JRidesPlugin.getBroadcastReceiver(),
+                LanguageFileField.NOTIFICATION_RIDE_STATE_OPEN,
+                b -> b.add(LanguageFileTag.rideDisplayName, ride.getDisplayName()));
+    }
+
+    @Override
+    public void broadcastRideClose() {
+        JRidesPlugin.getLanguageFile().sendMessage(
+                JRidesPlugin.getBroadcastReceiver(),
+                LanguageFileField.NOTIFICATION_RIDE_STATE_CLOSED,
+                b -> b.add(LanguageFileTag.rideDisplayName, ride.getDisplayName()));
+    }
+
+    @Override
+    public void unload() {
+        rideState.save();
+        loaded = false;
+        JRidesPlugin.getLogger().info("Unloaded ride " + getRide().getDisplayName());
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return loaded;
     }
 }
