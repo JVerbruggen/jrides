@@ -57,18 +57,19 @@ public class LanguageFile {
         setLanguageDefault(LanguageFileFields.NOTIFICATION_RESTRAINT_ON_EXIT_ATTEMPT, "The restraints are closed");
         setLanguageDefault(LanguageFileFields.NOTIFICATION_RESTRAINT_ON_ENTER_ATTEMPT, "The restraints are closed");
         setLanguageDefault(LanguageFileFields.NOTIFICATION_RESTRAINT_ENTER_OVERRIDE, "You just entered the ride while the restraints were closed");
-        setLanguageDefault(LanguageFileFields.NOTIFICATION_CANNOT_ENTER_RIDE, "You currently cannot enter this ride. Try again later.");
+        setLanguageDefault(LanguageFileFields.NOTIFICATION_CANNOT_ENTER_RIDE, "You currently cannot enter this ride, try again later");
+        setLanguageDefault(LanguageFileFields.NOTIFICATION_CANNOT_ENTER_RIDE_CLOSED, "This ride is currently closed");
 
         setLanguageDefault(LanguageFileFields.ELEVATED_OPERATOR_OVERRIDE_VICTIM_MESSAGE, "Player %" + LanguageFileTags.player + "% took over control of the operating cabin");
 
-        setLanguageDefault(LanguageFileFields.ERROR_SMOOTH_COASTERS_DISABLED, "Smoother ride experience is disabled, please install SmoothCoasters.");
+        setLanguageDefault(LanguageFileFields.ERROR_SMOOTH_COASTERS_DISABLED, "Smoother ride experience is disabled, please install SmoothCoasters");
         setLanguageDefault(LanguageFileFields.ERROR_GENERAL_NO_PERMISSION_MESSAGE, "You do not have permissions to execute this action");
         setLanguageDefault(LanguageFileFields.ERROR_PLAYER_COMMAND_ONLY_MESSAGE, "Only players can execute this command");
         setLanguageDefault(LanguageFileFields.ERROR_UNKNOWN_COMMAND_MESSAGE, "Unknown jrides command. Type '/jrides help' for help");
         setLanguageDefault(LanguageFileFields.ERROR_OPERATING_CABIN_OCCUPIED, "You can not take this operating cabin since it is already in use by another operator");
         setLanguageDefault(LanguageFileFields.ERROR_OPERATING_NO_PERMISSION, "You are not allowed to operate this ride");
         setLanguageDefault(LanguageFileFields.ERROR_RIDE_CONTROL_MENU_NOT_FOUND, "Ride control menu was not found");
-        setLanguageDefault(LanguageFileFields.ERROR_RIDE_OVERVIEW_MAP_NOT_FOUND, "Could not retrieve map for ride %" + LanguageFileTags.rideIdentifier + "%. Was the map id configured?");
+        setLanguageDefault(LanguageFileFields.ERROR_RIDE_OVERVIEW_MAP_NOT_FOUND, "Could not retrieve map for ride %" + LanguageFileTags.rideIdentifier + "%, was the map id configured?");
 
         setLanguageDefault(LanguageFileFields.BUTTON_CLAIM_CABIN, "Claim operating cabin");
         setLanguageDefault(LanguageFileFields.BUTTON_CABIN_CLAIMED, "Claim operating cabin");

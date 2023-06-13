@@ -11,12 +11,14 @@ public class SimpleCoaster implements Coaster {
     private String identifier;
     private String displayName;
     private PlayerLocation warpLocation;
+    private boolean canExitDuringRide;
 
-    public SimpleCoaster(String identifier, String displayName, PlayerLocation warpLocation) {
+    public SimpleCoaster(String identifier, String displayName, PlayerLocation warpLocation, boolean canExitDuringRide) {
         this.identifier = identifier;
         this.displayName = displayName;
         this.warpLocation = warpLocation;
         this.trains = new ArrayList<>();
+        this.canExitDuringRide = canExitDuringRide;
     }
 
     @Override
@@ -47,5 +49,10 @@ public class SimpleCoaster implements Coaster {
     @Override
     public boolean isLoaded() {
         return true;
+    }
+
+    @Override
+    public boolean canExitDuringRide() {
+        return canExitDuringRide;
     }
 }

@@ -82,7 +82,7 @@ public class AdvancedSectionBuilder {
                     .collect(Collectors.toList());
 
             section.setConflictSections(conflictingSections);
-            conflictingSections.forEach(other -> Bukkit.broadcastMessage(section.getName() + " conflicts with " + other));
+//            conflictingSections.forEach(other -> Bukkit.broadcastMessage(section.getName() + " conflicts with " + other));
         }
 
         // --- Link section ends together

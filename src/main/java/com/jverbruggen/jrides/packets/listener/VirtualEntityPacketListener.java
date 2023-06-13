@@ -12,6 +12,7 @@ import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.models.ride.coaster.train.CoasterSeat;
@@ -31,7 +32,6 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
     private final PlayerManager playerManager;
     private final SmoothAnimation smoothAnimation;
     private final List<UUID> shiftPressedDebounce;
-    private final boolean canExitDuringRide;
     private final PacketSender packetSender;
     private final LanguageFile languageFile;
 
@@ -45,7 +45,6 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         this.smoothAnimation = ServiceProvider.getSingleton(SmoothAnimation.class);
         this.packetSender = ServiceProvider.getSingleton(PacketSender.class);
         this.shiftPressedDebounce = new ArrayList<>();
-        this.canExitDuringRide = true;
         this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
     }
 
@@ -91,8 +90,8 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
 
         if(player.isSeated()) return;
 
-        if(!seat.getParentRideHandle().canEnter(player)){
-            languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_CANNOT_ENTER_RIDE);
+        if(!seat.getParentRideHandle().isOpen(player)){
+            languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_CANNOT_ENTER_RIDE_CLOSED);
             return;
         }
 
@@ -133,6 +132,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         shiftPressedDebounce.add(uuid);
 
         double teleportYaw = player.getBukkitPlayer().getLocation().getYaw();
+        Ride ride = seat.getParentRideHandle().getRide();
 
         if(seat.restraintsActive()){
             if(bukkitPlayer.hasPermission(Permissions.ELEVATED_RESTRAINT_OVERRIDE)){
@@ -144,7 +144,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
                     }
                 });
                 return;
-            }else if(canExitDuringRide){
+            }else if(ride.canExitDuringRide()){
                 Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> seat.ejectPassengerSoft(true));
                 return;
             }

@@ -28,4 +28,9 @@ public class UnloadedRide implements Ride {
     public boolean isLoaded() {
         return false;
     }
+
+    @Override
+    public boolean canExitDuringRide() {
+        return false;
+    }
 }

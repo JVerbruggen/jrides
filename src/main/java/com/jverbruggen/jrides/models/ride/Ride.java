@@ -8,4 +8,5 @@ public interface Ride {
 
     PlayerLocation getWarpLocation();
     boolean isLoaded();
+    boolean canExitDuringRide();
 }

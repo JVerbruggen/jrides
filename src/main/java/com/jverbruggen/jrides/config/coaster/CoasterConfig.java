@@ -21,9 +21,11 @@ public class CoasterConfig extends BaseConfig {
     private final ControllerConfig controllerConfig;
     private final SoundsConfig soundsConfig;
     private final int rideOverviewMapId;
+    private final boolean canExitDuringRide;
 
     public CoasterConfig(String manifestVersion, String identifier, String displayName, PlayerLocation warpLocation, TrackConfig track,
-                         VehiclesConfig vehicles, CartSpecConfig cartSpec, GatesConfig gates, double gravityConstant, double dragConstant, ControllerConfig controllerConfig, SoundsConfig soundsConfig, int rideOverviewMapId) {
+                         VehiclesConfig vehicles, CartSpecConfig cartSpec, GatesConfig gates, double gravityConstant, double dragConstant,
+                         ControllerConfig controllerConfig, SoundsConfig soundsConfig, int rideOverviewMapId, boolean canExitDuringRide) {
         this.manifestVersion = manifestVersion;
         this.identifier = identifier;
         this.displayName = displayName;
@@ -37,6 +39,7 @@ public class CoasterConfig extends BaseConfig {
         this.controllerConfig = controllerConfig;
         this.soundsConfig = soundsConfig;
         this.rideOverviewMapId = rideOverviewMapId;
+        this.canExitDuringRide = canExitDuringRide;
     }
 
     public String getManifestVersion() {
@@ -91,6 +94,10 @@ public class CoasterConfig extends BaseConfig {
         return rideOverviewMapId;
     }
 
+    public boolean getCanExitDuringRide() {
+        return canExitDuringRide;
+    }
+
     public static CoasterConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         String manifestVersion = configurationSection.getString("manifestVersion");
         String identifier = configurationSection.getString("identifier");
@@ -105,8 +112,10 @@ public class CoasterConfig extends BaseConfig {
         SoundsConfig sounds = SoundsConfig.fromConfigurationSection(configurationSection.getConfigurationSection("sounds"));
         ControllerConfig controllerConfig = ControllerConfig.fromConfigurationSection(configurationSection.getConfigurationSection("controller"));
         int rideOverviewMapId = getInt(configurationSection, "rideOverviewMapId", -1);
+        boolean canExitDuringRide = getBoolean(configurationSection, "canExitDuringRide", false);
 
         return new CoasterConfig(manifestVersion, identifier, displayName, warpLocation, track, vehicles,
-                cartSpec, gates, gravityConstant, dragConstant, controllerConfig, sounds, rideOverviewMapId);
+                cartSpec, gates, gravityConstant, dragConstant, controllerConfig, sounds, rideOverviewMapId,
+                canExitDuringRide);
     }
 }
