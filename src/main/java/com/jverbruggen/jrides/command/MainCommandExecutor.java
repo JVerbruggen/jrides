@@ -28,6 +28,11 @@ public class MainCommandExecutor extends BaseCommandExecutor {
     }
 
     @Override
+    public String getPermission() {
+        return null;
+    }
+
+    @Override
     public String getHelpMessageForParent() {
         return ChatColor.GOLD + "This server is running jrides - " + JRidesPlugin.getVersion();
     }

@@ -3,15 +3,18 @@ package com.jverbruggen.jrides.command;
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.command.context.CommandContext;
+import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.Collections;
 import java.util.List;
 
 public class VisualizeCommandExecutor extends BaseCommandExecutor {
@@ -28,20 +31,20 @@ public class VisualizeCommandExecutor extends BaseCommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String arg, String[] args, CommandContext context) {
-        if(!(commandSender instanceof org.bukkit.entity.Player)){
-            languageFile.sendMessage(commandSender, LanguageFileFields.ERROR_PLAYER_COMMAND_ONLY_MESSAGE);
+    public boolean onCommand(MessageAgent messageAgent, Command command, String arg, String[] args, CommandContext context) {
+        if(!messageAgent.isPlayer()){
+            languageFile.sendMessage(messageAgent, LanguageFileFields.ERROR_PLAYER_COMMAND_ONLY_MESSAGE);
             return true;
         }
 
         if(args.length != 2){
-            languageFile.sendMessage(commandSender, getHelpMessageForSelf());
+            languageFile.sendMessage(messageAgent, getHelpMessageForSelf());
             return true;
         }
 
         String identifier = args[1];
         if(identifier.equalsIgnoreCase("")){
-            languageFile.sendMessage(commandSender, getHelpMessageForSelf());
+            languageFile.sendMessage(messageAgent, getHelpMessageForSelf());
             return true;
         }
 
@@ -49,7 +52,7 @@ public class VisualizeCommandExecutor extends BaseCommandExecutor {
         ParticleTrackVisualisationTool tool = coasterHandle.getVisualisationTool();
 
         String actualIdentifier = coasterHandle.getRide().getIdentifier();
-        Player player = playerManager.getPlayer((org.bukkit.entity.Player) commandSender);
+        Player player = messageAgent.getPlayer(playerManager);
         if(tool.isViewer(player)){
             tool.removeViewer(player);
 
@@ -76,7 +79,14 @@ public class VisualizeCommandExecutor extends BaseCommandExecutor {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+    public String getPermission() {
+        return Permissions.COMMAND_ELEVATED_VISUALIZE;
+    }
+
+    @Override
+    public List<String> onTabComplete(MessageAgent messageAgent, Command command, String s, String[] strings) {
+        if(!messageAgent.hasPermission(getPermission())) return Collections.emptyList();
+
         if(strings.length == depth+1)
             return rideManager.getRideIdentifiers();
         return null;

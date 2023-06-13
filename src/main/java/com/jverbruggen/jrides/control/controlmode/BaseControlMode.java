@@ -10,7 +10,6 @@ import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
-import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
@@ -70,7 +69,7 @@ public abstract class BaseControlMode implements ControlMode {
             operator = newOperator;
             return true;
         }
-        if(newOperator.getBukkitPlayer().hasPermission(Permissions.OPERATOR_OVERRIDE)){
+        if(newOperator.getBukkitPlayer().hasPermission(Permissions.ELEVATED_OPERATOR_OVERRIDE)){
             operator.getBukkitPlayer().closeInventory();
             languageFile.sendMessage(operator, LanguageFileFields.ELEVATED_OPERATOR_OVERRIDE_VICTIM_MESSAGE,
                     b -> b.add(LanguageFileTags.player, newOperator.getName()));

@@ -3,11 +3,14 @@ package com.jverbruggen.jrides.command.control;
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.command.BaseCommandExecutor;
 import com.jverbruggen.jrides.command.context.CommandContext;
+import com.jverbruggen.jrides.common.permissions.Permissions;
+import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ControlCommandExecutor extends BaseCommandExecutor {
@@ -23,9 +26,9 @@ public class ControlCommandExecutor extends BaseCommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String arg, String[] args, CommandContext commandContext) {
+    public boolean onCommand(MessageAgent messageAgent, Command command, String arg, String[] args, CommandContext commandContext) {
         if(args.length <= 2){
-            languageFile.sendMultilineMessage(commandSender, getHelpMessageForSelf());
+            languageFile.sendMultilineMessage(messageAgent, getHelpMessageForSelf());
             return true;
         }
 
@@ -34,7 +37,7 @@ public class ControlCommandExecutor extends BaseCommandExecutor {
 
         commandContext.add(RideHandle.class, rideManager.getRideHandle(identifier));
 
-        runSubCommand(commandSender, command, arg, args, subCommand, commandContext);
+        runSubCommand(messageAgent, command, arg, args, subCommand, commandContext);
         return true;
     }
 
@@ -44,16 +47,23 @@ public class ControlCommandExecutor extends BaseCommandExecutor {
     }
 
     @Override
+    public String getPermission() {
+        return Permissions.COMMAND_CONTROL;
+    }
+
+    @Override
     public String getHelpMessageForParent() {
         return "/jrides control";
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+    public List<String> onTabComplete(MessageAgent messageAgent, Command command, String s, String[] strings) {
+        if(!messageAgent.hasPermission(getPermission())) return Collections.emptyList();
+
         if(strings.length == depth+1){
             return rideManager.getRideIdentifiers();
         }else if(strings.length == depth+2){
-            return getCommandSuggestions();
+            return getCommandSuggestions(messageAgent);
         }
         return null;
     }

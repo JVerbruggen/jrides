@@ -14,6 +14,7 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.state.ride.SoftEjector;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
 public class CoasterSeat implements Seat {
@@ -53,6 +54,11 @@ public class CoasterSeat implements Seat {
         passenger = player;
         virtualArmorstand.setPassenger(player);
         if(player != null){
+            if(!player.hasPermission(Permissions.RIDE_ENTER)){
+                JRidesPlugin.getLanguageFile().sendMessage(player, LanguageFileFields.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
+                return;
+            }
+
             player.setSeatedOn(this);
             parentCart.getParentTrain().onPlayerEnter(player);
             PlayerSitDownEvent.send(passenger, parentCart.getParentTrain().getHandle().getCoasterHandle().getRide());
@@ -60,11 +66,11 @@ public class CoasterSeat implements Seat {
             // Potentially rider wants to inspect frames
             org.bukkit.entity.Player bukkitPlayer = player.getBukkitPlayer();
             ItemStack itemInHand = bukkitPlayer.getInventory().getItemInMainHand();
-            if(bukkitPlayer.hasPermission(Permissions.STATUS_INSPECTION)
+            if(bukkitPlayer.hasPermission(Permissions.ELEVATED_STATUS_INSPECTION)
                     && itemInHand.getItemMeta() != null
                     && itemInHand.getItemMeta().getDisplayName().stripTrailing().equalsIgnoreCase("jrides:frame-inspect")){
                 getParentCart().getParentTrain().addPositionMessageListener(player);
-                player.sendMessage("Now inspecting frames");
+                player.sendMessage(ChatColor.GRAY + "(debug) Now inspecting frames");
             }
         }
     }

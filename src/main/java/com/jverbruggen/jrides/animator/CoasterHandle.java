@@ -250,7 +250,7 @@ public class CoasterHandle implements RideHandle {
     public boolean canEnter(Player player) {
         if(getState().getOpenState().isOpen())
             return true;
-        if(player.hasPermission(Permissions.RIDE_CLOSED_ENTER_OVERRIDE))
+        if(player.hasPermission(Permissions.ELEVATED_RIDE_CLOSED_ENTER_OVERRIDE))
             return true;
 
         return false;

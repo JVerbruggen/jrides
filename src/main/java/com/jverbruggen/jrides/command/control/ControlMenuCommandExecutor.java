@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.command.Command;
@@ -23,21 +24,18 @@ public class ControlMenuCommandExecutor extends BaseCommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args, CommandContext commandContext) {
-        if(!(commandSender instanceof org.bukkit.entity.Player)){
-            languageFile.sendMessage(commandSender, LanguageFileFields.ERROR_PLAYER_COMMAND_ONLY_MESSAGE, FeedbackType.CONFLICT);
+    public boolean onCommand(MessageAgent messageAgent, Command command, String s, String[] args, CommandContext commandContext) {
+        if(!messageAgent.isPlayer()){
+            languageFile.sendMessage(messageAgent, LanguageFileFields.ERROR_PLAYER_COMMAND_ONLY_MESSAGE, FeedbackType.CONFLICT);
             return true;
         }
-        if(!commandSender.hasPermission(Permissions.COMMAND_MENU)){
-            languageFile.sendMessage(commandSender, LanguageFileFields.ERROR_GENERAL_NO_PERMISSION_MESSAGE, FeedbackType.CONFLICT);
-            return true;
-        }
-        Player player = playerManager.getPlayer((org.bukkit.entity.Player) commandSender);
+
+        Player player = messageAgent.getPlayer(playerManager);
 
         RideHandle rideHandle = commandContext.get(RideHandle.class);
         Menu rideControlMenu = rideHandle.getRideControlMenu();
         if(rideControlMenu == null){
-            languageFile.sendMessage(commandSender, LanguageFileFields.ERROR_RIDE_CONTROL_MENU_NOT_FOUND, FeedbackType.CONFLICT);
+            languageFile.sendMessage(messageAgent, LanguageFileFields.ERROR_RIDE_CONTROL_MENU_NOT_FOUND, FeedbackType.CONFLICT);
             return true;
         }
         Inventory inventory = rideControlMenu.getInventoryFor(player);
@@ -50,6 +48,11 @@ public class ControlMenuCommandExecutor extends BaseCommandExecutor {
     @Override
     public String getCommand() {
         return "menu";
+    }
+
+    @Override
+    public String getPermission() {
+        return Permissions.COMMAND_CONTROL_MENU;
     }
 
     @Override

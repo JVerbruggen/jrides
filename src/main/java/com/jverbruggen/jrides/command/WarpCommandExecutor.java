@@ -7,11 +7,13 @@ import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.language.LanguageFileFields;
 import com.jverbruggen.jrides.language.LanguageFileTags;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.Collections;
 import java.util.List;
 
 public class WarpCommandExecutor extends BaseCommandExecutor {
@@ -28,22 +30,22 @@ public class WarpCommandExecutor extends BaseCommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String arg, String[] args, CommandContext context) {
-        if(!(commandSender instanceof org.bukkit.entity.Player)){
-            languageFile.sendMessage(commandSender, LanguageFileFields.ERROR_PLAYER_COMMAND_ONLY_MESSAGE);
+    public boolean onCommand(MessageAgent messageAgent, Command command, String arg, String[] args, CommandContext context) {
+        if(!messageAgent.isPlayer()){
+            languageFile.sendMessage(messageAgent, LanguageFileFields.ERROR_PLAYER_COMMAND_ONLY_MESSAGE);
             return true;
         }
 
         if(args.length != 2){
-            languageFile.sendMessage(commandSender, getHelpMessageForSelf());
+            languageFile.sendMessage(messageAgent, getHelpMessageForSelf());
             return true;
         }
 
         String identifier = args[1];
 
         CoasterHandle coasterHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
-        Player player = playerManager.getPlayer((org.bukkit.entity.Player) commandSender);
-        if(!player.getBukkitPlayer().hasPermission(Permissions.RIDE_WARP)){
+        Player player = messageAgent.getPlayer(playerManager);
+        if(!player.getBukkitPlayer().hasPermission(Permissions.COMMAND_RIDE_WARP)){
             languageFile.sendMessage(player, LanguageFileFields.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
             return false;
         }
@@ -63,7 +65,14 @@ public class WarpCommandExecutor extends BaseCommandExecutor {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+    public String getPermission() {
+        return Permissions.COMMAND_RIDE_WARP;
+    }
+
+    @Override
+    public List<String> onTabComplete(MessageAgent messageAgent, Command command, String s, String[] strings) {
+        if(!messageAgent.hasPermission(getPermission())) return Collections.emptyList();
+
         if(strings.length == depth+1)
             return rideManager.getRideIdentifiers();
         return null;

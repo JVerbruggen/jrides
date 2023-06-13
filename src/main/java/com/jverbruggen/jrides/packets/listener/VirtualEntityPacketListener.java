@@ -20,9 +20,7 @@ import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +97,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         }
 
         if(seat.restraintsActive()){
-            if(!player.getBukkitPlayer().hasPermission(Permissions.SEAT_RESTRAINT_OVERRIDE)){
+            if(!player.getBukkitPlayer().hasPermission(Permissions.ELEVATED_RESTRAINT_OVERRIDE)){
                 languageFile.sendMessage(player, LanguageFileFields.NOTIFICATION_RESTRAINT_ON_ENTER_ATTEMPT);
                 return;
             }
@@ -137,7 +135,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         double teleportYaw = player.getBukkitPlayer().getLocation().getYaw();
 
         if(seat.restraintsActive()){
-            if(bukkitPlayer.hasPermission(Permissions.SEAT_RESTRAINT_OVERRIDE)){
+            if(bukkitPlayer.hasPermission(Permissions.ELEVATED_RESTRAINT_OVERRIDE)){
                 Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> {
                     boolean ejected = seat.ejectPassengerSoft(false);
                     if(ejected){

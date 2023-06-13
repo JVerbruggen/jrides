@@ -379,7 +379,7 @@ public class SimpleTrain implements Train {
 
     @Override
     public boolean statusModeEnabled(Player player) {
-        return debugMode && player.getBukkitPlayer().hasPermission(Permissions.STATUS_INSPECTION);
+        return debugMode && player.getBukkitPlayer().hasPermission(Permissions.ELEVATED_STATUS_INSPECTION);
     }
 
     private void playSound(String soundName){

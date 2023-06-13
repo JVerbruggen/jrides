@@ -20,6 +20,7 @@ import com.jverbruggen.jrides.effect.platform.MultiArmorstandMovementEffectTrigg
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.entity.EntityIdFactory;
+import com.jverbruggen.jrides.models.entity.agent.MessageAgentManager;
 import com.jverbruggen.jrides.models.map.rideoverview.RideOverviewMapFactory;
 import com.jverbruggen.jrides.models.map.rideoverview.SectionVisualFactory;
 import com.jverbruggen.jrides.models.map.rideoverview.TrainVisualFactory;
@@ -60,6 +61,7 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(ConfigManager.class, new ConfigManager(plugin));
         ServiceProvider.register(LanguageFile.class, new LanguageFile());
 
+        ServiceProvider.register(MessageAgentManager.class, new MessageAgentManager());
         ServiceProvider.register(RideCounterManager.class, new RideCounterManager());
         ServiceProvider.register(ControlModeFactory.class, new ControlModeFactory());
         ServiceProvider.register(RideControllerFactory.class, new RideControllerFactory());
