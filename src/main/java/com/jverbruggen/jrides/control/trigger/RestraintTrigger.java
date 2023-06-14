@@ -43,16 +43,24 @@ public class RestraintTrigger implements StationTrigger {
         }
 
         Train stationaryTrain = stationHandle.getStationaryTrain();
-        if(stationaryTrain == null) {
+        boolean set = setRestraintsState(!stationaryTrain.getRestraintState());
+        if(!set) {
             languageFile.sendMessage(messageAgent, LanguageFileField.NOTIFICATION_RIDE_NO_TRAIN_PRESENT);
             return false;
         }
 
-        // Toggles between on and off
-        boolean newLockedState = !stationaryTrain.getRestraintState();
-        stationaryTrain.setRestraintForAll(newLockedState);
-        restraintLock.setLocked(!newLockedState);
+        return true;
+    }
 
+    public boolean setRestraintsState(boolean closed){
+        Train stationaryTrain = stationHandle.getStationaryTrain();
+        if(stationaryTrain == null) {
+            return false;
+        }
+
+        // Toggles between on and off
+        stationaryTrain.setRestraintForAll(closed);
+        restraintLock.setLocked(!closed);
         return true;
     }
 }

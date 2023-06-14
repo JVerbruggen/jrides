@@ -42,15 +42,22 @@ public class GateTrigger implements StationTrigger{
             return false;
         }
 
-        Train stationaryTrain = stationHandle.getStationaryTrain();
-        if(stationaryTrain == null) {
+        boolean set = setGatesState(!stationHandle.areEntryGatesClosed());
+        if(!set){
             languageFile.sendMessage(messageAgent, LanguageFileField.NOTIFICATION_RIDE_NO_TRAIN_PRESENT);
             return false;
         }
 
-        // Toggles between on and off
-        boolean allClosed = stationHandle.areEntryGatesClosed();
-        if(allClosed){
+        return true;
+    }
+
+    public boolean setGatesState(boolean closed){
+        Train stationaryTrain = stationHandle.getStationaryTrain();
+        if(stationaryTrain == null) {
+            return false;
+        }
+
+        if(closed){
             gatesLock.setLocked(true);
             stationHandle.openEntryGates();
         }else{

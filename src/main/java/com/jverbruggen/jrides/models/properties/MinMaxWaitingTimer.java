@@ -72,7 +72,11 @@ public class MinMaxWaitingTimer {
         waitingTimerInt = 0;
         preferredWaitingTime = minimumWaitingTime;
         sendStatusMessage();
-        this.lock.lock();
+
+        if(reachedFunction())
+            this.lock.unlock();
+        else
+            this.lock.lock();
     }
 
     private void sendStatusMessage(){

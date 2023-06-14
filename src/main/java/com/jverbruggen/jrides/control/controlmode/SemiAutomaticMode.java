@@ -2,14 +2,15 @@ package com.jverbruggen.jrides.control.controlmode;
 
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
+import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 
 public class SemiAutomaticMode extends BaseControlMode implements ControlMode {
 
-    public SemiAutomaticMode(RideHandle rideHandle, StationHandle stationHandle, MinMaxWaitingTimer waitingTimer, DispatchLockCollection dispatchLockCollection) {
-        super(rideHandle, stationHandle, waitingTimer, dispatchLockCollection, stationHandle.hasVehicle());
+    public SemiAutomaticMode(RideHandle rideHandle, TriggerContext triggerContext, MinMaxWaitingTimer waitingTimer) {
+        super(rideHandle, triggerContext, waitingTimer);
 
         waitingTimer.setReachedTimeFunction(waitingTimer::reachedMinimum);
     }
@@ -20,10 +21,12 @@ public class SemiAutomaticMode extends BaseControlMode implements ControlMode {
 
         MinMaxWaitingTimer waitingTimer = getWaitingTimer();
 
-        Vehicle stationaryVehicle = stationHandle.getStationaryVehicle();
-        if(stationaryVehicle != null){
-            waitingTimer.sendGenericWaitingNotification(stationaryVehicle.getPassengers());
-        }
-    }
+        StationHandle stationHandle = triggerContext.getParentStation();
+        if(stationHandle == null) return;
 
+        Vehicle stationaryVehicle = stationHandle.getStationaryVehicle();
+        if(stationaryVehicle == null) return;
+
+        waitingTimer.sendGenericWaitingNotification(stationaryVehicle.getPassengers());
+    }
 }

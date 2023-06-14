@@ -15,6 +15,7 @@ import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
 import org.bukkit.Bukkit;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,12 +27,14 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
     private Section selectedDestination;
 
     private int roundRobinState;
+    private @Nullable Train lastTrain;
 
     public SwitchBehaviour(CartMovementFactory cartMovementFactory, List<SwitchPosition> destinations, SwitchPosition origin) {
         super(cartMovementFactory);
         this.destinations = destinations;
         this.origin = origin;
         this.roundRobinState = 0;
+        this.lastTrain = null;
     }
 
     private void updateRoundRobinState(){
@@ -39,11 +42,20 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
             this.roundRobinState = 0;
     }
 
-    private void selectNewDestination(){
+    private void selectNewDestination(@Nullable Train train){
         if(destinations.size() == 0)
             throw new RuntimeException("Switch does not lead anywhere!");
 
-        selectedDestination = destinations.get(this.roundRobinState).getDestination();
+        SwitchPosition nextPosition = destinations.get(this.roundRobinState);
+        if(!nextPosition.availableFor(train)){
+            nextPosition = destinations.stream()
+                    .filter(p -> p.availableFor(train))
+                    .findFirst()
+                    .orElse(nextPosition);
+        }
+
+        selectedDestination = nextPosition.getDestination();
+
         JRidesPlugin.getLogger().info(LogType.SECTIONS, "Next destination for switch: " + selectedDestination);
         updateRoundRobinState();
     }
@@ -80,7 +92,9 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
 
     @Override
     public void trainPassed(Train train) {
-        selectNewDestination();
+//        selectNewDestination();
+        if(lastTrain == train)
+            lastTrain = null;
     }
 
     @Override
@@ -110,19 +124,28 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
 
     @Override
     public Section getSectionAtStart(Train train) {
+        if(lastTrain != train){
+            lastTrain = train;
+            newTrainEntered(train);
+        }
         return origin.getDestination();
     }
 
     @Override
     public Section getSectionAtEnd(Train train) {
         if(train != null){
+            if(lastTrain != train){
+                lastTrain = train;
+                newTrainEntered(train);
+            }
+
             List<Section> matchingInReservation = train.getReservedSections().stream()
                     .filter(s -> destinations.stream()
                             .anyMatch(d -> d.getDestination().equals(s)))
                     .collect(Collectors.toList());
 
             if(matchingInReservation.size() > 0){
-                Bukkit.broadcastMessage("Matches in reservation: " + matchingInReservation.get(0));
+                JRidesPlugin.getLogger().info(LogType.SECTIONS, "Matches in reservation: " + matchingInReservation.get(0));
                 return matchingInReservation.get(0);
             }
         }
@@ -138,6 +161,10 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
 
         origin.populateWith(sectionMap);
 
-        this.selectNewDestination();
+        this.selectNewDestination(null);
+    }
+
+    private void newTrainEntered(Train train){
+        selectNewDestination(train);
     }
 }

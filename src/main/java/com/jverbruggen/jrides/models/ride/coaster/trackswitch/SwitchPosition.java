@@ -1,8 +1,10 @@
 package com.jverbruggen.jrides.models.ride.coaster.trackswitch;
 
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 public class SwitchPosition {
@@ -31,6 +33,12 @@ public class SwitchPosition {
                 .filter(entry -> entry.getKey().getSectionIdentifier().equalsIgnoreCase(destinationReference))
                 .findFirst().orElseThrow().getValue();
         setDestination(found);
+    }
+
+    public boolean availableFor(@Nullable Train train){
+        Train occupiedBy = destination.getOccupiedBy();
+        Train reservedBy = destination.getReservedBy();
+        return (occupiedBy == null || occupiedBy == train) && (reservedBy == null || reservedBy == train);
     }
 
     @Override

@@ -16,29 +16,23 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 public abstract class BaseControlMode implements ControlMode {
     protected final RideHandle rideHandle;
-    protected final StationHandle stationHandle;
     protected final LanguageFile languageFile;
     protected TriggerContext triggerContext;
-    protected DispatchLockCollection dispatchLockCollection;
     protected MinMaxWaitingTimer waitingTimer;
     protected Player operator;
 
     protected final long tickInterval;
-    private boolean dispatchIntervalActive;
     private boolean started;
 
     private int tickIntervalState;
 
-    protected BaseControlMode(RideHandle rideHandle, StationHandle stationHandle, MinMaxWaitingTimer waitingTimer, DispatchLockCollection dispatchLockCollection, boolean activeOnStart) {
+    protected BaseControlMode(RideHandle rideHandle, TriggerContext triggerContext, MinMaxWaitingTimer waitingTimer) {
         this.rideHandle = rideHandle;
         this.languageFile = JRidesPlugin.getLanguageFile();
+        this.triggerContext = triggerContext;
 
-        this.stationHandle = stationHandle;
-        this.triggerContext = null;
-        this.dispatchLockCollection = dispatchLockCollection;
         this.waitingTimer = waitingTimer;
 
-        this.dispatchIntervalActive = activeOnStart;
         this.tickInterval = 5L;
         this.tickIntervalState = 0;
         this.operator = null;
@@ -56,7 +50,7 @@ public abstract class BaseControlMode implements ControlMode {
     }
 
     protected void incrementWaitingTimer(){
-        if(dispatchIntervalActive) waitingTimer.increment(tickInterval);
+        if(triggerContext.getTrainPresentLock().isUnlocked()) waitingTimer.increment(tickInterval);
     }
 
     @Override
@@ -84,16 +78,6 @@ public abstract class BaseControlMode implements ControlMode {
     }
 
     @Override
-    public void setTriggerContext(TriggerContext triggerContext) {
-        this.triggerContext = triggerContext;
-    }
-
-    @Override
-    public TriggerContext getTriggerContext() {
-        return triggerContext;
-    }
-
-    @Override
     public MinMaxWaitingTimer getWaitingTimer() {
         return waitingTimer;
     }
@@ -101,18 +85,11 @@ public abstract class BaseControlMode implements ControlMode {
     @Override
     public void onVehicleArrive(Train train, StationHandle stationHandle) {
         waitingTimer.reset();
-        dispatchIntervalActive = true;
     }
 
     @Override
     public void onVehicleDepart(Train train, StationHandle stationHandle) {
         waitingTimer.reset();
-        dispatchIntervalActive = false;
-    }
-
-    @Override
-    public StationHandle getStationHandle() {
-        return stationHandle;
     }
 
     @Override
@@ -123,5 +100,10 @@ public abstract class BaseControlMode implements ControlMode {
     @Override
     public boolean allowsAction(ControlAction action, Player player) {
         return player.equals(operator);
+    }
+
+    @Override
+    public void setTriggerContext(TriggerContext triggerContext) {
+        this.triggerContext = triggerContext;
     }
 }

@@ -83,4 +83,14 @@ public class SimpleDispatchLock implements DispatchLock {
     public void addEventListener(Consumer<DispatchLock> eventListener) {
         eventListeners.add(eventListener);
     }
+
+    @Override
+    public String toString() {
+        return "SimpleDispatchLock{" +
+                "locked=" + locked +
+                ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
+                ", debugStatus='" + debugStatus + '\'' +
+                '}';
+    }
 }

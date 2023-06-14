@@ -147,4 +147,13 @@ public class DispatchLockCollection implements DispatchLock {
     public void setLocked(boolean locked) {
         locks.forEach(l -> l.setLocked(locked));
     }
+
+    @Override
+    public String toString() {
+        return "DispatchLockCollection{" +
+                "description='" + description + '\'' +
+                ", locks=" + locks +
+                ", statusCached='" + statusCached + '\'' +
+                '}';
+    }
 }

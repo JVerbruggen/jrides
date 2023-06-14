@@ -133,6 +133,7 @@ public class TrackBehaviourFactory {
 
         TriggerContext triggerContext = new TriggerContext(
                 dispatchLockCollection,
+                trainInStationDispatchLock,
                 new DispatchTrigger(dispatchLockCollection),
                 new GateTrigger(gatesGenericLock),
                 new RestraintTrigger(restraintLock));
@@ -152,6 +153,7 @@ public class TrackBehaviourFactory {
 
         CoasterStationHandle stationHandle = new CoasterStationHandle(coasterHandle, stationName, shortStationName, triggerContext, gates, waitingTimer,
                 entryEffectTriggers, exitEffectTriggers, ejectLocation);
+        triggerContext.setParentStation(stationHandle);
 
         return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, true, triggerContext,
                 stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock, restraintLock, driveSpeed);

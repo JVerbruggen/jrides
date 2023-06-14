@@ -19,27 +19,6 @@ public class AlternateRideController extends SingularRideController implements R
         this.setRideHandle(rideHandle);
     }
 
-    @Override
-    public void onTrainArrive(Train train, StationHandle stationHandle) {
-
-    }
-
-    @Override
-    public void onTrainDepart(Train train, StationHandle stationHandle) {
-
-    }
-
-    @Override
-    public boolean setOperator(Player player) {
-        return false;
-    }
-
-    @Override
-    public Player getOperator() {
-        return null;
-    }
-
-
     public TriggerContext getLeftStationTriggerContext() {
         return leftStationTriggerContext;
     }

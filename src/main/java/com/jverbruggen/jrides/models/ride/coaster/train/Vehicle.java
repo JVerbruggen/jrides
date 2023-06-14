@@ -16,4 +16,6 @@ public interface Vehicle {
     void playRestraintCloseSound();
 
     void playDispatchSound();
+
+    String getName();
 }

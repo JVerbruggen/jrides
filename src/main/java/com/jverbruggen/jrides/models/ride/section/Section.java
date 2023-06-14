@@ -37,6 +37,7 @@ public interface Section extends Comparable {
     void clearEntireBlockReservation(@Nonnull Train authority);
     void clearEntireBlockReservation(@Nonnull Train authority, List<Section> done);
     @Nullable Train getReservedBy();
+    boolean isReserved();
 
     void addOccupation(@NonNull  Train train);
     void removeOccupation(@NonNull  Train train);

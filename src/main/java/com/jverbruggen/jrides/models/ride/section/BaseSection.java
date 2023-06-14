@@ -124,6 +124,11 @@ public abstract class BaseSection implements Section{
     }
 
     @Override
+    public boolean isReserved() {
+        return reservedBy != null;
+    }
+
+    @Override
     public Train getOccupiedBy() {
         return occupiedBy;
     }

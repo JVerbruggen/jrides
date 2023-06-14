@@ -73,4 +73,12 @@ public class StationHandle {
     public Vehicle getStationaryVehicle(){
         throw new RuntimeException("Get vehicle is not implemented yet for non-coaster station handle");
     }
+
+    @Override
+    public String toString() {
+        return "StationHandle{" +
+                "name='" + name + '\'' +
+                ", shortName='" + shortName + '\'' +
+                '}';
+    }
 }
