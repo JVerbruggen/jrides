@@ -17,6 +17,7 @@ import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.event.ride.RideInitializedEvent;
+import com.jverbruggen.jrides.exception.CoasterLoadException;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
@@ -30,6 +31,7 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.factory.*;
 import com.jverbruggen.jrides.models.ride.factory.track.TrackDescription;
 import com.jverbruggen.jrides.models.ride.factory.track.TrackType;
+import com.jverbruggen.jrides.models.ride.factory.train.TrainCreationResult;
 import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
@@ -118,7 +120,11 @@ public class RideManager {
             logger.info("Initialising ride " + rideIdentifier + " with type " + rideType);
 
             if(rideType.equals("coaster")) {
-                loadCoaster(world, rideIdentifier);
+                try {
+                    loadCoaster(world, rideIdentifier);
+                } catch (CoasterLoadException e) {
+                    JRidesPlugin.getLogger().severe("Could not load coaster " + rideIdentifier);
+                }
             }else throw new RuntimeException("Ride type unknown: " + rideType);
         }
 
@@ -127,10 +133,10 @@ public class RideManager {
     }
 
     public void unloadAllRides(){
-        getRideHandles().forEach(RideHandle::unload);
+        getRideHandles().forEach(r -> r.unload(true));
     }
 
-    private void loadCoaster(World world, String rideIdentifier){
+    private void loadCoaster(World world, String rideIdentifier) throws CoasterLoadException {
         RideState rideState = RideState.load(rideIdentifier);
         if(!rideState.shouldLoadRide()){
             logger.warning("Not loading ride " + rideIdentifier);
@@ -171,7 +177,14 @@ public class RideManager {
 
         SectionProvider sectionProvider = new SectionProvider();
         int trainCount = coasterConfig.getVehicles().getTrains();
-        List<TrainHandle> trainHandles = createTrains(coasterHandle, track, coasterConfig, sectionProvider, rideIdentifier, trainCount);
+
+        TrainCreationResult trainCreationResult = createTrains(coasterHandle, track, coasterConfig, sectionProvider, rideIdentifier, trainCount);
+        List<TrainHandle> trainHandles = trainCreationResult.output();
+        if(!trainCreationResult.success()){
+            coasterHandle.unload(false);
+            trainFactory.unloadAll(trainHandles);
+            throw new CoasterLoadException();
+        }
         coasterHandle.setTrains(trainHandles);
 
         RideController rideController = rideControllerFactory.createRideController(coasterHandle, coasterConfig.getControllerConfig());
@@ -190,16 +203,16 @@ public class RideManager {
         return new TrainHandle(sectionProvider, train, track);
     }
 
-    private List<TrainHandle> createTrains(CoasterHandle coasterHandle, Track track, CoasterConfig coasterConfig, SectionProvider sectionProvider, String rideIdentifier, int count){
+    private TrainCreationResult createTrains(CoasterHandle coasterHandle, Track track, CoasterConfig coasterConfig, SectionProvider sectionProvider, String rideIdentifier, int count) {
         List<TrainHandle> trains = new ArrayList<>();
         for(int i = 0; i < count; i++){
             String trainName = rideIdentifier + ":train_" + (i+1);
             TrainHandle trainHandle = createTrain(coasterHandle, track, coasterConfig, sectionProvider, trainName);
             if(trainHandle != null)
                 trains.add(trainHandle);
-            else throw new RuntimeException("TrainHandle was null!");
+            else return new TrainCreationResult(trains, false);
         }
-        return trains;
+        return new TrainCreationResult(trains, true);
     }
 
     private Track loadCoasterTrackFromConfig(CoasterHandle coasterHandle, CoasterConfig coasterConfig, float offsetX, float offsetY, float offsetZ){

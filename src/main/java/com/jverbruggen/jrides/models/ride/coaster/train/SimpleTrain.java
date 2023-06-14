@@ -382,6 +382,11 @@ public class SimpleTrain implements Train {
         return debugMode && player.getBukkitPlayer().hasPermission(Permissions.ELEVATED_STATUS_INSPECTION);
     }
 
+    @Override
+    public void despawn() {
+        carts.forEach(Cart::despawn);
+    }
+
     private void playSound(String soundName){
         if(soundName == null) return;
         JRidesPlugin.getWorld().playSound(this.getCurrentLocation().toBukkitLocation(JRidesPlugin.getWorld()), soundName, SoundCategory.MASTER, 0.1f, 1f);

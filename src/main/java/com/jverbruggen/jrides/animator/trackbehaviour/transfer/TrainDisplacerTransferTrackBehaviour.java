@@ -17,7 +17,6 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.TransferPosition;
 import com.jverbruggen.jrides.models.ride.section.Section;
-import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -84,7 +83,7 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
                 case WAITING:
                     Section currentSection = train.getHeadSection();
                     Section nextSection = currentSection.next(train);
-                    if(nextSection != null && nextSection.isBlockSectionSafe(train)){
+                    if(nextSection != null && nextSection.getBlockSectionSafety(train).safe()){
                         transfer.unlockTrain();
                         transfer.releaseRequest();
                         phase = TransferPhase.DRIVING;

@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.models.ride.factory;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.CoasterHandle;
+import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.CartSpecConfig;
 import com.jverbruggen.jrides.config.coaster.objects.VehiclesConfig;
@@ -47,7 +48,7 @@ public class TrainFactory {
     public Train createEquallyDistributedTrain(CoasterHandle coasterHandle, Track track, CoasterConfig coasterConfig, String trainIdentifier){
         final Section spawnSection = track.getNextSpawnSection();
         if(spawnSection == null){
-            JRidesPlugin.getLogger().severe("No spawn section available on track " + track.toString() + " for train to spawn!");
+            JRidesPlugin.getLogger().severe("No spawn section available on track " + track + " for train " + trainIdentifier + " to spawn!");
             return null;
         }
 
@@ -128,5 +129,9 @@ public class TrainFactory {
         spawnSection.addOccupation(train);
 
         return train;
+    }
+
+    public void unloadAll(List<TrainHandle> trainHandles) {
+        viewportManager.removeEntities(trainHandles);
     }
 }

@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.annotation.Nonnull;
@@ -25,12 +26,12 @@ public interface Section extends Comparable {
     boolean isOccupied();
     Train getOccupiedBy();
     boolean canBlock();
-    boolean isBlockSectionSafe(@Nullable Train train);
-    boolean isBlockSectionSafe(@Nullable Train train, boolean checkConflicts);
+    BlockSectionSafetyResult getBlockSectionSafety(@Nullable Train train);
+    BlockSectionSafetyResult getBlockSectionSafety(@Nullable Train train, boolean checkConflicts);
 
     void setLocalReservation(@Nonnull Train train);
     void clearLocalReservation(@Nonnull Train authority);
-    boolean canReserveLocally(@Nonnull Train train);
+    boolean canReserveLocally(@Nullable Train train);
     boolean canReserveEntireBlock(@Nonnull Train train);
     void setEntireBlockReservation(@Nonnull Train train);
     void clearEntireBlockReservation(@Nonnull Train authority);

@@ -175,4 +175,9 @@ public class SimpleCart implements Cart {
     public void playEffects() {
 
     }
+
+    @Override
+    public void despawn() {
+        modelArmorstand.despawn();
+    }
 }

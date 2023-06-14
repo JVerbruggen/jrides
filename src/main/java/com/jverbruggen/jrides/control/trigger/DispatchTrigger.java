@@ -24,7 +24,7 @@ public class DispatchTrigger implements Trigger {
         if(!dispatchLockCollection.allUnlocked()){
             if(messageAgent != null){
                 languageFile.sendMessage(messageAgent, LanguageFileField.NOTIFICATION_RIDE_DISPATCH_PROBLEMS, FeedbackType.CONFLICT);
-                dispatchLockCollection.getProblems(Integer.MAX_VALUE)
+                dispatchLockCollection.getProblems(Integer.MAX_VALUE, messageAgent.hasPermission(Permissions.ELEVATED_DISPATCH_PROBLEMS_DEBUG))
                         .forEach(p -> languageFile.sendMessage(messageAgent, p));
             }
             return false;

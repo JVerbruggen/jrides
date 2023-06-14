@@ -8,7 +8,7 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import org.bukkit.Bukkit;
+import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.annotation.Nonnull;
@@ -44,8 +44,13 @@ public abstract class BaseSection implements Section{
     }
 
     @Override
-    public boolean canReserveLocally(@Nonnull Train train) {
-        return reservedBy == null || reservedBy == train;
+    public boolean canReserveLocally(@Nullable Train train) {
+        if(train == null) return reservedBy == null;
+
+        boolean freeOfReservations = reservedBy == null || reservedBy == train;
+        boolean freeOfOccupation = occupiedBy == null || occupiedBy == train;
+
+        return freeOfReservations && freeOfOccupation;
     }
 
     @Override
@@ -59,7 +64,7 @@ public abstract class BaseSection implements Section{
 
     @Override
     public void setEntireBlockReservation(@Nonnull Train train) {
-        if(getReservedBy() == null){
+        if(canReserveLocally(train)){
             setLocalReservation(train);
         }else throw new RuntimeException("Could not make reservation although committed to it");
 
@@ -129,8 +134,8 @@ public abstract class BaseSection implements Section{
     }
 
     @Override
-    public boolean isBlockSectionSafe(@Nullable Train train) {
-        return isBlockSectionSafe(train, true);
+    public BlockSectionSafetyResult getBlockSectionSafety(@Nullable Train train) {
+        return getBlockSectionSafety(train, true);
     }
 
     @Override

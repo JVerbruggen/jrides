@@ -77,10 +77,10 @@ public class RideControlButtonFactory {
                 new StaticButtonVisual(Material.ITEM_FRAME,
                         ChatColor.RED, languageFile.get(LanguageFileField.BUTTON_PROBLEMS_STATE)),
                 slot, null);
-        problemList.changeLore(dispatchLockCollection.getProblems(1));
+        problemList.changeLore(dispatchLockCollection.getProblems(1, false));
 
         dispatchLockCollection.addEventListener(lock -> {
-            List<String> problems = dispatchLockCollection.getProblems(1);
+            List<String> problems = dispatchLockCollection.getProblems(1, false);
             if(problems.size() == 0){
                 problemList.setVisible(false);
             }else{

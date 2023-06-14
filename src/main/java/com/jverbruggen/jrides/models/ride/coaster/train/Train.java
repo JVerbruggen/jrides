@@ -78,4 +78,6 @@ public interface Train extends Vehicle {
     void addStatusMessageListener(Player player);
     void removeStatusMessageListener(Player player);
     boolean statusModeEnabled(Player player);
+
+    void despawn();
 }

@@ -54,7 +54,7 @@ public class BlockSectionCommandExecutor extends BaseCommandExecutor {
         for(Section section : sections){
             boolean occupied = section.isOccupied();
             boolean reserved = section.getReservedBy() != null;
-            boolean safe = section.isBlockSectionSafe(null);
+            boolean safe = section.getBlockSectionSafety(null).safe();
 
             ChatColor color = ChatColor.GREEN;
             if(occupied) color = ChatColor.RED;

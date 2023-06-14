@@ -25,4 +25,5 @@ public class Permissions {
 
     /// Debug
     public static final String ELEVATED_STATUS_INSPECTION = "jrides.elevated.status_inspection"; // Allow to inspect coaster frames (debug)
+    public static final String ELEVATED_DISPATCH_PROBLEMS_DEBUG = "jrides.elevated.dispatch_problems_debug";
 }

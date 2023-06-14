@@ -2,8 +2,10 @@ package com.jverbruggen.jrides.control;
 
 import org.bukkit.ChatColor;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -14,6 +16,8 @@ public class DispatchLockCollection implements DispatchLock {
     private final List<Consumer<DispatchLock>> unlockEventListeners;
     private DispatchLockCollection parentCollection;
     private boolean noticeSelfAsProblem;
+    private @Nullable String statusCached;
+    private @Nullable String debugStatusCached;
 
     public DispatchLockCollection(String description) {
         this.description = description;
@@ -22,6 +26,8 @@ public class DispatchLockCollection implements DispatchLock {
         this.unlockEventListeners = new ArrayList<>();
         this.parentCollection = null;
         this.noticeSelfAsProblem = false;
+        this.statusCached = null;
+        this.debugStatusCached = null;
     }
 
     public DispatchLockCollection(String description, DispatchLockCollection parentCollection) {
@@ -32,6 +38,8 @@ public class DispatchLockCollection implements DispatchLock {
         this.noticeSelfAsProblem = true;
 
         this.setParentCollection(parentCollection);
+        this.statusCached = null;
+        this.debugStatusCached = null;
     }
 
     public void addLockEventListener(Consumer<DispatchLock> lockEventListener){
@@ -66,7 +74,7 @@ public class DispatchLockCollection implements DispatchLock {
     }
 
     @Override
-    public List<String> getProblems(int detailLevel){
+    public List<String> getProblems(int detailLevel, boolean debug){
         List<String> problems = new ArrayList<>();
         if(noticeSelfAsProblem && !this.isUnlocked())
             problems.add(ChatColor.GRAY + "- " + this.getDescription());
@@ -77,18 +85,11 @@ public class DispatchLockCollection implements DispatchLock {
 
         for(DispatchLock lock : locks){
             if(!lock.isUnlocked()){
-                problems.addAll(lock.getProblems(newDetailLevel));
+                problems.addAll(lock.getProblems(newDetailLevel, debug));
             }
         }
 
         return problems;
-    }
-
-    public String getProblemString(){
-        List<String> problems = getProblems(Integer.MAX_VALUE);
-        return problems.stream()
-                .map(p -> ChatColor.YELLOW + p)
-                .collect(Collectors.joining("\n"));
     }
 
     public void onLock(DispatchLock lock){
@@ -123,7 +124,18 @@ public class DispatchLockCollection implements DispatchLock {
 
     @Override
     public void setStatus(String status) {
-        unlockEventListeners.forEach(l -> l.accept(this));
+        if(!Objects.equals(statusCached, status)){
+            statusCached = status;
+            unlockEventListeners.forEach(l -> l.accept(this));
+        }
+    }
+
+    @Override
+    public void setDebugStatus(String status) {
+        if(!Objects.equals(debugStatusCached, status)){
+            debugStatusCached = status;
+            unlockEventListeners.forEach(l -> l.accept(this));
+        }
     }
 
     @Override

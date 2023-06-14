@@ -49,4 +49,6 @@ public interface Cart {
 
     void setNextEffect(TrainEffectTriggerHandle nextEffect);
     void playEffects();
+
+    void despawn();
 }

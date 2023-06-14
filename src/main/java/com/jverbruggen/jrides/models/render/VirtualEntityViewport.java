@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.models.entity.VirtualEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class VirtualEntityViewport implements Viewport{
     protected List<VirtualEntity> virtualEntities;
@@ -87,6 +88,13 @@ public abstract class VirtualEntityViewport implements Viewport{
         for(Player player : viewers){
             renderLogic(virtualEntity, player);
         }
+    }
+
+    @Override
+    public void flushDeadEntities() {
+        virtualEntities = getEntities().stream()
+                .filter(VirtualEntity::isAlive)
+                .collect(Collectors.toList());
     }
 
     private void renderLogic(VirtualEntity virtualEntity, Player player){

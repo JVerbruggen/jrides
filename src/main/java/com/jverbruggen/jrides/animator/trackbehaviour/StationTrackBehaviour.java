@@ -16,6 +16,7 @@ import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
 
 public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour{
     private final double passThroughSpeed;
@@ -117,10 +118,12 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                         newSpeed.minus(deceleration, 0);
                     break;
                 case STATIONARY:
-                    if(isNextSectionSafe(train)){
+                    BlockSectionSafetyResult safety = getNextSectionSafety(train);
+                    if(safety.safe()){
                         blockSectionOccupiedDispatchLock.unlock();
                     }else{
                         blockSectionOccupiedDispatchLock.lock();
+                        blockSectionOccupiedDispatchLock.setDebugStatus(safety.reason());
                     }
 
                     DispatchTrigger dispatchTrigger = triggerContext.getDispatchTrigger();
@@ -142,7 +145,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                     break;
                 case WAITING:
                     Section nextSection = train.getNextSection();
-                    if(nextSection != null && nextSection.isBlockSectionSafe(train)){
+                    if(nextSection != null && nextSection.getBlockSectionSafety(train).safe()){
                         nextSection.setEntireBlockReservation(train);
                         phase = StationPhase.DEPARTING;
                         blockSectionOccupiedDispatchLock.lock();

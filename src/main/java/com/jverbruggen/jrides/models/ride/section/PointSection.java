@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -59,10 +60,10 @@ public class PointSection extends BaseSection {
     }
 
     @Override
-    public boolean isBlockSectionSafe(@Nullable Train train, boolean checkConflicts) {
+    public BlockSectionSafetyResult getBlockSectionSafety(@Nullable Train train, boolean checkConflicts) {
         Section next = next(train);
-        if(next == null) return false;
-        return next.isBlockSectionSafe(train, true);
+        if(next == null) return new BlockSectionSafetyResult(false, train, "No next section for train after point");
+        return next.getBlockSectionSafety(train, true);
     }
 
     @Override

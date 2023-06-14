@@ -28,4 +28,5 @@ public interface VirtualEntity {
     void despawnFor(Player player);
     void despawn();
     boolean shouldRenderFor(Player player);
+    boolean isAlive();
 }

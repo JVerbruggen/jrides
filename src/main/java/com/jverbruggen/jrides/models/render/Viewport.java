@@ -18,4 +18,5 @@ public interface Viewport {
     void removeEntity(VirtualEntity virtualEntity);
     void updateEntityViewers(VirtualEntity virtualEntity);
     boolean hasEntity(VirtualEntity virtualEntity);
+    void flushDeadEntities();
 }

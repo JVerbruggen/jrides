@@ -42,6 +42,6 @@ public interface RideHandle {
     void broadcastRideOpen();
     void broadcastRideClose();
 
-    void unload();
+    void unload(boolean save);
     boolean isLoaded();
 }

@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.BaseSection;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
 
 import java.util.List;
 
@@ -56,8 +57,8 @@ public class StraightTransferSection extends BaseSection {
     }
 
     @Override
-    public boolean isBlockSectionSafe(Train train, boolean checkConflicts) {
-        return false;
+    public BlockSectionSafetyResult getBlockSectionSafety(Train train, boolean checkConflicts) {
+        return BlockSectionSafetyResult.emptyFalse();
     }
 
     @Override

@@ -124,4 +124,9 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
             spawnFor(player);
         }
     }
+
+    @Override
+    public boolean isAlive() {
+        return spawned;
+    }
 }

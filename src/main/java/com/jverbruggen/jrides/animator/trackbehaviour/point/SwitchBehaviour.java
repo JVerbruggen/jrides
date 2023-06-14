@@ -1,9 +1,11 @@
 package com.jverbruggen.jrides.animator.trackbehaviour.point;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.animator.trackbehaviour.BaseTrackBehaviour;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
+import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
@@ -42,7 +44,7 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
             throw new RuntimeException("Switch does not lead anywhere!");
 
         selectedDestination = destinations.get(this.roundRobinState).getDestination();
-        Bukkit.broadcastMessage("Next destination for switch: " + selectedDestination);
+        JRidesPlugin.getLogger().info(LogType.SECTIONS, "Next destination for switch: " + selectedDestination);
         updateRoundRobinState();
     }
 

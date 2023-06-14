@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.state.viewport;
 
+import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
@@ -77,5 +78,15 @@ public class SpecifiedViewportManager implements ViewportManager{
     @Override
     public int getRenderDistance() {
         return renderDistance;
+    }
+
+    @Override
+    public void removeEntities(TrainHandle trainHandle) {
+
+    }
+
+    @Override
+    public void removeEntities(List<TrainHandle> trainHandles) {
+
     }
 }

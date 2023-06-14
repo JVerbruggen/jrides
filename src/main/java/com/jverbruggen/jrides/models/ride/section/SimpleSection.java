@@ -6,11 +6,11 @@ import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import org.bukkit.Bukkit;
+import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SimpleSection extends BaseSection {
     private Frame startFrame;
@@ -69,25 +69,29 @@ public class SimpleSection extends BaseSection {
     }
 
     @Override
-    public boolean isBlockSectionSafe(@Nullable Train train, boolean checkConflicts) {
-        if(!this.canReserveLocally(train)) return false;
-        if(this.isOccupied()) return false;
-        if(!this.trackBehaviour.accepts(train)) return false;
+    public BlockSectionSafetyResult getBlockSectionSafety(@Nullable Train train, boolean checkConflicts) {
+        if(!this.canReserveLocally(train)){
+            String reservedByString = getReservedBy() != null ? getReservedBy().getName() : "null";
+            return new BlockSectionSafetyResult(false, train, "Cannot reserve locally, reserved by " + reservedByString);
+        }
+        if(this.isOccupied()) return new BlockSectionSafetyResult(false, train, "Already occupied");
+        if(!this.trackBehaviour.accepts(train)) return new BlockSectionSafetyResult(false, train, "Track behaviour not ready for train");
         if(checkConflicts
                 && conflictSections != null
-                && conflictSections.stream().anyMatch(s -> !s.isBlockSectionSafe(train, false)))
-            return false;
+                && conflictSections.stream().anyMatch(s -> !s.getBlockSectionSafety(train, false).safe()))
+            return new BlockSectionSafetyResult(false, train, "One of conflicting sections unsafe");
 
-        if(this.canBlock()) return true;
+        if(this.canBlock()) return new BlockSectionSafetyResult(true, train, "OK: Can block self");
 
         Section next = next(train);
         if(next == null){
-            if(train == null) return false;
-            else throw new RuntimeException("Section was null for train when checking for block section safety");
+            throw new RuntimeException("Section was null for train when checking for block section safety");
         }
 
-        return next.isPreviousSectionFor(train, this)
-                && next.isBlockSectionSafe(train);
+        if(!next.isPreviousSectionFor(train, this))
+            return new BlockSectionSafetyResult(false, train, "Train and section order mismatch");
+
+        return next.getBlockSectionSafety(train);
     }
 
     @Override

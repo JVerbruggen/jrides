@@ -10,6 +10,7 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
+import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,10 +25,10 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
         this.parentTrack = null;
     }
 
-    protected boolean isNextSectionSafe(Train train){
+    protected BlockSectionSafetyResult getNextSectionSafety(Train train){
         Section nextSection = train.getNextSection();
-        if(nextSection == null) return false;
-        return nextSection.isBlockSectionSafe(train);
+        if(nextSection == null) return new BlockSectionSafetyResult(false, train, "No next section present");
+        return nextSection.getBlockSectionSafety(train);
     }
 
     protected boolean shouldReserveNextSection(Train train){

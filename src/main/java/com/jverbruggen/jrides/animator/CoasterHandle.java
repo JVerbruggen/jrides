@@ -330,8 +330,9 @@ public class CoasterHandle implements RideHandle {
     }
 
     @Override
-    public void unload() {
-        rideState.save();
+    public void unload(boolean save) {
+        if(!loaded) return;
+        if(save) rideState.save();
         loaded = false;
         JRidesPlugin.getLogger().info("Unloaded ride " + getRide().getDisplayName());
     }
