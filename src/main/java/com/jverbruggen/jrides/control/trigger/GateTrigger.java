@@ -52,17 +52,19 @@ public class GateTrigger implements StationTrigger{
     }
 
     public boolean setGatesState(boolean closed){
+        if(gatesLock.isUnlocked() == closed) return false;
+
         Train stationaryTrain = stationHandle.getStationaryTrain();
         if(stationaryTrain == null) {
             return false;
         }
 
         if(closed){
-            gatesLock.setLocked(true);
-            stationHandle.openEntryGates();
-        }else{
             stationHandle.closeEntryGates();
             gatesLock.setLocked(false);
+        }else{
+            gatesLock.setLocked(true);
+            stationHandle.openEntryGates();
         }
 
         return true;

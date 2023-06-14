@@ -53,12 +53,13 @@ public class RestraintTrigger implements StationTrigger {
     }
 
     public boolean setRestraintsState(boolean closed){
+        if(restraintLock.isUnlocked() == closed) return false;
+
         Train stationaryTrain = stationHandle.getStationaryTrain();
         if(stationaryTrain == null) {
             return false;
         }
 
-        // Toggles between on and off
         stationaryTrain.setRestraintForAll(closed);
         restraintLock.setLocked(!closed);
         return true;
