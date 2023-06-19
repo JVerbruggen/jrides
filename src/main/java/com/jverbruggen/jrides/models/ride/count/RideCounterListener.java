@@ -1,5 +1,7 @@
 package com.jverbruggen.jrides.models.ride.count;
 
+import com.jverbruggen.jrides.api.JRidesPlayer;
+import com.jverbruggen.jrides.api.JRidesRide;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
 import com.jverbruggen.jrides.event.player.PlayerQuitEvent;
 import com.jverbruggen.jrides.models.entity.Player;
@@ -17,11 +19,11 @@ public class RideCounterListener implements Listener {
 
     @EventHandler
     public void onFinishRide(PlayerFinishedRideEvent event){
-        Player player = event.getPlayer();
-        String rideIdentifier = event.getRideIdentifier();
+        JRidesPlayer player = event.getPlayer();
+        JRidesRide ride = event.getRide();
 
-        RideCounterRecordCollection collection = rideCounterManager.getCollection(player);
-        RideCounterRecord record = collection.findOrCreate(rideIdentifier);
+        RideCounterRecordCollection collection = rideCounterManager.getCollection(player.getIdentifier());
+        RideCounterRecord record = collection.findOrCreate(ride.getIdentifier());
 
         record.addOne();
 
@@ -31,7 +33,7 @@ public class RideCounterListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event){
-        Player player = event.getPlayer();
+        JRidesPlayer player = event.getPlayer();
 
         rideCounterManager.saveAndUnload(player.getIdentifier());
     }

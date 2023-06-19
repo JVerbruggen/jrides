@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.event.ride;
 
+import com.jverbruggen.jrides.api.JRidesRide;
 import com.jverbruggen.jrides.config.ride.RideState;
-import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -17,15 +17,15 @@ public class RideStateUpdatedEvent extends Event {
         return HANDLERS;
     }
 
-    private final Ride ride;
+    private final JRidesRide ride;
     private final RideState newState;
 
-    public RideStateUpdatedEvent(Ride ride, RideState newState) {
+    public RideStateUpdatedEvent(JRidesRide ride, RideState newState) {
         this.ride = ride;
         this.newState = newState;
     }
 
-    public Ride getRide() {
+    public JRidesRide getRide() {
         return ride;
     }
 
@@ -33,7 +33,7 @@ public class RideStateUpdatedEvent extends Event {
         return newState;
     }
 
-    public RideStateUpdatedEvent(boolean isAsync, Ride ride, RideState newState) {
+    public RideStateUpdatedEvent(boolean isAsync, JRidesRide ride, RideState newState) {
         super(isAsync);
         this.ride = ride;
         this.newState = newState;
@@ -44,7 +44,7 @@ public class RideStateUpdatedEvent extends Event {
         return HANDLERS;
     }
 
-    public static void send(Ride ride, RideState newState){
+    public static void send(JRidesRide ride, RideState newState){
         PluginManager pluginManager = ServiceProvider.getSingleton(PluginManager.class);
         pluginManager.callEvent(new RideStateUpdatedEvent(ride, newState));
     }

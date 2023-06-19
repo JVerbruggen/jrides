@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.state.ride;
 
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
@@ -24,15 +25,11 @@ public class RideCounterManager {
         this.cached = new HashMap<>();
     }
 
-    public void sendRideCounterUpdateMessage(Player player, RideCounterRecord record){
+    public void sendRideCounterUpdateMessage(JRidesPlayer player, RideCounterRecord record){
         languageFile.sendMultilineMessage(player, LanguageFileField.NOTIFICATION_RIDE_COUNTER_UPDATE,
                 builder -> builder
                         .add(LanguageFileTag.rideCount, record.getRideCount() + "")
                         .add(LanguageFileTag.rideDisplayName, record.getRide().getDisplayName()));
-    }
-
-    public RideCounterRecordCollection getCollection(Player player){
-        return getCollection(player.getIdentifier());
     }
 
     public RideCounterRecordCollection getCollection(String playerIdentifier){

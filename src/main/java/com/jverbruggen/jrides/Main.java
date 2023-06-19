@@ -6,7 +6,8 @@ import com.jverbruggen.jrides.common.startup.StartMessage;
 import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.event.ButtonClickEventListener;
 import com.jverbruggen.jrides.control.uiinterface.menu.open.SignMenuListener;
-import com.jverbruggen.jrides.event.player.BukkitPlayerJoinEventListener;
+import com.jverbruggen.jrides.listener.PlayerTeleportToRideListener;
+import com.jverbruggen.jrides.state.player.BukkitPlayerJoinEventListener;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgentManagerListener;
 import com.jverbruggen.jrides.models.map.rideoverview.RideOverviewMapListener;
@@ -51,6 +52,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new RideCounterListener(), this);
         pluginManager.registerEvents(new RideOverviewMapListener(), this);
         pluginManager.registerEvents(new MessageAgentManagerListener(), this);
+        pluginManager.registerEvents(new PlayerTeleportToRideListener(), this);
 
         ConfigurationSerialization.registerClass(RideCounterRecord.class);
         ConfigurationSerialization.registerClass(RideCounterRecordCollection.class);

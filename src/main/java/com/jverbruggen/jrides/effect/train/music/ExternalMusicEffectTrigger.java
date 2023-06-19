@@ -1,11 +1,15 @@
 package com.jverbruggen.jrides.effect.train.music;
 
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
 import com.jverbruggen.jrides.event.ride.OnrideMusicTriggerEvent;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ExternalMusicEffectTrigger extends BaseTrainEffectTrigger implements MusicEffectTrigger {
     private final PluginManager pluginManager;
@@ -20,7 +24,10 @@ public class ExternalMusicEffectTrigger extends BaseTrainEffectTrigger implement
 
     @Override
     public void execute(Train train) {
-        pluginManager.callEvent(new OnrideMusicTriggerEvent(train.getPassengers(), resource, descriptor));
+        pluginManager.callEvent(new OnrideMusicTriggerEvent(train.getPassengers()
+                .stream()
+                .map(p -> (JRidesPlayer)p)
+                .collect(Collectors.toList()), resource, descriptor));
 //        Bukkit.broadcastMessage(resource);
     }
 

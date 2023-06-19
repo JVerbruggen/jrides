@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.event.player;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.Bukkit;
@@ -10,13 +11,13 @@ import org.bukkit.plugin.PluginManager;
 
 public class PlayerQuitEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
-    private final Player player;
+    private final JRidesPlayer player;
 
-    public PlayerQuitEvent(Player player) {
+    public PlayerQuitEvent(JRidesPlayer player) {
         this.player = player;
     }
 
-    public Player getPlayer() {
+    public JRidesPlayer getPlayer() {
         return player;
     }
 
@@ -29,7 +30,7 @@ public class PlayerQuitEvent extends Event {
         return HANDLERS;
     }
 
-    public static void send(Player player){
+    public static void send(JRidesPlayer player){
         PluginManager pluginManager = ServiceProvider.getSingleton(PluginManager.class);
         Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(),
                 () -> pluginManager.callEvent(new PlayerQuitEvent(player)));

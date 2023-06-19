@@ -28,6 +28,22 @@
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>jrides-api</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>api</classifier>
+              <includes>
+                <include>com/jverbruggen/jrides/api/**/*.class</include>
+                <include>com/jverbruggen/jrides/event/**/*.class</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
@@ -114,8 +130,10 @@
     <maven.compiler.target>16.0.1</maven.compiler.target>
     <java.version>16.0.1</java.version>
     <maven.compiler.source>16.0.1</maven.compiler.source>
+    <project.artifactIdApi>jrides-api</project.artifactIdApi>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <minecraft.version>1.19.2-R0.1-SNAPSHOT</minecraft.version>
+    <project.artifactIdApiOutput>/api</project.artifactIdApiOutput>
     <testServer.location>../jrides_testserver/1.19.2</testServer.location>
   </properties>
 </project>

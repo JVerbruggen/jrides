@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.command;
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;
+import com.jverbruggen.jrides.event.player.PlayerTeleportByJRidesEvent;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
@@ -46,6 +47,9 @@ public class WarpCommandExecutor extends BaseCommandExecutor {
             languageFile.sendMessage(player, LanguageFileField.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
             return false;
         }
+
+        assert coasterHandle != null;
+        PlayerTeleportByJRidesEvent.sendEvent(player, coasterHandle.getRide().getWarpLocation());
 
         player.teleport(coasterHandle.getRide().getWarpLocation());
         return true;

@@ -149,7 +149,7 @@ public class SimpleCart implements Cart {
                         ? parentTrain.getStationaryAt().getEjectLocation()
                         : getParentTrain().getHandle().getCoasterHandle().getEjectLocation();
                 if(ejectLocation != null)
-                    passenger.teleport(ejectLocation);
+                    passenger.teleport(ejectLocation, true);
             }
         });
     }

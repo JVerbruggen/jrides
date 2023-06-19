@@ -90,7 +90,7 @@ public class CoasterSeat implements Seat {
             setPassenger(null);
             if(teleport){
                 PlayerLocation ejectLocation = getParentCart().getParentTrain().getHandle().getCoasterHandle().getEjectLocation();
-                passenger.teleport(ejectLocation);
+                passenger.teleport(ejectLocation, true);
             }
             return true;
         }else{

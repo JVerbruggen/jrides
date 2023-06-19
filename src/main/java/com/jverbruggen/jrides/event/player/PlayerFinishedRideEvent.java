@@ -1,5 +1,7 @@
 package com.jverbruggen.jrides.event.player;
 
+import com.jverbruggen.jrides.api.JRidesPlayer;
+import com.jverbruggen.jrides.api.JRidesRide;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -11,20 +13,20 @@ import java.util.List;
 
 public class PlayerFinishedRideEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
-    private final Player player;
-    private final String rideIdentifier;
+    private final JRidesPlayer player;
+    private final JRidesRide ride;
 
-    public PlayerFinishedRideEvent(Player player, String rideIdentifier) {
+    public PlayerFinishedRideEvent(JRidesPlayer player, JRidesRide ride) {
         this.player = player;
-        this.rideIdentifier = rideIdentifier;
+        this.ride = ride;
     }
 
-    public Player getPlayer() {
+    public JRidesPlayer getPlayer() {
         return player;
     }
 
-    public String getRideIdentifier() {
-        return rideIdentifier;
+    public JRidesRide getRide() {
+        return ride;
     }
 
     public static HandlerList getHandlerList() {
@@ -36,9 +38,9 @@ public class PlayerFinishedRideEvent extends Event {
         return HANDLERS;
     }
 
-    public static void sendFinishedRideEvent(List<Player> players, Ride ride){
+    public static void sendFinishedRideEvent(List<JRidesPlayer> players, JRidesRide ride){
         PluginManager pluginManager = ServiceProvider.getSingleton(PluginManager.class);
-        players.forEach(p -> pluginManager.callEvent(new PlayerFinishedRideEvent(p, ride.getIdentifier())));
+        players.forEach(p -> pluginManager.callEvent(new PlayerFinishedRideEvent(p, ride)));
     }
 
 }

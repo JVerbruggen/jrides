@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.models.math;
 
 import com.comphenix.protocol.wrappers.Vector3F;
+import com.jverbruggen.jrides.api.JRidesPlayerLocation;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -264,6 +265,10 @@ public class Vector3 {
         boolean zModRotated = (int)(l2.getZ() / chunkSize) != (int)(l1.getZ() / chunkSize);
 
         return xModRotated || yModRotated || zModRotated;
+    }
+
+    public static Vector3 fromPlayerLocation(JRidesPlayerLocation playerLocation){
+        return new Vector3(playerLocation.getX(), playerLocation.getY(), playerLocation.getZ());
     }
 
 }

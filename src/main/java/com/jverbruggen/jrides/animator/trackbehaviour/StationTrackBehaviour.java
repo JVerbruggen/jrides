@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.TrainMovement;
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
@@ -17,6 +18,8 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
+
+import java.util.stream.Collectors;
 
 public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour{
     private final double passThroughSpeed;
@@ -102,7 +105,10 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                         stationHandle.setStationaryTrain(train);
 
                         if(stationHandle.isExit())
-                            PlayerFinishedRideEvent.sendFinishedRideEvent(train.getPassengers(), coasterHandle.getRide());
+                            PlayerFinishedRideEvent.sendFinishedRideEvent(train.getPassengers()
+                                    .stream()
+                                    .map(p -> (JRidesPlayer)p)
+                                    .collect(Collectors.toList()), coasterHandle.getRide());
 
                         coasterHandle.getRideController().onTrainArrive(train, stationHandle);
                         trainInStationDispatchLock.unlock();

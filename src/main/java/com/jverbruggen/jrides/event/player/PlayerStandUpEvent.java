@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.event.player;
 
 import com.jverbruggen.jrides.JRidesPlugin;
-import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.Bukkit;
@@ -36,7 +36,7 @@ public class PlayerStandUpEvent extends Event {
         return HANDLERS;
     }
 
-    public static void send(Player player, Ride ride){
+    public static void send(JRidesPlayer player, Ride ride){
         PluginManager pluginManager = ServiceProvider.getSingleton(PluginManager.class);
         Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(),
                 () -> pluginManager.callEvent(new PlayerStandUpEvent(player.getBukkitPlayer(), ride.getIdentifier())));

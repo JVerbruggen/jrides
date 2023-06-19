@@ -1,12 +1,13 @@
 package com.jverbruggen.jrides.models.properties;
 
+import com.jverbruggen.jrides.api.JRidesPlayerLocation;
 import com.jverbruggen.jrides.models.math.Vector3;
 import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.util.List;
 
-public class PlayerLocation {
+public class PlayerLocation implements JRidesPlayerLocation {
     private double x;
     private double y;
     private double z;
@@ -41,6 +42,10 @@ public class PlayerLocation {
         return pitch;
     }
 
+    public void setYaw(double yaw) {
+        this.yaw = yaw;
+    }
+
     public Vector3 toVector3(){
         return new Vector3(x,y,z);
     }
@@ -65,5 +70,9 @@ public class PlayerLocation {
         }
 
         return new PlayerLocation(x, y, z, yaw, pitch);
+    }
+
+    public static PlayerLocation fromVector3(Vector3 vector3){
+        return new PlayerLocation(vector3.getX(), vector3.getY(), vector3.getZ(), 0, 0);
     }
 }

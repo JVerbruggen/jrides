@@ -1,9 +1,11 @@
 package com.jverbruggen.jrides.language;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
+import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.SimpleMessageReceiver;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.ChatColor;
@@ -214,6 +216,14 @@ public class LanguageFile {
     public void sendMultilineMessage(MessageReceiver messageReceiver, String content, FeedbackType feedbackType, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
         String prefix = getChatFeedbackColor(feedbackType);
         sendMessage(messageReceiver, prefix, content, builder);
+    }
+
+    public void sendMultilineMessage(JRidesPlayer apiPlayer, LanguageFileField field, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
+        if(!(apiPlayer instanceof MessageReceiver)){
+            throw new RuntimeException("Unexpected type in JRidesPlayer at languagefile");
+        }
+
+        sendMultilineMessage((MessageReceiver) apiPlayer, get(field), defaultFeedbackType, builder);
     }
 
     public void sendMessage(MessageReceiver messageReceiver, String prefix, String content, Function<StringReplacementBuilder, StringReplacementBuilder> builderFunction){

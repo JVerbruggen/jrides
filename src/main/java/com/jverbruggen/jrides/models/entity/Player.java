@@ -2,8 +2,10 @@ package com.jverbruggen.jrides.models.entity;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimationSupport;
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.controller.RideController;
+import com.jverbruggen.jrides.event.player.PlayerTeleportByJRidesEvent;
 import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
@@ -25,7 +27,7 @@ import org.bukkit.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player implements MessageAgent {
+public class Player implements MessageAgent, JRidesPlayer {
     private org.bukkit.entity.Player bukkitPlayer;
     private Seat seatedOn;
     private SmoothAnimationSupport smoothAnimationSupport;
@@ -179,19 +181,22 @@ public class Player implements MessageAgent {
         return viewing;
     }
 
-    public void teleport(PlayerLocation location) {
-        World world = bukkitPlayer.getWorld();
-        bukkitPlayer.teleport(location.toBukkitLocation(world));
+    public void teleport(PlayerLocation location){
+        teleport(location, false);
     }
 
-    public void teleport(Vector3 location){
-        World world = bukkitPlayer.getWorld();
-        bukkitPlayer.teleport(location.toBukkitLocation(world));
+    public void teleport(PlayerLocation location, boolean hard) {
+        if(hard)
+            getBukkitPlayer().teleport(location.toBukkitLocation(getBukkitPlayer().getWorld()));
+        else
+            PlayerTeleportByJRidesEvent.sendEvent(this, location);
     }
 
     public void teleport(Vector3 location, double yaw){
-        World world = bukkitPlayer.getWorld();
-        bukkitPlayer.teleport(location.toBukkitLocation(world, yaw));
+        PlayerLocation playerLocation = PlayerLocation.fromVector3(location);
+        playerLocation.setYaw(yaw);
+
+        teleport(playerLocation, false);
     }
 
     public boolean hasPermission(String permission){
