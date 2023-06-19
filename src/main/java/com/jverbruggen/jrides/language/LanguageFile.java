@@ -28,9 +28,9 @@ public class LanguageFile {
         this.language = new HashMap<>();
 
         setLanguageDefault(LanguageFileField.CHAT_FEEDBACK_PREFIX, "[jrides] ");
-        setLanguageDefault(LanguageFileField.CHAT_FEEDBACK_INFO_COLOR, ChatColor.GRAY + "");
-        setLanguageDefault(LanguageFileField.CHAT_FEEDBACK_WARNING_COLOR, ChatColor.YELLOW + "");
-        setLanguageDefault(LanguageFileField.CHAT_FEEDBACK_SEVERE_COLOR, ChatColor.RED + "");
+        setLanguageDefault(LanguageFileField.CHAT_FEEDBACK_INFO_COLOR, "&7");
+        setLanguageDefault(LanguageFileField.CHAT_FEEDBACK_WARNING_COLOR, "&e");
+        setLanguageDefault(LanguageFileField.CHAT_FEEDBACK_SEVERE_COLOR, "&c");
 
         setLanguageDefault(LanguageFileField.COMMAND_RIDE_DISPATCHED_MESSAGE, "Ride %" + LanguageFileTag.rideDisplayName + "% was dispatched!");
 
@@ -232,7 +232,7 @@ public class LanguageFile {
 
         content = builder.apply(content);
 
-        messageReceiver.sendMessage(prefix + content);
+        messageReceiver.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + content));
     }
 
     private String getChatFeedbackColor(FeedbackType feedbackType){
