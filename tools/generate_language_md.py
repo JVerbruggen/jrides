@@ -12,6 +12,15 @@ tag_replacement_base_expression = r"\"\s\+\sLanguageFileTag.{java_name}\s\+\s\""
 content = """
 # Language
 
+Also see: [docs/config.md](./config.md)
+
+Example language file (plugins/jrides/language.yml):
+```yaml
+language:
+  NOTIFICATION_RIDE_COUNTER_UPDATE: "&4-------\\n \\n&6You have been %RIDE_COUNT% times in %RIDE_DISPLAY_NAME%!\\n \\n&4-------"
+  NOTIFICATION_CANNOT_ENTER_RIDE: "&7This ride is temporarily unavailable."
+```
+
 Key | Default value
 --- | ---
 """
