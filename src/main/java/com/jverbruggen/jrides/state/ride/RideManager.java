@@ -18,6 +18,7 @@ import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.event.ride.RideInitializedEvent;
 import com.jverbruggen.jrides.exception.CoasterLoadException;
+import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
@@ -36,7 +37,9 @@ import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
@@ -46,6 +49,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -147,9 +151,14 @@ public class RideManager {
         if(coasterConfig == null) return;
 
         String displayName = coasterConfig.getDisplayName();
+        List<String> displayDescription = Arrays.stream(coasterConfig.getDisplayDescription().split("\\\\n"))
+                .map(d -> ChatColor.GRAY + d)
+                .collect(Collectors.toList());
+        ItemStack displayItem = ItemStackFactory.getCoasterStackFromConfig(coasterConfig.getDisplayItem());
+
         PlayerLocation warpLocation = coasterConfig.getWarpLocation();
         boolean canExitDuringRide = coasterConfig.getCanExitDuringRide();
-        Ride ride = new SimpleCoaster(rideIdentifier, displayName, warpLocation, canExitDuringRide);
+        Ride ride = new SimpleCoaster(rideIdentifier, displayName, displayDescription, displayItem, warpLocation, canExitDuringRide);
         int rideOverviewMapId = coasterConfig.getRideOverviewMapId();
         List<Float> offset = coasterConfig.getTrack().getPosition();
         float offsetX = offset.get(0);

@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.command.control;
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.command.BaseCommandExecutor;
 import com.jverbruggen.jrides.command.context.CommandContext;
+import com.jverbruggen.jrides.common.MenuSessionManager;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.language.FeedbackType;
@@ -16,10 +17,12 @@ import org.bukkit.inventory.Inventory;
 
 public class ControlAdminMenuCommandExecutor extends BaseCommandExecutor {
     private final RideControlMenuFactory rideControlMenuFactory;
+    private final MenuSessionManager menuSessionManager;
 
     protected ControlAdminMenuCommandExecutor(int depth) {
         super(depth);
         this.rideControlMenuFactory = ServiceProvider.getSingleton(RideControlMenuFactory.class);
+        this.menuSessionManager = ServiceProvider.getSingleton(MenuSessionManager.class);
     }
 
     @Override
@@ -39,7 +42,7 @@ public class ControlAdminMenuCommandExecutor extends BaseCommandExecutor {
         }
         Inventory inventory = rideControlMenu.getInventoryFor(player);
 
-        rideControlMenuFactory.addOpenRideControlMenu(player, rideControlMenu, inventory);
+        menuSessionManager.addOpenMenu(player, rideControlMenu, inventory);
         player.getBukkitPlayer().openInventory(inventory);
         return true;
     }

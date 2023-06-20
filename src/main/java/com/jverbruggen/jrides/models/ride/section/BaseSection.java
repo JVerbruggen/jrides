@@ -192,7 +192,7 @@ public abstract class BaseSection implements Section{
     @Override
     public Section next(Train train, boolean processPassing) {
         if(trackBehaviour.definesNextSection()){
-            return trackBehaviour.getSectionNext(train);
+            return trackBehaviour.getSectionNext(train, processPassing);
         }
 
         return nextSection.acceptAsNext(train, processPassing);
@@ -206,7 +206,7 @@ public abstract class BaseSection implements Section{
     @Override
     public Section previous(Train train, boolean processPassing) {
         if(trackBehaviour.definesNextSection()){
-            return trackBehaviour.getSectionPrevious(train);
+            return trackBehaviour.getSectionPrevious(train, processPassing);
         }
 
         return previousSection;
@@ -282,8 +282,8 @@ public abstract class BaseSection implements Section{
     @Override
     public boolean positiveDirectionToGoTo(Section section, Train forTrain) {
         if(trackBehaviour.definesNextSection()){
-            if(trackBehaviour.getSectionAtEnd(forTrain) == section) return true;
-            else if(trackBehaviour.getSectionAtStart(forTrain) == section) return false;
+            if(trackBehaviour.getSectionAtEnd(forTrain, false) == section) return true;
+            else if(trackBehaviour.getSectionAtStart(forTrain, false) == section) return false;
             else throw new RuntimeException("Cannot determine behaviour-defined direction to go to section " + section + " for train " + forTrain);
         }else{
             if(this.isNextSectionFor(forTrain, section)) return true;

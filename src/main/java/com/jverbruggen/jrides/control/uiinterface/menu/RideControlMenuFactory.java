@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.control.uiinterface.menu;
 
 import com.jverbruggen.jrides.animator.RideHandle;
+import com.jverbruggen.jrides.common.MenuSessionManager;
 import com.jverbruggen.jrides.config.coaster.objects.ControllerConfig;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.controller.AlternateRideController;
@@ -20,14 +21,14 @@ import org.bukkit.inventory.Inventory;
 import java.util.*;
 
 public class RideControlMenuFactory {
-    private final Map<Player, Menu> openRideControlMenus;
+    private final MenuSessionManager menuSessionManager;
     private final LanguageFile languageFile;
     private final RideControlButtonFactory rideControlButtonFactory;
 
     private final Map<RideController, Menu> adminRideControlMenus;
 
     public RideControlMenuFactory() {
-        this.openRideControlMenus = new HashMap<>();
+        this.menuSessionManager = ServiceProvider.getSingleton(MenuSessionManager.class);
         this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
         this.rideControlButtonFactory = ServiceProvider.getSingleton(RideControlButtonFactory.class);
 
@@ -126,27 +127,5 @@ public class RideControlMenuFactory {
         adminRideControlMenus.put(rideController, adminRideControlMenu);
 
         return adminRideControlMenu;
-    }
-
-    public void addOpenRideControlMenu(Player player, Menu rideControlMenu, Inventory inventory){
-        rideControlMenu.addSession(player, inventory);
-        openRideControlMenus.put(player, rideControlMenu);
-        rideControlMenu.sendUpdate();
-    }
-
-    public Menu getOpenRideControlMenu(Player player){
-        return openRideControlMenus.get(player);
-    }
-
-    public void removeOpenRideControlMenu(Player player){
-        Menu rideControlMenu = openRideControlMenus.get(player);
-        if(rideControlMenu == null) return;
-
-        rideControlMenu.removeSession(player);
-        openRideControlMenus.remove(player);
-    }
-
-    public boolean hasOpenRideControlMenu(Player player){
-        return openRideControlMenus.containsKey(player);
     }
 }

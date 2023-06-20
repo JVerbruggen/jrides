@@ -28,10 +28,10 @@ public interface TrackBehaviour {
     void setParentTrack(Track parentTrack);
     Track getParentTrack();
 
-    Section getSectionNext(Train train);
-    Section getSectionPrevious(Train train);
-    Section getSectionAtStart(Train train);
-    Section getSectionAtEnd(Train train);
+    Section getSectionNext(Train train, boolean process);
+    Section getSectionPrevious(Train train, boolean process);
+    Section getSectionAtStart(Train train, boolean process);
+    Section getSectionAtEnd(Train train, boolean process);
     boolean accepts(Train train);
 
     Collection<Section> getAllNextSections(Train train);

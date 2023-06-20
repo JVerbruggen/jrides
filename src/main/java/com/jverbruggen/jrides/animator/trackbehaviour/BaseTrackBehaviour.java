@@ -68,12 +68,12 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     }
 
     @Override
-    public Section getSectionAtEnd(Train train) {
+    public Section getSectionAtEnd(Train train, boolean process) {
         return null;
     }
 
     @Override
-    public Section getSectionAtStart(Train train) {
+    public Section getSectionAtStart(Train train, boolean process) {
         return null;
     }
 
@@ -103,23 +103,23 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     }
 
     @Override
-    public Section getSectionNext(Train train) {
-        return getSectionAtEnd(train);
+    public Section getSectionNext(Train train, boolean process) {
+        return getSectionAtEnd(train, process);
     }
 
     @Override
-    public Section getSectionPrevious(Train train) {
-        return getSectionAtStart(train);
+    public Section getSectionPrevious(Train train, boolean process) {
+        return getSectionAtStart(train, process);
     }
 
     @Override
     public Collection<Section> getAllNextSections(Train train) {
-        return List.of(getSectionNext(train));
+        return List.of(getSectionNext(train, false));
     }
 
     @Override
     public Collection<Section> getAllPreviousSections(Train train) {
-        return List.of(getSectionPrevious(train));
+        return List.of(getSectionPrevious(train, false));
     }
 
     @Override

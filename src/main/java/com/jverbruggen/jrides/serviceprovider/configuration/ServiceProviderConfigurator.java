@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimation;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothCoastersSmoothAnimation;
 import com.jverbruggen.jrides.animator.trackbehaviour.factory.TrackBehaviourFactory;
 import com.jverbruggen.jrides.animator.trackbehaviour.result.CartMovementFactory;
+import com.jverbruggen.jrides.common.MenuSessionManager;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.trigger.TriggerConfigFactory;
 import com.jverbruggen.jrides.control.controller.RideControllerFactory;
@@ -30,10 +31,11 @@ import com.jverbruggen.jrides.models.ride.factory.*;
 import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.PacketSenderFactory;
-import com.jverbruggen.jrides.packets.PacketSender_1_19_2;
 import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideCounterManager;
+import com.jverbruggen.jrides.state.ride.menu.RideOverviewMenuButtonFactory;
+import com.jverbruggen.jrides.state.ride.menu.RideOverviewMenuFactory;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import com.jverbruggen.jrides.state.viewport.ViewportManagerFactory;
 import com.jverbruggen.jrides.state.player.PlayerManager;
@@ -44,7 +46,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -61,6 +62,7 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(ConfigManager.class, new ConfigManager(plugin));
         ServiceProvider.register(LanguageFile.class, new LanguageFile());
 
+        ServiceProvider.register(MenuSessionManager.class, new MenuSessionManager());
         ServiceProvider.register(MessageAgentManager.class, new MessageAgentManager());
         ServiceProvider.register(RideCounterManager.class, new RideCounterManager());
         ServiceProvider.register(ControlModeFactory.class, new ControlModeFactory());
@@ -90,6 +92,8 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(SectionVisualFactory.class, new SectionVisualFactory());
         ServiceProvider.register(TrainVisualFactory.class, new TrainVisualFactory());
         ServiceProvider.register(RideOverviewMapFactory.class, new RideOverviewMapFactory());
+        ServiceProvider.register(RideOverviewMenuButtonFactory.class, new RideOverviewMenuButtonFactory());
+        ServiceProvider.register(RideOverviewMenuFactory.class, new RideOverviewMenuFactory());
 
         ServiceProvider.register(VirtualEntityPacketListener.class, new VirtualEntityPacketListener());
     }

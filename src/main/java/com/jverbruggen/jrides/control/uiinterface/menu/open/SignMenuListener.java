@@ -2,8 +2,8 @@ package com.jverbruggen.jrides.control.uiinterface.menu.open;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.RideHandle;
+import com.jverbruggen.jrides.common.MenuSessionManager;
 import com.jverbruggen.jrides.common.permissions.Permissions;
-import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.menu.Menu;
@@ -26,13 +26,13 @@ public class SignMenuListener implements Listener {
     private final String secondLineTriggerText;
     private final RideManager rideManager;
     private final PlayerManager playerManager;
-    private final RideControlMenuFactory rideControlMenuFactory;
+    private final MenuSessionManager menuSessionManager;
 
     public SignMenuListener(String secondLineTriggerText) {
         this.secondLineTriggerText = secondLineTriggerText;
         this.rideManager = ServiceProvider.getSingleton(RideManager.class);
         this.playerManager = ServiceProvider.getSingleton(PlayerManager.class);
-        this.rideControlMenuFactory = ServiceProvider.getSingleton(RideControlMenuFactory.class);
+        this.menuSessionManager = ServiceProvider.getSingleton(MenuSessionManager.class);
     }
 
     /**
@@ -76,7 +76,7 @@ public class SignMenuListener implements Listener {
         Menu rideControlMenu = rideHandle.getRideControlMenu();
         Inventory inventory = rideControlMenu.getInventoryFor(player);
 
-        rideControlMenuFactory.addOpenRideControlMenu(player, rideControlMenu, inventory);
+        menuSessionManager.addOpenMenu(player, rideControlMenu, inventory);
         player.getBukkitPlayer().openInventory(inventory);
         player.playSound(Sound.UI_BUTTON_CLICK);
     }

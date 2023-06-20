@@ -16,6 +16,7 @@ import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
 import org.bukkit.Bukkit;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,12 +47,16 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
         if(destinations.size() == 0)
             throw new RuntimeException("Switch does not lead anywhere!");
 
+        Arrays.stream(Thread.currentThread().getStackTrace()).forEach(t -> Bukkit.broadcastMessage(t.toString()));
+        Bukkit.broadcastMessage("Round robin state " + this.roundRobinState);
+
         SwitchPosition nextPosition = destinations.get(this.roundRobinState);
         if(!nextPosition.availableFor(train)){
             nextPosition = destinations.stream()
                     .filter(p -> p.availableFor(train))
                     .findFirst()
                     .orElse(nextPosition);
+            Bukkit.broadcastMessage("Round robin not available");
         }
 
         selectedDestination = nextPosition.getDestination();
@@ -79,7 +84,7 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
     public Section acceptAsNext(Train train, boolean canProcessPassed) {
         if(canProcessPassed) trainPassed(train);
 
-        return getSectionAtEnd(train);
+        return getSectionAtEnd(train, true);
     }
 
     @Override
@@ -123,8 +128,8 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
     }
 
     @Override
-    public Section getSectionAtStart(Train train) {
-        if(lastTrain != train){
+    public Section getSectionAtStart(Train train, boolean process) {
+        if(process && lastTrain != train && train != null){
             lastTrain = train;
             newTrainEntered(train);
         }
@@ -132,9 +137,9 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
     }
 
     @Override
-    public Section getSectionAtEnd(Train train) {
+    public Section getSectionAtEnd(Train train, boolean process) {
         if(train != null){
-            if(lastTrain != train){
+            if(process && lastTrain != train){
                 lastTrain = train;
                 newTrainEntered(train);
             }

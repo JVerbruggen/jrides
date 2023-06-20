@@ -5,6 +5,7 @@ public class Permissions {
     public static final String RIDE_ENTER = "jrides.default.ride_enter"; // Allow entering a ride
     public static final String RIDE_WARP = "jrides.default.warp"; // Allow warping (through menu)
     public static final String COMMAND_RIDE_WARP = "jrides.command.default.warp"; // Allow warping (through command)
+    public static final String COMMAND_RIDES_MENU = "jrides.command.default.rides"; // Allow opening '/jrides rides' menu
 
     /// Operator
     public static final String CABIN_OPERATE = "jrides.operator.cabin_operate"; // Allow to operate in a ride cabin

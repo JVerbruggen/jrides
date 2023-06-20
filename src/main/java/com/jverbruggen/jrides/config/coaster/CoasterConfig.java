@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.config.coaster;
 
 import com.jverbruggen.jrides.config.coaster.objects.*;
+import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
 import com.jverbruggen.jrides.config.gates.GatesConfig;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import org.bukkit.configuration.ConfigurationSection;
@@ -11,6 +12,8 @@ public class CoasterConfig extends BaseConfig {
     private final String manifestVersion;
     private final String identifier;
     private final String displayName;
+    private final String displayDescription;
+    private final ItemConfig displayItem;
     private final PlayerLocation warpLocation;
     private final TrackConfig track;
     private final VehiclesConfig vehicles;
@@ -23,12 +26,15 @@ public class CoasterConfig extends BaseConfig {
     private final int rideOverviewMapId;
     private final boolean canExitDuringRide;
 
-    public CoasterConfig(String manifestVersion, String identifier, String displayName, PlayerLocation warpLocation, TrackConfig track,
+    public CoasterConfig(String manifestVersion, String identifier, String displayName, String displayDescription,
+                         ItemConfig displayItem, PlayerLocation warpLocation, TrackConfig track,
                          VehiclesConfig vehicles, CartSpecConfig cartSpec, GatesConfig gates, double gravityConstant, double dragConstant,
                          ControllerConfig controllerConfig, SoundsConfig soundsConfig, int rideOverviewMapId, boolean canExitDuringRide) {
         this.manifestVersion = manifestVersion;
         this.identifier = identifier;
         this.displayName = displayName;
+        this.displayDescription = displayDescription;
+        this.displayItem = displayItem;
         this.warpLocation = warpLocation;
         this.track = track;
         this.vehicles = vehicles;
@@ -52,6 +58,13 @@ public class CoasterConfig extends BaseConfig {
 
     public String getDisplayName() {
         return displayName;
+    }
+    public String getDisplayDescription() {
+        return displayDescription;
+    }
+
+    public ItemConfig getDisplayItem() {
+        return displayItem;
     }
 
     public PlayerLocation getWarpLocation() {
@@ -102,6 +115,8 @@ public class CoasterConfig extends BaseConfig {
         String manifestVersion = configurationSection.getString("manifestVersion");
         String identifier = configurationSection.getString("identifier");
         String displayName = configurationSection.getString("displayName");
+        String displayDescription = getString(configurationSection, "displayDescription", "");
+        ItemConfig displayItem = ItemConfig.fromConfigurationSection(configurationSection.getConfigurationSection("displayItem"));
         PlayerLocation warpLocation = PlayerLocation.fromDoubleList(configurationSection.getDoubleList("warpLocation"));
         double gravityConstant = getDouble(configurationSection, "gravityConstant", 0.15);
         double dragConstant = getDouble(configurationSection, "dragConstant", 0.9993);
@@ -114,7 +129,7 @@ public class CoasterConfig extends BaseConfig {
         int rideOverviewMapId = getInt(configurationSection, "rideOverviewMapId", -1);
         boolean canExitDuringRide = getBoolean(configurationSection, "canExitDuringRide", false);
 
-        return new CoasterConfig(manifestVersion, identifier, displayName, warpLocation, track, vehicles,
+        return new CoasterConfig(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, track, vehicles,
                 cartSpec, gates, gravityConstant, dragConstant, controllerConfig, sounds, rideOverviewMapId,
                 canExitDuringRide);
     }

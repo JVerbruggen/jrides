@@ -169,7 +169,7 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
     }
 
     @Override
-    public Section getSectionAtStart(Train train) {
+    public Section getSectionAtStart(Train train, boolean process) {
         if(!transfer.canSafelyInteractWith(train.getHandle())){
             JRidesPlugin.getLogger().info(LogType.SECTIONS, "No safe interact at start");
             return null;
@@ -178,7 +178,7 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
     }
 
     @Override
-    public Section getSectionAtEnd(Train train) {
+    public Section getSectionAtEnd(Train train, boolean process) {
         if(!transfer.canSafelyInteractWith(train.getHandle())){
             JRidesPlugin.getLogger().info(LogType.SECTIONS, "No safe interact at end");
             return null;
@@ -208,22 +208,22 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour imp
     }
 
     @Override
-    public Section getSectionNext(Train train) {
-        Section logicalNext = getSectionAtEnd(train);
+    public Section getSectionNext(Train train, boolean process) {
+        Section logicalNext = getSectionAtEnd(train, process);
         if(logicalNext != null)
             return logicalNext;
         else{
-            return getSectionAtStart(train);
+            return getSectionAtStart(train, process);
         }
     }
 
     @Override
-    public Section getSectionPrevious(Train train) {
-        Section logicalNext = getSectionAtStart(train);
+    public Section getSectionPrevious(Train train, boolean process) {
+        Section logicalNext = getSectionAtStart(train, process);
         if(logicalNext != null)
             return logicalNext;
         else{
-            return getSectionAtEnd(train);
+            return getSectionAtEnd(train, process);
         }
     }
 

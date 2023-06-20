@@ -6,7 +6,7 @@ import com.jverbruggen.jrides.animator.TrainHandle;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.CartSpecConfig;
 import com.jverbruggen.jrides.config.coaster.objects.VehiclesConfig;
-import com.jverbruggen.jrides.config.coaster.objects.cart.CartModelItemConfig;
+import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
 import com.jverbruggen.jrides.config.coaster.objects.cart.CartTypeSpecConfig;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
@@ -85,7 +85,7 @@ public class TrainFactory {
             else
                 cartTypeSpecConfig = cartSpecConfig.getDefault();
 
-            CartModelItemConfig cartModelItemConfig = cartTypeSpecConfig.getModel().getItem();
+            ItemConfig cartModelItemConfig = cartTypeSpecConfig.getModel().getItem();
 
             Material modelMaterial = cartModelItemConfig.getMaterial();
             int modelDamage = cartModelItemConfig.getDamage();

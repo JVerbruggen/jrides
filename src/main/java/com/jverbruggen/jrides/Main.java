@@ -21,6 +21,7 @@ import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.player.PlayerManagerListener;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import com.jverbruggen.jrides.state.ride.SoftEjector;
+import com.jverbruggen.jrides.state.ride.menu.RideMenuLoader;
 import com.jverbruggen.jrides.state.viewport.ViewportListener;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Bukkit;
@@ -53,6 +54,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new RideOverviewMapListener(), this);
         pluginManager.registerEvents(new MessageAgentManagerListener(), this);
         pluginManager.registerEvents(new PlayerTeleportToRideListener(), this);
+        pluginManager.registerEvents(new RideMenuLoader(), this);
 
         ConfigurationSerialization.registerClass(RideCounterRecord.class);
         ConfigurationSerialization.registerClass(RideCounterRecordCollection.class);

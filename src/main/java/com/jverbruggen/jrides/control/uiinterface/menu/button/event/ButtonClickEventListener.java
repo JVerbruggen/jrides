@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.control.uiinterface.menu.button.event;
 
+import com.jverbruggen.jrides.common.MenuSessionManager;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.menu.Menu;
@@ -21,13 +22,11 @@ import org.bukkit.inventory.ItemStack;
 import java.util.UUID;
 
 public class ButtonClickEventListener implements Listener {
-    private final RideControlMenuFactory rideControlMenuFactory;
-    private final RideManager rideManager;
+    private final MenuSessionManager menuSessionManager;
     private final PlayerManager playerManager;
 
     public ButtonClickEventListener() {
-        this.rideControlMenuFactory = ServiceProvider.getSingleton(RideControlMenuFactory.class);
-        this.rideManager = ServiceProvider.getSingleton(RideManager.class);
+        this.menuSessionManager = ServiceProvider.getSingleton(MenuSessionManager.class);
         this.playerManager = ServiceProvider.getSingleton(PlayerManager.class);
     }
 
@@ -40,9 +39,9 @@ public class ButtonClickEventListener implements Listener {
         if(event.getView().getTopInventory() != clickedInventory) return;
 
         Player player = playerManager.getPlayer((org.bukkit.entity.Player) event.getWhoClicked());
-        if(!rideControlMenuFactory.hasOpenRideControlMenu(player)) return;
+        if(!menuSessionManager.hasOpenMenu(player)) return;
 
-        Menu menu = rideControlMenuFactory.getOpenRideControlMenu(player);
+        Menu menu = menuSessionManager.getOpenMenu(player);
         if(menu.getSessions().get(player) != clickedInventory) return;
 
         ItemStack item = event.getCurrentItem();
@@ -65,6 +64,6 @@ public class ButtonClickEventListener implements Listener {
     @EventHandler
     public void onClose(InventoryCloseEvent event){
         Player player = playerManager.getPlayer((org.bukkit.entity.Player) event.getPlayer());
-        rideControlMenuFactory.removeOpenRideControlMenu(player);
+        menuSessionManager.removeOpenMenu(player);
     }
 }

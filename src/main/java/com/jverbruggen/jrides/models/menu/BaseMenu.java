@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.models.menu;
 
-import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 
@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public abstract class BaseMenu implements Menu {
     private final HashMap<UUID, MenuButton> buttons;
-    private final Map<Player, Inventory> sessions;
+    private final Map<JRidesPlayer, Inventory> sessions;
     private final int inventoryRows;
     private final String inventoryTitle;
 
@@ -21,19 +21,19 @@ public abstract class BaseMenu implements Menu {
         this.sessions = new HashMap<>();
     }
 
-    public Map<Player, Inventory> getSessions() {
+    public Map<JRidesPlayer, Inventory> getSessions() {
         return sessions;
     }
 
-    public void addSession(Player player, Inventory inventory){
+    public void addSession(JRidesPlayer player, Inventory inventory){
         sessions.put(player, inventory);
     }
 
-    public void removeSession(Player player){
+    public void removeSession(JRidesPlayer player){
         sessions.remove(player);
     }
 
-    public Inventory getInventoryFor(Player player){
+    public Inventory getInventoryFor(JRidesPlayer player){
         Inventory inventory = Bukkit.createInventory(player.getBukkitPlayer(), 9*inventoryRows, inventoryTitle);
 
         for(MenuButton button : buttons.values()){

@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.items;
 
+import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
 import com.jverbruggen.jrides.models.entity.Player;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -10,15 +11,26 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 public class ItemStackFactory {
     public static ItemStack getCoasterStack(Material material, Integer damageValue, boolean unbreakable) {
+        return getStack(material, damageValue, unbreakable, ChatColor.GOLD + "jrides model", null);
+    }
+
+    public static ItemStack getStack(Material material, Integer damageValue, boolean unbreakable, String displayName, @Nullable List<String> lore) {
         ItemStack stack = new ItemStack(material, 1);
         ItemMeta meta = stack.getItemMeta();
         ((Damageable)meta).setDamage(damageValue);
-        meta.setDisplayName(ChatColor.GOLD + "jrides model");
+        meta.setDisplayName(displayName);
         meta.setUnbreakable(unbreakable);
+        if(lore != null) meta.setLore(lore);
         stack.setItemMeta(meta);
         return stack;
+    }
+
+    public static ItemStack getCoasterStackFromConfig(ItemConfig itemConfig){
+        return getCoasterStack(itemConfig.getMaterial(), itemConfig.getDamage(), itemConfig.isUnbreakable());
     }
 
     public static ItemStack getRideControlButtonStack(Material material, String displayName){

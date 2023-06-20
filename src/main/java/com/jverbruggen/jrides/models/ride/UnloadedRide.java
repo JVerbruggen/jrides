@@ -1,6 +1,9 @@
 package com.jverbruggen.jrides.models.ride;
 
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class UnloadedRide implements Ride {
     private String identifier;
@@ -16,6 +19,16 @@ public class UnloadedRide implements Ride {
 
     @Override
     public String getDisplayName() {
+        return identifier;
+    }
+
+    @Override
+    public List<String> getDisplayDescription() {
+        return List.of();
+    }
+
+    @Override
+    public ItemStack getDisplayItem() {
         return null;
     }
 
