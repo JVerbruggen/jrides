@@ -160,7 +160,7 @@ public class SimpleTrain implements Train {
 
     @Override
     public Section getNextSection() {
-        return getHeadSection().next(this);
+        return getHeadSection().next(this, false);
     }
 
     @Override

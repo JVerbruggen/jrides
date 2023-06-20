@@ -47,16 +47,12 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
         if(destinations.size() == 0)
             throw new RuntimeException("Switch does not lead anywhere!");
 
-        Arrays.stream(Thread.currentThread().getStackTrace()).forEach(t -> Bukkit.broadcastMessage(t.toString()));
-        Bukkit.broadcastMessage("Round robin state " + this.roundRobinState);
-
         SwitchPosition nextPosition = destinations.get(this.roundRobinState);
         if(!nextPosition.availableFor(train)){
             nextPosition = destinations.stream()
                     .filter(p -> p.availableFor(train))
                     .findFirst()
                     .orElse(nextPosition);
-            Bukkit.broadcastMessage("Round robin not available");
         }
 
         selectedDestination = nextPosition.getDestination();
@@ -84,7 +80,7 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
     public Section acceptAsNext(Train train, boolean canProcessPassed) {
         if(canProcessPassed) trainPassed(train);
 
-        return getSectionAtEnd(train, true);
+        return getSectionAtEnd(train, canProcessPassed);
     }
 
     @Override
