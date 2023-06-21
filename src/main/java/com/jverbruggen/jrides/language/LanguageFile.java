@@ -151,6 +151,10 @@ public class LanguageFile {
         sendMessage(messageReceiver, field, feedbackType, null);
     }
 
+    public void sendMessage(MessageReceiver messageReceiver, String content, FeedbackType feedbackType) {
+        sendMessage(messageReceiver, content, feedbackType, null);
+    }
+
     public void sendMessage(MessageReceiver messageReceiver, LanguageFileField field, FeedbackType feedbackType, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
         String content = get(field);
         sendMessage(messageReceiver, content, feedbackType, builder);

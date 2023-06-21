@@ -26,6 +26,11 @@ public class RideState extends BaseConfig implements ConfigurationSerializable {
     }
 
     public boolean setStateOpened(RideHandle rideHandle){
+        if(openState == OpenState.DISABLED){
+            JRidesPlugin.getLogger().severe("Cannot open a ride which has the DISABLED status");
+            return false;
+        }
+
         if(openState.isOpen() || openState.isOpening())
             return false;
         OpenState newState = openState.open(rideHandle);
@@ -35,12 +40,26 @@ public class RideState extends BaseConfig implements ConfigurationSerializable {
     }
 
     public boolean setStateClosed(RideHandle rideHandle){
+        if(openState == OpenState.DISABLED){
+            JRidesPlugin.getLogger().severe("Cannot close a ride which has the DISABLED status");
+            return false;
+        }
+
         if(!openState.isOpen())
             return false;
         OpenState newState = openState.close(rideHandle);
         boolean changed = newState != this.openState;
         this.openState = newState;
         return changed;
+    }
+
+    public boolean setInactive(){
+        this.openState = OpenState.INACTIVE;
+        return true;
+    }
+
+    public boolean isInactive(){
+        return this.openState == OpenState.INACTIVE || this.openState == OpenState.DISABLED;
     }
 
     public boolean setStateFullyClosed(){

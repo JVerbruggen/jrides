@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.event.player.PlayerTeleportByJRidesEvent;
+import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
@@ -41,14 +42,17 @@ public class WarpCommandExecutor extends BaseCommandExecutor {
 
         String identifier = args[1];
 
-        CoasterHandle coasterHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
         Player player = messageAgent.getPlayer(playerManager);
         if(!player.getBukkitPlayer().hasPermission(Permissions.COMMAND_RIDE_WARP)){
             languageFile.sendMessage(player, LanguageFileField.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
             return false;
         }
 
-        assert coasterHandle != null;
+        CoasterHandle coasterHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
+        if(coasterHandle == null){
+            languageFile.sendMessage(messageAgent, "Ride '" + identifier + "' not found", FeedbackType.CONFLICT);
+            return true;
+        }
         PlayerTeleportByJRidesEvent.sendEvent(player, coasterHandle.getRide().getWarpLocation());
 
         player.teleport(coasterHandle.getRide().getWarpLocation());

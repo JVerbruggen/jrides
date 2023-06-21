@@ -50,7 +50,7 @@ public class CoasterHandle implements RideHandle {
     private boolean loaded;
 
     public CoasterHandle(Ride ride, World world, String dispatchSound, String restraintOpenSound,
-                         String restraintCloseSound, String windSound, int rideOverviewMapId) {
+                         String restraintCloseSound, String windSound, int rideOverviewMapId, boolean loaded) {
         this.ride = ride;
         this.world = world;
         this.dispatchSound = dispatchSound;
@@ -68,7 +68,7 @@ public class CoasterHandle implements RideHandle {
         this.rideOverviewMapId = rideOverviewMapId;
         this.topRideCounters = new ArrayList<>();
         this.rideState = null;
-        this.loaded = true;
+        this.loaded = loaded;
     }
 
     public int getRideOverviewMapId(){
@@ -178,6 +178,8 @@ public class CoasterHandle implements RideHandle {
     }
 
     public void tick(){
+        if(!isLoaded()) return;
+
         if(rideController.isActive())
             rideController.getControlMode().tick();
 

@@ -110,7 +110,7 @@ public class RideControlMenuFactory {
     }
 
     public Menu getAdminMenu(RideController rideController){
-        if(!rideController.isActive())
+        if(rideController == null || !rideController.isActive())
             return null;
         if(adminRideControlMenus.containsKey(rideController))
             return adminRideControlMenus.get(rideController);

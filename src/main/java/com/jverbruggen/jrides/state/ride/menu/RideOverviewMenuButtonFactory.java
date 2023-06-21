@@ -34,16 +34,29 @@ public class RideOverviewMenuButtonFactory {
         List<String> closedLore = new ArrayList<>(lore);
         List<String> maintenanceLore = new ArrayList<>(lore);
 
+        openLore.add("");
         openLore.add(ChatColor.GREEN + "This ride is currently opened");
+        closedLore.add("");
         closedLore.add(ChatColor.RED + "This ride is currently closed");
+        maintenanceLore.add("");
         maintenanceLore.add(ChatColor.DARK_GRAY + "This ride is currently in maintenance");
 
-        options.put(OpenState.OPEN, new StaticButtonVisual(displayItem, ChatColor.GOLD, rideHandle.getRide().getDisplayName(), openLore));
-        options.put(OpenState.CLOSED, new StaticButtonVisual(displayItem, ChatColor.RED, rideHandle.getRide().getDisplayName(), closedLore));
-        options.put(OpenState.MAINTENANCE, new StaticButtonVisual(displayItem, ChatColor.GRAY, rideHandle.getRide().getDisplayName(), maintenanceLore));
+        ButtonVisual openVisual = new StaticButtonVisual(displayItem, ChatColor.GOLD, rideHandle.getRide().getDisplayName(), openLore);
+        ButtonVisual closedVisual = new StaticButtonVisual(displayItem, ChatColor.RED, rideHandle.getRide().getDisplayName(), closedLore);
+        ButtonVisual maintenanceVisual = new StaticButtonVisual(displayItem, ChatColor.GRAY, rideHandle.getRide().getDisplayName(), maintenanceLore);
+
+        options.put(OpenState.OPEN, openVisual);
+        options.put(OpenState.CLOSED, closedVisual);
+        options.put(OpenState.TRANSITION_TO_OPEN, closedVisual);
+        options.put(OpenState.TRANSITION_TO_CLOSE, closedVisual);
+        options.put(OpenState.MAINTENANCE, maintenanceVisual);
+        options.put(OpenState.INACTIVE, maintenanceVisual);
+
+        OpenState current = rideHandle.getState().getOpenState();
+        if(current == null) current = OpenState.MAINTENANCE;
 
         return new SimpleMenuButton(
-                new StatefulButtonVisual<>(() -> rideHandle.getState().getOpenState(), options, OpenState.MAINTENANCE),
+                new StatefulButtonVisual<>(() -> rideHandle.getState().getOpenState(), options, current),
                 slot,
                 new RunnableButtonAction(p -> p.teleport(rideHandle.getRide().getWarpLocation()))
         );

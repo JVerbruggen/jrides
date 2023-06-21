@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
+import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
@@ -20,6 +21,11 @@ public class ControlDispatchCommandExecutor extends BaseCommandExecutor {
     public boolean onCommand(MessageAgent messageAgent, Command command, String s, String[] args, CommandContext commandContext) {
         RideHandle rideHandle = commandContext.get(RideHandle.class);
         RideController rideController = rideHandle.getRideController();
+        if(rideController == null){
+            languageFile.sendMessage(messageAgent, LanguageFileField.ERROR_RIDE_CONTROL_MENU_NOT_FOUND, FeedbackType.CONFLICT);
+            return true;
+        }
+
         DispatchTrigger dispatchTrigger = rideController.getTriggerContext().getDispatchTrigger();
 
         boolean dispatched = dispatchTrigger.execute(messageAgent);

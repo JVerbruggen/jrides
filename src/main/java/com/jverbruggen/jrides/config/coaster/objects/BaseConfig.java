@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.config.coaster.objects;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +81,11 @@ public abstract class BaseConfig {
         return configurationSection.getBoolean(key);
     }
 
+    protected static @Nullable ConfigurationSection getConfigurationSection(ConfigurationSection configurationSection, String key){
+        if(!isPresent(configurationSection, key)) return null;
+        return configurationSection.getConfigurationSection(key);
+    }
+
     protected static List<String> getStringList(ConfigurationSection configurationSection, String key){
         assertPresence(configurationSection, key);
         return configurationSection.getStringList(key);
@@ -99,6 +105,11 @@ public abstract class BaseConfig {
                 .collect(Collectors.toList());
     }
 
+    protected static List<Double> getDoubleList(ConfigurationSection configurationSection, String key, List<Double> defaultValue){
+        if(!isPresent(configurationSection, key)) return defaultValue;
+        return getDoubleList(configurationSection, key);
+    }
+
     protected static List<List<Double>> getDoubleListList(ConfigurationSection configurationSection, String key){
         assertPresence(configurationSection, key);
 
@@ -108,6 +119,11 @@ public abstract class BaseConfig {
                         .map(BaseConfig::toDouble)
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
+    }
+
+    protected static List<List<Double>> getDoubleListList(ConfigurationSection configurationSection, String key, List<List<Double>> defaultValue){
+        if(!isPresent(configurationSection, key)) return defaultValue;
+        return getDoubleListList(configurationSection, key);
     }
 
     protected static double toDouble(Object object){

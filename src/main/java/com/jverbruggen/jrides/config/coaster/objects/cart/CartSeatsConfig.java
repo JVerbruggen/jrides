@@ -19,7 +19,7 @@ public class CartSeatsConfig extends BaseConfig {
     }
 
     public static CartSeatsConfig fromConfigurationSection(ConfigurationSection configurationSection) {
-        List<List<Double>> positions = getDoubleListList(configurationSection, "positions");
+        List<List<Double>> positions = getDoubleListList(configurationSection, "positions", List.of());
         List<Vector3> vectors = positions.stream()
                 .map(Vector3::fromDoubleList)
                 .collect(Collectors.toList());

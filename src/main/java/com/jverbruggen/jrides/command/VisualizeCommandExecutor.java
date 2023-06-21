@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;
+import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.Player;
@@ -47,7 +48,16 @@ public class VisualizeCommandExecutor extends BaseCommandExecutor {
         }
 
         CoasterHandle coasterHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
+        if(coasterHandle == null){
+            languageFile.sendMessage(messageAgent, "Ride '" + identifier + "' not found", FeedbackType.CONFLICT);
+            return true;
+        }
+
         ParticleTrackVisualisationTool tool = coasterHandle.getVisualisationTool();
+        if(tool == null){
+            languageFile.sendMessage(messageAgent, "Could not visualize track", FeedbackType.CONFLICT);
+            return true;
+        }
 
         String actualIdentifier = coasterHandle.getRide().getIdentifier();
         Player player = messageAgent.getPlayer(playerManager);

@@ -3,6 +3,8 @@ package com.jverbruggen.jrides.config.coaster.objects;
 import com.jverbruggen.jrides.config.coaster.objects.cart.CartTypeSpecConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
+import javax.annotation.Nullable;
+
 public class CartSpecConfig {
     private final CartTypeSpecConfig _default;
     private final CartTypeSpecConfig head;
@@ -34,7 +36,10 @@ public class CartSpecConfig {
         return tail != null;
     }
 
-    public static CartSpecConfig fromConfigurationSection(ConfigurationSection configurationSection) {
+    public static CartSpecConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection) {
+        if(configurationSection == null)
+            return new CartSpecConfig(CartTypeSpecConfig.fromConfigurationSection(null), null, null);
+
         CartTypeSpecConfig _default = CartTypeSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("default"));
         CartTypeSpecConfig head = null;
         CartTypeSpecConfig tail = null;

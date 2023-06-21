@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.command.BaseCommandExecutor;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;
+import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideManager;
@@ -35,7 +36,13 @@ public class ControlCommandExecutor extends BaseCommandExecutor {
         String identifier = args[1];
         String subCommand = args[2];
 
-        commandContext.add(RideHandle.class, rideManager.getRideHandle(identifier));
+        RideHandle rideHandle = rideManager.getRideHandle(identifier);
+        if(rideHandle == null){
+            languageFile.sendMessage(messageAgent, "Ride '" + identifier + "' not found", FeedbackType.CONFLICT);
+            return true;
+        }
+
+        commandContext.add(RideHandle.class, rideHandle);
 
         runSubCommand(messageAgent, command, arg, args, subCommand, commandContext);
         return true;

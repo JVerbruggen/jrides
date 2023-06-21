@@ -34,6 +34,7 @@ import com.jverbruggen.jrides.packets.PacketSenderFactory;
 import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideCounterManager;
+import com.jverbruggen.jrides.state.ride.coaster.CoasterLoader;
 import com.jverbruggen.jrides.state.ride.menu.RideOverviewMenuButtonFactory;
 import com.jverbruggen.jrides.state.ride.menu.RideOverviewMenuFactory;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
@@ -88,7 +89,8 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(TrainFactory.class, new TrainFactory());
         ServiceProvider.register(CartMovementFactory.class, new CartMovementFactory());
         ServiceProvider.register(TrackBehaviourFactory.class, new TrackBehaviourFactory());
-        ServiceProvider.register(RideManager.class, new RideManager(dataFolder));
+        ServiceProvider.register(CoasterLoader.class, new CoasterLoader(dataFolder));
+        ServiceProvider.register(RideManager.class, new RideManager());
         ServiceProvider.register(SectionVisualFactory.class, new SectionVisualFactory());
         ServiceProvider.register(TrainVisualFactory.class, new TrainVisualFactory());
         ServiceProvider.register(RideOverviewMapFactory.class, new RideOverviewMapFactory());

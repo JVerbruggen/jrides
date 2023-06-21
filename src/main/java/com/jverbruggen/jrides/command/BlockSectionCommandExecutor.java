@@ -3,8 +3,10 @@ package com.jverbruggen.jrides.command;
 import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;
+import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
+import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideManager;
@@ -47,7 +49,18 @@ public class BlockSectionCommandExecutor extends BaseCommandExecutor {
         }
 
         CoasterHandle coasterHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
-        ArrayList<Section> sections = new ArrayList<>(coasterHandle.getTrack().getSections());
+        if(coasterHandle == null){
+            languageFile.sendMessage(messageAgent, "Ride '" + identifier + "' not found", FeedbackType.CONFLICT);
+            return true;
+        }
+
+        Track track = coasterHandle.getTrack();
+        if(track == null){
+            languageFile.sendMessage(messageAgent, "Track was not found", FeedbackType.CONFLICT);
+            return true;
+        }
+
+        ArrayList<Section> sections = new ArrayList<>(track.getSections());
         Collections.sort(sections);
 
         languageFile.sendMessage(messageAgent, "-- Block section occupations --");

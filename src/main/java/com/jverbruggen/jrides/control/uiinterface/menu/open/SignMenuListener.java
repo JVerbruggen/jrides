@@ -4,6 +4,8 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.common.MenuSessionManager;
 import com.jverbruggen.jrides.common.permissions.Permissions;
+import com.jverbruggen.jrides.language.FeedbackType;
+import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.menu.Menu;
@@ -24,12 +26,14 @@ import org.bukkit.inventory.Inventory;
 
 public class SignMenuListener implements Listener {
     private final String secondLineTriggerText;
+    private final LanguageFile languageFile;
     private final RideManager rideManager;
     private final PlayerManager playerManager;
     private final MenuSessionManager menuSessionManager;
 
     public SignMenuListener(String secondLineTriggerText) {
         this.secondLineTriggerText = secondLineTriggerText;
+        this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
         this.rideManager = ServiceProvider.getSingleton(RideManager.class);
         this.playerManager = ServiceProvider.getSingleton(PlayerManager.class);
         this.menuSessionManager = ServiceProvider.getSingleton(MenuSessionManager.class);
@@ -74,6 +78,11 @@ public class SignMenuListener implements Listener {
         if(rideHandle == null) return;
 
         Menu rideControlMenu = rideHandle.getRideControlMenu();
+        if(rideControlMenu == null){
+            languageFile.sendMessage(player, LanguageFileField.ERROR_RIDE_CONTROL_MENU_NOT_FOUND, FeedbackType.CONFLICT);
+            return;
+        }
+
         Inventory inventory = rideControlMenu.getInventoryFor(player);
 
         menuSessionManager.addOpenMenu(player, rideControlMenu, inventory);

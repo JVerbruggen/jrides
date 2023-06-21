@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.config.coaster.objects.section.base.RangedSectionC
 import com.jverbruggen.jrides.config.coaster.objects.section.base.SectionConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -12,11 +13,20 @@ public class TrackConfig {
     private final List<Float> position;
     private final List<SectionConfig> sections;
     private final List<String> parts;
+    private final boolean correctlyLoaded;
 
     public TrackConfig(List<Float> position, List<SectionConfig> sections, List<String> parts) {
         this.position = position;
         this.sections = sections;
         this.parts = parts;
+        this.correctlyLoaded = true;
+    }
+
+    public TrackConfig(){
+        this.position = new ArrayList<>();
+        this.sections = new ArrayList<>();
+        this.parts = new ArrayList<>();
+        this.correctlyLoaded = false;
     }
 
     public List<Float> getPosition() {
@@ -31,7 +41,13 @@ public class TrackConfig {
         return parts;
     }
 
-    public static TrackConfig fromConfigurationSection(ConfigurationSection configurationSection) {
+    public boolean isCorrectlyLoaded() {
+        return correctlyLoaded;
+    }
+
+    public static TrackConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection) {
+        if(configurationSection == null) return new TrackConfig();
+
         List<Float> position = configurationSection.getFloatList("position");
         List<String> parts = configurationSection.getStringList("parts");
 

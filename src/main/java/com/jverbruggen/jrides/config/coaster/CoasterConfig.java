@@ -120,9 +120,9 @@ public class CoasterConfig extends BaseConfig {
         PlayerLocation warpLocation = PlayerLocation.fromDoubleList(configurationSection.getDoubleList("warpLocation"));
         double gravityConstant = getDouble(configurationSection, "gravityConstant", 0.15);
         double dragConstant = getDouble(configurationSection, "dragConstant", 0.9993);
-        TrackConfig track = TrackConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("track")));
-        VehiclesConfig vehicles = VehiclesConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("vehicles")));
-        CartSpecConfig cartSpec = CartSpecConfig.fromConfigurationSection(Objects.requireNonNull(configurationSection.getConfigurationSection("cartSpec")));
+        TrackConfig track = TrackConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "track"));
+        VehiclesConfig vehicles = VehiclesConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "vehicles"));
+        CartSpecConfig cartSpec = CartSpecConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "cartSpec"));
         GatesConfig gates = GatesConfig.fromConfigurationSection(configurationSection.getConfigurationSection("gates"));
         SoundsConfig sounds = SoundsConfig.fromConfigurationSection(configurationSection.getConfigurationSection("sounds"));
         ControllerConfig controllerConfig = ControllerConfig.fromConfigurationSection(configurationSection.getConfigurationSection("controller"));
