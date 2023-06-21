@@ -2,6 +2,7 @@ package com.jverbruggen.jrides;
 
 import com.comphenix.protocol.ProtocolManager;
 import com.jverbruggen.jrides.command.MainCommandExecutor;
+import com.jverbruggen.jrides.common.MenuSessionManager;
 import com.jverbruggen.jrides.common.startup.StartMessage;
 import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.event.ButtonClickEventListener;
@@ -89,11 +90,13 @@ public class Main extends JavaPlugin {
         PlayerManager playerManager = ServiceProvider.getSingleton(PlayerManager.class);
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
         RideManager rideManager = ServiceProvider.getSingleton(RideManager.class);
+        MenuSessionManager menuSessionManager = ServiceProvider.getSingleton(MenuSessionManager.class);
 
         for(Player player : playerManager.getPlayers()){
             player.clearSmoothAnimationRotation();
         }
 
+        menuSessionManager.closeAllOpenMenus();
         rideManager.unloadAllRides();
         viewportManager.despawnAll();
 

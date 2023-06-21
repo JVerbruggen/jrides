@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.common;
 
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.models.menu.Menu;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
@@ -34,5 +35,14 @@ public class MenuSessionManager {
 
     public boolean hasOpenMenu(JRidesPlayer player){
         return openMenus.containsKey(player);
+    }
+
+    public void closeAllOpenMenus(){
+        for(Map.Entry<JRidesPlayer, Menu> entry : openMenus.entrySet()){
+            JRidesPlayer player = entry.getKey();
+            Player bukkitPlayer = player.getBukkitPlayer();
+            bukkitPlayer.closeInventory();
+            removeOpenMenu(player);
+        }
     }
 }
