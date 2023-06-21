@@ -71,7 +71,12 @@ public class GlobalViewportManager implements ViewportManager {
 
     @Override
     public void updateVisuals(Player player) {
-        globalViewport.updateFor(player);
+        updateVisuals(player, player.getLocation());
+    }
+
+    @Override
+    public void updateVisuals(Player player, Vector3 playerLocation) {
+        globalViewport.updateFor(player, playerLocation);
     }
 
     @Override

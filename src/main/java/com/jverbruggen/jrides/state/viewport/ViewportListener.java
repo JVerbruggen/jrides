@@ -6,10 +6,13 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+
+import java.util.Objects;
 
 public class ViewportListener implements Listener {
     private final int chunkSize = 8;
@@ -21,7 +24,7 @@ public class ViewportListener implements Listener {
         this.playerManager = playerManager;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onMove(PlayerMoveEvent event){
         if(Vector3.chunkRotated(event.getFrom(), event.getTo(), 8)){
             Player player = playerManager.getPlayer(event.getPlayer());
@@ -29,10 +32,10 @@ public class ViewportListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onTeleport(PlayerTeleportEvent event){
         Player player = playerManager.getPlayer(event.getPlayer());
-        viewportManager.updateVisuals(player);
+        viewportManager.updateVisuals(player, Objects.requireNonNullElse(Vector3.fromBukkitLocation(event.getTo()), player.getLocation()));
 
         if(player.isSeated()){
             player.getSeatedOn().setPassenger(null);

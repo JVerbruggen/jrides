@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class Vector3 {
@@ -249,6 +250,11 @@ public class Vector3 {
     public static Vector3 fromDoubleList(List<Double> doubleList){
         if(doubleList.size() != 3) throw new RuntimeException("Can only create vector from double list of length 3");
         return new Vector3(doubleList.get(0), doubleList.get(1), doubleList.get(2));
+    }
+
+    public static Vector3 fromBukkitLocation(@Nullable Location bukkitLocation) {
+        if(bukkitLocation == null) return null;
+        return new Vector3(bukkitLocation.getX(), bukkitLocation.getY(), bukkitLocation.getZ());
     }
 
     public static boolean chunkRotated(Vector3 v1, Vector3 v2, int chunkSize){

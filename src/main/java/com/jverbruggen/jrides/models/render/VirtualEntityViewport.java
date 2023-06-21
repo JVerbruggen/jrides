@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.models.render;
 
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
+import com.jverbruggen.jrides.models.math.Vector3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,11 +74,11 @@ public abstract class VirtualEntityViewport implements Viewport{
     }
 
     @Override
-    public void updateFor(Player player) {
+    public void updateFor(Player player, Vector3 playerLocation) {
         if(!hasViewer(player)) addViewer(player);
 
         for(VirtualEntity virtualEntity : virtualEntities){
-            renderLogic(virtualEntity, player);
+            renderLogic(virtualEntity, player, playerLocation);
         }
     }
 
@@ -86,7 +87,7 @@ public abstract class VirtualEntityViewport implements Viewport{
         if(!hasEntity(virtualEntity)) addEntity(virtualEntity);
 
         for(Player player : viewers){
-            renderLogic(virtualEntity, player);
+            renderLogic(virtualEntity, player, player.getLocation());
         }
     }
 
@@ -97,8 +98,8 @@ public abstract class VirtualEntityViewport implements Viewport{
                 .collect(Collectors.toList());
     }
 
-    private void renderLogic(VirtualEntity virtualEntity, Player player){
-        double distanceSquared = virtualEntity.getLocation().distanceSquared(player.getLocation());
+    private void renderLogic(VirtualEntity virtualEntity, Player player, Vector3 playerLocation){
+        double distanceSquared = virtualEntity.getLocation().distanceSquared(playerLocation);
         if(player.isViewing(virtualEntity)){
             if(distanceSquared > maxRenderDistance*maxRenderDistance){
                 virtualEntity.despawnFor(player);

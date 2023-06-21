@@ -22,8 +22,13 @@ public class SpecifiedViewportManager implements ViewportManager{
         this.renderChunkSize = renderChunkSize;
     }
 
-    public void updateVisuals(Player player){
-        Vector3 location = player.getLocation();
+    @Override
+    public void updateVisuals(Player player) {
+        updateVisuals(player, player.getLocation());
+    }
+
+    @Override
+    public void updateVisuals(Player player, Vector3 playerLocation){
     }
 
     public void updateForEntity(VirtualEntity virtualEntity){
