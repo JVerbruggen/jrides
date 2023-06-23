@@ -10,7 +10,6 @@ import com.jverbruggen.jrides.animator.coaster.trackbehaviour.brake.BlockBrakeTr
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.brake.BrakeAndDriveTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.transfer.TrainDisplacerTransferTrackBehaviour;
-import com.jverbruggen.jrides.animator.trackbehaviour.*;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.point.SwitchBehaviour;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
