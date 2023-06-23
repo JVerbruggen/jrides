@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.models.map.rideoverview;
 
-import com.jverbruggen.jrides.animator.CoasterHandle;
+import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.models.math.Vector2;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.AutoTrackUpdateFrame;

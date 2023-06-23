@@ -1,8 +1,8 @@
 package com.jverbruggen.jrides.command;
 
-import com.jverbruggen.jrides.animator.CoasterHandle;
+import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.animator.RideHandle;
-import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
+import com.jverbruggen.jrides.animator.coaster.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.language.FeedbackType;

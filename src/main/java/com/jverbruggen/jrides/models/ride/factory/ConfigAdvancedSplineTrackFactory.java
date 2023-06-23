@@ -1,8 +1,8 @@
 package com.jverbruggen.jrides.models.ride.factory;
 
-import com.jverbruggen.jrides.animator.CoasterHandle;
-import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
-import com.jverbruggen.jrides.animator.trackbehaviour.factory.TrackBehaviourFactory;
+import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
+import com.jverbruggen.jrides.animator.coaster.NoLimitsExportPositionRecord;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.factory.TrackBehaviourFactory;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.base.SectionConfig;

@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.models.map.rideoverview;
 
-import com.jverbruggen.jrides.animator.TrainHandle;
+import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import dev.cerus.maps.api.Marker;
 
 public class TrainVisual {

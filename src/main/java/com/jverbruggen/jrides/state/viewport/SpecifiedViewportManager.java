@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.state.viewport;
 
-import com.jverbruggen.jrides.animator.TrainHandle;
+import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;

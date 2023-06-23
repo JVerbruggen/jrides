@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.models.map.rideoverview;
 
 import com.jverbruggen.jrides.JRidesPlugin;
-import com.jverbruggen.jrides.animator.CoasterHandle;
+import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;

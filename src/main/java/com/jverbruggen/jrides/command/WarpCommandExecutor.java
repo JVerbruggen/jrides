@@ -1,6 +1,5 @@
 package com.jverbruggen.jrides.command;
 
-import com.jverbruggen.jrides.animator.CoasterHandle;
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;

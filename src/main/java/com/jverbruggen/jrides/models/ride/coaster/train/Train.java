@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.models.ride.coaster.train;
 
-import com.jverbruggen.jrides.animator.TrainHandle;
+import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;

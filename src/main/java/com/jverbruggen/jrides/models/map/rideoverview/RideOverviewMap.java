@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.models.map.rideoverview;
 
 import com.jverbruggen.jrides.JRidesPlugin;
-import com.jverbruggen.jrides.animator.CoasterHandle;
+import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector2;
 import com.jverbruggen.jrides.models.ride.section.Section;

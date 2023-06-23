@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.models.ride.coaster.transfer;
 
-import com.jverbruggen.jrides.animator.TrainHandle;
+import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.*;
 import com.jverbruggen.jrides.models.ride.coaster.train.Cart;

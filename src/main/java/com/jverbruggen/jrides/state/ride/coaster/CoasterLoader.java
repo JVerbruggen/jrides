@@ -1,8 +1,8 @@
 package com.jverbruggen.jrides.state.ride.coaster;
 
-import com.jverbruggen.jrides.animator.CoasterHandle;
-import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
-import com.jverbruggen.jrides.animator.TrainHandle;
+import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
+import com.jverbruggen.jrides.animator.coaster.NoLimitsExportPositionRecord;
+import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
@@ -35,7 +35,6 @@ import com.jverbruggen.jrides.models.ride.factory.track.TrackType;
 import com.jverbruggen.jrides.models.ride.factory.train.TrainCreationResult;
 import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;

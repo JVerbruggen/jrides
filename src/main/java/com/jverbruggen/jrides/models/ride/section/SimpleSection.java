@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.models.ride.section;
 
 import com.jverbruggen.jrides.JRidesPlugin;
-import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
@@ -10,7 +10,6 @@ import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResul
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Objects;
 
 public class SimpleSection extends BaseSection {
     private Frame startFrame;

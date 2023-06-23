@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.models.ride.section.reference;
 
-import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.section.PointSection;
 import com.jverbruggen.jrides.models.ride.section.Section;

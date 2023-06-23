@@ -1,8 +1,8 @@
 package com.jverbruggen.jrides.models.ride.factory;
 
 import com.jverbruggen.jrides.JRidesPlugin;
-import com.jverbruggen.jrides.animator.CoasterHandle;
-import com.jverbruggen.jrides.animator.TrainHandle;
+import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
+import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.CartSpecConfig;
 import com.jverbruggen.jrides.config.coaster.objects.VehiclesConfig;

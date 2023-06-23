@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.state.viewport;
 
-import com.jverbruggen.jrides.animator.TrainHandle;
+import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.models.entity.EntityIdFactory;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
@@ -8,12 +8,10 @@ import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.render.GlobalViewport;
-import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 import com.jverbruggen.jrides.packets.PacketSender;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GlobalViewportManager implements ViewportManager {
     private final GlobalViewport globalViewport;

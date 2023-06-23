@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.models.ride.factory.track;
 
-import com.jverbruggen.jrides.animator.NoLimitsExportPositionRecord;
+import com.jverbruggen.jrides.animator.coaster.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 
 import java.util.List;

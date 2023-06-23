@@ -1,14 +1,11 @@
 package com.jverbruggen.jrides.models.ride.section.transfer;
 
-import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.BaseSection;
-import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
-
-import java.util.List;
 
 public class StraightTransferSection extends BaseSection {
     public TransferPosition currentTransferPosition;

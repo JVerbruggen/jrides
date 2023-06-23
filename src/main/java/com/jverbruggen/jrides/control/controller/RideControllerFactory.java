@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.control.controller;
 
-import com.jverbruggen.jrides.animator.CoasterHandle;
+import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.config.coaster.objects.ControllerConfig;
 import com.jverbruggen.jrides.config.coaster.objects.controller.AlternateControllerSpecConfig;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;

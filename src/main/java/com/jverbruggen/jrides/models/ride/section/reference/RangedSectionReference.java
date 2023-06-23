@@ -1,11 +1,10 @@
 package com.jverbruggen.jrides.models.ride.section.reference;
 
-import com.jverbruggen.jrides.animator.trackbehaviour.TrackBehaviour;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SimpleSection;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RangedSectionReference extends SectionReference {
