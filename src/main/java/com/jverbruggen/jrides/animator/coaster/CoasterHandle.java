@@ -1,41 +1,28 @@
 package com.jverbruggen.jrides.animator.coaster;
 
 import com.jverbruggen.jrides.JRidesPlugin;
-import com.jverbruggen.jrides.animator.RideHandle;
+import com.jverbruggen.jrides.animator.AbstractRideHandle;
 import com.jverbruggen.jrides.animator.coaster.tool.ParticleTrackVisualisationTool;
-import com.jverbruggen.jrides.common.permissions.Permissions;
-import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
-import com.jverbruggen.jrides.event.ride.RideStateUpdatedEvent;
-import com.jverbruggen.jrides.language.LanguageFileField;
-import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.Player;
-import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
-import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
-import org.bukkit.Sound;
 import org.bukkit.World;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CoasterHandle implements RideHandle {
-    private Ride ride;
-    private Menu rideControlMenu;
-    private RideController rideController;
+public class CoasterHandle extends AbstractRideHandle {
     private Track track;
-    private World world;
     private ParticleTrackVisualisationTool visualisationTool;
     private List<CoasterStationHandle> stationHandles;
     private List<TrainHandle> trains;
@@ -46,20 +33,15 @@ public class CoasterHandle implements RideHandle {
     private final String restraintCloseSound;
     private final String windSound;
     private int rideOverviewMapId;
-    private List<RideCounterRecordCollection> topRideCounters;
-    private RideState rideState;
-    private boolean loaded;
 
     public CoasterHandle(Ride ride, World world, String dispatchSound, String restraintOpenSound,
                          String restraintCloseSound, String windSound, int rideOverviewMapId, boolean loaded) {
-        this.ride = ride;
-        this.world = world;
+        super(world, ride, null, loaded);
+
         this.dispatchSound = dispatchSound;
         this.restraintOpenSound = restraintOpenSound;
         this.restraintCloseSound = restraintCloseSound;
         this.windSound = windSound;
-        this.rideController = null;
-
         this.trains = new ArrayList<>();
         this.stationHandles = new ArrayList<>();
         this.transfers = new ArrayList<>();
@@ -67,9 +49,6 @@ public class CoasterHandle implements RideHandle {
         this.track = null;
         this.effectTriggerCollection = null;
         this.rideOverviewMapId = rideOverviewMapId;
-        this.topRideCounters = new ArrayList<>();
-        this.rideState = null;
-        this.loaded = loaded;
     }
 
     public int getRideOverviewMapId(){
@@ -84,7 +63,7 @@ public class CoasterHandle implements RideHandle {
     public void setTrains(List<TrainHandle> trains) {
         this.trains = trains;
         trains.forEach(t -> t.setCoasterHandle(this));
-        this.visualisationTool = ParticleTrackVisualisationTool.fromTrack(world, track, 20, trains);
+        this.visualisationTool = ParticleTrackVisualisationTool.fromTrack(getWorld(), track, 20, trains);
     }
 
     public List<TrainHandle> getTrains() {
@@ -97,22 +76,6 @@ public class CoasterHandle implements RideHandle {
 
     public ParticleTrackVisualisationTool getVisualisationTool() {
         return visualisationTool;
-    }
-
-    @Override
-    public Ride getRide() {
-        return ride;
-    }
-
-    @Override
-    public RideController getRideController() {
-        return rideController;
-    }
-
-    @Override
-    public void setRideController(RideController rideController, Menu rideControlMenu) {
-        this.rideController = rideController;
-        this.rideControlMenu = rideControlMenu;
     }
 
     @Override
@@ -173,14 +136,10 @@ public class CoasterHandle implements RideHandle {
         return getCoasterStationHandles().get(index);
     }
 
-    @Override
-    public Menu getRideControlMenu() {
-        return rideControlMenu;
-    }
-
     public void tick(){
         if(!isLoaded()) return;
 
+        RideController rideController = getRideController();
         if(rideController.isActive())
             rideController.getControlMode().tick();
 
@@ -229,28 +188,10 @@ public class CoasterHandle implements RideHandle {
     }
 
     @Override
-    public List<RideCounterRecordCollection> getTopRideCounters() {
-        return topRideCounters;
-    }
-
-    @Override
     public List<Player> getPassengers() {
         return getTrains().stream()
                 .flatMap(trainHandle -> trainHandle.getTrain().getPassengers().stream())
-                .collect(Collectors.toUnmodifiableList());
-    }
-
-    @Override
-    public void setState(RideState state) {
-        assert state != null;
-
-        this.rideState = state;
-        RideStateUpdatedEvent.send(ride, rideState);
-    }
-
-    @Override
-    public RideState getState() {
-        return rideState;
+                .toList();
     }
 
     @Override
@@ -259,89 +200,8 @@ public class CoasterHandle implements RideHandle {
     }
 
     @Override
-    public void open(Player authority) {
-        if(!authority.hasPermission(Permissions.ELEVATED_RIDE_OPEN_STATE_CHANGE)){
-            JRidesPlugin.getLanguageFile().sendMessage(authority, LanguageFileField.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
-            return;
-        }
-
-        boolean opened = getState().setStateOpened(this);
-        if(opened) authority.playSound(Sound.BLOCK_FENCE_GATE_OPEN);
-        else authority.playSound(Sound.UI_BUTTON_CLICK);
-    }
-
-    @Override
-    public void close(Player authority) {
-        if(!authority.hasPermission(Permissions.ELEVATED_RIDE_OPEN_STATE_CHANGE)){
-            JRidesPlugin.getLanguageFile().sendMessage(authority, LanguageFileField.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
-            return;
-        }
-
-        boolean closed = attemptClose(authority);
-    }
-
-    private boolean attemptClose(@Nullable Player authority){
-        if(authority != null && !authority.hasPermission(Permissions.ELEVATED_RIDE_OPEN_STATE_CHANGE)){
-            JRidesPlugin.getLanguageFile().sendMessage(authority, LanguageFileField.ERROR_GENERAL_NO_PERMISSION_MESSAGE);
-            return false;
-        }
-
-        if(getState().getOpenState().isOpen()){
-            boolean closed = getState().setStateClosed(this);
-
-            if(authority != null){
-                if(!closed){
-                    authority.playSound(Sound.UI_BUTTON_CLICK);
-                }else{
-                    authority.playSound(Sound.BLOCK_FENCE_GATE_CLOSE);
-                }
-            }
-        }
-
-        Player currentOperator = rideController.getOperator();
-        if(currentOperator != null) currentOperator.setOperating(null);
-        rideControlMenu.sendUpdate();
-
-        if(getState().getOpenState().isClosing()){
-            if(canFullyClose()){
-                rideState.setStateFullyClosed();
-            }else return false;
-        }
-
-        return true;
-    }
-
-    @Override
     public boolean canFullyClose() {
         return getPassengers().size() == 0 && getRideController().getOperator() == null;
     }
 
-    @Override
-    public void broadcastRideOpen() {
-        JRidesPlugin.getLanguageFile().sendMessage(
-                JRidesPlugin.getBroadcastReceiver(),
-                LanguageFileField.NOTIFICATION_RIDE_STATE_OPEN,
-                b -> b.add(LanguageFileTag.rideDisplayName, ride.getDisplayName()));
-    }
-
-    @Override
-    public void broadcastRideClose() {
-        JRidesPlugin.getLanguageFile().sendMessage(
-                JRidesPlugin.getBroadcastReceiver(),
-                LanguageFileField.NOTIFICATION_RIDE_STATE_CLOSED,
-                b -> b.add(LanguageFileTag.rideDisplayName, ride.getDisplayName()));
-    }
-
-    @Override
-    public void unload(boolean save) {
-        if(!loaded) return;
-        if(save) rideState.save();
-        loaded = false;
-        JRidesPlugin.getLogger().info("Unloaded ride " + getRide().getDisplayName());
-    }
-
-    @Override
-    public boolean isLoaded() {
-        return loaded;
-    }
 }

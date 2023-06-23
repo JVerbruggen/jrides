@@ -235,4 +235,15 @@ public class MatrixMath {
                     matrix1[rv+3] * matrix2[cv+4*3]) / matrix1[rv+0];
         }
     }
+
+    public static Matrix4x4 rotateTranslate(Vector3 originPosition, Quaternion originRotation, Vector3 offsetPosition, Quaternion offsetRotation){
+        Matrix4x4 rotationMatrix = new Matrix4x4();
+        rotationMatrix.translate(originPosition);
+        rotationMatrix.rotate(originRotation);
+
+        rotationMatrix.rotate(offsetRotation);
+        rotationMatrix.translate(offsetPosition);
+
+        return rotationMatrix;
+    }
 }

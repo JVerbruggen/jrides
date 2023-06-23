@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.serviceprovider.configuration;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.jverbruggen.jrides.animator.flatride.factory.FlatRideFactory;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimation;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothCoastersSmoothAnimation;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.factory.TrackBehaviourFactory;
@@ -90,6 +91,7 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(CartMovementFactory.class, new CartMovementFactory());
         ServiceProvider.register(TrackBehaviourFactory.class, new TrackBehaviourFactory());
         ServiceProvider.register(CoasterLoader.class, new CoasterLoader(dataFolder));
+        ServiceProvider.register(FlatRideFactory.class, new FlatRideFactory());
         ServiceProvider.register(RideManager.class, new RideManager());
         ServiceProvider.register(SectionVisualFactory.class, new SectionVisualFactory());
         ServiceProvider.register(TrainVisualFactory.class, new TrainVisualFactory());

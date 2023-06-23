@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.state.ride;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.animator.RideHandle;
+import com.jverbruggen.jrides.animator.flatride.factory.FlatRideFactory;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.ride.RideConfig;
@@ -27,6 +28,7 @@ public class RideManager {
     private final List<RideHandle> rideHandles;
     private final ConfigManager configManager;
     private final CoasterLoader coasterLoader;
+    private final FlatRideFactory flatRideFactory;
     private final List<String> rideIdentifiers;
 
     public RideManager() {
@@ -34,15 +36,12 @@ public class RideManager {
         this.rideHandles = new ArrayList<>();
         this.configManager = ServiceProvider.getSingleton(ConfigManager.class);
         this.coasterLoader = ServiceProvider.getSingleton(CoasterLoader.class);
+        this.flatRideFactory = ServiceProvider.getSingleton(FlatRideFactory.class);
         this.rideIdentifiers = new ArrayList<>();
     }
 
-    public Ride GetRide(RideIdentifier identifier){
-        return null;
-    }
-
-    public void addRideHandle(CoasterHandle coasterHandle){
-        rideHandles.add(coasterHandle);
+    public void addRideHandle(RideHandle rideHandle){
+        rideHandles.add(rideHandle);
     }
 
     public List<String> getRideIdentifiers() {
@@ -52,10 +51,6 @@ public class RideManager {
     public List<RideHandle> getRideHandles() {
         return rideHandles;
     }
-
-//    public List<RideHandle> getRideHandles(){
-//        return new ArrayList<>(rideHandles);
-//    }
 
     public @Nullable RideHandle getRideHandle(String identifier){
         return this.rideHandles
@@ -86,6 +81,8 @@ public class RideManager {
                 } catch (CoasterLoadException e) {
                     JRidesPlugin.getLogger().severe("Could not load coaster " + rideIdentifier);
                 }
+            }else if(rideType.equals("flatride")){
+                loadFlatRide(world, rideIdentifier);
             }else throw new RuntimeException("Ride type unknown: " + rideType);
         }
 
@@ -111,6 +108,17 @@ public class RideManager {
         }
 
         CoasterHandle rideHandle = coasterLoader.loadCoaster(coasterConfig, rideIdentifier, rideState, world);
+        if(rideHandle != null) this.addRideHandle(rideHandle);
+    }
+
+    private void loadFlatRide(World world, String rideIdentifier){
+        RideState rideState = RideState.load(rideIdentifier);
+        if(!rideState.shouldLoadRide()){
+            logger.warning("Not loading ride " + rideIdentifier);
+            return;
+        }
+
+        RideHandle rideHandle = flatRideFactory.createSimpleFlatRide(rideIdentifier, world, rideState);
         if(rideHandle != null) this.addRideHandle(rideHandle);
     }
 

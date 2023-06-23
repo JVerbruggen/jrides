@@ -10,6 +10,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class Vector3 {
+    private static final Vector3 ZERO = new Vector3(0,0,0);
+
     public double x;
     public double y;
     public double z;
@@ -29,6 +31,10 @@ public class Vector3 {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public static Vector3 zero() {
+        return Vector3.ZERO;
     }
 
     public double getX() {
