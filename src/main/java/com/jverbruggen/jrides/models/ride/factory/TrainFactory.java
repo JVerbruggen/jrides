@@ -16,12 +16,8 @@ import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.AutoTrackUpdateFrame;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
-import com.jverbruggen.jrides.models.ride.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
-import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
-import com.jverbruggen.jrides.models.ride.coaster.train.SimpleCart;
-import com.jverbruggen.jrides.models.ride.coaster.train.SimpleTrain;
-import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.*;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -70,7 +66,7 @@ public class TrainFactory {
 
         final Vector3 cartOffset = coasterConfig.getCartSpec().getDefault().getModel().getPosition();
 
-        List<Cart> carts = new ArrayList<>();
+        List<CoasterCart> carts = new ArrayList<>();
         for(int i = 0; i < amountOfCarts; i++){
             int cartOffsetFrames = i*cartDistance;
 
@@ -94,13 +90,13 @@ public class TrainFactory {
 
             Vector3 trackLocation = spawnSection.getLocationFor(cartFrame);
             Quaternion orientation = spawnSection.getOrientationFor(cartFrame);
-            Vector3 cartLocation = Cart.calculateLocation(trackLocation, cartOffset, orientation);
+            Vector3 cartLocation = CoasterCart.calculateLocation(trackLocation, cartOffset, orientation);
 
             VirtualArmorstand armorStand = viewportManager.spawnVirtualArmorstand(cartLocation, model);
             Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> armorStand.setHeadpose(ArmorStandPose.getArmorStandPose(orientation)));
 
             List<Vector3> seatOffsets = cartTypeSpecConfig.getSeats().getPositions();
-            List<Seat> seats = seatFactory.createSeats(coasterHandle, seatOffsets, cartLocation, orientation);
+            List<CoasterSeat> seats = seatFactory.createCoasterSeats(coasterHandle, seatOffsets, cartLocation, orientation);
 
             Section cartSection = spawnSection;
             if(!cartSection.isInSection(cartFrame)){
@@ -110,7 +106,7 @@ public class TrainFactory {
             }
 
             String cartName = trainIdentifier + "_cart_" + i;
-            Cart cart = new SimpleCart(
+            CoasterCart cart = new SimpleCoasterCart(
                     cartName,
                     seats,
                     armorStand,

@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface Train extends Vehicle {
     String getName();
-    List<Cart> getCarts();
+    List<CoasterCart> getCarts();
     int size();
 
     Frame getFrontFacingTrainFrame();

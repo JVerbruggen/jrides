@@ -1,7 +1,6 @@
 package com.jverbruggen.jrides.animator.coaster;
 
 import com.jverbruggen.jrides.JRidesPlugin;
-import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovement;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
@@ -15,7 +14,7 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.properties.TrainEnd;
-import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
+import com.jverbruggen.jrides.models.ride.coaster.train.CoasterCart;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
@@ -78,10 +77,10 @@ public class TrainHandle {
         speedBPS.setSpeed(result.getNewSpeed().getSpeedPerTick());
 
         // --- Move carts according to instructions
-        Set<Map.Entry<Cart, CartMovement>> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getHandle(), train.getCarts(), result.getNewSpeed().getFrameIncrement(), null).entrySet();
+        Set<Map.Entry<CoasterCart, CartMovement>> cartMovements = cartMovementFactory.createOnTrackCartMovement(train.getHandle(), train.getCarts(), result.getNewSpeed().getFrameIncrement(), null).entrySet();
         if(cartMovements != null){
-            for(Map.Entry<Cart, CartMovement> cartMovement : cartMovements){
-                Cart cart = cartMovement.getKey();
+            for(Map.Entry<CoasterCart, CartMovement> cartMovement : cartMovements){
+                CoasterCart cart = cartMovement.getKey();
                 CartMovement movement = cartMovement.getValue();
                 cart.setPosition(movement);
                 cart.playEffects();

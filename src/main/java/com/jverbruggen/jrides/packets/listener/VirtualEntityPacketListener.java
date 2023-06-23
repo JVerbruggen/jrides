@@ -13,7 +13,7 @@ import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Ride;
-import com.jverbruggen.jrides.models.ride.Seat;
+import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.models.ride.coaster.train.CoasterSeat;
 import com.jverbruggen.jrides.packets.PacketSender;

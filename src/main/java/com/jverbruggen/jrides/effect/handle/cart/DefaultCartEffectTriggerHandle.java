@@ -2,7 +2,7 @@ package com.jverbruggen.jrides.effect.handle.cart;
 
 import com.jverbruggen.jrides.effect.cart.CartEffectTrigger;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
-import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
+import com.jverbruggen.jrides.models.ride.coaster.train.CoasterCart;
 
 public class DefaultCartEffectTriggerHandle extends BaseCartEffectTriggerHandle {
     public DefaultCartEffectTriggerHandle(Frame frame, CartEffectTrigger cartEffectTrigger) {
@@ -10,7 +10,7 @@ public class DefaultCartEffectTriggerHandle extends BaseCartEffectTriggerHandle 
     }
 
     @Override
-    public void execute(Cart cart) {
+    public void execute(CoasterCart cart) {
         getCartEffectTrigger().execute(cart);
     }
 }

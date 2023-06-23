@@ -2,7 +2,7 @@ package com.jverbruggen.jrides.effect.cart.rotation;
 
 import com.jverbruggen.jrides.effect.cart.BaseCartEffectTrigger;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
+import com.jverbruggen.jrides.models.ride.coaster.train.CoasterCart;
 
 public class CartRotationEffectTrigger extends BaseCartEffectTrigger {
     private final Vector3 rotation;
@@ -16,12 +16,12 @@ public class CartRotationEffectTrigger extends BaseCartEffectTrigger {
     }
 
     @Override
-    public void execute(Cart cart) {
+    public void execute(CoasterCart cart) {
 
     }
 
     @Override
-    public void executeReversed(Cart cart) {
+    public void executeReversed(CoasterCart cart) {
 
     }
 

@@ -18,7 +18,7 @@ import java.util.List;
 
 public class SimpleTrain implements Train {
     private final String name;
-    private List<Cart> carts;
+    private List<CoasterCart> carts;
     private Frame middleOfTrainFrame;
     private Frame headOfTrainFrame;
     private Frame tailOfTrainFrame;
@@ -40,7 +40,7 @@ public class SimpleTrain implements Train {
     private boolean drivingTowardsPositiveDirection;
     private boolean forwards;
 
-    public SimpleTrain(String name, List<Cart> carts, Frame headOfTrainFrame, Frame middleOfTrainFrame, Frame tailOfTrainFrame,
+    public SimpleTrain(String name, List<CoasterCart> carts, Frame headOfTrainFrame, Frame middleOfTrainFrame, Frame tailOfTrainFrame,
                        Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation, Section section, boolean debugMode) {
         this.name = name;
         this.carts = carts;
@@ -77,7 +77,7 @@ public class SimpleTrain implements Train {
     }
 
     @Override
-    public List<Cart> getCarts() {
+    public List<CoasterCart> getCarts() {
         return carts;
     }
 
@@ -197,7 +197,7 @@ public class SimpleTrain implements Train {
 
     @Override
     public void setRestraintForAll(boolean locked) {
-        for(Cart cart : getCarts()){
+        for(CoasterCart cart : getCarts()){
             cart.setRestraint(locked);
         }
 
@@ -207,7 +207,7 @@ public class SimpleTrain implements Train {
 
     @Override
     public boolean getRestraintState() {
-        return carts.stream().allMatch(Cart::getRestraintState);
+        return carts.stream().allMatch(CoasterCart::getRestraintState);
     }
 
     @Override
@@ -262,7 +262,7 @@ public class SimpleTrain implements Train {
         middleOfTrainFrame.setInvertedFrameAddition(inverted);
         tailOfTrainFrame.setInvertedFrameAddition(inverted);
 
-        for(Cart cart : getCarts()){
+        for(CoasterCart cart : getCarts()){
             cart.setInvertedFrameAddition(inverted);
         }
     }
@@ -317,7 +317,7 @@ public class SimpleTrain implements Train {
 
     @Override
     public void ejectPassengers() {
-        carts.forEach(Cart::ejectPassengers);
+        carts.forEach(CoasterCart::ejectPassengers);
     }
 
     @Override
@@ -384,7 +384,7 @@ public class SimpleTrain implements Train {
 
     @Override
     public void despawn() {
-        carts.forEach(Cart::despawn);
+        carts.forEach(CoasterCart::despawn);
     }
 
     private void playSound(String soundName){

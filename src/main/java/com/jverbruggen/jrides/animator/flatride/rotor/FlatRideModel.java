@@ -4,11 +4,11 @@ import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 
-public class RotorModel {
+public class FlatRideModel {
     private final VirtualEntity entity;
     private final Vector3 offset;
 
-    public RotorModel(VirtualEntity entity, Vector3 offset) {
+    public FlatRideModel(VirtualEntity entity, Vector3 offset) {
         this.entity = entity;
         this.offset = offset;
     }

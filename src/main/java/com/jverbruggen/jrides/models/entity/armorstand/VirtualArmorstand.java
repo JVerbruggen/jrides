@@ -8,7 +8,7 @@ import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.ride.Seat;
+import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.packet.raw.ArmorstandRotationServerPacket;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;

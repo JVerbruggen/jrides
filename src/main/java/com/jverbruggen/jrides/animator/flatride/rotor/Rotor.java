@@ -1,74 +1,51 @@
 package com.jverbruggen.jrides.animator.flatride.rotor;
 
+import com.jverbruggen.jrides.animator.flatride.AbstractFlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
+import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
+import com.jverbruggen.jrides.animator.flatride.attachment.RelativeAttachment;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Rotor implements FlatRideComponent {
-    private final String identifier;
+public class Rotor extends AbstractFlatRideComponent {
     private final List<Attachment> children;
-    private @Nullable Attachment attachedTo;
     private Quaternion rotation;
-    private final List<RotorModel> rotorModels;
+    private final RotorSpeed rotorSpeed;
 
-    public Rotor(String identifier, List<RotorModel> rotorModels) {
-        this.identifier = identifier;
+    public Rotor(String identifier, List<FlatRideModel> flatRideModels, RotorSpeed rotorSpeed) {
+        super(identifier, flatRideModels);
         this.children = new ArrayList<>();
-        this.attachedTo = null;
         this.rotation = new Quaternion();
-        this.rotorModels = rotorModels;
-    }
-
-    @Override
-    public String getIdentifier() {
-        return identifier;
+        this.rotorSpeed = rotorSpeed;
     }
 
     @Override
     public void attach(FlatRideComponent child, Quaternion offsetRotation, Vector3 offsetPosition){
-        Attachment attachment = new RotorAttachment(this, child, offsetRotation, offsetPosition);
+        Attachment attachment = new RelativeAttachment(this, child, offsetRotation, offsetPosition);
 
         child.setAttachedTo(attachment);
         children.add(attachment);
     }
 
     @Override
-    public @Nullable Attachment getAttachedTo() {
-        return attachedTo;
-    }
-
-    @Override
-    public void setAttachedTo(@Nullable Attachment attachment) {
-        attachedTo = attachment;
-    }
-
-    @Override
     public Quaternion getRotation() {
-        return Quaternion.multiply(attachedTo.getRotation(), rotation);
-    }
+        if(getAttachedTo() == null) throw new RuntimeException("Rotor " + getIdentifier() + " not attached to anything");
 
-    @Override
-    public Vector3 getPosition() {
-        if(attachedTo == null) throw new RuntimeException("Rotor " + identifier + " not attached to anything");
-
-        return attachedTo.getPosition();
+        return Quaternion.multiply(getAttachedTo().getRotation(), rotation);
     }
 
     @Override
     public void tick() {
-        rotation.rotateY(2);
+        rotation.rotateY(rotorSpeed.getSpeed());
 
         for(Attachment attachment : children){
             attachment.update();
             attachment.getChild().tick();
         }
 
-        for(RotorModel rotorModel : rotorModels){
-            rotorModel.updateLocation(getPosition(), getRotation());
-        }
+        updateFlatRideModels();
     }
 }

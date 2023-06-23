@@ -4,7 +4,7 @@ import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
-import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
+import com.jverbruggen.jrides.models.ride.coaster.train.CoasterCart;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
@@ -60,7 +60,7 @@ public class ParticleTrackVisualisationTool extends ParticleVisualisationTool {
         }
         for(TrainHandle train : trains){
             bukkitPlayer.spawnParticle(Particle.DRIP_WATER, train.getTrain().getCurrentHeadLocation().toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
-            for(Cart cart : train.getTrain().getCarts()){
+            for(CoasterCart cart : train.getTrain().getCarts()){
                 bukkitPlayer.spawnParticle(Particle.VILLAGER_HAPPY, cart.getPosition().toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
             }
             bukkitPlayer.spawnParticle(Particle.DRIP_LAVA, train.getTrain().getCurrentTailLocation().toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);

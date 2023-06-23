@@ -3,7 +3,7 @@ package com.jverbruggen.jrides.models.ride.coaster.transfer;
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.*;
-import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
+import com.jverbruggen.jrides.models.ride.coaster.train.CoasterCart;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
 
@@ -76,7 +76,7 @@ public class Transfer {
         rotationMatrix.translate(currentLocation);
         rotationMatrix.rotate(currentOrientation);
 
-        for(Cart cart : train.getTrain().getCarts()){
+        for(CoasterCart cart : train.getTrain().getCarts()){
             Quaternion currentCartOrientation = cart.getOrientation();
             if(currentCartOrientation == null) throw new RuntimeException("Cart doesn't have orientation");
 
@@ -160,7 +160,7 @@ public class Transfer {
     }
 
     private void updateModelPosition(){
-        Vector3 armorstandCompenstationVector = Cart.getArmorstandHeightCompensationVector();
+        Vector3 armorstandCompenstationVector = CoasterCart.getArmorstandHeightCompensationVector();
         Vector3 modelOffsetCompensated = Vector3.subtract(modelOffset, armorstandCompenstationVector);
 
         Matrix4x4 orientationMatrix = new Matrix4x4();
@@ -179,7 +179,7 @@ public class Transfer {
     }
 
     private void moveTrain(){
-        Vector3 armorstandCompenstationVector = Cart.getArmorstandHeightCompensationVector();
+        Vector3 armorstandCompenstationVector = CoasterCart.getArmorstandHeightCompensationVector();
 
         for(CartOffsetFromTransferOrigin cartProgramming : cartPositions){
             Matrix4x4 matrix = new Matrix4x4();
@@ -318,15 +318,15 @@ public class Transfer {
 class CartOffsetFromTransferOrigin{
     private final Vector3 position;
     private final Quaternion orientation;
-    private final Cart cart;
+    private final CoasterCart cart;
 
-    CartOffsetFromTransferOrigin(Vector3 position, Quaternion orientation, Cart cart) {
+    CartOffsetFromTransferOrigin(Vector3 position, Quaternion orientation, CoasterCart cart) {
         this.position = position;
         this.orientation = orientation;
         this.cart = cart;
     }
 
-    public Cart getCart() {
+    public CoasterCart getCart() {
         return cart;
     }
 

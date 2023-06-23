@@ -1,0 +1,67 @@
+package com.jverbruggen.jrides.animator.flatride;
+
+import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
+import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
+import com.jverbruggen.jrides.models.math.Quaternion;
+import com.jverbruggen.jrides.models.math.Vector3;
+
+import javax.annotation.Nullable;
+import java.util.List;
+
+public abstract class AbstractFlatRideComponent implements FlatRideComponent {
+    private final String identifier;
+    private @Nullable Attachment attachedTo;
+    private final List<FlatRideModel> flatRideModels;
+
+    public AbstractFlatRideComponent(String identifier, List<FlatRideModel> flatRideModels) {
+        this.identifier = identifier;
+        this.attachedTo = null;
+        this.flatRideModels = flatRideModels;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    @Override
+    public @Nullable Attachment getAttachedTo() {
+        return attachedTo;
+    }
+
+    @Override
+    public void setAttachedTo(@Nullable Attachment attachment) {
+        attachedTo = attachment;
+    }
+
+    @Override
+    public Quaternion getRotation() {
+        if(attachedTo == null) throw new RuntimeException("Rotor " + identifier + " not attached to anything");
+
+        return attachedTo.getRotation();
+    }
+
+    @Override
+    public Vector3 getPosition() {
+        if(attachedTo == null) throw new RuntimeException("Rotor " + identifier + " not attached to anything");
+
+        return attachedTo.getPosition();
+    }
+
+    @Override
+    public void tick() {
+        updateFlatRideModels();
+    }
+
+    @Override
+    public void attach(FlatRideComponent child, Quaternion offsetRotation, Vector3 offsetPosition) {
+        throw new RuntimeException("Cannot attach to this component");
+    }
+
+    protected void updateFlatRideModels(){
+        for(FlatRideModel flatRideModel : flatRideModels){
+            flatRideModel.updateLocation(getPosition(), getRotation());
+        }
+    }
+
+}

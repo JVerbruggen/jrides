@@ -1,11 +1,10 @@
-package com.jverbruggen.jrides.models.ride;
+package com.jverbruggen.jrides.models.ride.seat;
 
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
 
 public interface Seat {
     Player getPassenger();
@@ -20,8 +19,8 @@ public interface Seat {
     void setRestraint(boolean locked);
     boolean restraintsActive();
 
-    void setParentCart(Cart cart);
-    Cart getParentCart();
+    void setParentSeatHost(SeatHost seatHost);
+    SeatHost getParentSeatHost();
 
     RideHandle getParentRideHandle();
 }

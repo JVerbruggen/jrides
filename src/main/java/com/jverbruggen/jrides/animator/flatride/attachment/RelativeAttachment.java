@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.animator.flatride.rotor;
+package com.jverbruggen.jrides.animator.flatride.attachment;
 
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.models.math.Matrix4x4;
@@ -6,14 +6,14 @@ import com.jverbruggen.jrides.models.math.MatrixMath;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 
-public class RotorAttachment implements Attachment {
+public class RelativeAttachment implements Attachment {
     private FlatRideComponent parent;
     private FlatRideComponent child;
     private Quaternion offsetRotation;
     private Vector3 offsetPosition;
     private Matrix4x4 cacheMatrix;
 
-    public RotorAttachment(FlatRideComponent parent, FlatRideComponent child, Quaternion offsetRotation, Vector3 offsetPosition) {
+    public RelativeAttachment(FlatRideComponent parent, FlatRideComponent child, Quaternion offsetRotation, Vector3 offsetPosition) {
         this.parent = parent;
         this.child = child;
         this.offsetRotation = offsetRotation;

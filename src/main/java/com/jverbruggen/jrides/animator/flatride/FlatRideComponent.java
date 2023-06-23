@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.animator.flatride;
 
-import com.jverbruggen.jrides.animator.flatride.rotor.Attachment;
+import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 

@@ -9,7 +9,7 @@ import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.frame.SimpleFrame;
 import com.jverbruggen.jrides.models.properties.TrackEnd;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
-import com.jverbruggen.jrides.models.ride.coaster.train.Cart;
+import com.jverbruggen.jrides.models.ride.coaster.train.CoasterCart;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.exception.SectionNotFoundException;
@@ -97,7 +97,7 @@ public class SectionProvider {
         logger.warning(LogType.CRASH, "| tail-sc: " + train.getTailSection());
         logger.warning(LogType.CRASH, "crash-sc:" + onSection.toString());
         logger.warning(LogType.CRASH, "crash-fr:" + onFrame);
-        for(Cart cart : train.getCarts()){
+        for(CoasterCart cart : train.getCarts()){
             logger.warning(LogType.CRASH, "| cart-fr: " + cart.getFrame());
         }
     }

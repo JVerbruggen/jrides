@@ -1,7 +1,10 @@
 package com.jverbruggen.jrides.models.ride.coaster.train;
 
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovement;
+import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
+import com.jverbruggen.jrides.event.player.PlayerSitDownEvent;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.ArmorStandPose;
@@ -9,15 +12,18 @@ import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
-import com.jverbruggen.jrides.models.ride.Seat;
+import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
+import org.bukkit.ChatColor;
+import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SimpleCart implements Cart {
+public class SimpleCoasterCart implements CoasterCart {
     private final String name;
-    private List<Seat> seats;
+    private List<CoasterSeat> seats;
     private VirtualArmorstand modelArmorstand;
     private Vector3 trackOffset;
     private Frame frame;
@@ -29,7 +35,7 @@ public class SimpleCart implements Cart {
     private Quaternion currentOrientation;
     private Vector3 orientationOffset;
 
-    public SimpleCart(String name, List<Seat> seats, VirtualArmorstand modelArmorstand, Vector3 trackOffset, Frame frame) {
+    public SimpleCoasterCart(String name, List<CoasterSeat> seats, VirtualArmorstand modelArmorstand, Vector3 trackOffset, Frame frame) {
         this.name = name;
         this.seats = seats;
         this.modelArmorstand = modelArmorstand;
@@ -41,7 +47,7 @@ public class SimpleCart implements Cart {
         this.nextEffect = null;
         this.hasEffects = false;
 
-        seats.forEach(s -> s.setParentCart(this));
+        seats.forEach(s -> s.setParentSeatHost(this));
     }
 
     @Override
@@ -51,6 +57,10 @@ public class SimpleCart implements Cart {
 
     @Override
     public List<Seat> getSeats() {
+        return new ArrayList<>(seats);
+    }
+
+    public List<CoasterSeat> getCoasterSeats(){
         return seats;
     }
 
@@ -109,7 +119,7 @@ public class SimpleCart implements Cart {
     @Override
     public void setPosition(Vector3 position) {
         modelArmorstand.setLocation(position, null);
-        SeatFactory.moveSeats(seats, position, currentOrientation);
+        SeatFactory.moveCoasterSeats(seats, position, currentOrientation);
     }
 
     @Override
@@ -119,14 +129,46 @@ public class SimpleCart implements Cart {
 
     @Override
     public void setRestraint(boolean locked) {
-        for(Seat seat : getSeats()){
+        for(Seat seat : getCoasterSeats()){
             seat.setRestraint(locked);
         }
     }
 
     @Override
     public boolean getRestraintState() {
-        return getSeats().stream().allMatch(Seat::restraintsActive);
+        return getCoasterSeats().stream().allMatch(Seat::restraintsActive);
+    }
+
+    @Override
+    public PlayerLocation getEjectLocation() {
+        return getParentTrain().getHandle().getCoasterHandle().getEjectLocation();
+    }
+
+    @Override
+    public RideHandle getRideHandle() {
+        return getParentTrain().getHandle().getCoasterHandle();
+    }
+
+    @Override
+    public void onPlayerEnter(Player player) {
+        getParentTrain().onPlayerEnter(player);
+        PlayerSitDownEvent.send(player, getParentTrain().getHandle().getCoasterHandle().getRide());
+
+        // Potentially rider wants to inspect frames
+        org.bukkit.entity.Player bukkitPlayer = player.getBukkitPlayer();
+        ItemStack itemInHand = bukkitPlayer.getInventory().getItemInMainHand();
+        if(bukkitPlayer.hasPermission(Permissions.ELEVATED_STATUS_INSPECTION)
+                && itemInHand.getItemMeta() != null
+                && itemInHand.getItemMeta().getDisplayName().stripTrailing().equalsIgnoreCase("jrides:frame-inspect")){
+            getParentTrain().addPositionMessageListener(player);
+            player.sendMessage(ChatColor.GRAY + "(debug) Now inspecting frames");
+        }
+    }
+
+    @Override
+    public void onPlayerExit(Player player) {
+        getParentTrain().onPlayerExit(player);
+        getParentTrain().removePositionMessageListener(player);
     }
 
     @Override

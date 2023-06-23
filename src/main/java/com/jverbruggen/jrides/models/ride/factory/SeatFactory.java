@@ -1,11 +1,11 @@
 package com.jverbruggen.jrides.models.ride.factory;
 
-import com.jverbruggen.jrides.animator.RideHandle;
+import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Matrix4x4;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.ride.Seat;
+import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.train.CoasterSeat;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
@@ -20,8 +20,8 @@ public class SeatFactory {
         this.viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
     }
 
-    public List<Seat> createSeats(RideHandle rideHandle, List<Vector3> seatOffsets, Vector3 cartLocation, Quaternion orientation){
-        List<Seat> seats = new ArrayList<>();
+    public List<CoasterSeat> createCoasterSeats(CoasterHandle coasterHandle, List<Vector3> seatOffsets, Vector3 cartLocation, Quaternion orientation){
+        List<CoasterSeat> seats = new ArrayList<>();
         Matrix4x4 rotationMatrix = new Matrix4x4();
         rotationMatrix.rotate(orientation);
 
@@ -31,7 +31,7 @@ public class SeatFactory {
 
             double yawRotation = orientation.getPacketYaw();
             VirtualArmorstand seatArmorStand = viewportManager.spawnVirtualArmorstand(absoluteSeatLocation, yawRotation);
-            Seat seat = new CoasterSeat(rideHandle, seatArmorStand, seatOffset);
+            CoasterSeat seat = new CoasterSeat(coasterHandle, seatArmorStand, seatOffset);
             seatArmorStand.setHostSeat(seat);
             seats.add(seat);
         }
@@ -50,7 +50,7 @@ public class SeatFactory {
         return compensatedRelativeSeatLocation;
     }
 
-    public static void moveSeats(List<Seat> seats, Vector3 cartLocation, Quaternion orientation){
+    public static void moveCoasterSeats(List<CoasterSeat> seats, Vector3 cartLocation, Quaternion orientation){
         Matrix4x4 rotationMatrix = new Matrix4x4();
         rotationMatrix.rotate(orientation);
 
