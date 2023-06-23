@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.command;
 
 import com.jverbruggen.jrides.animator.CoasterHandle;
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;
@@ -47,9 +48,14 @@ public class VisualizeCommandExecutor extends BaseCommandExecutor {
             return true;
         }
 
-        CoasterHandle coasterHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
-        if(coasterHandle == null){
+        RideHandle rideHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
+        if(rideHandle == null){
             languageFile.sendMessage(messageAgent, "Ride '" + identifier + "' not found", FeedbackType.CONFLICT);
+            return true;
+        }
+
+        if(!(rideHandle instanceof CoasterHandle coasterHandle)){
+            languageFile.sendMessage(messageAgent, "Ride cannot be visualized: not a coaster", FeedbackType.CONFLICT);
             return true;
         }
 

@@ -64,7 +64,7 @@ public class ButtonClickEventListener implements Listener {
         onItemTowardsMenu(event, event.getClickedInventory());
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.LOW)
     public void onItemMoveTowardsMenuDrag(InventoryDragEvent event){
         onItemTowardsMenu(event, event.getInventory());
     }

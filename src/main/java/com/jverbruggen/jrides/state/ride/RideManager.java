@@ -24,14 +24,14 @@ import java.util.List;
 
 public class RideManager {
     private final JRidesLogger logger;
-    private final List<CoasterHandle> coasterHandles;
+    private final List<RideHandle> rideHandles;
     private final ConfigManager configManager;
     private final CoasterLoader coasterLoader;
     private final List<String> rideIdentifiers;
 
     public RideManager() {
         this.logger = ServiceProvider.getSingleton(JRidesLogger.class);
-        this.coasterHandles = new ArrayList<>();
+        this.rideHandles = new ArrayList<>();
         this.configManager = ServiceProvider.getSingleton(ConfigManager.class);
         this.coasterLoader = ServiceProvider.getSingleton(CoasterLoader.class);
         this.rideIdentifiers = new ArrayList<>();
@@ -42,23 +42,23 @@ public class RideManager {
     }
 
     public void addRideHandle(CoasterHandle coasterHandle){
-        coasterHandles.add(coasterHandle);
+        rideHandles.add(coasterHandle);
     }
 
     public List<String> getRideIdentifiers() {
         return rideIdentifiers;
     }
 
-    public List<CoasterHandle> getCoasterHandles() {
-        return coasterHandles;
+    public List<RideHandle> getRideHandles() {
+        return rideHandles;
     }
 
-    public List<RideHandle> getRideHandles(){
-        return new ArrayList<>(coasterHandles);
-    }
+//    public List<RideHandle> getRideHandles(){
+//        return new ArrayList<>(rideHandles);
+//    }
 
-    public @Nullable CoasterHandle getRideHandle(String identifier){
-        return this.coasterHandles
+    public @Nullable RideHandle getRideHandle(String identifier){
+        return this.rideHandles
                 .stream()
                 .filter(ch -> ch.getRide().getIdentifier().equalsIgnoreCase(identifier))
                 .findFirst()
@@ -119,8 +119,8 @@ public class RideManager {
     }
 
     private void tick(){
-        for(CoasterHandle coasterHandle : coasterHandles){
-            coasterHandle.tick();
+        for(RideHandle rideHandle : rideHandles){
+            rideHandle.tick();
         }
     }
 }

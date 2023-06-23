@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.command;
 
 import com.jverbruggen.jrides.animator.CoasterHandle;
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.language.FeedbackType;
@@ -48,13 +49,18 @@ public class BlockSectionCommandExecutor extends BaseCommandExecutor {
             return true;
         }
 
-        CoasterHandle coasterHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
-        if(coasterHandle == null){
+        RideHandle rideHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
+        if(rideHandle == null){
             languageFile.sendMessage(messageAgent, "Ride '" + identifier + "' not found", FeedbackType.CONFLICT);
             return true;
         }
 
-        Track track = coasterHandle.getTrack();
+        if(!(rideHandle instanceof CoasterHandle)){
+            languageFile.sendMessage(messageAgent, "Ride has no track", FeedbackType.CONFLICT);
+            return true;
+        }
+
+        Track track = ((CoasterHandle)rideHandle).getTrack();
         if(track == null){
             languageFile.sendMessage(messageAgent, "Track was not found", FeedbackType.CONFLICT);
             return true;

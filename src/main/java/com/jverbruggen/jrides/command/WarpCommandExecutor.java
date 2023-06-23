@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.command;
 
 import com.jverbruggen.jrides.animator.CoasterHandle;
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.event.player.PlayerTeleportByJRidesEvent;
@@ -48,14 +49,14 @@ public class WarpCommandExecutor extends BaseCommandExecutor {
             return false;
         }
 
-        CoasterHandle coasterHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
-        if(coasterHandle == null){
+        RideHandle rideHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
+        if(rideHandle == null){
             languageFile.sendMessage(messageAgent, "Ride '" + identifier + "' not found", FeedbackType.CONFLICT);
             return true;
         }
-        PlayerTeleportByJRidesEvent.sendEvent(player, coasterHandle.getRide().getWarpLocation());
+        PlayerTeleportByJRidesEvent.sendEvent(player, rideHandle.getRide().getWarpLocation());
 
-        player.teleport(coasterHandle.getRide().getWarpLocation());
+        player.teleport(rideHandle.getRide().getWarpLocation());
         return true;
     }
 

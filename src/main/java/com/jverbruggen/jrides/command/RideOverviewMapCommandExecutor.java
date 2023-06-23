@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.command;
 
 import com.jverbruggen.jrides.animator.CoasterHandle;
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.language.FeedbackType;
@@ -48,14 +49,19 @@ public class RideOverviewMapCommandExecutor extends BaseCommandExecutor {
             return true;
         }
 
-        CoasterHandle coasterHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
-        if(coasterHandle == null){
+        RideHandle rideHandle = ServiceProvider.getSingleton(RideManager.class).getRideHandle(identifier);
+        if(rideHandle == null){
             languageFile.sendMessage(messageAgent, "Ride '" + identifier + "' not found", FeedbackType.CONFLICT);
             return true;
         }
 
+        if(!(rideHandle instanceof CoasterHandle)){
+            languageFile.sendMessage(messageAgent, "Ride has no track", FeedbackType.CONFLICT);
+            return true;
+        }
+
         Player player = messageAgent.getPlayer(playerManager);
-        rideOverviewMapFactory.giveMap(player, coasterHandle);
+        rideOverviewMapFactory.giveMap(player, ((CoasterHandle) rideHandle));
 
         return true;
     }
