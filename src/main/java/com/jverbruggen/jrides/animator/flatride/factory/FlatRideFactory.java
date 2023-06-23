@@ -102,7 +102,7 @@ public class FlatRideFactory {
 
         StructureConfig structureConfig = flatRideConfig.getStructureConfig();
         for(StructureConfigItem item : structureConfig.getItems()){
-            item.createAndAddTo(components);
+            item.createAndAddTo(components, flatRideHandle);
         }
 
         components.stream()

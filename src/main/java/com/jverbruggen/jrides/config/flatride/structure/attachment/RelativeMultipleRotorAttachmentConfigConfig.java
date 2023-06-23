@@ -1,7 +1,7 @@
-package com.jverbruggen.jrides.config.flatride.structure.rotor.attachment;
+package com.jverbruggen.jrides.config.flatride.structure.attachment;
 
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
-import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.config.flatride.structure.rotor.RotorConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -9,30 +9,12 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
 
-public class RelativeMultipleRotorAttachmentConfig extends BaseConfig implements AttachmentConfig {
-    private final String toComponentIdentifier;
-    private final Vector3 offsetPosition;
-    private final int amount;
-
-    public RelativeMultipleRotorAttachmentConfig(String toComponentIdentifier, Vector3 offsetPosition, int amount) {
-        this.toComponentIdentifier = toComponentIdentifier;
-        this.offsetPosition = offsetPosition;
-        this.amount = amount;
+public class RelativeMultipleRotorAttachmentConfigConfig extends AbstractRelativeMultipleAttachmentConfig<RotorConfig> {
+    public RelativeMultipleRotorAttachmentConfigConfig(String toComponentIdentifier, Vector3 offsetPosition, int amount) {
+        super(toComponentIdentifier, offsetPosition, amount);
     }
 
-    public String getToComponentIdentifier() {
-        return toComponentIdentifier;
-    }
-
-    public Vector3 getOffsetPosition() {
-        return offsetPosition;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public static AttachmentConfig fromConfigurationSection(ConfigurationSection configurationSection) {
+    public static AttachmentConfig<RotorConfig> fromConfigurationSection(ConfigurationSection configurationSection) {
         String armTo = getString(configurationSection, "arm");
         Vector3 offsetPosition;
         if(configurationSection.contains("armDistance"))
@@ -43,11 +25,11 @@ public class RelativeMultipleRotorAttachmentConfig extends BaseConfig implements
 
         int armDuplicate = getInt(configurationSection, "armDuplicate", 1);
 
-        return new RelativeMultipleRotorAttachmentConfig(armTo, offsetPosition, armDuplicate);
+        return new RelativeMultipleRotorAttachmentConfigConfig(armTo, offsetPosition, armDuplicate);
     }
 
     @Override
-    public void createRotorWithAttachment(RotorConfig rotorConfig, List<FlatRideComponent> components) {
+    public void createWithAttachment(RotorConfig rotorConfig, List<FlatRideComponent> components, RideHandle rideHandle) {
         List<FlatRideComponent> attachedToComponents = FlatRideComponent.findAllMatching(components, getToComponentIdentifier());
 
         for(FlatRideComponent attachedTo : attachedToComponents){

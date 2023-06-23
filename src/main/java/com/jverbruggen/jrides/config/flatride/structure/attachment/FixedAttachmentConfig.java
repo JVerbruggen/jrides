@@ -1,5 +1,6 @@
-package com.jverbruggen.jrides.config.flatride.structure.rotor.attachment;
+package com.jverbruggen.jrides.config.flatride.structure.attachment;
 
+import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.attachment.FixedAttachment;
@@ -16,7 +17,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfig {
+public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfig<RotorConfig> {
     private final Vector3 position;
     private final Quaternion rotation;
 
@@ -25,7 +26,7 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
         this.rotation = rotation;
     }
 
-    public static AttachmentConfig fromConfigurationSection(ConfigurationSection configurationSection) {
+    public static AttachmentConfig<RotorConfig> fromConfigurationSection(ConfigurationSection configurationSection) {
         Vector3 position = Vector3.fromDoubleList(getDoubleList(configurationSection, "position"));
         Quaternion rotation = Quaternion.fromDoubleList(getDoubleList(configurationSection, "rotation", List.of(0d,0d,0d)));
 
@@ -33,7 +34,7 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
     }
 
     @Override
-    public void createRotorWithAttachment(RotorConfig rotorConfig, List<FlatRideComponent> components) {
+    public void createWithAttachment(RotorConfig rotorConfig, List<FlatRideComponent> components, RideHandle rideHandle) {
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
         List<FlatRideModel> flatRideModels = rotorConfig.getFlatRideModels().stream()
