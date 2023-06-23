@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.models.entity;
 
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.ride.seat.Seat;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,4 +30,5 @@ public interface VirtualEntity {
     void despawn();
     boolean shouldRenderFor(Player player);
     boolean isAlive();
+    void setHostSeat(Seat seat);
 }

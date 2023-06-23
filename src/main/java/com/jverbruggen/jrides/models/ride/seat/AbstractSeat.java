@@ -7,7 +7,6 @@ import com.jverbruggen.jrides.event.player.PlayerStandUpEvent;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
-import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
@@ -16,16 +15,16 @@ import com.jverbruggen.jrides.state.ride.SoftEjector;
 public abstract class AbstractSeat implements Seat {
     private final RideHandle parentRideHandle;
     private Player passenger;
-    private final VirtualArmorstand virtualArmorstand;
+    private final VirtualEntity virtualEntity;
     private final Vector3 offset;
     private boolean restraintLocked;
     private SeatHost seatHost;
 
-    public AbstractSeat(RideHandle parentRideHandle, SeatHost seatHost, VirtualArmorstand virtualArmorstand, Vector3 offset) {
+    public AbstractSeat(RideHandle parentRideHandle, SeatHost seatHost, VirtualEntity virtualEntity, Vector3 offset) {
         this.parentRideHandle = parentRideHandle;
         this.seatHost = seatHost;
         this.passenger = null;
-        this.virtualArmorstand = virtualArmorstand;
+        this.virtualEntity = virtualEntity;
         this.offset = offset;
         this.restraintLocked = true;
     }
@@ -98,7 +97,7 @@ public abstract class AbstractSeat implements Seat {
 
     @Override
     public void setLocation(Vector3 location, Quaternion orientation) {
-        virtualArmorstand.setLocation(location, orientation);
+        virtualEntity.setLocation(location, orientation);
 
         if(hasPassenger()){
             Quaternion smoothAnimationRotation = orientation.clone();
@@ -109,7 +108,7 @@ public abstract class AbstractSeat implements Seat {
 
     @Override
     public VirtualEntity getEntity() {
-        return virtualArmorstand;
+        return virtualEntity;
     }
 
     @Override
@@ -129,7 +128,7 @@ public abstract class AbstractSeat implements Seat {
 
     protected void onPassengerExit(Player passenger){
         passenger.setSeatedOn(null);
-        virtualArmorstand.setPassenger(null);
+        virtualEntity.setPassenger(null);
         passenger.clearSmoothAnimationRotation();
         PlayerStandUpEvent.send(passenger, getParentSeatHost().getRideHandle().getRide());
 

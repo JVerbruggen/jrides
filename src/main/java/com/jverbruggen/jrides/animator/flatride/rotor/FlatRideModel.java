@@ -7,10 +7,12 @@ import com.jverbruggen.jrides.models.math.Vector3;
 public class FlatRideModel {
     private final VirtualEntity entity;
     private final Vector3 offset;
+    private final Quaternion rotationOffset;
 
-    public FlatRideModel(VirtualEntity entity, Vector3 offset) {
+    public FlatRideModel(VirtualEntity entity, Vector3 offset, Quaternion rotationOffset) {
         this.entity = entity;
         this.offset = offset;
+        this.rotationOffset = rotationOffset;
     }
 
     public VirtualEntity getEntity() {
@@ -21,7 +23,11 @@ public class FlatRideModel {
         return offset;
     }
 
+    public Quaternion getRotationOffset() {
+        return rotationOffset;
+    }
+
     public void updateLocation(Vector3 parentLocation, Quaternion parentRotation){
-        entity.setLocation(Vector3.add(parentLocation, this.offset), parentRotation);
+        entity.setLocation(Vector3.add(parentLocation, this.offset), Quaternion.multiply(parentRotation, this.rotationOffset));
     }
 }

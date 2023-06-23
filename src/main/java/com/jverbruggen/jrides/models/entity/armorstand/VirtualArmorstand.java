@@ -99,6 +99,7 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         return false;
     }
 
+    @Override
     public void setHostSeat(Seat seat) {
         partOfSeat = seat;
         allowsPassengerValue = true;

@@ -21,7 +21,6 @@ import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.flatride.FlatRide;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
@@ -57,7 +56,7 @@ public class FlatRideFactory {
                 Quaternion.fromYawPitchRoll(0, 90, 0),
                 new Vector3(7, 0, 0),
                 new RotorSpeed(2.5f),
-                List.of(new ModelConfig(new ItemConfig(Material.GOLD_BLOCK), Vector3.zero())),
+                List.of(new ModelConfig(new ItemConfig(Material.GOLD_BLOCK), Vector3.zero(), new Quaternion())),
                 4);
 
         for(FlatRideComponent turntableRotor : turntableRotors){
@@ -67,7 +66,7 @@ public class FlatRideFactory {
                     Quaternion.fromYawPitchRoll(0, 90, 0),
                     new Vector3(3, 0, 0),
                     new RotorSpeed(8),
-                    List.of(new ModelConfig(new ItemConfig(Material.REDSTONE_BLOCK), Vector3.zero())),
+                    List.of(new ModelConfig(new ItemConfig(Material.REDSTONE_BLOCK), Vector3.zero(), new Quaternion())),
                     3);
 
             int seatYawOffset = 180;
@@ -78,6 +77,7 @@ public class FlatRideFactory {
                         Quaternion.fromYawPitchRoll(0, 0, 0),
                         new Vector3(1, 0, 0),
                         seatYawOffset,
+                        List.of(),
                         3);
             }
         }
@@ -116,7 +116,7 @@ public class FlatRideFactory {
     private Rotor createMainRotor(String identifier, Vector3 position, Quaternion rotation, RotorSpeed rotorSpeed){
         VirtualEntity virtualEntity = viewportManager.spawnVirtualArmorstand(position, new TrainModelItem(new ItemStack(Material.DIAMOND_BLOCK)));
 
-        Rotor rotor = new Rotor(identifier, identifier, true, List.of(new FlatRideModel(virtualEntity, Vector3.zero())), rotorSpeed);
+        Rotor rotor = new Rotor(identifier, identifier, true, List.of(new FlatRideModel(virtualEntity, Vector3.zero(), new Quaternion())), rotorSpeed);
         rotor.setAttachedTo(new FixedAttachment(rotor, position, rotation));
         return rotor;
     }

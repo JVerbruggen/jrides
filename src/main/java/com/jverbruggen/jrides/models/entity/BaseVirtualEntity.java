@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.models.entity;
 
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 
@@ -128,5 +129,10 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     @Override
     public boolean isAlive() {
         return spawned;
+    }
+
+    @Override
+    public void setHostSeat(Seat seat) {
+
     }
 }
