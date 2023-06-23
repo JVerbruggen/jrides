@@ -11,20 +11,29 @@ import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FlatRideHandle extends AbstractRideHandle {
-    private final FlatRideComponent rootComponent;
+    private final List<FlatRideComponent> rootComponents;
 
-    public FlatRideHandle(World world, Ride ride, boolean loaded, FlatRideComponent rootComponent) {
+    public FlatRideHandle(World world, Ride ride, boolean loaded) {
         super(world, ride, null, loaded);
 
-        this.rootComponent = rootComponent;
+        this.rootComponents = new ArrayList<>();
     }
 
     @Override
     public void tick() {
-        this.rootComponent.tick();
+        this.rootComponents.forEach(FlatRideComponent::tick);
+    }
+
+    public void addRootComponent(FlatRideComponent component){
+        rootComponents.add(component);
+    }
+
+    public List<FlatRideComponent> getRootComponents() {
+        return rootComponents;
     }
 
     @Override

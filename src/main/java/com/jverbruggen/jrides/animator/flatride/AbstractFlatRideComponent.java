@@ -10,11 +10,15 @@ import java.util.List;
 
 public abstract class AbstractFlatRideComponent implements FlatRideComponent {
     private final String identifier;
+    private final String groupIdentifier;
+    private final boolean root;
     private @Nullable Attachment attachedTo;
     private final List<FlatRideModel> flatRideModels;
 
-    public AbstractFlatRideComponent(String identifier, List<FlatRideModel> flatRideModels) {
+    public AbstractFlatRideComponent(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels) {
         this.identifier = identifier;
+        this.groupIdentifier = groupIdentifier;
+        this.root = root;
         this.attachedTo = null;
         this.flatRideModels = flatRideModels;
     }
@@ -22,6 +26,16 @@ public abstract class AbstractFlatRideComponent implements FlatRideComponent {
     @Override
     public String getIdentifier() {
         return identifier;
+    }
+
+    @Override
+    public String getGroupIdentifier() {
+        return groupIdentifier;
+    }
+
+    @Override
+    public boolean isRoot() {
+        return root;
     }
 
     @Override
@@ -64,4 +78,8 @@ public abstract class AbstractFlatRideComponent implements FlatRideComponent {
         }
     }
 
+    @Override
+    public boolean equalsToIdentifier(String identifier) {
+        return identifier.equals(this.identifier) || identifier.equals(this.groupIdentifier);
+    }
 }

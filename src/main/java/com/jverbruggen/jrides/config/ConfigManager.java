@@ -2,7 +2,8 @@ package com.jverbruggen.jrides.config;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
-import com.jverbruggen.jrides.config.ride.RideConfig;
+import com.jverbruggen.jrides.config.flatride.FlatRideConfig;
+import com.jverbruggen.jrides.config.ride.RidesConfig;
 import com.jverbruggen.jrides.config.trigger.TriggerConfig;
 import com.jverbruggen.jrides.config.trigger.TriggerConfigFactory;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -132,16 +133,20 @@ public class ConfigManager {
         saveConfig(configuration.saveToString(), file);
     }
 
-    public String getFolder(String rideIdentifier){
+    public String getCoasterFolder(String rideIdentifier){
         return "coasters/" + rideIdentifier;
     }
 
+    public String getFlatrideFolder(String rideIdentifier){
+        return "flatrides/" + rideIdentifier;
+    }
+
     public String getTriggerFolder(String rideIdentifier){
-        return getFolder(rideIdentifier) + "/triggers";
+        return getCoasterFolder(rideIdentifier) + "/triggers";
     }
 
     public ConfigurationSection getAllEffectsConfigSection(String rideIdentifier, String trackIdentifier){
-        String fileName = getFolder(rideIdentifier) + "/" + rideIdentifier + "." + trackIdentifier + ".trigger.yml";
+        String fileName = getCoasterFolder(rideIdentifier) + "/" + rideIdentifier + "." + trackIdentifier + ".trigger.yml";
         YamlConfiguration yamlConfiguration = getYamlConfiguration(fileName);
         if(yamlConfiguration == null){
             JRidesPlugin.getLogger().warning("No trigger file for ride " + rideIdentifier);
@@ -164,7 +169,7 @@ public class ConfigManager {
     }
 
     public CoasterConfig getCoasterConfig(String rideIdentifier){
-        String fileName = getFolder(rideIdentifier) + "/" + rideIdentifier + ".coaster.yml";
+        String fileName = getCoasterFolder(rideIdentifier) + "/" + rideIdentifier + ".coaster.yml";
         YamlConfiguration yamlConfiguration = getYamlConfiguration(fileName);
         if(yamlConfiguration == null){
             JRidesPlugin.getLogger().severe(rideIdentifier + ".coaster.yml config not found for " + rideIdentifier);
@@ -174,7 +179,18 @@ public class ConfigManager {
         return CoasterConfig.fromConfigurationSection(yamlConfiguration.getConfigurationSection("config"));
     }
 
-    public RideConfig getRideConfig(){
+    public FlatRideConfig getFlatRideConfig(String rideIdentifier){
+        String fileName = getFlatrideFolder(rideIdentifier) + "/" + rideIdentifier + ".flatride.yml";
+        YamlConfiguration yamlConfiguration = getYamlConfiguration(fileName);
+        if(yamlConfiguration == null){
+            JRidesPlugin.getLogger().severe(rideIdentifier + ".flatride.yml config not found for " + rideIdentifier);
+            return null;
+        }
+
+        return FlatRideConfig.fromConfigurationSection(yamlConfiguration.getConfigurationSection("config"));
+    }
+
+    public RidesConfig getRideConfig(){
         String fileName = "rides.yml";
         YamlConfiguration yamlConfiguration = getYamlConfiguration(fileName);
         if(yamlConfiguration == null) {
@@ -182,7 +198,7 @@ public class ConfigManager {
             return null;
         }
 
-        return RideConfig.fromConfigurationSection(yamlConfiguration.getConfigurationSection("config"));
+        return RidesConfig.fromConfigurationSection(yamlConfiguration.getConfigurationSection("config"));
     }
 
     public void updateConfigFile(String configFile, String yamlRootKey, Object object){

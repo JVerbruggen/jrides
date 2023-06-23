@@ -15,8 +15,8 @@ public class Rotor extends AbstractFlatRideComponent {
     private Quaternion rotation;
     private final RotorSpeed rotorSpeed;
 
-    public Rotor(String identifier, List<FlatRideModel> flatRideModels, RotorSpeed rotorSpeed) {
-        super(identifier, flatRideModels);
+    public Rotor(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels, RotorSpeed rotorSpeed) {
+        super(identifier, groupIdentifier, root, flatRideModels);
         this.children = new ArrayList<>();
         this.rotation = new Quaternion();
         this.rotorSpeed = rotorSpeed;

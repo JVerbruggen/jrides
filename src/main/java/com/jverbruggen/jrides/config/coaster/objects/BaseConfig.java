@@ -9,9 +9,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class BaseConfig {
+    private static String getAvailableKeys(ConfigurationSection configurationSection){
+        if(configurationSection == null) return "<none>";
+        return String.join(", ", configurationSection.getKeys(false));
+    }
+
     private static void assertPresence(ConfigurationSection configurationSection, String key){
         if(configurationSection == null || !configurationSection.contains(key)){
-            throw new RuntimeException("Missing key in config: " + key);
+            throw new RuntimeException("Missing key in config: '" + key + "', available: " + getAvailableKeys(configurationSection));
         }
     }
 

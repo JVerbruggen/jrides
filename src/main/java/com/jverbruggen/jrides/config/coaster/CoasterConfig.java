@@ -3,72 +3,38 @@ package com.jverbruggen.jrides.config.coaster;
 import com.jverbruggen.jrides.config.coaster.objects.*;
 import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
 import com.jverbruggen.jrides.config.gates.GatesConfig;
+import com.jverbruggen.jrides.config.ride.AbstractRideConfig;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.Objects;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class CoasterConfig extends BaseConfig {
-    private final String manifestVersion;
-    private final String identifier;
-    private final String displayName;
-    private final String displayDescription;
-    private final ItemConfig displayItem;
-    private final PlayerLocation warpLocation;
+public class CoasterConfig extends AbstractRideConfig {
     private final TrackConfig track;
     private final VehiclesConfig vehicles;
     private final CartSpecConfig cartSpec;
-    private final GatesConfig gates;
     private final double gravityConstant;
     private final double dragConstant;
     private final ControllerConfig controllerConfig;
     private final SoundsConfig soundsConfig;
     private final int rideOverviewMapId;
-    private final boolean canExitDuringRide;
 
-    public CoasterConfig(String manifestVersion, String identifier, String displayName, String displayDescription,
+    public CoasterConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription,
                          ItemConfig displayItem, PlayerLocation warpLocation, TrackConfig track,
                          VehiclesConfig vehicles, CartSpecConfig cartSpec, GatesConfig gates, double gravityConstant, double dragConstant,
                          ControllerConfig controllerConfig, SoundsConfig soundsConfig, int rideOverviewMapId, boolean canExitDuringRide) {
-        this.manifestVersion = manifestVersion;
-        this.identifier = identifier;
-        this.displayName = displayName;
-        this.displayDescription = displayDescription;
-        this.displayItem = displayItem;
-        this.warpLocation = warpLocation;
+        super(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, canExitDuringRide);
         this.track = track;
         this.vehicles = vehicles;
         this.cartSpec = cartSpec;
-        this.gates = gates;
         this.gravityConstant = gravityConstant;
         this.dragConstant = dragConstant;
         this.controllerConfig = controllerConfig;
         this.soundsConfig = soundsConfig;
         this.rideOverviewMapId = rideOverviewMapId;
-        this.canExitDuringRide = canExitDuringRide;
-    }
-
-    public String getManifestVersion() {
-        return manifestVersion;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-    public String getDisplayDescription() {
-        return displayDescription;
-    }
-
-    public ItemConfig getDisplayItem() {
-        return displayItem;
-    }
-
-    public PlayerLocation getWarpLocation() {
-        return warpLocation;
     }
 
     public TrackConfig getTrack() {
@@ -81,10 +47,6 @@ public class CoasterConfig extends BaseConfig {
 
     public CartSpecConfig getCartSpec() {
         return cartSpec;
-    }
-
-    public GatesConfig getGates() {
-        return gates;
     }
 
     public double getGravityConstant() {
@@ -107,15 +69,17 @@ public class CoasterConfig extends BaseConfig {
         return rideOverviewMapId;
     }
 
-    public boolean getCanExitDuringRide() {
-        return canExitDuringRide;
-    }
-
     public static CoasterConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         String manifestVersion = configurationSection.getString("manifestVersion");
         String identifier = configurationSection.getString("identifier");
         String displayName = configurationSection.getString("displayName");
-        String displayDescription = getString(configurationSection, "displayDescription", "");
+
+        List<String> displayDescription = Arrays.stream(getString(configurationSection, "displayDescription", "").split("\\\\n"))
+                .map(d -> ChatColor.GRAY + d)
+                .collect(Collectors.toList());
+        if(displayDescription.size() == 1 && ChatColor.stripColor(displayDescription.get(0)).equals(""))
+            displayDescription.clear();
+
         ItemConfig displayItem = ItemConfig.fromConfigurationSection(configurationSection.getConfigurationSection("displayItem"));
         PlayerLocation warpLocation = PlayerLocation.fromDoubleList(configurationSection.getDoubleList("warpLocation"));
         double gravityConstant = getDouble(configurationSection, "gravityConstant", 0.15);

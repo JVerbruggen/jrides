@@ -6,14 +6,13 @@ import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.flatride.factory.FlatRideFactory;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
-import com.jverbruggen.jrides.config.ride.RideConfig;
-import com.jverbruggen.jrides.config.ride.RideConfigObject;
+import com.jverbruggen.jrides.config.flatride.FlatRideConfig;
+import com.jverbruggen.jrides.config.ride.RidesConfig;
+import com.jverbruggen.jrides.config.ride.RidesConfigObject;
 import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.event.ride.RideInitializedEvent;
 import com.jverbruggen.jrides.exception.CoasterLoadException;
 import com.jverbruggen.jrides.logging.JRidesLogger;
-import com.jverbruggen.jrides.models.ride.Ride;
-import com.jverbruggen.jrides.models.identifier.RideIdentifier;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.coaster.CoasterLoader;
 import org.bukkit.Bukkit;
@@ -61,14 +60,14 @@ public class RideManager {
     }
 
     public void initAllRides(World world){
-        RideConfig rideConfig = configManager.getRideConfig();
-        if(rideConfig == null) return;
+        RidesConfig ridesConfig = configManager.getRideConfig();
+        if(ridesConfig == null) return;
 
-        List<RideConfigObject> rideConfigObjects = rideConfig.getRides();
+        List<RidesConfigObject> ridesConfigObjects = ridesConfig.getRides();
 
-        for (RideConfigObject rideConfigObject : rideConfigObjects) {
-            String rideIdentifier = rideConfigObject.getIdentifier();
-            String rideType = rideConfigObject.getType();
+        for (RidesConfigObject ridesConfigObject : ridesConfigObjects) {
+            String rideIdentifier = ridesConfigObject.getIdentifier();
+            String rideType = ridesConfigObject.getType();
 
             if(rideIdentifiers.contains(rideIdentifier)) throw new RuntimeException("Ride " + rideIdentifier + " identifier already exists!");
             rideIdentifiers.add(rideIdentifier);
@@ -118,7 +117,14 @@ public class RideManager {
             return;
         }
 
-        RideHandle rideHandle = flatRideFactory.createSimpleFlatRide(rideIdentifier, world, rideState);
+        FlatRideConfig flatRideConfig = configManager.getFlatRideConfig(rideIdentifier);
+        if(flatRideConfig == null) {
+            logger.warning("Flatride '" + rideIdentifier + "' has no config file present, not loading");
+            return;
+        }
+
+        RideHandle rideHandle = flatRideFactory.createFromConfig(rideIdentifier, world, rideState, flatRideConfig);
+//        RideHandle rideHandle = flatRideFactory.createSimpleFlatRide(rideIdentifier, world, rideState);
         if(rideHandle != null) this.addRideHandle(rideHandle);
     }
 

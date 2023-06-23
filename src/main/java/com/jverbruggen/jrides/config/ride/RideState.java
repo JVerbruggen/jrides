@@ -114,6 +114,6 @@ public class RideState extends BaseConfig implements ConfigurationSerializable {
     }
 
     private static String getFileName(ConfigManager configManager, String rideIdentifier){
-        return configManager.getFolder(rideIdentifier) + "/" + rideIdentifier + ".state.yml";
+        return configManager.getCoasterFolder(rideIdentifier) + "/" + rideIdentifier + ".state.yml";
     }
 }

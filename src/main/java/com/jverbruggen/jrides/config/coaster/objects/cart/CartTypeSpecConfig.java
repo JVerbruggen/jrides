@@ -6,15 +6,15 @@ import org.bukkit.configuration.ConfigurationSection;
 import javax.annotation.Nullable;
 
 public class CartTypeSpecConfig extends BaseConfig {
-    private final CartModelConfig model;
+    private final ModelConfig model;
     private final CartSeatsConfig seats;
 
-    public CartTypeSpecConfig(CartModelConfig model, CartSeatsConfig seats) {
+    public CartTypeSpecConfig(ModelConfig model, CartSeatsConfig seats) {
         this.model = model;
         this.seats = seats;
     }
 
-    public CartModelConfig getModel() {
+    public ModelConfig getModel() {
         return model;
     }
 
@@ -23,7 +23,7 @@ public class CartTypeSpecConfig extends BaseConfig {
     }
 
     public static CartTypeSpecConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection) {
-        CartModelConfig model = CartModelConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "model"));
+        ModelConfig model = ModelConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "model"));
         CartSeatsConfig seats = CartSeatsConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "seats"));
         return new CartTypeSpecConfig(model, seats);
     }

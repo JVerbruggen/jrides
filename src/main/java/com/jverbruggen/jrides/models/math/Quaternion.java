@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.models.math;
 import org.bukkit.util.Vector;
 
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * A quaternion for performing rotations in 3D space.
@@ -622,6 +623,11 @@ public class Quaternion implements Cloneable {
      */
     public static Quaternion fromYawPitchRoll(Vector rotation) {
         return fromYawPitchRoll(rotation.getX(), rotation.getY(), rotation.getZ());
+    }
+
+    public static Quaternion fromDoubleList(List<Double> doubleList) {
+        if (doubleList.size() != 3) throw new RuntimeException("Size of double list has to be 3");
+        return fromYawPitchRoll(doubleList.get(0), doubleList.get(1), doubleList.get(2));
     }
 
     /**

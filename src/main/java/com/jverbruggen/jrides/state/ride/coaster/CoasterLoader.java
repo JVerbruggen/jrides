@@ -35,7 +35,6 @@ import com.jverbruggen.jrides.models.ride.factory.track.TrackType;
 import com.jverbruggen.jrides.models.ride.factory.train.TrainCreationResult;
 import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 
@@ -46,7 +45,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -93,16 +91,12 @@ public class CoasterLoader {
 
     public CoasterHandle loadNormally(CoasterConfig coasterConfig, String rideIdentifier, RideState rideState, World world) throws CoasterLoadException {
         String displayName = coasterConfig.getDisplayName();
-        List<String> displayDescription = Arrays.stream(coasterConfig.getDisplayDescription().split("\\\\n"))
-                .map(d -> ChatColor.GRAY + d)
-                .collect(Collectors.toList());
-        if(displayDescription.size() == 1 && ChatColor.stripColor(displayDescription.get(0)).equals(""))
-            displayDescription.clear();
+        List<String> displayDescription = coasterConfig.getDisplayDescription();
 
         ItemStack displayItem = ItemStackFactory.getCoasterStackFromConfig(coasterConfig.getDisplayItem());
 
         PlayerLocation warpLocation = coasterConfig.getWarpLocation();
-        boolean canExitDuringRide = coasterConfig.getCanExitDuringRide();
+        boolean canExitDuringRide = coasterConfig.canExitDuringRide();
         Ride ride = new SimpleCoaster(rideIdentifier, displayName, displayDescription, displayItem, warpLocation, canExitDuringRide);
 
         // Initialize Handle
@@ -191,7 +185,7 @@ public class CoasterLoader {
     private TrackDescription loadTrackSegmentFromConfig(String trackIdentifier, CoasterHandle coasterHandle, CoasterConfig coasterConfig, float offsetX, float offsetY, float offsetZ){
         Ride ride = coasterHandle.getRide();
         String rideIdentifier = ride.getIdentifier();
-        String configFileName = configManager.getFolder(rideIdentifier) + "/track/" + rideIdentifier + "." + trackIdentifier + ".csv";
+        String configFileName = configManager.getCoasterFolder(rideIdentifier) + "/track/" + rideIdentifier + "." + trackIdentifier + ".csv";
         File configFile = new File(dataFolder, configFileName);
         Path pathToConfigFile = configFile.toPath();
         List<NoLimitsExportPositionRecord> positions = new ArrayList<>();
