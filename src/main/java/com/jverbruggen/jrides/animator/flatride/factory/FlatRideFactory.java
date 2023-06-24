@@ -6,7 +6,7 @@ import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.animator.flatride.attachment.FixedAttachment;
 import com.jverbruggen.jrides.animator.flatride.rotor.Rotor;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
-import com.jverbruggen.jrides.animator.flatride.rotor.RotorSpeed;
+import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.config.coaster.objects.cart.ModelConfig;
 import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
 import com.jverbruggen.jrides.config.flatride.FlatRideConfig;
@@ -47,7 +47,7 @@ public class FlatRideFactory {
                 "center",
                 center,
                 new Quaternion(),
-                new RotorSpeed(2.5f));
+                new FlatRideComponentSpeed(2.5f));
         flatRideHandle.addRootComponent(rootRotor);
 
         List<FlatRideComponent> turntableRotors = FlatRideComponent.createDistributedAttachedRotors(
@@ -55,7 +55,7 @@ public class FlatRideFactory {
                 rootRotor,
                 Quaternion.fromYawPitchRoll(0, 90, 0),
                 new Vector3(7, 0, 0),
-                new RotorSpeed(2.5f),
+                new FlatRideComponentSpeed(2.5f),
                 List.of(new ModelConfig(new ItemConfig(Material.GOLD_BLOCK), Vector3.zero(), new Quaternion())),
                 4);
 
@@ -65,7 +65,7 @@ public class FlatRideFactory {
                     turntableRotor,
                     Quaternion.fromYawPitchRoll(0, 90, 0),
                     new Vector3(3, 0, 0),
-                    new RotorSpeed(8),
+                    new FlatRideComponentSpeed(8),
                     List.of(new ModelConfig(new ItemConfig(Material.REDSTONE_BLOCK), Vector3.zero(), new Quaternion())),
                     3);
 
@@ -113,10 +113,10 @@ public class FlatRideFactory {
         return flatRideHandle;
     }
 
-    private Rotor createMainRotor(String identifier, Vector3 position, Quaternion rotation, RotorSpeed rotorSpeed){
+    private Rotor createMainRotor(String identifier, Vector3 position, Quaternion rotation, FlatRideComponentSpeed flatRideComponentSpeed){
         VirtualEntity virtualEntity = viewportManager.spawnVirtualArmorstand(position, new TrainModelItem(new ItemStack(Material.DIAMOND_BLOCK)));
 
-        Rotor rotor = new Rotor(identifier, identifier, true, List.of(new FlatRideModel(virtualEntity, Vector3.zero(), new Quaternion())), rotorSpeed);
+        Rotor rotor = new Rotor(identifier, identifier, true, List.of(new FlatRideModel(virtualEntity, Vector3.zero(), new Quaternion())), flatRideComponentSpeed);
         rotor.setAttachedTo(new FixedAttachment(rotor, position, rotation));
         return rotor;
     }

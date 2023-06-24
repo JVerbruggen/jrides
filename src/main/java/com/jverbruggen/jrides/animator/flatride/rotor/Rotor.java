@@ -1,33 +1,20 @@
 package com.jverbruggen.jrides.animator.flatride.rotor;
 
-import com.jverbruggen.jrides.animator.flatride.AbstractFlatRideComponent;
-import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
+import com.jverbruggen.jrides.animator.flatride.AbstractInterconnectedFlatRideComponent;
+import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
-import com.jverbruggen.jrides.animator.flatride.attachment.RelativeAttachment;
 import com.jverbruggen.jrides.models.math.Quaternion;
-import com.jverbruggen.jrides.models.math.Vector3;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Rotor extends AbstractFlatRideComponent {
-    private final List<Attachment> children;
-    private Quaternion rotation;
-    private final RotorSpeed rotorSpeed;
+public class Rotor extends AbstractInterconnectedFlatRideComponent {
+    private final Quaternion rotation;
+    private final FlatRideComponentSpeed flatRideComponentSpeed;
 
-    public Rotor(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels, RotorSpeed rotorSpeed) {
+    public Rotor(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed) {
         super(identifier, groupIdentifier, root, flatRideModels);
-        this.children = new ArrayList<>();
         this.rotation = new Quaternion();
-        this.rotorSpeed = rotorSpeed;
-    }
-
-    @Override
-    public void attach(FlatRideComponent child, Quaternion offsetRotation, Vector3 offsetPosition){
-        Attachment attachment = new RelativeAttachment(this, child, offsetRotation, offsetPosition);
-
-        child.setAttachedTo(attachment);
-        children.add(attachment);
+        this.flatRideComponentSpeed = flatRideComponentSpeed;
     }
 
     @Override
@@ -39,9 +26,9 @@ public class Rotor extends AbstractFlatRideComponent {
 
     @Override
     public void tick() {
-        rotation.rotateY(rotorSpeed.getSpeed());
+        rotation.rotateY(flatRideComponentSpeed.getSpeed());
 
-        for(Attachment attachment : children){
+        for(Attachment attachment : getChildren()){
             attachment.update();
             attachment.getChild().tick();
         }

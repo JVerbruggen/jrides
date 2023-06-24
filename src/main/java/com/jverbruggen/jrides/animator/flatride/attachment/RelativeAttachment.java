@@ -41,7 +41,7 @@ public class RelativeAttachment implements Attachment {
     @Override
     public void update() {
         cacheMatrix = MatrixMath.rotateTranslate(
-                parent.getAttachedTo().getPosition(),
+                parent.getPosition(),
                 parent.getRotation(),
                 this.offsetPosition,
                 this.offsetRotation);

@@ -3,7 +3,7 @@ package com.jverbruggen.jrides.config.flatride.structure.attachment;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.models.math.Vector3;
 
-public abstract class AbstractRelativeMultipleAttachmentConfig<T extends BaseConfig> extends BaseConfig implements AttachmentConfig<T> {
+public abstract class AbstractRelativeMultipleAttachmentConfig extends BaseConfig implements AttachmentConfig {
     private final String toComponentIdentifier;
     private final Vector3 offsetPosition;
     private final int amount;

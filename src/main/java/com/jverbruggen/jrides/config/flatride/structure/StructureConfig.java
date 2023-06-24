@@ -1,7 +1,8 @@
 package com.jverbruggen.jrides.config.flatride.structure;
 
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
-import com.jverbruggen.jrides.config.flatride.structure.rotor.RotorConfig;
+import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
+import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.seat.SeatConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -33,6 +34,7 @@ public class StructureConfig extends BaseConfig {
             StructureConfigItem structureConfigItem = switch (type) {
                 case "rotor" -> RotorConfig.fromConfigurationSection(itemConfigurationSection, key);
                 case "seat" -> SeatConfig.fromConfigurationSection(itemConfigurationSection, key);
+                case "linear_actuator" -> LinearActuatorConfig.fromConfigurationSection(itemConfigurationSection, key);
                 default -> throw new RuntimeException("Unknown structure type '" + type + "'");
             };
 
