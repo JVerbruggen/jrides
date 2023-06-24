@@ -27,11 +27,15 @@ public class LinearActuator extends AbstractInterconnectedFlatRideComponent {
         this.phase = phase;
 
         this.actuatorState = new Vector3(0,0,0);
-        this.sineState = phase;
+        resetToInitialPhase();
+    }
+
+    private void resetToInitialPhase(){
+        this.sineState = phase/180f*PI;
     }
 
     private void increaseSineState(){
-        sineState = (sineState + flatRideComponentSpeed.getSpeed()/360f*PI) % PI2;
+        sineState = (sineState + flatRideComponentSpeed.getSpeed()/180*PI) % PI2;
         updateActuatorState();
     }
 
