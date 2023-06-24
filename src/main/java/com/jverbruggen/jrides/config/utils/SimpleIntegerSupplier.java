@@ -1,6 +1,8 @@
 package com.jverbruggen.jrides.config.utils;
 
-public class SimpleIntegerSupplier implements IntegerSupplier {
+import java.util.function.Supplier;
+
+public class SimpleIntegerSupplier implements Supplier<Integer> {
     private final int value;
 
     public SimpleIntegerSupplier(int value) {
@@ -8,7 +10,7 @@ public class SimpleIntegerSupplier implements IntegerSupplier {
     }
 
     @Override
-    public int getInteger() {
+    public Integer get() {
         return value;
     }
 }

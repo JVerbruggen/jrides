@@ -11,13 +11,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class EntityMovePacket extends MultiplePacket implements Packet {
-    private ProtocolManager protocolManager;
     private int entityId;
     private Vector3 location;
     private double yawRotation;
 
     public EntityMovePacket(ProtocolManager protocolManager, int entityId, Vector3 location, double yawRotation) {
-        this.protocolManager = protocolManager;
+        super(protocolManager);
         this.entityId = entityId;
         this.location = location;
         this.yawRotation = yawRotation;

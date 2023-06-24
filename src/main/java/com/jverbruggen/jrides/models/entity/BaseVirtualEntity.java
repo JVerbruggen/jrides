@@ -14,6 +14,12 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     protected PacketSender packetSender;
     protected ViewportManager viewportManager;
 
+    private Player passenger;
+    private boolean allowsPassengerValue;
+    private boolean passengerSyncCounterActive;
+    private int passengerSyncCounter;
+    private Seat partOfSeat;
+
     protected boolean spawned;
     protected UUID uuid;
     protected int entityId;
@@ -23,6 +29,12 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     private int teleportSyncCoundownState; // If entity isn't teleported every few frames, it starts drifting due to only relative updates
 
     public BaseVirtualEntity(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, int entityId) {
+        this.passenger = null;
+        this.allowsPassengerValue = false;
+        this.passengerSyncCounterActive = false;
+        this.passengerSyncCounter = 0;
+        this.partOfSeat = null;
+
         this.packetSender = packetSender;
         this.viewportManager = viewportManager;
         this.entityId = entityId;
@@ -31,6 +43,46 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
         this.viewers = new ArrayList<>();
         this.spawned = true;
         this.teleportSyncCoundownState = 0;
+    }
+
+    @Override
+    public Player getPassenger() {
+        return passenger;
+    }
+
+    @Override
+    public boolean allowsPassenger() {
+        return allowsPassengerValue;
+    }
+
+    @Override
+    public boolean hasPassenger() {
+        return passenger != null;
+    }
+
+    @Override
+    public void setPassenger(Player player) {
+        this.passenger = player;
+
+        packetSender.sendMountVirtualEntityPacket(viewers, player, entityId);
+
+        if(player != null){
+            this.passengerSyncCounterActive = true;
+            this.passengerSyncCounter = 0;
+        }else{
+            this.passengerSyncCounterActive = false;
+        }
+    }
+
+    @Override
+    public void setHostSeat(Seat seat) {
+        partOfSeat = seat;
+        setAllowsPassengerValue(true);
+    }
+
+    @Override
+    public Seat getHostSeat() {
+        return partOfSeat;
     }
 
     @Override
@@ -131,8 +183,17 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
         return spawned;
     }
 
-    @Override
-    public void setHostSeat(Seat seat) {
+    protected void setAllowsPassengerValue(boolean allowsPassengerValue) {
+        this.allowsPassengerValue = allowsPassengerValue;
+    }
 
+    protected void syncPassenger(Vector3 position){
+        if(passengerSyncCounterActive){
+            if(passengerSyncCounter > 20){
+                passengerSyncCounter = 0;
+
+                this.passenger.setPositionWithoutTeleport(position);
+            }else passengerSyncCounter++;
+        }
     }
 }

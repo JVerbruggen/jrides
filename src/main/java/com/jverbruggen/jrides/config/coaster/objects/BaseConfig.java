@@ -1,7 +1,6 @@
 package com.jverbruggen.jrides.config.coaster.objects;
 
 import com.jverbruggen.jrides.config.utils.CycleIntegerSupplier;
-import com.jverbruggen.jrides.config.utils.IntegerSupplier;
 import com.jverbruggen.jrides.config.utils.RandomIntegerSupplier;
 import com.jverbruggen.jrides.config.utils.SimpleIntegerSupplier;
 import org.bukkit.configuration.ConfigurationSection;
@@ -11,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public abstract class BaseConfig {
@@ -63,7 +63,7 @@ public abstract class BaseConfig {
         return getInt(configurationSection, key);
     }
 
-    protected static IntegerSupplier getIntSupplier(ConfigurationSection configurationSection, String key){
+    protected static Supplier<Integer> getIntSupplier(ConfigurationSection configurationSection, String key){
         assertPresence(configurationSection, key);
         Object value = configurationSection.get(key);
         if(value instanceof List<?>){
@@ -81,7 +81,7 @@ public abstract class BaseConfig {
         return new SimpleIntegerSupplier((int) value);
     }
 
-    protected static IntegerSupplier getIntSupplier(ConfigurationSection configurationSection, String key, int defaultValue){
+    protected static Supplier<Integer> getIntSupplier(ConfigurationSection configurationSection, String key, int defaultValue){
         if(!isPresent(configurationSection, key)) return new SimpleIntegerSupplier(defaultValue);
         return getIntSupplier(configurationSection, key);
     }

@@ -1,8 +1,9 @@
 package com.jverbruggen.jrides.config.utils;
 
 import java.util.List;
+import java.util.function.Supplier;
 
-public class CycleIntegerSupplier implements IntegerSupplier {
+public class CycleIntegerSupplier implements Supplier<Integer> {
     private final List<Integer> cycle;
     private int pointer;
 
@@ -12,7 +13,7 @@ public class CycleIntegerSupplier implements IntegerSupplier {
     }
 
     @Override
-    public int getInteger() {
+    public Integer get() {
         int newPointer = pointer;
         pointer = (pointer + 1) % cycle.size();
         return cycle.get(newPointer);

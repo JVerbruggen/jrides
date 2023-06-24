@@ -6,10 +6,13 @@ import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandModels;
 import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandRotations;
 import com.jverbruggen.jrides.models.math.Vector3;
+import org.bukkit.entity.EntityType;
 
 import java.util.List;
 
 public interface PacketSender {
+    void spawnVirtualEntity(Player player, int entityId, Vector3 location, double yawRotation,
+                            EntityType entityType, boolean invisible, int leashedToEntity);
     void spawnVirtualArmorstand(Player player, int entityId, Vector3 location, double yawRotation,
                                 ArmorstandRotations rotations, ArmorstandModels models, boolean invisible,
                                 int leashedToEntity);
@@ -24,6 +27,8 @@ public interface PacketSender {
     void sendAttachLeashPacket(Player player, int entityId, int leashToEntityId);
     void moveVirtualArmorstand(Player player, int entityId, Vector3 location, double yawRotation);
     void moveVirtualArmorstand(List<Player> players, int entityId, Vector3 location, double yawRotation);
+    void moveVirtualEntity(Player player, int entityId, Vector3 location, double yawRotation);
+    void moveVirtualEntity(List<Player> players, int entityId, Vector3 location, double yawRotation);
     void destroyVirtualEntity(Player player, int entityId);
     void destroyVirtualEntity(List<Player> players, int entityId);
     void teleportVirtualEntity(Player player, int entityId, Vector3 blockLocation);

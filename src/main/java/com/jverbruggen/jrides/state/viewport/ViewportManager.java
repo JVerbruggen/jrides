@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Vector3;
+import org.bukkit.entity.EntityType;
 
 import java.util.List;
 
@@ -13,6 +14,8 @@ public interface ViewportManager {
     void updateVisuals(Player player);
     void updateVisuals(Player player, Vector3 playerLocation);
     void updateForEntity(VirtualEntity virtualEntity);
+    VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType);
+    VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType, double yawRotation);
     VirtualArmorstand spawnVirtualArmorstand(Vector3 location);
     VirtualArmorstand spawnVirtualArmorstand(Vector3 location, double yawRotation);
     VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem headModel);

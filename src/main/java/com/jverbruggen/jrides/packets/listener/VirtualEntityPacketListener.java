@@ -74,9 +74,6 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         if (entity == null) {
             return;
         }
-        if(!(entity instanceof VirtualArmorstand)){
-            return;
-        }
         if (!entity.allowsPassenger()) {
             return;
         }
@@ -84,8 +81,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
             return;
         }
 
-        VirtualArmorstand virtualArmorstand = (VirtualArmorstand) entity;
-        Seat seat = virtualArmorstand.getHostSeat();
+        Seat seat = entity.getHostSeat();
         Player player = playerManager.getPlayer(bukkitPlayer);
 
         if(player.isSeated()) return;

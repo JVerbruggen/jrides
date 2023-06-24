@@ -56,7 +56,7 @@ public class FlatRideFactory {
                 Quaternion.fromYawPitchRoll(0, 90, 0),
                 new Vector3(7, 0, 0),
                 new FlatRideComponentSpeed(2.5f),
-                List.of(new ModelConfig(new ItemConfig(Material.GOLD_BLOCK), Vector3.zero(), new Quaternion())),
+                List.of(new ModelConfig(new ItemConfig(Material.GOLD_BLOCK), null, Vector3.zero(), new Quaternion())),
                 4);
 
         for(FlatRideComponent turntableRotor : turntableRotors){
@@ -66,7 +66,7 @@ public class FlatRideFactory {
                     Quaternion.fromYawPitchRoll(0, 90, 0),
                     new Vector3(3, 0, 0),
                     new FlatRideComponentSpeed(8),
-                    List.of(new ModelConfig(new ItemConfig(Material.REDSTONE_BLOCK), Vector3.zero(), new Quaternion())),
+                    List.of(new ModelConfig(new ItemConfig(Material.REDSTONE_BLOCK), null, Vector3.zero(), new Quaternion())),
                     3);
 
             int seatYawOffset = 180;

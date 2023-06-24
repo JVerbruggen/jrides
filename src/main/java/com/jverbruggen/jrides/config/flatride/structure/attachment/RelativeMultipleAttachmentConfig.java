@@ -24,7 +24,7 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
             offsetPosition = new Vector3(getDouble(configurationSection, "armDistance"), 0, 0);
         else if(configurationSection.contains("armOffset"))
             offsetPosition = Vector3.fromDoubleList(getDoubleList(configurationSection, "armOffset"));
-        else throw new RuntimeException("No arm offset or arm distance specified for rotor");
+        else offsetPosition = Vector3.zero();
 
         int armDuplicate = getInt(configurationSection, "armDuplicate", 1);
 

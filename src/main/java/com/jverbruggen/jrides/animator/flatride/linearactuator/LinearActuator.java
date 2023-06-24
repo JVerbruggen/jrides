@@ -15,12 +15,12 @@ public class LinearActuator extends AbstractInterconnectedFlatRideComponent {
 
     private final FlatRideComponentSpeed flatRideComponentSpeed;
     private final Vector3 actuatorState;
-    private final short size;
+    private final float size;
     private final short phase;
 
     private float sineState;
 
-    public LinearActuator(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, short size, short phase) {
+    public LinearActuator(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, float size, short phase) {
         super(identifier, groupIdentifier, root, flatRideModels);
         this.flatRideComponentSpeed = flatRideComponentSpeed;
         this.size = size;

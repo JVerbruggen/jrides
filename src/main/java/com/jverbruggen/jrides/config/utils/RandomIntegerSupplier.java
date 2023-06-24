@@ -1,6 +1,8 @@
 package com.jverbruggen.jrides.config.utils;
 
-public class RandomIntegerSupplier implements IntegerSupplier {
+import java.util.function.Supplier;
+
+public class RandomIntegerSupplier implements Supplier<Integer> {
     private final int lowerRange;
     private final int upperRange;
 
@@ -10,7 +12,7 @@ public class RandomIntegerSupplier implements IntegerSupplier {
     }
 
     @Override
-    public int getInteger() {
+    public Integer get() {
         return (int)(Math.random() * (upperRange - lowerRange)) + lowerRange;
     }
 }

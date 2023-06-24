@@ -10,6 +10,10 @@ import java.util.List;
 public abstract class MultiplePacket implements Packet {
     protected ProtocolManager protocolManager;
 
+    public MultiplePacket(ProtocolManager protocolManager) {
+        this.protocolManager = protocolManager;
+    }
+
     public abstract List<PacketContainer> getPackets();
 
     protected boolean sendPacket(Player player, PacketContainer packet){

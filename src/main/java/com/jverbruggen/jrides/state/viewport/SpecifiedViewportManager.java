@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.render.Viewport;
+import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,16 @@ public class SpecifiedViewportManager implements ViewportManager{
                 viewport.removeEntity(virtualEntity);
             }
         }
+    }
+
+    @Override
+    public VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType) {
+        return null;
+    }
+
+    @Override
+    public VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType, double yawRotation) {
+        return null;
     }
 
     @Override

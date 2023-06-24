@@ -9,7 +9,6 @@ import com.jverbruggen.jrides.animator.flatride.seat.FlatRideSeat;
 import com.jverbruggen.jrides.animator.flatride.seat.SeatComponent;
 import com.jverbruggen.jrides.config.coaster.objects.cart.ModelConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
-import com.jverbruggen.jrides.config.utils.IntegerSupplier;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.MatrixMath;
 import com.jverbruggen.jrides.models.math.Quaternion;
@@ -21,6 +20,7 @@ import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public interface FlatRideComponent {
@@ -111,7 +111,7 @@ public interface FlatRideComponent {
         return rotor;
     }
 
-    static LinearActuator createLinearActuator(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, short size, IntegerSupplier phase, List<ModelConfig> flatRideModelsConfig){
+    static LinearActuator createLinearActuator(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, float size, Supplier<Integer> phase, List<ModelConfig> flatRideModelsConfig){
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
         Vector3 spawnPosition = MatrixMath.rotateTranslate(
@@ -124,7 +124,7 @@ public interface FlatRideComponent {
                 .map(config -> config.toFlatRideModel(spawnPosition, viewportManager))
                 .collect(Collectors.toList());
 
-        LinearActuator linearActuator = new LinearActuator(identifier, groupIdentifier, false, flatRideModels, flatRideComponentSpeed, size, (short)phase.getInteger());
+        LinearActuator linearActuator = new LinearActuator(identifier, groupIdentifier, false, flatRideModels, flatRideComponentSpeed, size, phase.get().shortValue());
         attachedTo.attach(linearActuator, offsetRotation, offsetPosition);
 
         return linearActuator;

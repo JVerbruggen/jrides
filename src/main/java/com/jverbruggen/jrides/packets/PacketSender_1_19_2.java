@@ -11,6 +11,7 @@ import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandModels;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.packet.raw.*;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 
 import java.util.List;
@@ -68,15 +69,28 @@ public class PacketSender_1_19_2 implements PacketSender {
     }
 
     @Override
+    public void spawnVirtualEntity(Player player, int entityId, Vector3 location, double yawRotation, EntityType entityType, boolean invisible, int leashedToEntity) {
+        double locationX = location.getX();
+        double locationY = location.getY();
+        double locationZ = location.getZ();
+        UUID uuid = UUID.randomUUID();
+
+        new SpawnBukkitEntityServerPacket(
+                protocolManager, entityId, entityType, locationX, locationY, locationZ, yawRotation, uuid
+        ).send(player);
+
+        sendAttachLeashPacket(player, entityId, leashedToEntity);
+    }
+
+    @Override
     public void spawnVirtualArmorstand(Player player, int entityId, Vector3 location, double yawRotation, ArmorstandRotations rotations, ArmorstandModels models, boolean invisible, int leashedToEntity) {
-        int entityType = 2;
         double locationX = location.getX();
         double locationY = location.getY();
         double locationZ = location.getZ();
         UUID uuid = UUID.randomUUID();
 
         new SpawnArmorstandServerPacket(
-                protocolManager, entityId, entityType, locationX, locationY, locationZ, yawRotation, uuid
+                protocolManager, entityId, locationX, locationY, locationZ, yawRotation, uuid
         ).send(player);
 
         new EntityMetadataServerPacket(
@@ -110,8 +124,6 @@ public class PacketSender_1_19_2 implements PacketSender {
     }
 
     public void moveVirtualArmorstand(Player player, int entityId, Vector3 location, double yawRotation){
-        Vector vector = location.toBukkitVector();
-
         new ArmorstandMoveServerPacket(
                 protocolManager, entityId, location, yawRotation
         ).send(player);
@@ -120,6 +132,20 @@ public class PacketSender_1_19_2 implements PacketSender {
     @Override
     public void moveVirtualArmorstand(List<Player> players, int entityId, Vector3 location, double yawRotation) {
         new ArmorstandMoveServerPacket(
+                protocolManager, entityId, location, yawRotation
+        ).sendAll(players);
+    }
+
+    @Override
+    public void moveVirtualEntity(Player player, int entityId, Vector3 location, double yawRotation) {
+        new EntityMovePacket(
+                protocolManager, entityId, location, yawRotation
+        ).send(player);
+    }
+
+    @Override
+    public void moveVirtualEntity(List<Player> players, int entityId, Vector3 location, double yawRotation) {
+        new EntityMovePacket(
                 protocolManager, entityId, location, yawRotation
         ).sendAll(players);
     }

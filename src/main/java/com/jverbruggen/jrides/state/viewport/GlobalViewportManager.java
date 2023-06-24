@@ -1,14 +1,12 @@
 package com.jverbruggen.jrides.state.viewport;
 
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
-import com.jverbruggen.jrides.models.entity.EntityIdFactory;
-import com.jverbruggen.jrides.models.entity.Player;
-import com.jverbruggen.jrides.models.entity.TrainModelItem;
-import com.jverbruggen.jrides.models.entity.VirtualEntity;
+import com.jverbruggen.jrides.models.entity.*;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.render.GlobalViewport;
 import com.jverbruggen.jrides.packets.PacketSender;
+import org.bukkit.entity.EntityType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -80,6 +78,22 @@ public class GlobalViewportManager implements ViewportManager {
     @Override
     public void updateForEntity(VirtualEntity virtualEntity) {
         globalViewport.updateEntityViewers(virtualEntity);
+    }
+
+    @Override
+    public VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType) {
+        return spawnVirtualEntity(location, entityType, 0);
+    }
+
+    @Override
+    public VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType, double yawRotation) {
+        int entityId = entityIdFactory.newId();
+        VirtualEntity virtualEntity = new VirtualBukkitEntity(packetSender, this, location, entityType, yawRotation, entityId);
+
+        addEntity(virtualEntity);
+
+        updateForEntity(virtualEntity);
+        return virtualEntity;
     }
 
     @Override

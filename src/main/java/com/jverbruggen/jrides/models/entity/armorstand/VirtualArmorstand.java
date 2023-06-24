@@ -17,61 +17,22 @@ import org.bukkit.Bukkit;
 import java.util.List;
 
 public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntity {
-    private Player passenger;
+    private static final Vector3 HEAD_OFFSET = new Vector3(0, 1.7, 0);
+
     private double yawRotation;
     private ArmorstandRotations rotations;
     private ArmorstandModels models;
     private boolean invisible;
     private int leashedToEntity;
-    private boolean allowsPassengerValue;
-    private Seat partOfSeat;
-
-    private boolean passengerSyncCounterActive;
-    private int passengerSyncCounter;
 
     public VirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, double yawRotation, int entityId) {
         super(packetSender, viewportManager, location, entityId);
 
-        this.passenger = null;
         this.yawRotation = yawRotation;
         this.rotations = new ArmorstandRotations();
         this.models = new ArmorstandModels();
         this.invisible = true;
         this.leashedToEntity = -1;
-        this.allowsPassengerValue = false;
-        this.partOfSeat = null;
-
-        this.passengerSyncCounterActive = false;
-        this.passengerSyncCounter = 0;
-    }
-
-    @Override
-    public Player getPassenger() {
-        return passenger;
-    }
-
-    @Override
-    public boolean allowsPassenger() {
-        return allowsPassengerValue;
-    }
-
-    @Override
-    public boolean hasPassenger() {
-        return passenger != null;
-    }
-
-    @Override
-    public void setPassenger(Player player) {
-        this.passenger = player;
-
-        packetSender.sendMountVirtualEntityPacket(viewers, player, entityId);
-
-        if(player != null){
-            this.passengerSyncCounterActive = true;
-            this.passengerSyncCounter = 0;
-        }else{
-            this.passengerSyncCounterActive = false;
-        }
     }
 
     @Override
@@ -88,25 +49,15 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
             this.packetSender.sendApplyModelPacket(viewers, entityId, EnumWrappers.ItemSlot.HEAD, models.getHead());
         }
 
-        if(passenger != null){
+        if(getPassenger() != null){
             Bukkit.getScheduler().runTaskLater(JRidesPlugin.getBukkitPlugin(),
-                    () -> packetSender.sendMountVirtualEntityPacket(List.of(player), passenger, entityId), 1L);
+                    () -> packetSender.sendMountVirtualEntityPacket(List.of(player), getPassenger(), entityId), 1L);
         }
     }
 
     @Override
     public boolean shouldRenderFor(Player player) {
         return false;
-    }
-
-    @Override
-    public void setHostSeat(Seat seat) {
-        partOfSeat = seat;
-        allowsPassengerValue = true;
-    }
-
-    public Seat getHostSeat() {
-        return partOfSeat;
     }
 
     public void setHeadpose(Vector3 rotation) {
@@ -126,13 +77,7 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         if(orientation != null)
             this.yawRotation = orientation.getYaw() - 90;
 
-        if(passengerSyncCounterActive){
-            if(passengerSyncCounter > 20){
-                passengerSyncCounter = 0;
-
-                this.passenger.setPositionWithoutTeleport(Vector3.add(newLocation, getHeadOffset()));
-            }else passengerSyncCounter++;
-        }
+        syncPassenger(Vector3.add(newLocation, getHeadOffset()));
     }
 
     @Override
@@ -146,6 +91,6 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     }
 
     public static Vector3 getHeadOffset(){
-        return new Vector3(0, 1.7, 0);
+        return HEAD_OFFSET;
     }
 }

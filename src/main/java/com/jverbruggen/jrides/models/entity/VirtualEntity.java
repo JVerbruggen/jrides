@@ -31,4 +31,5 @@ public interface VirtualEntity {
     boolean shouldRenderFor(Player player);
     boolean isAlive();
     void setHostSeat(Seat seat);
+    Seat getHostSeat();
 }

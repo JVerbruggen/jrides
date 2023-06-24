@@ -8,18 +8,18 @@ import com.jverbruggen.jrides.config.flatride.structure.StructureConfigItem;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.AttachmentConfig;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.FixedAttachmentConfig;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.RelativeMultipleAttachmentConfig;
-import com.jverbruggen.jrides.config.utils.IntegerSupplier;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class LinearActuatorConfig extends AbstractActuatorConfig{
     private final String axis;
-    private final short size;
-    private final IntegerSupplier phase;
+    private final float size;
+    private final Supplier<Integer> phase;
 
-    public LinearActuatorConfig(String identifier, boolean root, String axis, short size, IntegerSupplier phase, AttachmentConfig attachmentConfig, FlatRideComponentSpeed flatRideComponentSpeed, List<ModelConfig> flatRideModelsConfig) {
+    public LinearActuatorConfig(String identifier, boolean root, String axis, float size, Supplier<Integer> phase, AttachmentConfig attachmentConfig, FlatRideComponentSpeed flatRideComponentSpeed, List<ModelConfig> flatRideModelsConfig) {
         super(identifier, root, attachmentConfig, flatRideComponentSpeed, flatRideModelsConfig);
         this.axis = axis;
         this.size = size;
@@ -30,11 +30,11 @@ public class LinearActuatorConfig extends AbstractActuatorConfig{
         return axis;
     }
 
-    public short getSize() {
+    public float getSize() {
         return size;
     }
 
-    public IntegerSupplier getPhase() {
+    public Supplier<Integer> getPhase() {
         return phase;
     }
 
@@ -46,8 +46,8 @@ public class LinearActuatorConfig extends AbstractActuatorConfig{
     public static StructureConfigItem fromConfigurationSection(ConfigurationSection configurationSection, String identifier) {
         boolean root = getBoolean(configurationSection, "root", false);
         String axis = getString(configurationSection, "axis", "y");
-        short size = (short)getInt(configurationSection, "size", 1);
-        IntegerSupplier phase = getIntSupplier(configurationSection, "phase", 0);
+        float size = (float)getDouble(configurationSection, "size", 1d);
+        Supplier<Integer> phase = getIntSupplier(configurationSection, "phase", 0);
         String control = getString(configurationSection, "control", "continuous");
 
         AttachmentConfig attachmentConfig = null;
