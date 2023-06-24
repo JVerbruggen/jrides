@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.config.flatride.structure.StructureConfigItem;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.AttachmentConfig;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.FixedAttachmentConfig;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.RelativeMultipleAttachmentConfig;
+import com.jverbruggen.jrides.config.utils.IntegerSupplier;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
@@ -15,14 +16,26 @@ import java.util.List;
 
 public class LinearActuatorConfig extends AbstractActuatorConfig{
     private final String axis;
+    private final short size;
+    private final IntegerSupplier phase;
 
-    public LinearActuatorConfig(String identifier, boolean root, String axis, AttachmentConfig attachmentConfig, FlatRideComponentSpeed flatRideComponentSpeed, List<ModelConfig> flatRideModelsConfig) {
+    public LinearActuatorConfig(String identifier, boolean root, String axis, short size, IntegerSupplier phase, AttachmentConfig attachmentConfig, FlatRideComponentSpeed flatRideComponentSpeed, List<ModelConfig> flatRideModelsConfig) {
         super(identifier, root, attachmentConfig, flatRideComponentSpeed, flatRideModelsConfig);
         this.axis = axis;
+        this.size = size;
+        this.phase = phase;
     }
 
     public String getAxis() {
         return axis;
+    }
+
+    public short getSize() {
+        return size;
+    }
+
+    public IntegerSupplier getPhase() {
+        return phase;
     }
 
     @Override
@@ -33,6 +46,8 @@ public class LinearActuatorConfig extends AbstractActuatorConfig{
     public static StructureConfigItem fromConfigurationSection(ConfigurationSection configurationSection, String identifier) {
         boolean root = getBoolean(configurationSection, "root", false);
         String axis = getString(configurationSection, "axis", "y");
+        short size = (short)getInt(configurationSection, "size", 1);
+        IntegerSupplier phase = getIntSupplier(configurationSection, "phase", 0);
         String control = getString(configurationSection, "control", "continuous");
 
         AttachmentConfig attachmentConfig = null;
@@ -61,6 +76,6 @@ public class LinearActuatorConfig extends AbstractActuatorConfig{
             modelConfigs = ModelConfig.multipleFromConfigurationSection(getConfigurationSection(configurationSection, "models"));
         else modelConfigs = new ArrayList<>();
 
-        return new LinearActuatorConfig(identifier, root, axis, attachmentConfig, flatRideComponentSpeed, modelConfigs);
+        return new LinearActuatorConfig(identifier, root, axis, size, phase, attachmentConfig, flatRideComponentSpeed, modelConfigs);
     }
 }

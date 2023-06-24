@@ -1,14 +1,21 @@
 package com.jverbruggen.jrides.config.coaster.objects;
 
+import com.jverbruggen.jrides.config.utils.CycleIntegerSupplier;
+import com.jverbruggen.jrides.config.utils.IntegerSupplier;
+import com.jverbruggen.jrides.config.utils.RandomIntegerSupplier;
+import com.jverbruggen.jrides.config.utils.SimpleIntegerSupplier;
 import org.bukkit.configuration.ConfigurationSection;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public abstract class BaseConfig {
+    private static Random random = new Random();
+
     private static String getAvailableKeys(ConfigurationSection configurationSection){
         if(configurationSection == null) return "<none>";
         return String.join(", ", configurationSection.getKeys(false));
@@ -43,7 +50,7 @@ public abstract class BaseConfig {
 
     protected static double getDouble(ConfigurationSection configurationSection, String key, double defaultValue){
         if(!isPresent(configurationSection, key)) return defaultValue;
-        return configurationSection.getDouble(key);
+        return getDouble(configurationSection, key);
     }
 
     protected static int getInt(ConfigurationSection configurationSection, String key){
@@ -53,7 +60,30 @@ public abstract class BaseConfig {
 
     protected static int getInt(ConfigurationSection configurationSection, String key, int defaultValue){
         if(!isPresent(configurationSection, key)) return defaultValue;
-        return configurationSection.getInt(key);
+        return getInt(configurationSection, key);
+    }
+
+    protected static IntegerSupplier getIntSupplier(ConfigurationSection configurationSection, String key){
+        assertPresence(configurationSection, key);
+        Object value = configurationSection.get(key);
+        if(value instanceof List<?>){
+            List<Integer> ints = ((List<?>)value).stream().map(o -> (int)o).toList();
+            if(ints.size() != 2) throw new RuntimeException("Range can only have 2 items");
+            return new RandomIntegerSupplier(ints.get(0), ints.get(1));
+        }else if(value instanceof String sValue && sValue.startsWith("<")){
+            List<Integer> ints = Arrays.stream(sValue.substring(1, sValue.length() - 1).replace(" ", "").split(","))
+                    .map(Integer::parseInt)
+                    .toList();
+            return new CycleIntegerSupplier(ints);
+        }
+
+        assert value instanceof Integer;
+        return new SimpleIntegerSupplier((int) value);
+    }
+
+    protected static IntegerSupplier getIntSupplier(ConfigurationSection configurationSection, String key, int defaultValue){
+        if(!isPresent(configurationSection, key)) return new SimpleIntegerSupplier(defaultValue);
+        return getIntSupplier(configurationSection, key);
     }
 
     protected static String getString(Map<String, Object> config, String key, String defaultValue){

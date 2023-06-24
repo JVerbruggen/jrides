@@ -21,7 +21,7 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
         String armTo = getString(configurationSection, "arm");
         Vector3 offsetPosition;
         if(configurationSection.contains("armDistance"))
-            offsetPosition = new Vector3(getInt(configurationSection, "armDistance"), 0, 0);
+            offsetPosition = new Vector3(getDouble(configurationSection, "armDistance"), 0, 0);
         else if(configurationSection.contains("armOffset"))
             offsetPosition = Vector3.fromDoubleList(getDoubleList(configurationSection, "armOffset"));
         else throw new RuntimeException("No arm offset or arm distance specified for rotor");
@@ -56,12 +56,10 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
 
         for(FlatRideComponent attachedTo : attachedToComponents){
             List<FlatRideComponent> createdComponents = FlatRideComponent.createDistributedLinearActuators(
-                    linearActuatorConfig.getIdentifier(),
                     attachedTo,
                     new Quaternion(),
                     getOffsetPosition(),
-                    linearActuatorConfig.getFlatRideComponentSpeed(),
-                    linearActuatorConfig.getFlatRideModels(),
+                    linearActuatorConfig,
                     getAmount());
 
             components.addAll(createdComponents);

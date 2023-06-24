@@ -51,7 +51,8 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
 
         LinearActuator linearActuator = new LinearActuator(
                 linearActuatorConfig.getIdentifier(), linearActuatorConfig.getIdentifier(), linearActuatorConfig.isRoot(),
-                flatRideModels, linearActuatorConfig.getFlatRideComponentSpeed());
+                flatRideModels, linearActuatorConfig.getFlatRideComponentSpeed(), linearActuatorConfig.getSize(),
+                (short)linearActuatorConfig.getPhase().getInteger());
 
         Attachment attachment = new FixedAttachment(linearActuator, position, rotation);
         linearActuator.setAttachedTo(attachment);
