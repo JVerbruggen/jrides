@@ -24,7 +24,7 @@ public class RangedSectionConfig extends SectionConfig {
     private final String nextSection;
     private final List<String> conflictSections;
     private final BlockSectionSpecConfig blockSectionSpec;
-    private final StationSpecConfig stationSectionSpec;
+    private final CoasterStationConfig stationSectionSpec;
     private final BrakeSectionSpecConfig brakeSectionSpec;
     private final DriveSectionSpecConfig driveSectionSpec;
     private final StorageSectionSpecConfig storageSectionSpec;
@@ -33,7 +33,7 @@ public class RangedSectionConfig extends SectionConfig {
 
     public RangedSectionConfig(String identifier, int lowerRange, int upperRange, boolean jumpAtStart, boolean jumpAtEnd, String trackSource, String type,
                                String nextSection, List<String> conflictSections,
-                               BlockSectionSpecConfig blockSectionSpec, StationSpecConfig stationSectionSpec, BrakeSectionSpecConfig brakeSectionSpec,
+                               BlockSectionSpecConfig blockSectionSpec, CoasterStationConfig stationSectionSpec, BrakeSectionSpecConfig brakeSectionSpec,
                                DriveSectionSpecConfig driveSectionSpec, StorageSectionSpecConfig storageSectionSpec, TransferSectionSpecConfig transferSectionSpec,
                                LaunchSectionSpecConfig launchSectionSpecConfig) {
         super(type, identifier);
@@ -77,7 +77,7 @@ public class RangedSectionConfig extends SectionConfig {
         return blockSectionSpec;
     }
 
-    public StationSpecConfig getStationSectionSpec() {
+    public CoasterStationConfig getStationSectionSpec() {
         return stationSectionSpec;
     }
 
@@ -136,9 +136,9 @@ public class RangedSectionConfig extends SectionConfig {
         if(configurationSection.contains("blockSection"))
             blockSectionSpec = BlockSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("blockSection"));
 
-        StationSpecConfig stationSectionSpec = null;
+        CoasterStationConfig stationSectionSpec = null;
         if(configurationSection.contains("stationSection"))
-            stationSectionSpec = StationSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("stationSection"));
+            stationSectionSpec = CoasterStationConfig.fromConfigurationSection(configurationSection.getConfigurationSection("stationSection"));
 
         BrakeSectionSpecConfig brakeSectionSpec = null;
         if(configurationSection.contains("brakeSection"))

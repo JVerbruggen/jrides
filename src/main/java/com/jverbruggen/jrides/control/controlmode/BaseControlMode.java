@@ -4,7 +4,6 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.ControlAction;
-import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
@@ -50,7 +49,7 @@ public abstract class BaseControlMode implements ControlMode {
     }
 
     protected void incrementWaitingTimer(){
-        if(triggerContext.getTrainPresentLock().isUnlocked()) waitingTimer.increment(tickInterval);
+        if(triggerContext.getVehiclePresentLock().isUnlocked()) waitingTimer.increment(tickInterval);
     }
 
     @Override

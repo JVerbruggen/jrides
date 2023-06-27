@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.animator.coaster;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.AbstractRideHandle;
 import com.jverbruggen.jrides.animator.coaster.tool.ParticleTrackVisualisationTool;
+import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
@@ -28,20 +29,12 @@ public class CoasterHandle extends AbstractRideHandle {
     private List<TrainHandle> trains;
     private List<Transfer> transfers;
     private EffectTriggerCollection effectTriggerCollection;
-    private final String dispatchSound;
-    private final String restraintOpenSound;
-    private final String restraintCloseSound;
-    private final String windSound;
+
     private int rideOverviewMapId;
 
-    public CoasterHandle(Ride ride, World world, String dispatchSound, String restraintOpenSound,
-                         String restraintCloseSound, String windSound, int rideOverviewMapId, boolean loaded) {
-        super(world, ride, null, loaded);
+    public CoasterHandle(Ride ride, World world, SoundsConfig sounds, int rideOverviewMapId, boolean loaded) {
+        super(world, ride, null, loaded, sounds);
 
-        this.dispatchSound = dispatchSound;
-        this.restraintOpenSound = restraintOpenSound;
-        this.restraintCloseSound = restraintCloseSound;
-        this.windSound = windSound;
         this.trains = new ArrayList<>();
         this.stationHandles = new ArrayList<>();
         this.transfers = new ArrayList<>();
@@ -157,22 +150,6 @@ public class CoasterHandle extends AbstractRideHandle {
 
     public void setEffectTriggerCollection(EffectTriggerCollection effectTriggerCollection) {
         this.effectTriggerCollection = effectTriggerCollection;
-    }
-
-    public String getDispatchSound() {
-        return dispatchSound;
-    }
-
-    public String getRestraintOpenSound() {
-        return restraintOpenSound;
-    }
-
-    public String getRestraintCloseSound() {
-        return restraintCloseSound;
-    }
-
-    public String getWindSound() {
-        return windSound;
     }
 
     public void addTransfer(Transfer transfer){

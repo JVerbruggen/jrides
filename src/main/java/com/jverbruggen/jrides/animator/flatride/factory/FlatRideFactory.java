@@ -3,88 +3,48 @@ package com.jverbruggen.jrides.animator.flatride.factory;
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
-import com.jverbruggen.jrides.animator.flatride.attachment.FixedAttachment;
-import com.jverbruggen.jrides.animator.flatride.rotor.Rotor;
-import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
-import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
-import com.jverbruggen.jrides.config.coaster.objects.cart.ModelConfig;
-import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
+import com.jverbruggen.jrides.animator.flatride.station.FlatRideStationHandle;
+import com.jverbruggen.jrides.animator.flatride.timing.TimingSequence;
+import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.config.flatride.FlatRideConfig;
 import com.jverbruggen.jrides.config.flatride.structure.StructureConfig;
 import com.jverbruggen.jrides.config.flatride.structure.StructureConfigItem;
+import com.jverbruggen.jrides.config.gates.GateOwnerConfigSpec;
 import com.jverbruggen.jrides.config.ride.RideState;
-import com.jverbruggen.jrides.models.entity.TrainModelItem;
-import com.jverbruggen.jrides.models.entity.VirtualEntity;
-import com.jverbruggen.jrides.models.math.Quaternion;
-import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.control.DispatchLock;
+import com.jverbruggen.jrides.control.DispatchLockCollection;
+import com.jverbruggen.jrides.control.SimpleDispatchLock;
+import com.jverbruggen.jrides.control.controller.RideController;
+import com.jverbruggen.jrides.control.controller.RideControllerFactory;
+import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
+import com.jverbruggen.jrides.control.trigger.GateTrigger;
+import com.jverbruggen.jrides.control.trigger.RestraintTrigger;
+import com.jverbruggen.jrides.control.trigger.TriggerContext;
+import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
+import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
+import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.flatride.FlatRide;
+import com.jverbruggen.jrides.models.ride.gate.Gate;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import com.jverbruggen.jrides.state.viewport.ViewportManager;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class FlatRideFactory {
-    private final ViewportManager viewportManager;
+    private final RideControllerFactory rideControllerFactory;
+    private final RideControlMenuFactory rideControlMenuFactory;
+    private final LanguageFile languageFile;
 
     public FlatRideFactory() {
-        viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
-    }
-
-    public RideHandle createSimpleFlatRide(String rideIdentifier, World world, RideState rideState){
-        Vector3 center = new Vector3(-1026.5, 110, -771.5);
-        FlatRide flatRide = new FlatRide(rideIdentifier,
-                "DisplayName", List.of(""), new ItemStack(Material.GOLD_BLOCK),
-                PlayerLocation.fromVector3(center), false);
-
-        FlatRideHandle flatRideHandle = new FlatRideHandle(world, flatRide, true);
-
-        Rotor rootRotor = createMainRotor(
-                "center",
-                center,
-                new Quaternion(),
-                new FlatRideComponentSpeed(2.5f));
-        flatRideHandle.addRootComponent(rootRotor);
-
-        List<FlatRideComponent> turntableRotors = FlatRideComponent.createDistributedAttachedRotors(
-                "turntable",
-                rootRotor,
-                Quaternion.fromYawPitchRoll(0, 90, 0),
-                new Vector3(7, 0, 0),
-                new FlatRideComponentSpeed(2.5f),
-                List.of(new ModelConfig(new ItemConfig(Material.GOLD_BLOCK), null, Vector3.zero(), new Quaternion())),
-                4);
-
-        for(FlatRideComponent turntableRotor : turntableRotors){
-            List<FlatRideComponent> cupRotors = FlatRideComponent.createDistributedAttachedRotors(
-                    "cup",
-                    turntableRotor,
-                    Quaternion.fromYawPitchRoll(0, 90, 0),
-                    new Vector3(3, 0, 0),
-                    new FlatRideComponentSpeed(8),
-                    List.of(new ModelConfig(new ItemConfig(Material.REDSTONE_BLOCK), null, Vector3.zero(), new Quaternion())),
-                    3);
-
-            int seatYawOffset = 180;
-            for(FlatRideComponent cupRotor : cupRotors){
-                FlatRideComponent.createDistributedSeats(flatRideHandle,
-                        cupRotor.getIdentifier(),
-                        cupRotor,
-                        Quaternion.fromYawPitchRoll(0, 0, 0),
-                        new Vector3(1, 0, 0),
-                        seatYawOffset,
-                        List.of(),
-                        3);
-            }
-        }
-
-        flatRideHandle.setState(rideState);
-
-        return flatRideHandle;
+        rideControllerFactory = ServiceProvider.getSingleton(RideControllerFactory.class);
+        rideControlMenuFactory = ServiceProvider.getSingleton(RideControlMenuFactory.class);
+        languageFile = ServiceProvider.getSingleton(LanguageFile.class);
     }
 
     public RideHandle createFromConfig(String rideIdentifier, World world, RideState rideState, FlatRideConfig flatRideConfig){
@@ -93,10 +53,38 @@ public class FlatRideFactory {
         ItemStack displayItem = flatRideConfig.getDisplayItem().createItemStack();
         PlayerLocation warpLocation = flatRideConfig.getWarpLocation();
         boolean canExitDuringRide = flatRideConfig.canExitDuringRide();
+        String shortStationName = "station";
+
+        DispatchLockCollection dispatchLockCollection = new DispatchLockCollection("Main locks");
+
+        DispatchLock vehicleInStation = new SimpleDispatchLock(dispatchLockCollection,
+                languageFile.get(LanguageFileField.NOTIFICATION_RIDE_NO_TRAIN_PRESENT), true);
+        DispatchLock minimumWaitTimeDispatchLock = new SimpleDispatchLock(dispatchLockCollection,
+                languageFile.get(LanguageFileField.NOTIFICATION_RIDE_WAITING_TIME), true);
+        DispatchLock restraintLock = new SimpleDispatchLock(dispatchLockCollection,
+                languageFile.get(LanguageFileField.NOTIFICATION_RIDE_RESTRAINTS_NOT_CLOSED), true);
+        DispatchLockCollection gatesGenericLock = new DispatchLockCollection(
+                languageFile.get(LanguageFileField.NOTIFICATION_RIDE_GATES_NOT_CLOSED), dispatchLockCollection);
+
+        TriggerContext triggerContext = new TriggerContext(
+                dispatchLockCollection,
+                vehicleInStation,
+                new DispatchTrigger(dispatchLockCollection),
+                new GateTrigger(gatesGenericLock),
+                new RestraintTrigger(restraintLock));
+
+        Optional<GateOwnerConfigSpec> optionalGateOwner = flatRideConfig.getGates().getGateOwnerSpec(shortStationName);
+        List<Gate> gates = optionalGateOwner.isPresent()
+                ? optionalGateOwner.get().createGates(shortStationName, world, gatesGenericLock)
+                : new ArrayList<>();
+
+        FlatRideStationHandle stationHandle = flatRideConfig.getStationConfig().createFlatRideStationHandle(
+                displayName + "_" + shortStationName, shortStationName, triggerContext, gates, minimumWaitTimeDispatchLock
+        );
 
         FlatRide flatRide = new FlatRide(rideIdentifier, displayName, displayDescription, displayItem,
                 warpLocation, canExitDuringRide);
-        FlatRideHandle flatRideHandle = new FlatRideHandle(world, flatRide, true);
+        FlatRideHandle flatRideHandle = new FlatRideHandle(world, flatRide, true, stationHandle, flatRideConfig.getSoundsConfig());
 
         List<FlatRideComponent> components = new ArrayList<>();
 
@@ -109,15 +97,14 @@ public class FlatRideFactory {
                 .filter(FlatRideComponent::isRoot)
                 .forEach(flatRideHandle::addRootComponent);
 
+        TimingSequence timingSequence = flatRideConfig.getTimingConfig().createTimingSequence(components);
+        flatRideHandle.setTimingSequence(timingSequence);
+
+        RideController rideController = rideControllerFactory.createFlatRideController(flatRideHandle);
+        Menu rideControlMenu = rideControlMenuFactory.getRideControlMenu(rideController, null);
+        flatRideHandle.setRideController(rideController, rideControlMenu);
+
         flatRideHandle.setState(rideState);
         return flatRideHandle;
-    }
-
-    private Rotor createMainRotor(String identifier, Vector3 position, Quaternion rotation, FlatRideComponentSpeed flatRideComponentSpeed){
-        VirtualEntity virtualEntity = viewportManager.spawnVirtualArmorstand(position, new TrainModelItem(new ItemStack(Material.DIAMOND_BLOCK)));
-
-        Rotor rotor = new Rotor(identifier, identifier, true, List.of(new FlatRideModel(virtualEntity, Vector3.zero(), new Quaternion())), flatRideComponentSpeed);
-        rotor.setAttachedTo(new FixedAttachment(rotor, position, rotation));
-        return rotor;
     }
 }

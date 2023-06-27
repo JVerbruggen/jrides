@@ -16,19 +16,16 @@ import org.bukkit.SoundCategory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleTrain implements Train {
-    private final String name;
+public class SimpleTrain extends AbstractVehicle implements Train {
     private List<CoasterCart> carts;
     private Frame middleOfTrainFrame;
     private Frame headOfTrainFrame;
     private Frame tailOfTrainFrame;
     private List<Section> currentSections;
     private List<Section> reservedSections;
-    private boolean crashed;
     private Vector3 headLocation;
     private Vector3 middleLocation;
     private Vector3 tailLocation;
-    private List<Player> passengers;
 
     private CoasterStationHandle onStation;
     private TrainHandle trainHandle;
@@ -36,18 +33,16 @@ public class SimpleTrain implements Train {
     private String statusMessage;
     private List<Player> statusMessageListeners;
     private List<MessageReceiver> positionMessageListeners;
-    private boolean debugMode;
     private boolean drivingTowardsPositiveDirection;
     private boolean forwards;
 
     public SimpleTrain(String name, List<CoasterCart> carts, Frame headOfTrainFrame, Frame middleOfTrainFrame, Frame tailOfTrainFrame,
                        Vector3 headLocation, Vector3 middleLocation, Vector3 tailLocation, Section section, boolean debugMode) {
-        this.name = name;
+        super(name, debugMode);
         this.carts = carts;
         this.headOfTrainFrame = headOfTrainFrame;
         this.middleOfTrainFrame = middleOfTrainFrame;
         this.tailOfTrainFrame = tailOfTrainFrame;
-        this.crashed = false;
 
         this.currentSections = new ArrayList<>();
         this.currentSections.add(section);
@@ -57,23 +52,16 @@ public class SimpleTrain implements Train {
 
         this.reservedSections = new ArrayList<>();
 
-        this.passengers = new ArrayList<>();
         this.onStation = null;
         this.trainHandle = null;
         this.statusMessage = "";
         this.statusMessageListeners = new ArrayList<>();
         this.positionMessageListeners = new ArrayList<>();
-        this.debugMode = debugMode;
 
         this.drivingTowardsPositiveDirection = true;
         this.forwards = true;
 
         getCarts().forEach(c -> c.setParentTrain(this));
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override
@@ -211,16 +199,6 @@ public class SimpleTrain implements Train {
     }
 
     @Override
-    public void setCrashed(boolean crashed) {
-        this.crashed = crashed;
-    }
-
-    @Override
-    public boolean isCrashed() {
-        return crashed;
-    }
-
-    @Override
     public boolean equals(Train other) {
         return this.getName().equalsIgnoreCase(other.getName());
     }
@@ -269,7 +247,7 @@ public class SimpleTrain implements Train {
 
     @Override
     public void onPlayerEnter(Player player) {
-        passengers.add(player);
+        addPassenger(player);
         if(statusModeEnabled(player)){
             addStatusMessageListener(player);
         }
@@ -281,14 +259,10 @@ public class SimpleTrain implements Train {
 
     @Override
     public void onPlayerExit(Player player) {
-        passengers.remove(player);
+        removePassenger(player);
         removeStatusMessageListener(player);
     }
 
-    @Override
-    public List<Player> getPassengers() {
-        return passengers;
-    }
 
     @Override
     public void setStationaryAt(CoasterStationHandle stationaryAt) {
@@ -322,17 +296,17 @@ public class SimpleTrain implements Train {
 
     @Override
     public void playRestraintOpenSound() {
-        playSound(trainHandle.getCoasterHandle().getRestraintOpenSound());
+        playSound(trainHandle.getCoasterHandle().getSounds().getRestraintOpen());
     }
 
     @Override
     public void playRestraintCloseSound() {
-        playSound(trainHandle.getCoasterHandle().getRestraintCloseSound());
+        playSound(trainHandle.getCoasterHandle().getSounds().getRestraintClose());
     }
 
     @Override
     public void playDispatchSound() {
-        playSound(trainHandle.getCoasterHandle().getDispatchSound());
+        playSound(trainHandle.getCoasterHandle().getSounds().getDispatch());
     }
 
     @Override
@@ -358,7 +332,7 @@ public class SimpleTrain implements Train {
 
     @Override
     public void setStatusMessage(String statusMessage) {
-        if(!debugMode) return;
+        if(!isDebugMode()) return;
         this.statusMessage = statusMessage;
         if(!statusMessage.equals(""))
             statusMessageListeners.forEach(l -> l.sendMessage(statusMessage));
@@ -366,30 +340,25 @@ public class SimpleTrain implements Train {
 
     @Override
     public void addStatusMessageListener(Player player) {
-        if(!debugMode) return;
+        if(!isDebugMode()) return;
         statusMessageListeners.add(player);
         player.sendMessage(statusMessage);
     }
 
     @Override
     public void removeStatusMessageListener(Player player) {
-        if(!debugMode) return;
+        if(!isDebugMode()) return;
         statusMessageListeners.remove(player);
     }
 
     @Override
     public boolean statusModeEnabled(Player player) {
-        return debugMode && player.getBukkitPlayer().hasPermission(Permissions.ELEVATED_STATUS_INSPECTION);
+        return isDebugMode() && player.getBukkitPlayer().hasPermission(Permissions.ELEVATED_STATUS_INSPECTION);
     }
 
     @Override
     public void despawn() {
         carts.forEach(CoasterCart::despawn);
-    }
-
-    private void playSound(String soundName){
-        if(soundName == null) return;
-        JRidesPlugin.getWorld().playSound(this.getCurrentLocation().toBukkitLocation(JRidesPlugin.getWorld()), soundName, SoundCategory.MASTER, 0.1f, 1f);
     }
 
     @Override

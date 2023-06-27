@@ -128,7 +128,7 @@ public class TrainHandle {
     }
 
     private void playWindSounds(){
-        String sound = coasterHandle.getWindSound();
+        String sound = coasterHandle.getSounds().getOnrideWind();
         if(sound == null) return;
         if(windSoundState < windSoundInterval)
             windSoundState++;

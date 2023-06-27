@@ -16,8 +16,8 @@ public class FlatRideComponentSpeed {
     }
 
     public FlatRideComponentSpeed(float speed){
-        this.speed = speed;
-        this.minSpeed = speed;
+        this.speed = 0;
+        this.minSpeed = 0;
         this.maxSpeed = speed;
     }
 
@@ -25,6 +25,14 @@ public class FlatRideComponentSpeed {
         this.speed += acceleration;
         if(this.speed > this.maxSpeed) this.speed = this.maxSpeed;
         else if(this.speed < this.minSpeed) this.speed = this.minSpeed;
+    }
+
+    public void accelerateTowards(float acceleration, float towards){
+        this.speed += acceleration;
+        if(this.speed > this.maxSpeed) this.speed = this.maxSpeed;
+        else if(this.speed < this.minSpeed) this.speed = this.minSpeed;
+        else if(acceleration > 0 && this.speed > towards) this.speed = towards;
+        else if(acceleration < 0 && this.speed < towards) this.speed = towards;
     }
 
     public float getSpeed() {

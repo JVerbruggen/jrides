@@ -62,13 +62,14 @@ public class LinearActuatorConfig extends AbstractActuatorConfig{
         if(attachmentConfig == null) throw new RuntimeException("No attachment specified for linear actuator");
 
         FlatRideComponentSpeed flatRideComponentSpeed;
-        if(configurationSection.contains("maxSpeed") || configurationSection.contains("minSpeed")){
+        if(configurationSection.contains("minSpeed")) {
             flatRideComponentSpeed = new FlatRideComponentSpeed(
-                    (float)getDouble(configurationSection, "speed"),
-                    (float)getDouble(configurationSection, "minSpeed"),
-                    (float)getDouble(configurationSection, "maxSpeed"));
+                    (float) getDouble(configurationSection, "speed"),
+                    (float) getDouble(configurationSection, "minSpeed"),
+                    (float) getDouble(configurationSection, "maxSpeed"));
         }else{
-            flatRideComponentSpeed = new FlatRideComponentSpeed((float)getDouble(configurationSection, "speed", 1));
+            flatRideComponentSpeed = new FlatRideComponentSpeed(
+                    (float)getDouble(configurationSection, "speed", 0));
         }
 
         List<ModelConfig> modelConfigs;

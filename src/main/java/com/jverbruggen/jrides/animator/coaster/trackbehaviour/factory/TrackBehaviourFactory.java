@@ -117,22 +117,9 @@ public class TrackBehaviourFactory {
         DispatchLockCollection gatesGenericLock = new DispatchLockCollection(
                 languageFile.get(LanguageFileField.NOTIFICATION_RIDE_GATES_NOT_CLOSED), dispatchLockCollection);
 
-        List<Gate> gates = new ArrayList<>();
-        if(gateSpec != null){
-            List<GateConfig> gateConfigs = gateSpec.getGateSpecConfigEntry().getGates();
-            for(int i = 0; i < gateConfigs.size(); i++){
-                GateConfig gateConfig = gateConfigs.get(i);
-                String gateName = stationName + "_gate_" + i;
-                Vector3 location = gateConfig.getLocation();
-                final String gateDisplayName = "" + i;
-                gates.add(new FenceGate(gateName,
-                        new SimpleDispatchLock(gatesGenericLock,
-                                languageFile.get(LanguageFileField.NOTIFICATION_RIDE_GATE_NOT_CLOSED,
-                                        b -> b.add(LanguageFileTag.name, gateDisplayName)),
-                                false),
-                        location.toBukkitLocation(world).getBlock()));
-            }
-        }
+        List<Gate> gates = gateSpec != null
+                ? gateSpec.createGates(stationName, world, gatesGenericLock)
+                : new ArrayList<>();
 
         TriggerContext triggerContext = new TriggerContext(
                 dispatchLockCollection,
@@ -141,21 +128,13 @@ public class TrackBehaviourFactory {
                 new GateTrigger(gatesGenericLock),
                 new RestraintTrigger(restraintLock));
 
-        StationSpecConfig stationSpecConfig = rangedSectionConfig.getStationSectionSpec();
-        int minimumWaitingTime = stationSpecConfig.getMinimumWaitIntervalSeconds();
-        int maximumWaitingTime = stationSpecConfig.getMaximumWaitIntervalSeconds();
+        CoasterStationConfig coasterStationConfig = rangedSectionConfig.getStationSectionSpec();
+        double driveSpeed = coasterStationConfig.getDriveSpeed();
 
-        double driveSpeed = stationSpecConfig.getDriveSpeed();
+        CoasterStationHandle stationHandle = coasterStationConfig.createStationHandle(
+                stationName, shortStationName, triggerContext, coasterHandle,
+                gates, minimumWaitTimeDispatchLock);
 
-        StationEffectsConfig stationEffectsConfig = stationSpecConfig.getStationEffectsConfig();
-        List<TrainEffectTriggerHandle> entryEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, stationEffectsConfig.getEntryEffects());
-        List<TrainEffectTriggerHandle> exitEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, stationEffectsConfig.getExitEffects());
-        PlayerLocation ejectLocation = stationSpecConfig.getEjectLocation();
-
-        MinMaxWaitingTimer waitingTimer = new MinMaxWaitingTimer(minimumWaitingTime, maximumWaitingTime, minimumWaitTimeDispatchLock);
-
-        CoasterStationHandle stationHandle = new CoasterStationHandle(coasterHandle, stationName, shortStationName, triggerContext, gates, waitingTimer,
-                entryEffectTriggers, exitEffectTriggers, ejectLocation);
         triggerContext.setParentStation(stationHandle);
 
         return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, true, triggerContext,
@@ -184,8 +163,8 @@ public class TrackBehaviourFactory {
         }else if(type.equalsIgnoreCase("blocksection")){
             return getBlockBrakeBehaviour(rangedSectionConfig, totalFrames);
         }else if(type.equalsIgnoreCase("station")){
-            StationSpecConfig stationSectionSpecConfig = rangedSectionConfig.getStationSectionSpec();
-            GateOwnerConfigSpec gateSpec = coasterConfig.getGates().getGateOwnerSpec(identifier);
+            CoasterStationConfig stationSectionSpecConfig = rangedSectionConfig.getStationSectionSpec();
+            GateOwnerConfigSpec gateSpec = coasterConfig.getGates().getGateOwnerSpec(identifier).orElse(null);
 
             double engagePercentage = stationSectionSpecConfig.getEngage();
             Frame lowerRange = new SimpleFrame(rangedSectionConfig.getLowerRange());

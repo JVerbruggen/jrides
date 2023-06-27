@@ -1,7 +1,21 @@
 package com.jverbruggen.jrides.config.gates;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.control.DispatchLock;
+import com.jverbruggen.jrides.control.DispatchLockCollection;
+import com.jverbruggen.jrides.control.SimpleDispatchLock;
+import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.language.LanguageFileTag;
+import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.ride.gate.FenceGate;
+import com.jverbruggen.jrides.models.ride.gate.Gate;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GateOwnerConfigSpec {
     private final GateSpecConfig gateSpecConfigEntry;
@@ -31,5 +45,26 @@ public class GateOwnerConfigSpec {
         if (configurationSection.contains("exit")) gateSpecConfigExit = GateSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("exit"));
 
         return new GateOwnerConfigSpec(gateSpecConfigEntry, gateSpecConfigExit);
+    }
+
+    public List<Gate> createGates(String stationName, World world, DispatchLockCollection gatesGenericLock){
+        LanguageFile languageFile = JRidesPlugin.getLanguageFile();
+        List<Gate> gates = new ArrayList<>();
+
+        List<GateConfig> gateConfigs = getGateSpecConfigEntry().getGates();
+        for(int i = 0; i < gateConfigs.size(); i++){
+            GateConfig gateConfig = gateConfigs.get(i);
+            String gateName = stationName + "_gate_" + i;
+            Vector3 location = gateConfig.getLocation();
+            final String gateDisplayName = "" + i;
+            gates.add(new FenceGate(gateName,
+                    new SimpleDispatchLock(gatesGenericLock,
+                            languageFile.get(LanguageFileField.NOTIFICATION_RIDE_GATE_NOT_CLOSED,
+                                    b -> b.add(LanguageFileTag.name, gateDisplayName)),
+                            false),
+                    location.toBukkitLocation(world).getBlock()));
+        }
+
+        return gates;
     }
 }

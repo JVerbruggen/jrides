@@ -1,23 +1,24 @@
 package com.jverbruggen.jrides.control.controller;
 
 import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
+import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.config.coaster.objects.ControllerConfig;
 import com.jverbruggen.jrides.config.coaster.objects.controller.AlternateControllerSpecConfig;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 
 public class RideControllerFactory {
-    public RideController createRideController(CoasterHandle coasterHandle, ControllerConfig controllerConfig){
+    public RideController createCoasterController(CoasterHandle coasterHandle, ControllerConfig controllerConfig){
         if(controllerConfig == null || controllerConfig.getType().equalsIgnoreCase(ControllerConfig.CONTROLLER_DEFAULT))
-            return createDefaultRideController(coasterHandle);
+            return createDefaultCoasterController(coasterHandle);
 
         String type = controllerConfig.getType();
         if(type.equalsIgnoreCase(ControllerConfig.CONTROLLER_ALTERNATE))
-            return createAlternateRideController(coasterHandle, controllerConfig.getAlternateControllerSpecConfig());
+            return createAlternateCoasterController(coasterHandle, controllerConfig.getAlternateControllerSpecConfig());
 
         throw new RuntimeException("Ride controller type " + type + " is not supported");
     }
 
-    private RideController createAlternateRideController(CoasterHandle coasterHandle, AlternateControllerSpecConfig alternateControllerSpecConfig) {
+    private RideController createAlternateCoasterController(CoasterHandle coasterHandle, AlternateControllerSpecConfig alternateControllerSpecConfig) {
         String stationLeftName = alternateControllerSpecConfig.getStationLeft();
         String stationRightName = alternateControllerSpecConfig.getStationRight();
 
@@ -30,9 +31,13 @@ public class RideControllerFactory {
         return new AlternateRideController(stationHandleLeft.getTriggerContext(), stationHandleRight.getTriggerContext(), coasterHandle);
     }
 
-    private RideController createDefaultRideController(CoasterHandle coasterHandle){
+    private RideController createDefaultCoasterController(CoasterHandle coasterHandle){
         CoasterStationHandle stationHandle = coasterHandle.getStationHandle(0);
 
-        return new SimpleRideController(stationHandle, coasterHandle);
+        return new SimpleRideController(coasterHandle, stationHandle.getTriggerContext());
+    }
+
+    public RideController createFlatRideController(FlatRideHandle flatRideHandle){
+        return new SimpleRideController(flatRideHandle, flatRideHandle.getFirstTriggerContext());
     }
 }

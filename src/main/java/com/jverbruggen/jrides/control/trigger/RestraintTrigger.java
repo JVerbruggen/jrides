@@ -7,10 +7,12 @@ import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
+import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 
 public class RestraintTrigger implements StationTrigger {
-    private CoasterStationHandle stationHandle;
+    private StationHandle stationHandle;
     private final DispatchLock restraintLock;
     private final LanguageFile languageFile;
 
@@ -21,7 +23,7 @@ public class RestraintTrigger implements StationTrigger {
     }
 
     @Override
-    public void setStationHandle(CoasterStationHandle stationHandle) {
+    public void setStationHandle(StationHandle stationHandle) {
         this.stationHandle = stationHandle;
     }
 
@@ -42,7 +44,7 @@ public class RestraintTrigger implements StationTrigger {
             return false;
         }
 
-        Train stationaryTrain = stationHandle.getStationaryTrain();
+        Vehicle stationaryTrain = stationHandle.getStationaryVehicle();
         boolean set = setRestraintsState(!stationaryTrain.getRestraintState());
         if(!set) {
             languageFile.sendMessage(messageAgent, LanguageFileField.NOTIFICATION_RIDE_NO_TRAIN_PRESENT);
@@ -55,7 +57,7 @@ public class RestraintTrigger implements StationTrigger {
     public boolean setRestraintsState(boolean closed){
         if(restraintLock.isUnlocked() == closed) return false;
 
-        Train stationaryTrain = stationHandle.getStationaryTrain();
+        Vehicle stationaryTrain = stationHandle.getStationaryVehicle();
         if(stationaryTrain == null) {
             return false;
         }

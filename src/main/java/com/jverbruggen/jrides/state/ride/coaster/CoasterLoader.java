@@ -102,13 +102,8 @@ public class CoasterLoader {
         // Initialize Handle
         int rideOverviewMapId = coasterConfig.getRideOverviewMapId();
         SoundsConfig sounds = coasterConfig.getSoundsConfig();
-        String dispatchSound = sounds.getDispatch();
-        String restraintOpenSound = sounds.getRestraintOpen();
-        String restraintCloseSound = sounds.getRestraintClose();
-        String windSound = sounds.getOnrideWind();
 
-        CoasterHandle coasterHandle = new CoasterHandle(ride, world, dispatchSound, restraintOpenSound,
-                restraintCloseSound, windSound, rideOverviewMapId, !rideState.isInactive());
+        CoasterHandle coasterHandle = new CoasterHandle(ride, world, sounds, rideOverviewMapId, !rideState.isInactive());
 
         // Initialize Track
         if(!rideState.isInactive()){
@@ -143,7 +138,7 @@ public class CoasterLoader {
             }
             coasterHandle.setTrains(trainHandles);
 
-            RideController rideController = rideControllerFactory.createRideController(coasterHandle, coasterConfig.getControllerConfig());
+            RideController rideController = rideControllerFactory.createCoasterController(coasterHandle, coasterConfig.getControllerConfig());
             Menu rideControlMenu = rideControlMenuFactory.getRideControlMenu(rideController, coasterConfig.getControllerConfig());
             coasterHandle.setRideController(rideController, rideControlMenu);
         }

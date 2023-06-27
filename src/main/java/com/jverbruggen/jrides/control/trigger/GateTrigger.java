@@ -7,10 +7,12 @@ import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
+import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 
 public class GateTrigger implements StationTrigger{
-    private CoasterStationHandle stationHandle;
+    private StationHandle stationHandle;
     private final DispatchLock gatesLock;
     private final LanguageFile languageFile;
 
@@ -21,7 +23,7 @@ public class GateTrigger implements StationTrigger{
     }
 
     @Override
-    public void setStationHandle(CoasterStationHandle stationHandle) {
+    public void setStationHandle(StationHandle stationHandle) {
         this.stationHandle = stationHandle;
     }
 
@@ -54,7 +56,7 @@ public class GateTrigger implements StationTrigger{
     public boolean setGatesState(boolean closed){
         if(gatesLock.isUnlocked() == closed) return false;
 
-        Train stationaryTrain = stationHandle.getStationaryTrain();
+        Vehicle stationaryTrain = stationHandle.getStationaryVehicle();
         if(stationaryTrain == null) {
             return false;
         }

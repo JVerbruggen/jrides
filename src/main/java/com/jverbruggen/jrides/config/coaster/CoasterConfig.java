@@ -19,21 +19,19 @@ public class CoasterConfig extends AbstractRideConfig {
     private final double gravityConstant;
     private final double dragConstant;
     private final ControllerConfig controllerConfig;
-    private final SoundsConfig soundsConfig;
     private final int rideOverviewMapId;
 
     public CoasterConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription,
                          ItemConfig displayItem, PlayerLocation warpLocation, TrackConfig track,
                          VehiclesConfig vehicles, CartSpecConfig cartSpec, GatesConfig gates, double gravityConstant, double dragConstant,
                          ControllerConfig controllerConfig, SoundsConfig soundsConfig, int rideOverviewMapId, boolean canExitDuringRide) {
-        super(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, canExitDuringRide);
+        super(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, soundsConfig, canExitDuringRide);
         this.track = track;
         this.vehicles = vehicles;
         this.cartSpec = cartSpec;
         this.gravityConstant = gravityConstant;
         this.dragConstant = dragConstant;
         this.controllerConfig = controllerConfig;
-        this.soundsConfig = soundsConfig;
         this.rideOverviewMapId = rideOverviewMapId;
     }
 
@@ -59,10 +57,6 @@ public class CoasterConfig extends AbstractRideConfig {
 
     public ControllerConfig getControllerConfig() {
         return controllerConfig;
-    }
-
-    public SoundsConfig getSoundsConfig() {
-        return soundsConfig;
     }
 
     public int getRideOverviewMapId() {

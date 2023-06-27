@@ -1,6 +1,9 @@
 package com.jverbruggen.jrides.animator.flatride;
 
 import com.jverbruggen.jrides.animator.AbstractRideHandle;
+import com.jverbruggen.jrides.animator.flatride.station.FlatRideStationHandle;
+import com.jverbruggen.jrides.animator.flatride.timing.TimingSequence;
+import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.models.entity.Player;
@@ -16,16 +19,30 @@ import java.util.List;
 
 public class FlatRideHandle extends AbstractRideHandle {
     private final List<FlatRideComponent> rootComponents;
+    private TimingSequence timingSequence;
+    private final FlatRideStationHandle stationHandle;
 
-    public FlatRideHandle(World world, Ride ride, boolean loaded) {
-        super(world, ride, null, loaded);
-
+    public FlatRideHandle(World world, Ride ride, boolean loaded, FlatRideStationHandle stationHandle, SoundsConfig sounds) {
+        super(world, ride, null, loaded, sounds);
+        this.stationHandle = stationHandle;
+        this.timingSequence = null;
         this.rootComponents = new ArrayList<>();
+
+        stationHandle.setFlatRideHandle(this);
     }
 
     @Override
     public void tick() {
+        if(stationHandle.getTriggerContext().getDispatchTrigger().isActive()
+                && this.timingSequence.isIdle())
+            this.timingSequence.restart();
+
+        this.timingSequence.tick();
         this.rootComponents.forEach(FlatRideComponent::tick);
+    }
+
+    public void setTimingSequence(TimingSequence timingSequence) {
+        this.timingSequence = timingSequence;
     }
 
     public void addRootComponent(FlatRideComponent component){
@@ -38,27 +55,27 @@ public class FlatRideHandle extends AbstractRideHandle {
 
     @Override
     public DispatchTrigger getDispatchTrigger() {
-        return null;
+        return getFirstTriggerContext().getDispatchTrigger();
     }
 
     @Override
     public TriggerContext getTriggerContext(@NotNull String contextOwner) {
-        return null;
+        return getFirstTriggerContext();
     }
 
     @Override
     public TriggerContext getFirstTriggerContext() {
-        return null;
+        return stationHandle.getTriggerContext();
     }
 
     @Override
     public PlayerLocation getEjectLocation() {
-        return null;
+        return stationHandle.getEjectLocation();
     }
 
     @Override
     public List<StationHandle> getStationHandles() {
-        return null;
+        return List.of(stationHandle);
     }
 
     @Override

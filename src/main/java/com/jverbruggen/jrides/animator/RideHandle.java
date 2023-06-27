@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.animator;
 
+import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
@@ -44,4 +45,6 @@ public interface RideHandle {
 
     void unload(boolean save);
     boolean isLoaded();
+
+    SoundsConfig getSounds();
 }

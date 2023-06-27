@@ -10,13 +10,18 @@ import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 public class SimpleRideController extends SingularRideController implements RideController {
-    private final CoasterStationHandle stationHandle;
+    private final TriggerContext triggerContext;
 
-    public SimpleRideController(CoasterStationHandle stationHandle, RideHandle rideHandle) {
+    public SimpleRideController(RideHandle rideHandle, TriggerContext triggerContext) {
         super();
-        this.stationHandle = stationHandle;
+        this.triggerContext = triggerContext;
         this.changeMode(this.getControlModeFactory().getForWithoutOperator(rideHandle));
 
         this.setRideHandle(rideHandle);
+    }
+
+    @Override
+    public TriggerContext getTriggerContext() {
+        return triggerContext;
     }
 }

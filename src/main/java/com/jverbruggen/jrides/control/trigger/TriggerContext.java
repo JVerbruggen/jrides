@@ -9,15 +9,15 @@ import javax.annotation.Nullable;
 
 public class TriggerContext {
     private final DispatchLockCollection dispatchLockCollection;
-    private final DispatchLock trainPresentLock;
+    private final DispatchLock vehiclePresentLock;
     private final DispatchTrigger dispatchTrigger;
     private final GateTrigger gateTrigger;
     private final RestraintTrigger restraintTrigger;
     private @Nullable StationHandle parentStation;
 
-    public TriggerContext(DispatchLockCollection dispatchLockCollection, DispatchLock trainPresentLock, DispatchTrigger dispatchTrigger, GateTrigger gateTrigger, RestraintTrigger restraintTrigger) {
+    public TriggerContext(DispatchLockCollection dispatchLockCollection, DispatchLock vehiclePresentLock, DispatchTrigger dispatchTrigger, GateTrigger gateTrigger, RestraintTrigger restraintTrigger) {
         this.dispatchLockCollection = dispatchLockCollection;
-        this.trainPresentLock = trainPresentLock;
+        this.vehiclePresentLock = vehiclePresentLock;
         this.dispatchTrigger = dispatchTrigger;
         this.gateTrigger = gateTrigger;
         this.restraintTrigger = restraintTrigger;
@@ -28,8 +28,8 @@ public class TriggerContext {
         return dispatchTrigger;
     }
 
-    public DispatchLock getTrainPresentLock() {
-        return trainPresentLock;
+    public DispatchLock getVehiclePresentLock() {
+        return vehiclePresentLock;
     }
 
     public GateTrigger getGateTrigger() {
@@ -56,7 +56,7 @@ public class TriggerContext {
     @Override
     public String toString() {
         return "TriggerContext{" +
-                "trainPresentLock=" + trainPresentLock +
+                "vehiclePresentLock=" + vehiclePresentLock +
                 ", parentStation=" + parentStation +
                 '}';
     }

@@ -25,8 +25,6 @@ public class CoasterStationHandle extends StationHandle {
         this.exitEffectTriggers = exitEffectTriggers;
         this.stationaryTrain = null;
 
-        triggerContext.getRestraintTrigger().setStationHandle(this);
-        triggerContext.getGateTrigger().setStationHandle(this);
         coasterHandle.addStationHandle(this);
     }
 

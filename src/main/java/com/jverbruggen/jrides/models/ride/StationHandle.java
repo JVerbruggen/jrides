@@ -23,6 +23,9 @@ public class StationHandle {
         this.ejectLocation = ejectLocation;
         this.waitingTimer = waitingTimer;
         this.triggerContext = triggerContext;
+
+        triggerContext.getRestraintTrigger().setStationHandle(this);
+        triggerContext.getGateTrigger().setStationHandle(this);
     }
 
     public PlayerLocation getEjectLocation() {

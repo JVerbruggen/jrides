@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.animator;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.common.permissions.Permissions;
+import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.event.ride.RideStateUpdatedEvent;
@@ -25,16 +26,19 @@ public abstract class AbstractRideHandle implements RideHandle{
     private boolean loaded;
     private Menu rideControlMenu;
     private RideController rideController;
+    private final SoundsConfig sounds;
 
     private List<RideCounterRecordCollection> topRideCounters;
 
-    public AbstractRideHandle(World world, Ride ride, RideState rideState, boolean loaded) {
+    public AbstractRideHandle(World world, Ride ride, RideState rideState, boolean loaded, SoundsConfig sounds) {
         this.world = world;
         this.ride = ride;
         this.rideState = rideState;
         this.loaded = loaded;
         this.rideController = null;
         this.topRideCounters = new ArrayList<>();
+
+        this.sounds = sounds;
     }
 
     public World getWorld() {
@@ -161,5 +165,9 @@ public abstract class AbstractRideHandle implements RideHandle{
     @Override
     public List<RideCounterRecordCollection> getTopRideCounters() {
         return topRideCounters;
+    }
+
+    public SoundsConfig getSounds() {
+        return sounds;
     }
 }
