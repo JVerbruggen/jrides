@@ -10,6 +10,7 @@ import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
+import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
@@ -21,24 +22,32 @@ public class FlatRideHandle extends AbstractRideHandle {
     private final List<FlatRideComponent> rootComponents;
     private TimingSequence timingSequence;
     private final FlatRideStationHandle stationHandle;
+    private final DispatchTrigger dispatchTrigger;
 
     public FlatRideHandle(World world, Ride ride, boolean loaded, FlatRideStationHandle stationHandle, SoundsConfig sounds) {
         super(world, ride, null, loaded, sounds);
         this.stationHandle = stationHandle;
         this.timingSequence = null;
         this.rootComponents = new ArrayList<>();
+        this.dispatchTrigger = stationHandle.getTriggerContext().getDispatchTrigger();
 
         stationHandle.setFlatRideHandle(this);
     }
 
     @Override
     public void tick() {
-        if(stationHandle.getTriggerContext().getDispatchTrigger().isActive()
-                && this.timingSequence.isIdle())
+        if(dispatchTrigger.isActive()
+                && this.timingSequence.isIdle()){
+            dispatchTrigger.reset();
             this.timingSequence.restart();
+        }
 
-        this.timingSequence.tick();
+
+        boolean finished = this.timingSequence.tick();
         this.rootComponents.forEach(FlatRideComponent::tick);
+
+        if(finished)
+            stationHandle.getStationaryVehicle().ejectPassengers();
     }
 
     public void setTimingSequence(TimingSequence timingSequence) {
@@ -106,5 +115,9 @@ public class FlatRideHandle extends AbstractRideHandle {
     @Override
     public boolean canFullyClose() {
         return true;
+    }
+
+    public Vehicle getVehicle(){
+        return stationHandle.getVehicle();
     }
 }

@@ -53,7 +53,7 @@ public class WarpCommandExecutor extends BaseCommandExecutor {
             languageFile.sendMessage(messageAgent, "Ride '" + identifier + "' not found", FeedbackType.CONFLICT);
             return true;
         }
-        PlayerTeleportByJRidesEvent.sendEvent(player, rideHandle.getRide().getWarpLocation());
+        PlayerTeleportByJRidesEvent.sendEvent(player, rideHandle.getRide().getWarpLocation(), false);
 
         player.teleport(rideHandle.getRide().getWarpLocation());
         return true;

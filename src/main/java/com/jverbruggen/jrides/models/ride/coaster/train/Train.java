@@ -55,9 +55,6 @@ public interface Train extends Vehicle {
     void setDrivingDirection(boolean positive);
     void setInvertedFrameAddition(boolean inverted);
 
-    void onPlayerEnter(Player player);
-    void onPlayerExit(Player player);
-
     void setStationaryAt(CoasterStationHandle stationaryAt);
 
     CoasterStationHandle getStationaryAt();

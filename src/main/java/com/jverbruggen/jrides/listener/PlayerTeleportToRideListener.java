@@ -11,7 +11,7 @@ import org.bukkit.event.Listener;
 public class PlayerTeleportToRideListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerTeleportToRide(PlayerTeleportByJRidesEvent e){
-        if(!e.isCancelled()){
+        if(!e.isCancelled() || e.isHardTeleport()){
             Player bukkitPlayer = e.getPlayer().getBukkitPlayer();
             JRidesPlayerLocation playerLocation = e.getLocation();
             bukkitPlayer.teleport(new Location(bukkitPlayer.getWorld(),

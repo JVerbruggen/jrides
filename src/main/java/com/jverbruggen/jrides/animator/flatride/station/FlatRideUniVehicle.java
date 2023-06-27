@@ -6,6 +6,8 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.coaster.train.AbstractVehicle;
 
+import java.util.ArrayList;
+
 public class FlatRideUniVehicle extends AbstractVehicle {
     private FlatRideHandle flatRideHandle;
     private boolean onStation;
@@ -33,7 +35,7 @@ public class FlatRideUniVehicle extends AbstractVehicle {
     @Override
     public void ejectPassengers() {
         PlayerLocation ejectLocation = flatRideHandle.getEjectLocation();
-        for(Player passenger : getPassengers()){
+        for(Player passenger : new ArrayList<>(getPassengers())){
             passenger.teleport(ejectLocation, true);
         }
     }

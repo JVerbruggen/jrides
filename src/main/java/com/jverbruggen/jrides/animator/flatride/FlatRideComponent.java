@@ -1,6 +1,5 @@
 package com.jverbruggen.jrides.animator.flatride;
 
-import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.linearactuator.LinearActuator;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
@@ -63,7 +62,7 @@ public interface FlatRideComponent {
         return rotors;
     }
 
-    static List<FlatRideComponent> createDistributedSeats(RideHandle rideHandle, String identifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, int seatYawOffset, List<ModelConfig> flatRideModelsConfig, int amount){
+    static List<FlatRideComponent> createDistributedSeats(FlatRideHandle rideHandle, String identifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, int seatYawOffset, List<ModelConfig> flatRideModelsConfig, int amount){
         return createDistributedComponent(
                 identifier,
                 offsetRotation,
@@ -131,7 +130,7 @@ public interface FlatRideComponent {
     }
 
 
-    static SeatComponent createSeat(RideHandle rideHandle, String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, int seatYawOffset,  List<ModelConfig> flatRideModelsConfig){
+    static SeatComponent createSeat(FlatRideHandle flatRideHandle, String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, int seatYawOffset,  List<ModelConfig> flatRideModelsConfig){
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
         Vector3 spawnPosition = MatrixMath.rotateTranslate(
@@ -150,10 +149,10 @@ public interface FlatRideComponent {
                 .map(FlatRideModel::getEntity)
                 .orElseGet(() -> viewportManager.spawnVirtualArmorstand(spawnPosition));
 
-        Seat seat = new FlatRideSeat(rideHandle, null, seatEntity, Vector3.zero());
+        Seat seat = new FlatRideSeat(flatRideHandle, null, seatEntity, Vector3.zero());
 
         Quaternion seatRotation = Quaternion.fromYawPitchRoll(0, seatYawOffset, 0);
-        SeatComponent component = new SeatComponent(identifier, groupIdentifier, false, flatRideModels, seat, seatRotation);
+        SeatComponent component = new SeatComponent(identifier, groupIdentifier, false, flatRideModels, seat, seatRotation, flatRideHandle.getVehicle());
         seat.setParentSeatHost(component);
 
         attachedTo.attach(component, offsetRotation, offsetPosition);

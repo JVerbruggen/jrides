@@ -1,7 +1,5 @@
 package com.jverbruggen.jrides.models.properties;
 
-import org.bukkit.Bukkit;
-
 public class Speed {
     private double speedPerTick;
     private boolean inverted;

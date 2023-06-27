@@ -48,6 +48,16 @@ public abstract class AbstractVehicle implements Vehicle {
         passengers.add(player);
     }
 
+    @Override
+    public void onPlayerEnter(Player player) {
+        addPassenger(player);
+    }
+
+    @Override
+    public void onPlayerExit(Player player) {
+        removePassenger(player);
+    }
+
     public boolean isDebugMode() {
         return debugMode;
     }

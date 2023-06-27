@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.config.flatride.structure.attachment;
 
-import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
+import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.seat.SeatConfig;
@@ -32,7 +32,7 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
     }
 
     @Override
-    public void createSeatWithAttachment(SeatConfig seatConfig, List<FlatRideComponent> components, RideHandle rideHandle) {
+    public void createSeatWithAttachment(SeatConfig seatConfig, List<FlatRideComponent> components, FlatRideHandle rideHandle) {
         List<FlatRideComponent> attachedToComponents = FlatRideComponent.findAllMatching(components, getToComponentIdentifier());
 
         for(FlatRideComponent attachedTo : attachedToComponents){
@@ -51,7 +51,7 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
     }
 
     @Override
-    public void createLinearActuator(LinearActuatorConfig linearActuatorConfig, List<FlatRideComponent> components, RideHandle rideHandle) {
+    public void createLinearActuator(LinearActuatorConfig linearActuatorConfig, List<FlatRideComponent> components, FlatRideHandle rideHandle) {
         List<FlatRideComponent> attachedToComponents = FlatRideComponent.findAllMatching(components, getToComponentIdentifier());
 
         for(FlatRideComponent attachedTo : attachedToComponents){
@@ -67,7 +67,7 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
     }
 
     @Override
-    public void createRotorWithAttachment(RotorConfig rotorConfig, List<FlatRideComponent> components, RideHandle rideHandle) {
+    public void createRotorWithAttachment(RotorConfig rotorConfig, List<FlatRideComponent> components, FlatRideHandle rideHandle) {
         List<FlatRideComponent> attachedToComponents = FlatRideComponent.findAllMatching(components, getToComponentIdentifier());
 
         for(FlatRideComponent attachedTo : attachedToComponents){

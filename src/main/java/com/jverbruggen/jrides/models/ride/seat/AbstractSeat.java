@@ -137,5 +137,7 @@ public abstract class AbstractSeat implements Seat {
 
     protected void onPassengerEnter(Player passenger){
         passenger.setSeatedOn(this);
+
+        seatHost.onPlayerEnter(passenger);
     }
 }

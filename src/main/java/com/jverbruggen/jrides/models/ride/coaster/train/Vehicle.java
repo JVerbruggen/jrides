@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface Vehicle {
     List<Player> getPassengers();
+    void onPlayerEnter(Player player);
+    void onPlayerExit(Player player);
 
     boolean isStationary();
 

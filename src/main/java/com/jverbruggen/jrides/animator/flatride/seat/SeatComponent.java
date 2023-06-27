@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
+import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.models.ride.seat.SeatHost;
 
@@ -14,11 +15,13 @@ import java.util.List;
 public class SeatComponent extends AbstractFlatRideComponent implements SeatHost {
     private final Seat seat;
     private final Quaternion rotationOffset;
+    private final Vehicle parentVehicle;
 
-    public SeatComponent(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels, Seat seat, Quaternion rotationOffset) {
+    public SeatComponent(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels, Seat seat, Quaternion rotationOffset, Vehicle parentVehicle) {
         super(identifier, groupIdentifier, root, flatRideModels);
         this.seat = seat;
         this.rotationOffset = rotationOffset;
+        this.parentVehicle = parentVehicle;
     }
 
     @Override
@@ -76,11 +79,11 @@ public class SeatComponent extends AbstractFlatRideComponent implements SeatHost
 
     @Override
     public void onPlayerEnter(Player player) {
-
+        parentVehicle.onPlayerEnter(player);
     }
 
     @Override
     public void onPlayerExit(Player player) {
-
+        parentVehicle.onPlayerExit(player);
     }
 }

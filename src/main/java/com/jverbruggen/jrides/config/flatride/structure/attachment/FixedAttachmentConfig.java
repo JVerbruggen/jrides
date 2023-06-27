@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.config.flatride.structure.attachment;
 
-import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
+import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.attachment.FixedAttachment;
 import com.jverbruggen.jrides.animator.flatride.linearactuator.LinearActuator;
@@ -37,12 +37,12 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
     }
 
     @Override
-    public void createSeatWithAttachment(SeatConfig config, List<FlatRideComponent> components, RideHandle rideHandle) {
+    public void createSeatWithAttachment(SeatConfig config, List<FlatRideComponent> components, FlatRideHandle rideHandle) {
         throw new RuntimeException("Attaching seat to fixed point not implemented. Also kinda weird.");
     }
 
     @Override
-    public void createLinearActuator(LinearActuatorConfig linearActuatorConfig, List<FlatRideComponent> components, RideHandle rideHandle) {
+    public void createLinearActuator(LinearActuatorConfig linearActuatorConfig, List<FlatRideComponent> components, FlatRideHandle rideHandle) {
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
         List<FlatRideModel> flatRideModels = linearActuatorConfig.getFlatRideModels().stream()
@@ -61,7 +61,7 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
     }
 
     @Override
-    public void createRotorWithAttachment(RotorConfig rotorConfig, List<FlatRideComponent> components, RideHandle rideHandle) {
+    public void createRotorWithAttachment(RotorConfig rotorConfig, List<FlatRideComponent> components, FlatRideHandle rideHandle) {
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
         List<FlatRideModel> flatRideModels = rotorConfig.getFlatRideModels().stream()

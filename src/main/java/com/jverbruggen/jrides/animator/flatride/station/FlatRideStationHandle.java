@@ -26,6 +26,10 @@ public class FlatRideStationHandle extends StationHandle {
         return null;
     }
 
+    public FlatRideUniVehicle getVehicle() {
+        return vehicle;
+    }
+
     public void setFlatRideHandle(FlatRideHandle flatRideHandle) {
         this.flatRideHandle = flatRideHandle;
         this.vehicle.setFlatRideHandle(flatRideHandle);

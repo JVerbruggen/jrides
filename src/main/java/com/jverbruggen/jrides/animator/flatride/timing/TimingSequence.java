@@ -34,14 +34,18 @@ public class TimingSequence {
             this.current = itemIterator.next();
     }
 
-    public void tick(){
-        if(current == null) return;
+    public boolean tick(){
+        if(current == null) return false;
 
         boolean finished = current.tick(state);
         if(finished) {
             loadNext();
             state = 0;
-        }else state++;
+            return this.current == null;
+        }else{
+            state++;
+            return false;
+        }
     }
 
     public boolean isIdle(){

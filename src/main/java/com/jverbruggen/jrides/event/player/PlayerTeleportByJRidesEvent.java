@@ -2,7 +2,6 @@ package com.jverbruggen.jrides.event.player;
 
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.api.JRidesPlayerLocation;
-import com.jverbruggen.jrides.api.JRidesRide;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -14,11 +13,13 @@ public class PlayerTeleportByJRidesEvent extends Event implements Cancellable {
     private final JRidesPlayer player;
     private final JRidesPlayerLocation location;
     private boolean cancelled;
+    private boolean hard;
 
-    public PlayerTeleportByJRidesEvent(JRidesPlayer player, JRidesPlayerLocation location) {
+    public PlayerTeleportByJRidesEvent(JRidesPlayer player, JRidesPlayerLocation location, boolean hard) {
         this.player = player;
         this.location = location;
         this.cancelled = false;
+        this.hard = hard;
     }
 
     public JRidesPlayer getPlayer() {
@@ -27,6 +28,10 @@ public class PlayerTeleportByJRidesEvent extends Event implements Cancellable {
 
     public JRidesPlayerLocation getLocation() {
         return location;
+    }
+
+    public boolean isHardTeleport() {
+        return hard;
     }
 
     public static HandlerList getHandlerList() {
@@ -38,9 +43,9 @@ public class PlayerTeleportByJRidesEvent extends Event implements Cancellable {
         return HANDLERS;
     }
 
-    public static void sendEvent(JRidesPlayer player, JRidesPlayerLocation playerLocation){
+    public static void sendEvent(JRidesPlayer player, JRidesPlayerLocation playerLocation, boolean hard){
         PluginManager pluginManager = ServiceProvider.getSingleton(PluginManager.class);
-        pluginManager.callEvent(new PlayerTeleportByJRidesEvent(player, playerLocation));
+        pluginManager.callEvent(new PlayerTeleportByJRidesEvent(player, playerLocation, hard));
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.jverbruggen.jrides.config.flatride.structure.actuator;
 
-import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
+import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.config.coaster.objects.cart.ModelConfig;
 import com.jverbruggen.jrides.config.flatride.structure.StructureConfigItem;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.AttachmentConfig;
@@ -39,7 +39,7 @@ public class LinearActuatorConfig extends AbstractActuatorConfig{
     }
 
     @Override
-    public void createAndAddTo(List<FlatRideComponent> components, RideHandle rideHandle) {
+    public void createAndAddTo(List<FlatRideComponent> components, FlatRideHandle rideHandle) {
         getAttachmentConfig().createLinearActuator(this, components, rideHandle);
     }
 

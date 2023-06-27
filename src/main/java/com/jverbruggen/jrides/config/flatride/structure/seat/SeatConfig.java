@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.config.flatride.structure.seat;
 
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
+import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.config.coaster.objects.cart.ModelConfig;
 import com.jverbruggen.jrides.config.flatride.structure.StructureConfigItem;
@@ -31,7 +32,7 @@ public class SeatConfig extends BaseConfig implements StructureConfigItem {
     }
 
     @Override
-    public void createAndAddTo(List<FlatRideComponent> components, RideHandle rideHandle) {
+    public void createAndAddTo(List<FlatRideComponent> components, FlatRideHandle rideHandle) {
         attachmentConfig.createSeatWithAttachment(this, components, rideHandle);
     }
 
