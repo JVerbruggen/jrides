@@ -154,6 +154,8 @@ public interface FlatRideComponent {
         Quaternion seatRotation = Quaternion.fromYawPitchRoll(0, seatYawOffset, 0);
         SeatComponent component = new SeatComponent(identifier, groupIdentifier, false, flatRideModels, seat, seatRotation, flatRideHandle.getVehicle());
         seat.setParentSeatHost(component);
+        flatRideHandle.addSeatComponent(component);
+
 
         attachedTo.attach(component, offsetRotation, offsetPosition);
 

@@ -12,8 +12,11 @@ public interface Vehicle {
 
     boolean isStationary();
 
+    /**
+     * @return true if restraints are closed
+     */
     boolean getRestraintState();
-    void setRestraintForAll(boolean locked);
+    void setRestraintForAll(boolean closed);
 
     void ejectPassengers();
 

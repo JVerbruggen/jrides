@@ -1,11 +1,15 @@
 package com.jverbruggen.jrides.animator.flatride;
 
 import com.jverbruggen.jrides.animator.AbstractRideHandle;
+import com.jverbruggen.jrides.animator.flatride.seat.SeatComponent;
 import com.jverbruggen.jrides.animator.flatride.station.FlatRideStationHandle;
 import com.jverbruggen.jrides.animator.flatride.timing.TimingSequence;
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
+import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
+import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Ride;
@@ -17,37 +21,63 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FlatRideHandle extends AbstractRideHandle {
-    private final List<FlatRideComponent> rootComponents;
     private TimingSequence timingSequence;
     private final FlatRideStationHandle stationHandle;
     private final DispatchTrigger dispatchTrigger;
+    private final List<SeatComponent> seatComponents;
+
+    private boolean finished;
 
     public FlatRideHandle(World world, Ride ride, boolean loaded, FlatRideStationHandle stationHandle, SoundsConfig sounds) {
         super(world, ride, null, loaded, sounds);
         this.stationHandle = stationHandle;
         this.timingSequence = null;
-        this.rootComponents = new ArrayList<>();
         this.dispatchTrigger = stationHandle.getTriggerContext().getDispatchTrigger();
+        this.finished = false;
+        this.seatComponents = new ArrayList<>();
 
         stationHandle.setFlatRideHandle(this);
+        stationHandle.getTriggerContext().getRestraintTrigger().getLock().addEventListener(c -> this.onRestraintLockUpdateEventListener(c.isUnlocked()));
     }
 
     @Override
     public void tick() {
-        if(dispatchTrigger.isActive()
-                && this.timingSequence.isIdle()){
+        boolean dispatchActive = dispatchTrigger.isActive();
+        if(finished && !dispatchActive) return;
+
+        if(dispatchActive && this.timingSequence.isIdle()){
             dispatchTrigger.reset();
             this.timingSequence.restart();
+            finished = false;
+            this.setRestraints(true);
         }
 
-
-        boolean finished = this.timingSequence.tick();
-        this.rootComponents.forEach(FlatRideComponent::tick);
+        finished = this.timingSequence.tick();
+        this.stationHandle.getVehicle().tick();
 
         if(finished)
-            stationHandle.getStationaryVehicle().ejectPassengers();
+            onRideFinish();
+    }
+
+    private void onRideFinish(){
+        PlayerFinishedRideEvent.sendFinishedRideEvent(getPassengers()
+                .stream()
+                .map(p -> (JRidesPlayer)p)
+                .collect(Collectors.toList()), getRide());
+
+        this.setRestraints(false);
+        stationHandle.getVehicle().ejectPassengers();
+    }
+
+    private void setRestraints(boolean closed){
+        stationHandle.getTriggerContext().getVehiclePresentLock().setLocked(!closed);
+    }
+
+    private void onRestraintLockUpdateEventListener(boolean unlocked){
+        seatComponents.forEach(c -> c.setRestraint(unlocked));
     }
 
     public void setTimingSequence(TimingSequence timingSequence) {
@@ -55,11 +85,11 @@ public class FlatRideHandle extends AbstractRideHandle {
     }
 
     public void addRootComponent(FlatRideComponent component){
-        rootComponents.add(component);
+        stationHandle.getVehicle().addRootComponent(component);
     }
 
     public List<FlatRideComponent> getRootComponents() {
-        return rootComponents;
+        return stationHandle.getVehicle().getRootComponents();
     }
 
     @Override
@@ -94,30 +124,14 @@ public class FlatRideHandle extends AbstractRideHandle {
 
     @Override
     public List<Player> getPassengers() {
-        return null;
-    }
-
-    @Override
-    public boolean isOpen() {
-        return false;
-    }
-
-    @Override
-    public void open(Player authority) {
-
-    }
-
-    @Override
-    public void close(Player authority) {
-
-    }
-
-    @Override
-    public boolean canFullyClose() {
-        return true;
+        return stationHandle.getVehicle().getPassengers();
     }
 
     public Vehicle getVehicle(){
         return stationHandle.getVehicle();
+    }
+
+    public void addSeatComponent(SeatComponent seatComponent){
+        this.seatComponents.add(seatComponent);
     }
 }

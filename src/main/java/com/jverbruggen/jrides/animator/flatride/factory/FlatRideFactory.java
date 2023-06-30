@@ -58,7 +58,7 @@ public class FlatRideFactory {
         DispatchLockCollection dispatchLockCollection = new DispatchLockCollection("Main locks");
 
         DispatchLock vehicleInStation = new SimpleDispatchLock(dispatchLockCollection,
-                languageFile.get(LanguageFileField.NOTIFICATION_RIDE_NO_TRAIN_PRESENT), true);
+                languageFile.get(LanguageFileField.NOTIFICATION_RIDE_NO_TRAIN_PRESENT), false);
         DispatchLock minimumWaitTimeDispatchLock = new SimpleDispatchLock(dispatchLockCollection,
                 languageFile.get(LanguageFileField.NOTIFICATION_RIDE_WAITING_TIME), true);
         DispatchLock restraintLock = new SimpleDispatchLock(dispatchLockCollection,

@@ -171,14 +171,4 @@ public class CoasterHandle extends AbstractRideHandle {
                 .toList();
     }
 
-    @Override
-    public boolean isOpen() {
-        return isLoaded() && getState().getOpenState().isOpen();
-    }
-
-    @Override
-    public boolean canFullyClose() {
-        return getPassengers().size() == 0 && getRideController().getOperator() == null;
-    }
-
 }

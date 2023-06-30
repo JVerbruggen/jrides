@@ -4,7 +4,6 @@ import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.api.JRidesRide;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
 import com.jverbruggen.jrides.event.player.PlayerQuitEvent;
-import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideCounterManager;
 import org.bukkit.event.EventHandler;

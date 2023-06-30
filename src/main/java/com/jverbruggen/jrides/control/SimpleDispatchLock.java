@@ -14,6 +14,12 @@ public class SimpleDispatchLock implements DispatchLock {
     private String status;
     private String debugStatus;
 
+    /**
+     * Simple implementation of a DispatchLock
+     * @param parentCollection the parent collection that it is part of.
+     * @param description Description of what the lock is blocking for.
+     * @param initLocked Whether the lock should initially be locked (preventing the ride from dispatching) or unlocked (allowing dispatching to happen)
+     */
     public SimpleDispatchLock(DispatchLockCollection parentCollection, String description, boolean initLocked) {
         this.parentCollection = parentCollection;
         this.description = description;

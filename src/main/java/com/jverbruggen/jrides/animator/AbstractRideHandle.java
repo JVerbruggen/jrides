@@ -170,4 +170,15 @@ public abstract class AbstractRideHandle implements RideHandle{
     public SoundsConfig getSounds() {
         return sounds;
     }
+
+
+    @Override
+    public boolean isOpen() {
+        return isLoaded() && getState().getOpenState().isOpen();
+    }
+
+    @Override
+    public boolean canFullyClose() {
+        return getPassengers().isEmpty();
+    }
 }
