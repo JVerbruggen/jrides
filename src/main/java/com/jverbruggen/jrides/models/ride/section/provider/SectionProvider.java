@@ -73,8 +73,11 @@ public class SectionProvider {
             // else if the section is free
         }else{
             // .. occupy it
-            if(toSection.getReservedBy() != train)
-                throw new RuntimeException("Logic error: Section " + toSection.getName() + " was not reserved in section occupation logic!");
+            if(toSection.getReservedBy() != train){
+                if(!toSection.getBlockSectionSafety(train).safe())
+                    throw new RuntimeException("Logic error: Section " + toSection.getName() + " was not reserved in section occupation logic!");
+                toSection.setLocalReservation(train);
+            }
 
             toSection.addOccupation(train);
             train.addCurrentSection(toSection, onTrainEnd);

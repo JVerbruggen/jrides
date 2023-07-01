@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.state.ride.coaster;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.animator.coaster.NoLimitsExportPositionRecord;
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
@@ -57,6 +58,7 @@ public class CoasterLoader {
     private final EffectTriggerFactory effectTriggerFactory;
     private final RideControllerFactory rideControllerFactory;
     private final RideControlMenuFactory rideControlMenuFactory;
+    private final List<Integer> rideOverviewMapIds;
 
     public CoasterLoader(File dataFolder) {
         this.logger = ServiceProvider.getSingleton(JRidesLogger.class);
@@ -67,6 +69,7 @@ public class CoasterLoader {
         this.effectTriggerFactory = ServiceProvider.getSingleton(EffectTriggerFactory.class);
         this.rideControllerFactory = ServiceProvider.getSingleton(RideControllerFactory.class);
         this.rideControlMenuFactory = ServiceProvider.getSingleton(RideControlMenuFactory.class);
+        this.rideOverviewMapIds = new ArrayList<>();
     }
 
     public CoasterHandle loadCoaster(CoasterConfig coasterConfig, String rideIdentifier, RideState rideState, World world) throws CoasterLoadException {
@@ -83,6 +86,8 @@ public class CoasterLoader {
                 if(rideState.isInactive()) throw exception;
                 rideState.setInactive();
                 tryAgain = true;
+            }catch (CoasterLoadException exception){
+                JRidesPlugin.getLogger().severe("An error occured while loading " + rideIdentifier + ": " + exception.getMessage());
             }
         }
 
@@ -101,6 +106,10 @@ public class CoasterLoader {
 
         // Initialize Handle
         int rideOverviewMapId = coasterConfig.getRideOverviewMapId();
+        if(!rideOverviewMapIds.contains(rideOverviewMapId))
+            rideOverviewMapIds.add(rideOverviewMapId);
+        else throw new CoasterLoadException("When loading " + rideIdentifier + ": RideOverviewMap id=" + rideOverviewMapId + " was already taken by another coaster.");
+
         SoundsConfig sounds = coasterConfig.getSoundsConfig();
 
         CoasterHandle coasterHandle = new CoasterHandle(ride, world, sounds, rideOverviewMapId, !rideState.isInactive());

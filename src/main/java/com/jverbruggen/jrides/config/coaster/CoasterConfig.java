@@ -64,9 +64,9 @@ public class CoasterConfig extends AbstractRideConfig {
     }
 
     public static CoasterConfig fromConfigurationSection(ConfigurationSection configurationSection) {
-        String manifestVersion = configurationSection.getString("manifestVersion");
-        String identifier = configurationSection.getString("identifier");
-        String displayName = configurationSection.getString("displayName");
+        String manifestVersion = getString(configurationSection, "manifestVersion");
+        String identifier = getString(configurationSection, "identifier");
+        String displayName = getString(configurationSection, "displayName");
 
         List<String> displayDescription = Arrays.stream(getString(configurationSection, "displayDescription", "").split("\\\\n"))
                 .map(d -> ChatColor.GRAY + d)

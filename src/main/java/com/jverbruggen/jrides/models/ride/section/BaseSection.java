@@ -100,6 +100,7 @@ public abstract class BaseSection implements Section{
 
     @Override
     public void setLocalReservation(@Nonnull Train train) {
+        if(reservedBy == train) return;
         if(reservedBy != null)
             throw new RuntimeException("Cannot reserve an already-reserved section!");
 

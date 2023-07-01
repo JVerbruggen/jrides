@@ -27,7 +27,7 @@ public class DriveSectionSpecConfig extends BaseConfig {
     }
 
     public static DriveSectionSpecConfig fromConfigurationSection(ConfigurationSection configurationSection) {
-        double driveSpeed = getDouble(configurationSection, "driveSpeed");
+        double driveSpeed = getDouble(configurationSection, "driveSpeed", 1.0);
         double acceleration = getDouble(configurationSection, "acceleration", 1.0);
         double deceleration = getDouble(configurationSection, "deceleration", acceleration);
 

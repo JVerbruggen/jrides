@@ -117,7 +117,7 @@ public class RangedSectionConfig extends SectionConfig {
     }
 
     public static RangedSectionConfig fromConfigurationSection(ConfigurationSection configurationSection, String sectionIdentifier) {
-        String type = configurationSection.getString("type");
+        String type = getString(configurationSection, "type");
         List<?> range = configurationSection.getList("range");
 
         int lowerRange = (Integer)range.get(0);
@@ -125,7 +125,7 @@ public class RangedSectionConfig extends SectionConfig {
         String trackSource = "default";
         if(range.size() == 3)
             trackSource = (String)range.get(2);
-        String nextSection = configurationSection.getString("nextSection");
+        String nextSection = getString(configurationSection, "nextSection");
 
         List<String> conflictSections = getStringList(configurationSection, "conflictSections", null);
 
@@ -145,7 +145,7 @@ public class RangedSectionConfig extends SectionConfig {
             brakeSectionSpec = BrakeSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("brakeSection"));
 
         DriveSectionSpecConfig driveSectionSpec = null;
-        if(configurationSection.contains("driveSection"))
+        if(type.equals("drive"))
             driveSectionSpec = DriveSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("driveSection"));
 
         StorageSectionSpecConfig storageSectionSpec = null;

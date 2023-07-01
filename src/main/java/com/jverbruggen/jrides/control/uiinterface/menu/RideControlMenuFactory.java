@@ -47,7 +47,7 @@ public class RideControlMenuFactory {
     }
 
     public SimpleMenu getSimpleControlMenu(RideController rideController){
-        if(!rideController.isActive())
+        if(rideController == null || !rideController.isActive())
             return null;
 
         DispatchLockCollection dispatchLockCollection = rideController.getTriggerContext().getDispatchLockCollection();

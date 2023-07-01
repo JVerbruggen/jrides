@@ -3,13 +3,14 @@ package com.jverbruggen.jrides.animator.flatride.linearactuator;
 import com.jverbruggen.jrides.animator.flatride.AbstractInterconnectedFlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
+import com.jverbruggen.jrides.animator.flatride.interfaces.HasSpeed;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
 import com.jverbruggen.jrides.models.math.Vector3;
 import org.bukkit.Bukkit;
 
 import java.util.List;
 
-public class LinearActuator extends AbstractInterconnectedFlatRideComponent {
+public class LinearActuator extends AbstractInterconnectedFlatRideComponent implements HasSpeed {
     private static final float PI = 3.1415926535f;
     private static final float PI2 = PI*2;
 
@@ -58,5 +59,10 @@ public class LinearActuator extends AbstractInterconnectedFlatRideComponent {
         }
 
         updateFlatRideModels();
+    }
+
+    @Override
+    public FlatRideComponentSpeed getFlatRideComponentSpeed() {
+        return flatRideComponentSpeed;
     }
 }

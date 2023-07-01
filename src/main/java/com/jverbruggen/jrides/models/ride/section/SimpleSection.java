@@ -73,7 +73,9 @@ public class SimpleSection extends BaseSection {
             String reservedByString = getReservedBy() != null ? getReservedBy().getName() : "null";
             return new BlockSectionSafetyResult(false, train, "Cannot reserve locally, reserved by " + reservedByString);
         }
-        if(this.isOccupied()) return new BlockSectionSafetyResult(false, train, "Already occupied");
+        if(train != null
+                && this.getOccupiedBy() != train
+                && this.getOccupiedBy() != null) return new BlockSectionSafetyResult(false, train, "Already occupied by " + this.getOccupiedBy());
         if(!this.trackBehaviour.accepts(train)) return new BlockSectionSafetyResult(false, train, "Track behaviour not ready for train");
         if(checkConflicts
                 && conflictSections != null

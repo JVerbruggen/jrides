@@ -22,7 +22,6 @@ import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResul
 import java.util.stream.Collectors;
 
 public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour{
-    private final double passThroughSpeed;
     private final double deceleration;
     private final double acceleration;
     private final double driveSpeed;
@@ -47,7 +46,6 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
         super(cartMovementFactory);
         this.coasterHandle = coasterHandle;
         this.logger = JRidesPlugin.getLogger();
-        this.passThroughSpeed = 1.0;
         this.deceleration = 0.2;
         this.acceleration = 0.1;
         this.driveSpeed = driveSpeed;
@@ -162,7 +160,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                     }
                     break;
                 case DEPARTING:
-                    newSpeed.add(acceleration, 1.0);
+                    newSpeed.add(acceleration, driveSpeed);
                     break;
             }
         }
