@@ -112,7 +112,8 @@ public class CoasterLoader {
 
         SoundsConfig sounds = coasterConfig.getSoundsConfig();
 
-        CoasterHandle coasterHandle = new CoasterHandle(ride, world, sounds, rideOverviewMapId, !rideState.isInactive());
+        CoasterHandle coasterHandle = new CoasterHandle(ride, world, sounds, rideOverviewMapId, !rideState.isInactive(),
+                coasterConfig.getDragConstant(), coasterConfig.getGravityConstant());
 
         // Initialize Track
         if(!rideState.isInactive()){

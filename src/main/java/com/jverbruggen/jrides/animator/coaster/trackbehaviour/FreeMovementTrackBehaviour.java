@@ -23,34 +23,10 @@ public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements Tr
     }
 
     public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Section section) {
-        // --- New mass middle calculation
         Train train = trainHandle.getTrain();
-        Section backFacingSection = train.getBackFacingTrainFrame().getSection();
-        Vector3 newForwardsFacingFrameLocation = section.getLocationFor(train.getFrontFacingTrainFrame());
-        Vector3 newBackwardsFacingFrameLocation = backFacingSection.getLocationFor(train.getBackFacingTrainFrame());
-
-        // --- Gravity speed calculation
-        Speed newSpeed = currentSpeed.clone();
-        double pitch = getGravityPitch(train, newForwardsFacingFrameLocation, newBackwardsFacingFrameLocation);
-
-        double dy = Math.sin(pitch/180*3.141592);
-
-        newSpeed.add(dy * this.gravityConstant);
-        newSpeed.multiply(this.dragConstant);
+        Speed newSpeed = calculateGravityActedSpeed(trainHandle, section, currentSpeed, gravityConstant, dragConstant);
 
         return calculateTrainMovement(train, section, newSpeed);
-    }
-
-    private double getGravityPitch(Train train, Vector3 newHeadOfTrainLocation, Vector3 newTailOfTrainLocation){
-        if(train.getCarts().size() == 1){
-            int forwardsMulti = -1;
-            if(!train.isFacingForwards())
-                forwardsMulti = 1;
-            return forwardsMulti * train.getCarts().get(0).getOrientation().getRoll();
-        }else{
-            Vector3 headTailDifference = Vector3.subtract(newHeadOfTrainLocation, newTailOfTrainLocation);
-            return Quaternion.fromLookDirection(headTailDifference.toBukkitVector()).getPitch();
-        }
     }
 
     @Override
@@ -86,5 +62,36 @@ public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements Tr
     @Override
     protected void setParentTrackOnFrames(Track parentTrack) {
 
+    }
+
+    private static double getGravityPitch(Train train, Vector3 newHeadOfTrainLocation, Vector3 newTailOfTrainLocation){
+        if(train.getCarts().size() == 1){
+            int forwardsMulti = -1;
+            if(!train.isFacingForwards())
+                forwardsMulti = 1;
+            return forwardsMulti * train.getCarts().get(0).getOrientation().getRoll();
+        }else{
+            Vector3 headTailDifference = Vector3.subtract(newHeadOfTrainLocation, newTailOfTrainLocation);
+            return Quaternion.fromLookDirection(headTailDifference.toBukkitVector()).getPitch();
+        }
+    }
+
+    public static Speed calculateGravityActedSpeed(TrainHandle trainHandle, Section section, Speed currentSpeed, double gravityConstant, double dragConstant){
+        // --- New mass middle calculation
+        Train train = trainHandle.getTrain();
+        Section backFacingSection = train.getBackFacingTrainFrame().getSection();
+        Vector3 newForwardsFacingFrameLocation = section.getLocationFor(train.getFrontFacingTrainFrame());
+        Vector3 newBackwardsFacingFrameLocation = backFacingSection.getLocationFor(train.getBackFacingTrainFrame());
+
+        // --- Gravity speed calculation
+        Speed newSpeed = currentSpeed.clone();
+        double pitch = getGravityPitch(train, newForwardsFacingFrameLocation, newBackwardsFacingFrameLocation);
+
+        double dy = Math.sin(pitch/180*3.141592);
+
+        newSpeed.add(dy * gravityConstant);
+        newSpeed.multiply(dragConstant);
+
+        return newSpeed;
     }
 }

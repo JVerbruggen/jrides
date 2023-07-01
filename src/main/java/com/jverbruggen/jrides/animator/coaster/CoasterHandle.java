@@ -27,13 +27,17 @@ public class CoasterHandle extends AbstractRideHandle {
     private ParticleTrackVisualisationTool visualisationTool;
     private List<CoasterStationHandle> stationHandles;
     private List<TrainHandle> trains;
-    private List<Transfer> transfers;
+    private final List<Transfer> transfers;
     private EffectTriggerCollection effectTriggerCollection;
 
+    private final double dragConstant;
+    private final double gravityConstant;
     private int rideOverviewMapId;
 
-    public CoasterHandle(Ride ride, World world, SoundsConfig sounds, int rideOverviewMapId, boolean loaded) {
+    public CoasterHandle(Ride ride, World world, SoundsConfig sounds, int rideOverviewMapId, boolean loaded, double dragConstant, double gravityConstant) {
         super(world, ride, null, loaded, sounds);
+        this.dragConstant = dragConstant;
+        this.gravityConstant = gravityConstant;
 
         this.trains = new ArrayList<>();
         this.stationHandles = new ArrayList<>();
@@ -42,6 +46,14 @@ public class CoasterHandle extends AbstractRideHandle {
         this.track = null;
         this.effectTriggerCollection = null;
         this.rideOverviewMapId = rideOverviewMapId;
+    }
+
+    public double getDragConstant() {
+        return dragConstant;
+    }
+
+    public double getGravityConstant() {
+        return gravityConstant;
     }
 
     public int getRideOverviewMapId(){

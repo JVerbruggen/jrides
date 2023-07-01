@@ -18,6 +18,7 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
+import org.bukkit.Bukkit;
 
 import java.util.stream.Collectors;
 
@@ -39,6 +40,8 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
     private final DispatchLock restraintsLock;
     private boolean stopping;
     private boolean dispatching;
+    private final int passThroughCount;
+    private int passThroughCountState;
 
     public StationTrackBehaviour(CoasterHandle coasterHandle, CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, TriggerContext triggerContext,
                                  CoasterStationHandle stationHandle, DispatchLock trainInStationDispatchLock, DispatchLock blockSectionOccupiedDispatchLock,
@@ -57,6 +60,8 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
         this.stationHandle = stationHandle;
         this.dispatching = false;
         this.stopping = false;
+        this.passThroughCount = 0;
+        this.passThroughCountState = 0;
 
         this.trainInStationDispatchLock = trainInStationDispatchLock;
         this.blockSectionOccupiedDispatchLock = blockSectionOccupiedDispatchLock;
@@ -80,16 +85,36 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
             goIntoSwitch = false;
             switch (phase){
                 case IDLE:
-                    phase = StationPhase.ARRIVING;
                     handlingTrain = train;
+                    if(shouldPassThrough()){
+                        phase = StationPhase.PASSING_THROUGH;
+                        passThroughCountState++;
+                    }else if(!shouldReverse(trainHandle)){
+                        phase = StationPhase.ARRIVING;
+                    }else{
+                        phase = StationPhase.REVERSING;
+                    }
                     goIntoSwitch = true;
+                    break;
+                case PASSING_THROUGH:
+                    newSpeed = FreeMovementTrackBehaviour.calculateGravityActedSpeed(
+                            trainHandle, section, currentSpeed, coasterHandle.getGravityConstant(), coasterHandle.getDragConstant()
+                    );
+                    break;
+                case REVERSING:
+                    if(!shouldReverse(trainHandle)){
+                        phase = StationPhase.ARRIVING;
+                        goIntoSwitch = true;
+                    }else{
+                        newSpeed.approach(acceleration, deceleration, driveSpeed);
+                    }
                     break;
                 case ARRIVING:
                     if(train.getHeadSection().hasPassed(stopFrame, train.getHeadOfTrainFrame())){
                         phase = StationPhase.STOPPING;
                         goIntoSwitch = true;
                     }else{
-                        newSpeed.approach(acceleration, deceleration, 1.0);
+                        newSpeed.approach(acceleration, deceleration, driveSpeed);
                     }
                     break;
                 case STOPPING:
@@ -141,6 +166,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                         if(!stationHandle.exitEffectTriggersDone()) break;
 
                         trainHandle.resetEffects();
+                        passThroughCountState = 0;
 
                         phase = StationPhase.WAITING;
                         dispatching = false;
@@ -166,6 +192,14 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
         }
 
         return calculateTrainMovement(train, section, newSpeed);
+    }
+
+    private boolean shouldReverse(TrainHandle trainHandle){
+        return !trainHandle.getSpeed().isPositive();
+    }
+
+    private boolean shouldPassThrough(){
+        return this.passThroughCountState < this.passThroughCount;
     }
 
     private void trainExited(){
