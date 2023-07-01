@@ -17,11 +17,13 @@ public class FlatRideUniVehicle extends AbstractVehicle {
     private boolean onStation;
     private final DispatchLock restraintLock;
 
-    public FlatRideUniVehicle(String name, boolean debugMode, DispatchLock restraintLock) {
+    public FlatRideUniVehicle(String name, boolean debugMode, DispatchLock restraintLock, DispatchLock vehiclePresentLock) {
         super(name, debugMode);
         this.rootComponents = new ArrayList<>();
         this.onStation = true;
         this.restraintLock = restraintLock;
+
+        vehiclePresentLock.addEventListener(l -> setStationary(l.isUnlocked()));
     }
 
     public void tick(){
@@ -40,6 +42,10 @@ public class FlatRideUniVehicle extends AbstractVehicle {
     @Override
     public boolean isStationary() {
         return onStation;
+    }
+
+    public void setStationary(boolean stationary){
+        onStation = stationary;
     }
 
     @Override

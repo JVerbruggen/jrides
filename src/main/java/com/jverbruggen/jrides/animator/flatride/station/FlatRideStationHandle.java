@@ -16,7 +16,8 @@ public class FlatRideStationHandle extends StationHandle {
 
     public FlatRideStationHandle(String name, String shortName, List<Gate> entryGates, PlayerLocation ejectLocation, MinMaxWaitingTimer waitingTimer, TriggerContext triggerContext) {
         super(name, shortName, entryGates, ejectLocation, waitingTimer, triggerContext);
-        this.vehicle = new FlatRideUniVehicle(name + "_vehicle", false, triggerContext.getRestraintTrigger().getLock());
+        this.vehicle = new FlatRideUniVehicle(name + "_vehicle", false,
+                triggerContext.getRestraintTrigger().getLock(), triggerContext.getVehiclePresentLock());
     }
 
     @Override

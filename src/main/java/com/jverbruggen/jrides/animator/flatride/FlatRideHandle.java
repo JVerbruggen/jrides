@@ -6,7 +6,6 @@ import com.jverbruggen.jrides.animator.flatride.station.FlatRideStationHandle;
 import com.jverbruggen.jrides.animator.flatride.timing.TimingSequence;
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
-import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
@@ -49,10 +48,7 @@ public class FlatRideHandle extends AbstractRideHandle {
         if(finished && !dispatchActive) return;
 
         if(dispatchActive && this.timingSequence.isIdle()){
-            dispatchTrigger.reset();
-            this.timingSequence.restart();
-            finished = false;
-            this.setRestraints(true);
+            onRideStart();
         }
 
         finished = this.timingSequence.tick();
@@ -62,18 +58,22 @@ public class FlatRideHandle extends AbstractRideHandle {
             onRideFinish();
     }
 
+    private void onRideStart(){
+        dispatchTrigger.reset();
+        this.timingSequence.restart();
+        finished = false;
+        stationHandle.getTriggerContext().getVehiclePresentLock().setLocked(true);
+    }
+
     private void onRideFinish(){
         PlayerFinishedRideEvent.sendFinishedRideEvent(getPassengers()
                 .stream()
                 .map(p -> (JRidesPlayer)p)
                 .collect(Collectors.toList()), getRide());
 
-        this.setRestraints(false);
+        stationHandle.getTriggerContext().getVehiclePresentLock().setLocked(false);
+        stationHandle.getTriggerContext().getRestraintTrigger().getLock().setLocked(true);
         stationHandle.getVehicle().ejectPassengers();
-    }
-
-    private void setRestraints(boolean closed){
-        stationHandle.getTriggerContext().getVehiclePresentLock().setLocked(!closed);
     }
 
     private void onRestraintLockUpdateEventListener(boolean unlocked){

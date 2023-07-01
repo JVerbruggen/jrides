@@ -45,8 +45,8 @@ public class RestraintTrigger implements StationTrigger {
         }
 
         Vehicle stationaryTrain = stationHandle.getStationaryVehicle();
-        boolean set = setRestraintsState(!stationaryTrain.getRestraintState());
-        if(!set) {
+
+        if(stationaryTrain == null || !setRestraintsState(!stationaryTrain.getRestraintState())) {
             languageFile.sendMessage(messageAgent, LanguageFileField.NOTIFICATION_RIDE_NO_TRAIN_PRESENT);
             return false;
         }
