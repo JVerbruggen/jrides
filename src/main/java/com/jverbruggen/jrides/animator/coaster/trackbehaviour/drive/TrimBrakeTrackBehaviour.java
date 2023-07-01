@@ -1,51 +1,34 @@
-package com.jverbruggen.jrides.animator.coaster.trackbehaviour.brake;
+package com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive;
 
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.BaseTrackBehaviour;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.FreeMovementTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.TrainMovement;
-import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
+import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
+public class TrimBrakeTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
+    private final double gravityConstant;
+    private final double dragConstantWithTrim;
 
-public class FullStopAndGoTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
-    private final int stopTime;
-    private Phase phase;
-    private int stopTimeCounter;
-
-    public FullStopAndGoTrackBehaviour(CartMovementFactory cartMovementFactory, int stopTime) {
+    public TrimBrakeTrackBehaviour(CartMovementFactory cartMovementFactory, double gravityConstant, double dragConstantWithTrim) {
         super(cartMovementFactory);
-
-        this.stopTime = stopTime;
-        trainExitedAtEnd();
+        this.gravityConstant = gravityConstant;
+        this.dragConstantWithTrim = dragConstantWithTrim;
     }
 
     @Override
     public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Section section) {
-//        Bukkit.broadcastMessage("Brake " + phase.toString());
-        Speed newSpeed = currentSpeed.clone();
         Train train = trainHandle.getTrain();
 
-        final double deceleration = 0.5;
-        final double acceleration = 0.1;
-
-        switch (phase){
-            case STOPPING:
-                if(currentSpeed.isZero()) phase = Phase.STOPPED;
-                newSpeed.minus(deceleration, 0);
-                break;
-            case STOPPED:
-                if(stopTimeCounter <= 0) phase = Phase.LEAVING;
-                stopTimeCounter--;
-                break;
-            case LEAVING:
-                newSpeed.add(acceleration, 1.0);
-                break;
-        }
+        Speed newSpeed = FreeMovementTrackBehaviour.calculateGravityActedSpeed(
+                trainHandle, section, currentSpeed, gravityConstant, dragConstantWithTrim
+        );
 
         return calculateTrainMovement(train, section, newSpeed);
     }
@@ -57,13 +40,12 @@ public class FullStopAndGoTrackBehaviour extends BaseTrackBehaviour implements T
 
     @Override
     public void trainExitedAtEnd(){
-        this.phase = Phase.STOPPING;
-        this.stopTimeCounter = this.stopTime;
+
     }
 
     @Override
     public String getName() {
-        return "FullStopAndGo";
+        return "TrimBrake";
     }
 
     @Override
@@ -85,10 +67,4 @@ public class FullStopAndGoTrackBehaviour extends BaseTrackBehaviour implements T
     protected void setParentTrackOnFrames(Track parentTrack) {
 
     }
-}
-
-enum Phase{
-    STOPPING,
-    STOPPED,
-    LEAVING
 }

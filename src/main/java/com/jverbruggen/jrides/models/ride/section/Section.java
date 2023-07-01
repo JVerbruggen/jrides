@@ -43,6 +43,7 @@ public interface Section extends Comparable {
     void removeOccupation(@NonNull  Train train);
     boolean canTrainSpawnOn();
     boolean hasPassed(Frame staticFrame, Frame movingFrame);
+    boolean hasPassedInverse(Frame staticFrame, Frame movingFrame);
     boolean passesCycle();
     boolean shouldJumpAtStart();
     boolean shouldJumpAtEnd();

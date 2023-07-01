@@ -69,6 +69,11 @@ public class StraightTransferSection extends BaseSection {
     }
 
     @Override
+    public boolean hasPassedInverse(Frame staticFrame, Frame movingFrame) {
+        return false;
+    }
+
+    @Override
     public boolean passesCycle() {
         return false;
     }

@@ -12,8 +12,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class SimpleSection extends BaseSection {
-    private Frame startFrame;
-    private Frame endFrame;
+    private final Frame startFrame;
+    private final Frame endFrame;
     private final boolean jumpAtStart;
     private final boolean jumpAtEnd;
     private String name;
@@ -115,6 +115,11 @@ public class SimpleSection extends BaseSection {
         ));
 
         return normalPassed || cyclicPassed;
+    }
+
+    @Override
+    public boolean hasPassedInverse(Frame staticFrame, Frame movingFrame) {
+        return hasPassed(movingFrame, staticFrame);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.animator.coaster.trackbehaviour.brake;
+package com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive;
 
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.BaseTrackBehaviour;

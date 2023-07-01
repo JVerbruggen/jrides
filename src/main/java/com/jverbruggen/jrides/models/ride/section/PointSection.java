@@ -80,6 +80,11 @@ public class PointSection extends BaseSection {
     }
 
     @Override
+    public boolean hasPassedInverse(Frame staticFrame, Frame movingFrame) {
+        return hasPassed(movingFrame, staticFrame);
+    }
+
+    @Override
     public boolean passesCycle() {
         return false;
     }

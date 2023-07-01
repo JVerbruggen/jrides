@@ -6,8 +6,10 @@ import com.jverbruggen.jrides.animator.coaster.trackbehaviour.FreeMovementTrackB
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.LaunchTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.StationTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.TrackBehaviour;
-import com.jverbruggen.jrides.animator.coaster.trackbehaviour.brake.BlockBrakeTrackBehaviour;
-import com.jverbruggen.jrides.animator.coaster.trackbehaviour.brake.BrakeAndDriveTrackBehaviour;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive.BlockBrakeTrackBehaviour;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive.BrakeAndDriveTrackBehaviour;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive.DriveAndReleaseTrackBehaviour;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive.TrimBrakeTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.transfer.TrainDisplacerTransferTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.point.SwitchBehaviour;
@@ -19,7 +21,6 @@ import com.jverbruggen.jrides.config.coaster.objects.section.point.SwitchSection
 import com.jverbruggen.jrides.config.coaster.objects.section.ranged.*;
 import com.jverbruggen.jrides.config.coaster.objects.section.ranged.transfer.TransferSectionPositionSpecConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.ranged.transfer.TransferSectionSpecConfig;
-import com.jverbruggen.jrides.config.gates.GateConfig;
 import com.jverbruggen.jrides.config.gates.GateOwnerConfigSpec;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
@@ -33,13 +34,11 @@ import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
-import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.properties.*;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.frame.FrameRange;
 import com.jverbruggen.jrides.models.properties.frame.SimpleFrame;
@@ -47,7 +46,6 @@ import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.trackswitch.SwitchPosition;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.TransferPosition;
-import com.jverbruggen.jrides.models.ride.gate.FenceGate;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
@@ -138,7 +136,8 @@ public class TrackBehaviourFactory {
         triggerContext.setParentStation(stationHandle);
 
         return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, true, triggerContext,
-                stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock, restraintLock, driveSpeed);
+                stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock, restraintLock, driveSpeed,
+                coasterStationConfig.isForwardsDispatch(), coasterStationConfig.getPassThroughCount());
     }
 
     private TrackBehaviour getSwitchBehaviour(SwitchSectionSpecConfig switchSectionSpecConfig) {
@@ -177,12 +176,32 @@ public class TrackBehaviourFactory {
             double driveSpeed = brakeSectionSpecConfig.getDriveSpeed();
             double deceleration = brakeSectionSpecConfig.getDeceleration();
             return new BrakeAndDriveTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, deceleration);
+        }else if(type.equalsIgnoreCase("trim")){
+            TrimBrakeSectionSpecConfig trimBrakeSectionSpecConfig = rangedSectionConfig.getTrimBrakeSectionSpecConfig();
+            double dragConstantWithTrim = trimBrakeSectionSpecConfig.getTrimResistanceConstant() * coasterConfig.getDragConstant();
+            return new TrimBrakeTrackBehaviour(cartMovementFactory, coasterConfig.getGravityConstant(), dragConstantWithTrim);
         }else if(type.equalsIgnoreCase("drive")){
             DriveSectionSpecConfig driveSectionSpecConfig = rangedSectionConfig.getDriveSectionSpec();
             double driveSpeed = driveSectionSpecConfig.getDriveSpeed();
             double acceleration = driveSectionSpecConfig.getAcceleration();
             double deceleration = driveSectionSpecConfig.getDeceleration();
             return new BrakeAndDriveTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, acceleration);
+        }else if(type.equalsIgnoreCase("driveAndRelease")){
+            DriveAndReleaseSectionSpecConfig driveAndReleaseSectionSpecConfig = rangedSectionConfig.getDriveAndReleaseSectionSpecConfig();
+            double driveSpeed = driveAndReleaseSectionSpecConfig.getDriveSpeed();
+            double acceleration = driveAndReleaseSectionSpecConfig.getAcceleration();
+            double deceleration = driveAndReleaseSectionSpecConfig.getDeceleration();
+
+            double engagePercentage = driveAndReleaseSectionSpecConfig.getEngage();
+            Frame lowerRange = new SimpleFrame(rangedSectionConfig.getLowerRange());
+            Frame upperRange = new SimpleFrame(rangedSectionConfig.getUpperRange());
+
+            Frame stopFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
+
+            int minWaitTicks = driveAndReleaseSectionSpecConfig.getWaitTicks();
+
+            return new DriveAndReleaseTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, acceleration,
+                    stopFrame, minWaitTicks, coasterConfig.getGravityConstant(), coasterConfig.getDragConstant());
         }else if(type.equalsIgnoreCase("launch")){
             LaunchSectionSpecConfig launchSectionSpecConfig = rangedSectionConfig.getLaunchSectionSpecConfig();
             double engagePercentage = launchSectionSpecConfig.getEngage();

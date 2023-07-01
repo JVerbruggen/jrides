@@ -18,7 +18,6 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
-import org.bukkit.Bukkit;
 
 import java.util.stream.Collectors;
 
@@ -33,19 +32,23 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
     private StationPhase phase;
     private final Frame stopFrame;
     private final boolean canSpawn;
-    private TriggerContext triggerContext;
+    private final TriggerContext triggerContext;
     private final CoasterStationHandle stationHandle;
     private final DispatchLock trainInStationDispatchLock;
     private final DispatchLock blockSectionOccupiedDispatchLock;
     private final DispatchLock restraintsLock;
+
     private boolean stopping;
     private boolean dispatching;
+
     private final int passThroughCount;
     private int passThroughCountState;
+    private final boolean forwardsDispatch;
+    private final byte dispatchSpeedMultiplier;
 
     public StationTrackBehaviour(CoasterHandle coasterHandle, CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, TriggerContext triggerContext,
                                  CoasterStationHandle stationHandle, DispatchLock trainInStationDispatchLock, DispatchLock blockSectionOccupiedDispatchLock,
-                                 DispatchLock restraintsLock, double driveSpeed) {
+                                 DispatchLock restraintsLock, double driveSpeed, boolean forwardsDispatch, int passThroughCount) {
         super(cartMovementFactory);
         this.coasterHandle = coasterHandle;
         this.logger = JRidesPlugin.getLogger();
@@ -60,8 +63,11 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
         this.stationHandle = stationHandle;
         this.dispatching = false;
         this.stopping = false;
-        this.passThroughCount = 0;
-        this.passThroughCountState = 0;
+        this.passThroughCount = passThroughCount;
+        this.passThroughCountState = passThroughCount;
+
+        this.forwardsDispatch = forwardsDispatch;
+        this.dispatchSpeedMultiplier = (byte) (forwardsDispatch ? 1 : -1);
 
         this.trainInStationDispatchLock = trainInStationDispatchLock;
         this.blockSectionOccupiedDispatchLock = blockSectionOccupiedDispatchLock;
@@ -83,54 +89,52 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
         boolean goIntoSwitch = true;
         while(goIntoSwitch){
             goIntoSwitch = false;
-            switch (phase){
-                case IDLE:
+            switch (phase) {
+                case IDLE -> {
                     handlingTrain = train;
-                    if(shouldPassThrough()){
+                    if (shouldPassThrough()) {
                         phase = StationPhase.PASSING_THROUGH;
                         passThroughCountState++;
-                    }else if(!shouldReverse(trainHandle)){
+                    } else if (isTrainSpeedPositive(trainHandle)) {
                         phase = StationPhase.ARRIVING;
-                    }else{
+                    } else {
                         phase = StationPhase.REVERSING;
                     }
                     goIntoSwitch = true;
-                    break;
-                case PASSING_THROUGH:
-                    newSpeed = FreeMovementTrackBehaviour.calculateGravityActedSpeed(
-                            trainHandle, section, currentSpeed, coasterHandle.getGravityConstant(), coasterHandle.getDragConstant()
-                    );
-                    break;
-                case REVERSING:
-                    if(!shouldReverse(trainHandle)){
+                }
+                case PASSING_THROUGH -> newSpeed = FreeMovementTrackBehaviour.calculateGravityActedSpeed(
+                        trainHandle, section, currentSpeed, coasterHandle.getGravityConstant(), coasterHandle.getDragConstant()
+                );
+                case REVERSING -> {
+                    if (isTrainSpeedPositive(trainHandle)) {
                         phase = StationPhase.ARRIVING;
                         goIntoSwitch = true;
-                    }else{
+                    } else {
                         newSpeed.approach(acceleration, deceleration, driveSpeed);
                     }
-                    break;
-                case ARRIVING:
-                    if(train.getHeadSection().hasPassed(stopFrame, train.getHeadOfTrainFrame())){
+                }
+                case ARRIVING -> {
+                    if (train.getHeadSection().hasPassed(stopFrame, train.getHeadOfTrainFrame())) {
                         phase = StationPhase.STOPPING;
                         goIntoSwitch = true;
-                    }else{
+                    } else {
                         newSpeed.approach(acceleration, deceleration, driveSpeed);
                     }
-                    break;
-                case STOPPING:
-                    if(newSpeed.isZero()) {
-                        if(!stopping) stationHandle.runEntryEffectTriggers(train);
+                }
+                case STOPPING -> {
+                    if (newSpeed.isZero()) {
+                        if (!stopping) stationHandle.runEntryEffectTriggers(train);
                         stopping = true;
 
-                        if(!stationHandle.entryEffectTriggersDone()) break;
+                        if (!stationHandle.entryEffectTriggersDone()) break;
 
                         phase = StationPhase.STATIONARY;
                         stationHandle.setStationaryTrain(train);
 
-                        if(stationHandle.isExit())
+                        if (stationHandle.isExit())
                             PlayerFinishedRideEvent.sendFinishedRideEvent(train.getPassengers()
                                     .stream()
-                                    .map(p -> (JRidesPlayer)p)
+                                    .map(p -> (JRidesPlayer) p)
                                     .collect(Collectors.toList()), coasterHandle.getRide());
 
                         coasterHandle.getRideController().onTrainArrive(train, stationHandle);
@@ -138,32 +142,31 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                         restraintsLock.setLocked(true);
                         train.setRestraintForAll(false);
 
-                        if(stationHandle.shouldEject())
+                        if (stationHandle.shouldEject())
                             train.ejectPassengers();
 
                         stopping = false;
                         goIntoSwitch = true;
-                    }else
+                    } else
                         newSpeed.minus(deceleration, 0);
-                    break;
-                case STATIONARY:
+                }
+                case STATIONARY -> {
                     BlockSectionSafetyResult safety = getNextSectionSafety(train);
-                    if(safety.safe()){
+                    if (safety.safe()) {
                         blockSectionOccupiedDispatchLock.unlock();
-                    }else{
+                    } else {
                         blockSectionOccupiedDispatchLock.lock();
                         blockSectionOccupiedDispatchLock.setDebugStatus(safety.reason());
                     }
-
                     DispatchTrigger dispatchTrigger = triggerContext.getDispatchTrigger();
-                    if(dispatching || dispatchTrigger.isActive()){
+                    if (dispatching || dispatchTrigger.isActive()) {
                         trainInStationDispatchLock.lock();
                         dispatchTrigger.reset();
 
-                        if(!dispatching) stationHandle.runExitEffectTriggers(train);
+                        if (!dispatching) stationHandle.runExitEffectTriggers(train);
                         dispatching = true;
 
-                        if(!stationHandle.exitEffectTriggersDone()) break;
+                        if (!stationHandle.exitEffectTriggersDone()) break;
 
                         trainHandle.resetEffects();
                         passThroughCountState = 0;
@@ -172,10 +175,10 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                         dispatching = false;
                         goIntoSwitch = true;
                     }
-                    break;
-                case WAITING:
-                    Section nextSection = train.getNextSection();
-                    if(nextSection != null && nextSection.getBlockSectionSafety(train).safe()){
+                }
+                case WAITING -> {
+                    Section nextSection = getNextSection(train);
+                    if (nextSection != null && nextSection.getBlockSectionSafety(train).safe()) {
                         nextSection.setEntireBlockReservation(train);
                         phase = StationPhase.DEPARTING;
                         blockSectionOccupiedDispatchLock.lock();
@@ -184,18 +187,24 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
                         train.playDispatchSound();
                         goIntoSwitch = true;
                     }
-                    break;
-                case DEPARTING:
-                    newSpeed.add(acceleration, driveSpeed);
-                    break;
+                }
+                case DEPARTING -> newSpeed.approach(
+                        acceleration,
+                        acceleration,
+                        driveSpeed*dispatchSpeedMultiplier);
             }
         }
 
         return calculateTrainMovement(train, section, newSpeed);
     }
 
-    private boolean shouldReverse(TrainHandle trainHandle){
-        return !trainHandle.getSpeed().isPositive();
+    private Section getNextSection(Train train){
+        if(forwardsDispatch) return train.getNextSection();
+        return train.getHeadSection().previous(train);
+    }
+
+    private boolean isTrainSpeedPositive(TrainHandle trainHandle){
+        return trainHandle.getSpeed().isPositive();
     }
 
     private boolean shouldPassThrough(){

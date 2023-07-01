@@ -18,11 +18,15 @@ import java.util.List;
 public class CoasterStationConfig extends StationConfig {
     private final double engage;
     private final double driveSpeed;
+    private final int passThroughCount;
+    private final boolean forwardsDispatch;
 
-    public CoasterStationConfig(double engage, double driveSpeed, int minimumWaitIntervalSeconds, int maximumWaitIntervalSeconds, StationEffectsConfig stationEffectsConfig, PlayerLocation ejectLocation) {
+    public CoasterStationConfig(double engage, double driveSpeed, int passThroughCount, boolean forwardsDispatch, int minimumWaitIntervalSeconds, int maximumWaitIntervalSeconds, StationEffectsConfig stationEffectsConfig, PlayerLocation ejectLocation) {
         super(minimumWaitIntervalSeconds, maximumWaitIntervalSeconds, stationEffectsConfig, ejectLocation);
         this.engage = engage;
         this.driveSpeed = driveSpeed;
+        this.passThroughCount = passThroughCount;
+        this.forwardsDispatch = forwardsDispatch;
     }
 
     public double getEngage() {
@@ -33,15 +37,25 @@ public class CoasterStationConfig extends StationConfig {
         return driveSpeed;
     }
 
+    public int getPassThroughCount() {
+        return passThroughCount;
+    }
+
+    public boolean isForwardsDispatch() {
+        return forwardsDispatch;
+    }
+
     public static CoasterStationConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         double engage = getDouble(configurationSection, "engage", 0.5);
         double driveSpeed = getDouble(configurationSection, "driveSpeed", 1.0);
+        int passThroughCount = getInt(configurationSection, "passThroughCount", 0);
+        boolean forwardsDispatch = getBoolean(configurationSection, "forwardsDispatch", true);
         int minimumWaitIntervalSeconds = getInt(configurationSection, "minimumWaitIntervalSeconds", 0);
         int maximumWaitIntervalSeconds = getInt(configurationSection, "maximumWaitIntervalSeconds", 60);
         StationEffectsConfig effects = StationEffectsConfig.fromConfigurationSection(configurationSection.getConfigurationSection("effects"));
         PlayerLocation ejectLocation = PlayerLocation.fromDoubleList(configurationSection.getDoubleList("ejectLocation"));
 
-        return new CoasterStationConfig(engage, driveSpeed, minimumWaitIntervalSeconds, maximumWaitIntervalSeconds, effects, ejectLocation);
+        return new CoasterStationConfig(engage, driveSpeed, passThroughCount, forwardsDispatch, minimumWaitIntervalSeconds, maximumWaitIntervalSeconds, effects, ejectLocation);
     }
 
     public CoasterStationHandle createStationHandle(String stationName, String shortStationName, TriggerContext triggerContext, CoasterHandle coasterHandle, List<Gate> gates, DispatchLock minimumWaitTimeDispatchLock){
