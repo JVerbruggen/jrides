@@ -8,6 +8,7 @@ public class HelpCommandExecutor extends BaseCommandExecutor {
     private final ControlCommandExecutor controlCommandExecutor;
     private final WarpCommandExecutor warpCommandExecutor;
     private final RideOverviewMapCommandExecutor rideOverviewMapCommandExecutor;
+    private final RideCounterMapCommandExecutor rideCounterMapCommandExecutor;
 
     public HelpCommandExecutor() {
         super(1);
@@ -16,6 +17,7 @@ public class HelpCommandExecutor extends BaseCommandExecutor {
         this.controlCommandExecutor = new ControlCommandExecutor();
         this.warpCommandExecutor = new WarpCommandExecutor();
         this.rideOverviewMapCommandExecutor = new RideOverviewMapCommandExecutor();
+        this.rideCounterMapCommandExecutor = new RideCounterMapCommandExecutor();
     }
 
     @Override
@@ -29,6 +31,7 @@ public class HelpCommandExecutor extends BaseCommandExecutor {
                 blockSectionCommandExecutor.getHelpMessageForParent() + "\n" +
                 controlCommandExecutor.getHelpMessageForParent() + "\n" +
                 warpCommandExecutor.getHelpMessageForParent() + "\n" +
-                rideOverviewMapCommandExecutor.getHelpMessageForParent();
+                rideOverviewMapCommandExecutor.getHelpMessageForParent() + "\n" +
+                rideCounterMapCommandExecutor.getHelpMessageForParent();
     }
 }

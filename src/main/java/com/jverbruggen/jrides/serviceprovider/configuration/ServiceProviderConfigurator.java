@@ -23,6 +23,7 @@ import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.entity.EntityIdFactory;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgentManager;
+import com.jverbruggen.jrides.models.map.ridecounter.RideCounterMapFactory;
 import com.jverbruggen.jrides.models.map.rideoverview.RideOverviewMapFactory;
 import com.jverbruggen.jrides.models.map.rideoverview.SectionVisualFactory;
 import com.jverbruggen.jrides.models.map.rideoverview.TrainVisualFactory;
@@ -96,6 +97,7 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(SectionVisualFactory.class, new SectionVisualFactory());
         ServiceProvider.register(TrainVisualFactory.class, new TrainVisualFactory());
         ServiceProvider.register(RideOverviewMapFactory.class, new RideOverviewMapFactory());
+        ServiceProvider.register(RideCounterMapFactory.class, new RideCounterMapFactory());
         ServiceProvider.register(RideOverviewMenuButtonFactory.class, new RideOverviewMenuButtonFactory());
         ServiceProvider.register(RideOverviewMenuFactory.class, new RideOverviewMenuFactory());
 

@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.animator;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
+import com.jverbruggen.jrides.config.ride.RideCounterMapConfigs;
 import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.event.ride.RideStateUpdatedEvent;
@@ -29,8 +30,9 @@ public abstract class AbstractRideHandle implements RideHandle{
     private final SoundsConfig sounds;
 
     private List<RideCounterRecordCollection> topRideCounters;
+    private RideCounterMapConfigs rideCounterMapConfigs;
 
-    public AbstractRideHandle(World world, Ride ride, RideState rideState, boolean loaded, SoundsConfig sounds) {
+    public AbstractRideHandle(World world, Ride ride, RideState rideState, boolean loaded, SoundsConfig sounds, RideCounterMapConfigs rideCounterMapConfigs) {
         this.world = world;
         this.ride = ride;
         this.rideState = rideState;
@@ -39,6 +41,7 @@ public abstract class AbstractRideHandle implements RideHandle{
         this.topRideCounters = new ArrayList<>();
 
         this.sounds = sounds;
+        this.rideCounterMapConfigs = rideCounterMapConfigs;
     }
 
     public World getWorld() {
@@ -180,5 +183,9 @@ public abstract class AbstractRideHandle implements RideHandle{
     @Override
     public boolean canFullyClose() {
         return getPassengers().isEmpty();
+    }
+
+    public RideCounterMapConfigs getRideCounterMapConfigs() {
+        return rideCounterMapConfigs;
     }
 }

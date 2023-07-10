@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.animator.flatride.station.FlatRideStationHandle;
 import com.jverbruggen.jrides.animator.flatride.timing.TimingSequence;
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
+import com.jverbruggen.jrides.config.ride.RideCounterMapConfigs;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
@@ -30,8 +31,8 @@ public class FlatRideHandle extends AbstractRideHandle {
 
     private boolean finished;
 
-    public FlatRideHandle(World world, Ride ride, boolean loaded, FlatRideStationHandle stationHandle, SoundsConfig sounds) {
-        super(world, ride, null, loaded, sounds);
+    public FlatRideHandle(World world, Ride ride, boolean loaded, FlatRideStationHandle stationHandle, SoundsConfig sounds, RideCounterMapConfigs rideCounterMapConfigs) {
+        super(world, ride, null, loaded, sounds, rideCounterMapConfigs);
         this.stationHandle = stationHandle;
         this.timingSequence = null;
         this.dispatchTrigger = stationHandle.getTriggerContext().getDispatchTrigger();

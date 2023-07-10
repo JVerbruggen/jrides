@@ -13,6 +13,7 @@ public class MainCommandExecutor extends BaseCommandExecutor {
         registerSubCommand(new ControlCommandExecutor());
         registerSubCommand(new WarpCommandExecutor());
         registerSubCommand(new RideOverviewMapCommandExecutor());
+        registerSubCommand(new RideCounterMapCommandExecutor());
         registerSubCommand(new RidesCommandExecutor());
     }
 

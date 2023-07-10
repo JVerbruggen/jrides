@@ -18,8 +18,9 @@ public abstract class AbstractRideConfig extends BaseConfig {
     private final GatesConfig gates;
     private final SoundsConfig soundsConfig;
     private final boolean canExitDuringRide;
+    private final RideCounterMapConfigs rideCounterMapConfigs;
 
-    public AbstractRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemConfig displayItem, PlayerLocation warpLocation, GatesConfig gates, SoundsConfig soundsConfig, boolean canExitDuringRide) {
+    public AbstractRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemConfig displayItem, PlayerLocation warpLocation, GatesConfig gates, SoundsConfig soundsConfig, boolean canExitDuringRide, RideCounterMapConfigs rideCounterMapConfigs) {
         this.manifestVersion = manifestVersion;
         this.identifier = identifier;
         this.displayName = displayName;
@@ -29,6 +30,7 @@ public abstract class AbstractRideConfig extends BaseConfig {
         this.gates = gates;
         this.soundsConfig = soundsConfig;
         this.canExitDuringRide = canExitDuringRide;
+        this.rideCounterMapConfigs = rideCounterMapConfigs;
     }
 
     public String getManifestVersion() {
@@ -65,5 +67,9 @@ public abstract class AbstractRideConfig extends BaseConfig {
 
     public boolean canExitDuringRide() {
         return canExitDuringRide;
+    }
+
+    public RideCounterMapConfigs getRideCounterMapConfigs() {
+        return rideCounterMapConfigs;
     }
 }

@@ -21,6 +21,7 @@ public class Permissions {
     public static final String COMMAND_ELEVATED_BASE = "jrides.command.elevated"; // Base for elevated commands (for admins)
     public static final String COMMAND_ELEVATED_ADMIN_MENU = "jrides.command.elevated.admin_menu"; // Allow to open ride admin menu
     public static final String COMMAND_ELEVATED_RIDE_OVERVIEW = "jrides.command.elevated.ride_overview"; // Allow for generating a ride overview map
+    public static final String COMMAND_ELEVATED_RIDE_COUNTER_MAP = "jrides.command.elevated.ride_counter_map"; // Allow for generating a ride counter map
     public static final String COMMAND_ELEVATED_BLOCK_SECTION = "jrides.command.elevated.block_section"; // Allow for getting block section occupation message (debug)
     public static final String COMMAND_ELEVATED_VISUALIZE = "jrides.command.elevated.visualize"; // Allow to visualize a coaster spline (debug)
 

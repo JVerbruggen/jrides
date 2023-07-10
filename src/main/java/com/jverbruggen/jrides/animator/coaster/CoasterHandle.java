@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.AbstractRideHandle;
 import com.jverbruggen.jrides.animator.coaster.tool.ParticleTrackVisualisationTool;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
+import com.jverbruggen.jrides.config.ride.RideCounterMapConfigs;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
@@ -33,9 +34,10 @@ public class CoasterHandle extends AbstractRideHandle {
     private final double dragConstant;
     private final double gravityConstant;
     private int rideOverviewMapId;
+    private final RideCounterMapConfigs rideCounterMapConfigs;
 
-    public CoasterHandle(Ride ride, World world, SoundsConfig sounds, int rideOverviewMapId, boolean loaded, double dragConstant, double gravityConstant) {
-        super(world, ride, null, loaded, sounds);
+    public CoasterHandle(Ride ride, World world, SoundsConfig sounds, int rideOverviewMapId, boolean loaded, double dragConstant, double gravityConstant, RideCounterMapConfigs rideCounterMapConfigs) {
+        super(world, ride, null, loaded, sounds, rideCounterMapConfigs);
         this.dragConstant = dragConstant;
         this.gravityConstant = gravityConstant;
 
@@ -46,6 +48,7 @@ public class CoasterHandle extends AbstractRideHandle {
         this.track = null;
         this.effectTriggerCollection = null;
         this.rideOverviewMapId = rideOverviewMapId;
+        this.rideCounterMapConfigs = rideCounterMapConfigs;
     }
 
     public double getDragConstant() {

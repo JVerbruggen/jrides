@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.config.flatride.timing.TimingConfig;
 import com.jverbruggen.jrides.config.gates.GatesConfig;
 import com.jverbruggen.jrides.config.gates.StationConfig;
 import com.jverbruggen.jrides.config.ride.AbstractRideConfig;
+import com.jverbruggen.jrides.config.ride.RideCounterMapConfigs;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -21,8 +22,8 @@ public class FlatRideConfig extends AbstractRideConfig {
     private final StructureConfig structureConfig;
     private final TimingConfig timingConfig;
 
-    public FlatRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemConfig displayItem, PlayerLocation warpLocation, GatesConfig gates, boolean canExitDuringRide, StationConfig stationConfig, SoundsConfig soundsConfig, StructureConfig structureConfig, TimingConfig timingConfig) {
-        super(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, soundsConfig, canExitDuringRide);
+    public FlatRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemConfig displayItem, PlayerLocation warpLocation, GatesConfig gates, boolean canExitDuringRide, StationConfig stationConfig, SoundsConfig soundsConfig, StructureConfig structureConfig, TimingConfig timingConfig, RideCounterMapConfigs rideCounterMapConfigs) {
+        super(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, soundsConfig, canExitDuringRide, rideCounterMapConfigs);
         this.stationConfig = stationConfig;
         this.structureConfig = structureConfig;
         this.timingConfig = timingConfig;
@@ -60,7 +61,8 @@ public class FlatRideConfig extends AbstractRideConfig {
         StationConfig stationConfig = StationConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "station"));
         StructureConfig structureConfig = StructureConfig.fromConfigurationSection(Objects.requireNonNull(getConfigurationSection(configurationSection, "structure"), "Structure for flatride not present"));
         TimingConfig timingConfig = TimingConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "timing"));
+        RideCounterMapConfigs rideCounterMapConfigs = RideCounterMapConfigs.fromConfigurationSection(getConfigurationSection(configurationSection, "rideCounterBoards"));
 
-        return new FlatRideConfig(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, canExitDuringRide, stationConfig, sounds, structureConfig, timingConfig);
+        return new FlatRideConfig(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, canExitDuringRide, stationConfig, sounds, structureConfig, timingConfig, rideCounterMapConfigs);
     }
 }
