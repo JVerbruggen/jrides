@@ -3,7 +3,6 @@ package com.jverbruggen.jrides.models.map.ridecounter;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.models.entity.Player;
-import com.jverbruggen.jrides.models.map.rideoverview.MapScope;
 import dev.cerus.maps.api.ClientsideMap;
 import dev.cerus.maps.api.graphics.ClientsideMapGraphics;
 import dev.cerus.maps.api.graphics.ColorCache;
