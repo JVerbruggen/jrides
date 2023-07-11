@@ -68,6 +68,10 @@ public class Player implements MessageAgent, JRidesPlayer {
         bukkitPlayer.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
     }
 
+    public void sendTitle(String title, String subtitle, int stay){
+        bukkitPlayer.sendTitle(title, subtitle, 10, stay, 10);
+    }
+
     public org.bukkit.entity.Player getBukkitPlayer(){
         return bukkitPlayer;
     }

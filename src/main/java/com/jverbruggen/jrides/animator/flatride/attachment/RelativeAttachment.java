@@ -39,6 +39,11 @@ public class RelativeAttachment implements Attachment {
     }
 
     @Override
+    public FlatRideComponent getParent() {
+        return parent;
+    }
+
+    @Override
     public void update() {
         cacheMatrix = MatrixMath.rotateTranslate(
                 parent.getPosition(),

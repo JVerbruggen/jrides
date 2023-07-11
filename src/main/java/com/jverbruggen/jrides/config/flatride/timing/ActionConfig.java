@@ -19,14 +19,12 @@ public class ActionConfig extends BaseConfig {
     private final String targetIdentifier;
     private Float speed;
     private Float accelerate;
-    private Float controlSpeed;
     private Boolean allowControl;
 
     public ActionConfig(String targetIdentifier) {
         this.targetIdentifier = targetIdentifier;
         speed = null;
         accelerate = null;
-        controlSpeed = null;
         allowControl = null;
     }
 
@@ -44,14 +42,6 @@ public class ActionConfig extends BaseConfig {
 
     public void setAccelerate(Float accelerate) {
         this.accelerate = accelerate;
-    }
-
-    public float getControlSpeed() {
-        return controlSpeed == null ? 0 : controlSpeed;
-    }
-
-    public void setControlSpeed(Float controlSpeed) {
-        this.controlSpeed = controlSpeed;
     }
 
     public Boolean allowsControl() {
@@ -74,8 +64,6 @@ public class ActionConfig extends BaseConfig {
                 actionConfig.setSpeed((float) getDouble(actionConfigurationSection, "speed"));
             if(actionConfigurationSection.contains("accelerate"))
                 actionConfig.setAccelerate((float) getDouble(actionConfigurationSection, "accelerate"));
-            if(actionConfigurationSection.contains("controlSpeed"))
-                actionConfig.setControlSpeed((float) getDouble(actionConfigurationSection, "controlSpeed"));
             if(actionConfigurationSection.contains("allowControl"))
                 actionConfig.setAllowControl(getBoolean(actionConfigurationSection, "allowControl"));
 
@@ -97,7 +85,7 @@ public class ActionConfig extends BaseConfig {
             timingActions.add(new InstructionBinding(new SpeedInstruction(getAccelerate(), getSpeed()), targetedFlatRideComponents));
         }
         if(allowControl != null){
-            timingActions.add(new InstructionBinding(new ControlInstruction(allowsControl(), getControlSpeed()), targetedFlatRideComponents));
+            timingActions.add(new InstructionBinding(new ControlInstruction(allowsControl()), targetedFlatRideComponents));
         }
         return timingActions;
     }

@@ -10,9 +10,10 @@ import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
-import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Ride;
+import com.jverbruggen.jrides.models.ride.seat.InstructionType;
+import com.jverbruggen.jrides.models.ride.seat.PlayerControlInstruction;
 import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.models.ride.coaster.train.CoasterSeat;
@@ -104,16 +105,48 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         seat.setPassenger(player);
     }
 
-    private void onSteerVehicle(PacketEvent event) {
-        boolean dismountVehicle = event.getPacket().getBooleans().read(1);
-        if(!dismountVehicle){
-            if(shiftPressedDebounce.size() > 0) shiftPressedDebounce.remove(event.getPlayer().getUniqueId());
+    private void processPlayerControl(PacketEvent event, Seat seat){
+        if(!seat.supportsPlayerControl()){
             return;
         }
+
+        float sidewaysLeft = event.getPacket().getFloat().read(0); // Left is positive, right is negative
+        float forwards = event.getPacket().getFloat().read(1);
+        boolean jump = event.getPacket().getBooleans().read(0);
+
+        InstructionType type;
+        if(sidewaysLeft > 0){
+            type = InstructionType.A;
+        }else if(sidewaysLeft < 0){
+            type = InstructionType.D;
+        }else if(forwards > 0){
+            type = InstructionType.W;
+        }else if(forwards < 0){
+            type = InstructionType.S;
+        }else if(jump){
+            type = InstructionType.SPACE;
+        }else{
+            type = InstructionType.NONE;
+        }
+
+
+        seat.sendPlayerControlInstruction(type);
+    }
+
+    private void onSteerVehicle(PacketEvent event) {
+        boolean dismountVehicle = event.getPacket().getBooleans().read(1);
 
         org.bukkit.entity.Player bukkitPlayer = event.getPlayer();
         Player player = playerManager.getPlayer(bukkitPlayer);
         Seat seat = player.getSeatedOn();
+
+        processPlayerControl(event, seat);
+
+        if(!dismountVehicle){
+            removeShiftDebounce(event.getPlayer());
+            return;
+        }
+
         if(seat == null){
             return;
         }
@@ -154,6 +187,10 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
             seat.setPassenger(null);
             player.teleport(Vector3.add(entity.getLocation(), CoasterSeat.getHeightCompensation()), teleportYaw);
         });
+    }
+
+    private void removeShiftDebounce(org.bukkit.entity.Player player){
+        if(shiftPressedDebounce.size() > 0) shiftPressedDebounce.remove(player.getUniqueId());
     }
 
     private void onSendingSpawnPlayerPacket(PacketEvent event){

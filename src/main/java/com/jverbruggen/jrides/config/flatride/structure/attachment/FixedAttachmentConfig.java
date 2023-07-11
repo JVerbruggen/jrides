@@ -68,7 +68,9 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
                 .map(config -> config.toFlatRideModel(position, viewportManager))
                 .collect(Collectors.toList());
 
-        Rotor rotor = new Rotor(rotorConfig.getIdentifier(), rotorConfig.getIdentifier(), rotorConfig.isRoot(), flatRideModels, rotorConfig.getFlatRideComponentSpeed());
+        Rotor rotor = new Rotor(rotorConfig.getIdentifier(), rotorConfig.getIdentifier(), rotorConfig.isRoot(),
+                flatRideModels, rotorConfig.getFlatRideComponentSpeed());
+        rotor.createPlayerControl(rotorConfig.getPlayerControlConfig());
 
         Attachment attachment = new FixedAttachment(rotor, position, rotation);
         rotor.setAttachedTo(attachment);

@@ -2,8 +2,10 @@ package com.jverbruggen.jrides.animator.flatride;
 
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
+import com.jverbruggen.jrides.config.flatride.structure.ControlConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -70,6 +72,15 @@ public abstract class AbstractFlatRideComponent implements FlatRideComponent {
     @Override
     public void attach(FlatRideComponent child, Quaternion offsetRotation, Vector3 offsetPosition) {
         throw new RuntimeException("Cannot attach to this component");
+    }
+
+    @Nullable
+    @Override
+    public PlayerControl getPlayerControl() {
+        if(attachedTo == null) return null;
+        if(attachedTo.getParent() == null) return null;
+
+        return attachedTo.getParent().getPlayerControl();
     }
 
     protected void updateFlatRideModels(){

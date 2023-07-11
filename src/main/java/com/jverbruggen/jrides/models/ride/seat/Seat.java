@@ -5,6 +5,9 @@ import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
+
+import javax.annotation.Nonnull;
 
 public interface Seat {
     Player getPassenger();
@@ -23,4 +26,8 @@ public interface Seat {
     SeatHost getParentSeatHost();
 
     RideHandle getParentRideHandle();
+
+    boolean supportsPlayerControl();
+    @Nonnull PlayerControl getPlayerControl();
+    void sendPlayerControlInstruction(InstructionType instruction);
 }
