@@ -3,7 +3,6 @@ package com.jverbruggen.jrides.animator.flatride.rotor;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import com.jverbruggen.jrides.models.ride.seat.InstructionType;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;

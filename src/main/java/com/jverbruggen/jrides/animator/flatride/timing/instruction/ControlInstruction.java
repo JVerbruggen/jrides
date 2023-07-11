@@ -24,4 +24,9 @@ public class ControlInstruction implements Instruction {
     public boolean canHandle(FlatRideComponent component) {
         return component instanceof PlayerControllable;
     }
+
+    @Override
+    public void reset() {
+
+    }
 }

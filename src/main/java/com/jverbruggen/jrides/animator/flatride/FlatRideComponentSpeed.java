@@ -1,5 +1,8 @@
 package com.jverbruggen.jrides.animator.flatride;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class FlatRideComponentSpeed {
     private float speed;
     private float minSpeed;

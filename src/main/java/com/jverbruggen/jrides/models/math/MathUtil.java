@@ -396,6 +396,14 @@ public class MathUtil {
         return Math.floorMod(x, y);
     }
 
+    public static double floorMod(double x, double y){
+        return (x - Math.floor(x/y) * y);
+    }
+
+    public static float floorMod(float x, float y){
+        return (x - (float)Math.floor(x/y) * y);
+    }
+
     /**
      * Returns the floor modulus of the long arguments
      *

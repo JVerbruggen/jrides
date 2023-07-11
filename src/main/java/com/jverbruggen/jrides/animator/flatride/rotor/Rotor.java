@@ -3,17 +3,18 @@ package com.jverbruggen.jrides.animator.flatride.rotor;
 import com.jverbruggen.jrides.animator.flatride.AbstractInterconnectedFlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
+import com.jverbruggen.jrides.animator.flatride.interfaces.HasPosition;
 import com.jverbruggen.jrides.animator.flatride.interfaces.HasSpeed;
 import com.jverbruggen.jrides.animator.flatride.interfaces.PlayerControllable;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorPlayerControlConfig;
+import com.jverbruggen.jrides.models.math.MathUtil;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class Rotor extends AbstractInterconnectedFlatRideComponent implements HasSpeed, PlayerControllable {
+public class Rotor extends AbstractInterconnectedFlatRideComponent implements HasSpeed, PlayerControllable, HasPosition {
     private final Quaternion rotation;
     private final FlatRideComponentSpeed flatRideComponentSpeed;
     private RotorPlayerControl playerControl;
@@ -44,7 +45,7 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Ha
             playerControl.apply();
         }
 
-        rotation.rotateY(flatRideComponentSpeed.getSpeed());
+        addYaw(flatRideComponentSpeed.getSpeed());
 
         for(Attachment attachment : getChildren()){
             attachment.update();
@@ -84,5 +85,37 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Ha
 
         playerControl = controlConfig.createPlayerControl();
         playerControl.setRotor(this);
+    }
+
+    public float getCurrentPosition(){
+        return (float) rotation.getYaw();
+    }
+
+    @Override
+    public boolean hasPassed(double from, double target){
+        target = MathUtil.floorMod(target - from, 360d);
+        double currentPosition = MathUtil.floorMod(getCurrentPosition() - from, 360d);
+
+        boolean forwardsPassed = target <= currentPosition;
+        boolean backwardsPassed = currentPosition <= target;
+//        System.out.println("t: " + target + ", c: " + currentPosition + ", f: " + from);
+
+        boolean positiveSpeed = flatRideComponentSpeed.getSpeed() >= 0;
+        return (positiveSpeed && forwardsPassed)
+            || (!positiveSpeed && backwardsPassed);
+    }
+
+    private void addYaw(double addRotation){
+        rotation.rotateY(-addRotation);
+    }
+
+    @Override
+    public void setInstructionPosition(double position) {
+        addYaw(position);
+    }
+
+    @Override
+    public double getInstructionPosition() {
+        return rotation.getYaw();
     }
 }

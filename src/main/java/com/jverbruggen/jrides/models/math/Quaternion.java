@@ -271,6 +271,7 @@ public class Quaternion implements Cloneable {
 
     /**
      * Deduces the yaw component (y) of {@link #getYawPitchRoll()}
+     * !! Uses range [-180, 180], wrap [0, 360] degrees using MathUtil.wrapAngle
      *
      * @return yaw
      */
