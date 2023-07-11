@@ -21,13 +21,13 @@ public class RideCounterMapConfigs extends BaseConfig {
         return rideCounterMapConfigs;
     }
 
-    public static RideCounterMapConfigs fromConfigurationSection(ConfigurationSection configurationSection) {
+    public static RideCounterMapConfigs fromConfigurationSection(String rideIdentifier, ConfigurationSection configurationSection) {
         if(configurationSection == null) return new RideCounterMapConfigs();
 
         Map<String, RideCounterMapConfig> rideCounterMapConfigs = configurationSection.getKeys(false).stream().collect(
                 Collectors.toMap(
                         key -> key,
-                        key -> RideCounterMapConfig.fromConfigurationSection(configurationSection.getConfigurationSection(key))
+                        key -> RideCounterMapConfig.fromConfigurationSection(rideIdentifier, configurationSection.getConfigurationSection(key))
                 )
         );
 

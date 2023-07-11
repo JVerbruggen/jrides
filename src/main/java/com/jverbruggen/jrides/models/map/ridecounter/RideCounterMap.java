@@ -5,7 +5,6 @@ import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import dev.cerus.maps.api.ClientsideMap;
 import dev.cerus.maps.api.graphics.ClientsideMapGraphics;
-import dev.cerus.maps.api.graphics.ColorCache;
 import dev.cerus.maps.version.VersionAdapterFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -13,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapView;
 
+import java.awt.image.BufferedImage;
 import java.util.Collection;
 
 public class RideCounterMap  {
@@ -21,11 +21,13 @@ public class RideCounterMap  {
     private final MapView mapView;
 
     private final ClientsideMapGraphics currentGraphics;
+    private final BufferedImage backgroundImage;
 
-    public RideCounterMap(RideHandle rideHandle, MapView mapView) {
+    public RideCounterMap(RideHandle rideHandle, MapView mapView, BufferedImage backgroundImage) {
         this.rideHandle = rideHandle;
         this.mapView = mapView;
         this.currentGraphics = new ClientsideMapGraphics();
+        this.backgroundImage = backgroundImage;
     }
 
     public void give(Player player) {
@@ -45,7 +47,7 @@ public class RideCounterMap  {
 
     public void updateVisuals() {
         // TODO: Implement this functionality to show the ride counters
-        currentGraphics.fillComplete(ColorCache.rgbToMap(190,190,190));
+        currentGraphics.drawImage(backgroundImage, 0, 0);
     }
 
     public void sendUpdate(Collection<Player> players) {
