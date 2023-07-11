@@ -10,6 +10,7 @@ import com.jverbruggen.jrides.config.ride.RideCounterMapConfigs;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
+import com.jverbruggen.jrides.event.ride.RideFinishedEvent;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Ride;
@@ -71,6 +72,7 @@ public class FlatRideHandle extends AbstractRideHandle {
                 .stream()
                 .map(p -> (JRidesPlayer)p)
                 .collect(Collectors.toList()), getRide());
+        RideFinishedEvent.send(getRide());
 
         stationHandle.getTriggerContext().getVehiclePresentLock().setLocked(false);
         stationHandle.getTriggerContext().getRestraintTrigger().getLock().setLocked(true);

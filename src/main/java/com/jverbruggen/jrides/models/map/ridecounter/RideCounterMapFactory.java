@@ -73,6 +73,18 @@ public class RideCounterMapFactory {
         }
     }
 
+    public void updateMapsByRide(String rideIdentifier) {
+        assert rideCounterMaps != null;
+        rideCounterMaps.keySet().stream()
+                .filter(key -> key.startsWith(rideIdentifier))
+                .forEach(key -> {
+                    RideCounterMap rideCounterMap = rideCounterMaps.get(key);
+                    if (rideCounterMap == null) return;
+                    rideCounterMap.updateVisuals();
+                    rideCounterMap.sendUpdate(ServiceProvider.getSingleton(PlayerManager.class).getPlayers());
+                });
+    }
+
     public List<String> getBoardIdentifiersByRide(String rideIdentifier) {
         assert rideCounterMaps != null;
         return rideCounterMaps.keySet().stream()
