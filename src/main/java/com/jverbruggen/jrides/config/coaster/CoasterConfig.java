@@ -87,7 +87,7 @@ public class CoasterConfig extends AbstractRideConfig {
         ControllerConfig controllerConfig = ControllerConfig.fromConfigurationSection(configurationSection.getConfigurationSection("controller"));
         int rideOverviewMapId = getInt(configurationSection, "rideOverviewMapId", -1);
         boolean canExitDuringRide = getBoolean(configurationSection, "canExitDuringRide", false);
-        RideCounterMapConfigs rideCounterMapConfigs = RideCounterMapConfigs.fromConfigurationSection(configurationSection.getConfigurationSection("rideCounterBoards"));
+        RideCounterMapConfigs rideCounterMapConfigs = RideCounterMapConfigs.fromConfigurationSection(configurationSection.getConfigurationSection("rideCounterMaps"));
 
         return new CoasterConfig(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, track, vehicles,
                 cartSpec, gates, gravityConstant, dragConstant, controllerConfig, sounds, rideOverviewMapId,
