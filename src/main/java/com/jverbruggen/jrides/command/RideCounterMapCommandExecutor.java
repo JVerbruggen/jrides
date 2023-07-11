@@ -73,7 +73,7 @@ public class RideCounterMapCommandExecutor extends BaseCommandExecutor {
 
     @Override
     public String getCommand() {
-        return "ridecounteroverview";
+        return "ridecountermap";
     }
 
     @Override
