@@ -1,11 +1,12 @@
 package com.jverbruggen.jrides.config.ride;
 
+import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class RideCounterMapConfigs {
+public class RideCounterMapConfigs extends BaseConfig {
     private final Map<String, RideCounterMapConfig> rideCounterMapConfigs;
 
     public RideCounterMapConfigs(Map<String, RideCounterMapConfig> rideCounterMapConfigs) {

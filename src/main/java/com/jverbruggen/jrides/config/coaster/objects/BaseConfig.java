@@ -169,4 +169,24 @@ public abstract class BaseConfig {
         }else throw new RuntimeException("Cannot convert " + object + " to double");
     }
 
+    protected static List<Integer> getIntegerList(ConfigurationSection configurationSection, String key){
+        assertPresence(configurationSection, key);
+
+        return configurationSection.getList(key)
+                .stream()
+                .map(BaseConfig::toInteger)
+                .collect(Collectors.toList());
+    }
+
+    protected static List<Integer> getIntegerList(ConfigurationSection configurationSection, String key, List<Integer> defaultValue){
+        if(!isPresent(configurationSection, key)) return defaultValue;
+        return getIntegerList(configurationSection, key);
+    }
+
+    protected static int toInteger(Object object){
+        if(object instanceof Integer){
+            return (Integer) object;
+        }else throw new RuntimeException("Cannot convert " + object + " to integer");
+    }
+
 }
