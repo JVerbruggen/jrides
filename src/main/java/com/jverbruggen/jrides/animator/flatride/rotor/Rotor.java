@@ -87,8 +87,8 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Ha
         playerControl.setRotor(this);
     }
 
-    public float getCurrentPosition(){
-        return (float) rotation.getYaw();
+    public double getCurrentPosition(){
+        return rotation.getYaw();
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.animator.flatride.rotor;
 
-import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import com.jverbruggen.jrides.models.ride.seat.InstructionType;
 import org.bukkit.ChatColor;
@@ -17,7 +17,7 @@ public class RotorPlayerControl implements PlayerControl {
     private float currentSpeed;
     private float pendingAcceleration;
 
-    private List<Player> controlling;
+    private List<JRidesPlayer> controlling;
 
     public RotorPlayerControl(float lowerSpeed, float upperSpeed, float acceleration) {
         this.rotor = null;
@@ -72,13 +72,13 @@ public class RotorPlayerControl implements PlayerControl {
     }
 
     @Override
-    public void addControlling(Player player) {
+    public void addControlling(JRidesPlayer player) {
         if(controlling == null) controlling = new ArrayList<>();
         controlling.add(player);
     }
 
     @Override
-    public void removeControlling(Player player) {
+    public void removeControlling(JRidesPlayer player) {
         if(controlling == null) return;
         controlling.remove(player);
         if(controlling.size() == 0) controlling = null;

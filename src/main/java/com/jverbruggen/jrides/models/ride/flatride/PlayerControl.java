@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.models.ride.flatride;
 
-import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.models.ride.seat.InstructionType;
 
 public interface PlayerControl {
@@ -28,14 +28,14 @@ public interface PlayerControl {
      * Used for communication
      * @param player player to add
      */
-    void addControlling(Player player);
+    void addControlling(JRidesPlayer player);
 
     /**
      * Remove player that controls the PlayerControl
      * Used for communication
      * @param player player to remove
      */
-    void removeControlling(Player player);
+    void removeControlling(JRidesPlayer player);
 
     /**
      * Send notification that the control phase has started
