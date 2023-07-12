@@ -1,8 +1,5 @@
 package com.jverbruggen.jrides.animator.flatride;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 public class FlatRideComponentSpeed {
     private float speed;
     private float minSpeed;
@@ -45,6 +42,14 @@ public class FlatRideComponentSpeed {
 
     public float getSpeed() {
         return speed;
+    }
+
+    public float getMinSpeed() {
+        return minSpeed;
+    }
+
+    public float getMaxSpeed() {
+        return maxSpeed;
     }
 
     public FlatRideComponentSpeed clone(){

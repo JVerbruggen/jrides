@@ -1,6 +1,8 @@
 package com.jverbruggen.jrides.config.flatride.structure.actuator;
 
 import com.jverbruggen.jrides.animator.flatride.rotor.RotorPlayerControl;
+import com.jverbruggen.jrides.animator.flatride.rotor.RotorSpeedPlayerControl;
+import com.jverbruggen.jrides.animator.flatride.rotor.RotorTargetPositionPlayerControl;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.config.flatride.structure.ControlConfig;
 import org.bukkit.configuration.ConfigurationSection;
@@ -12,13 +14,18 @@ public class RotorPlayerControlConfig extends BaseConfig implements ControlConfi
     public final String type;
     public final float lowerSpeed;
     public final float upperSpeed;
+    public final float lowerPosition;
+    public final float upperPosition;
+
     public final float acceleration;
     public final String accumulator;
 
-    public RotorPlayerControlConfig(String type, float lowerSpeed, float upperSpeed, float acceleration, String accumulator) {
+    public RotorPlayerControlConfig(String type, float lowerSpeed, float upperSpeed, float lowerPosition, float upperPosition, float acceleration, String accumulator) {
         this.type = type;
         this.lowerSpeed = lowerSpeed;
         this.upperSpeed = upperSpeed;
+        this.lowerPosition = lowerPosition;
+        this.upperPosition = upperPosition;
         this.acceleration = acceleration;
         this.accumulator = accumulator;
     }
@@ -27,40 +34,43 @@ public class RotorPlayerControlConfig extends BaseConfig implements ControlConfi
         return type;
     }
 
-    public float getLowerSpeed() {
-        return lowerSpeed;
-    }
-
-    public float getUpperSpeed() {
-        return upperSpeed;
-    }
-
     public float getAcceleration() {
         return acceleration;
-    }
-
-    public String getAccumulator() {
-        return accumulator;
     }
 
     public static RotorPlayerControlConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection) {
         if(configurationSection == null) return null;
 
         String type = getString(configurationSection, "type");
-        List<Double> speed = getDoubleList(configurationSection, "speed");
+        List<Double> speed = getDoubleList(configurationSection, "speed", List.of(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY));
+        List<Double> position = getDoubleList(configurationSection, "position", List.of(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY));
         float acceleration = (float)getDouble(configurationSection, "acceleration");
         String accumulator = getString(configurationSection, "accumulator");
 
         if(speed.size() != 2)
             throw new RuntimeException("Only supports rotor control config with speed of length 2! [<lower_bound>, <upper_bound>] i.e. [-1, 1]");
+        if(position.size() != 2)
+            throw new RuntimeException("Only supports rotor control config with position of length 2! [<lower_bound>, <upper_bound>] i.e. [0, 45]");
+
+        float lowerSpeed = speed.get(0).floatValue();
+        float upperSpeed = speed.get(1).floatValue();
+        float lowerPosition = position.get(0).floatValue();
+        float upperPosition = position.get(1).floatValue();
+
+        if(lowerSpeed != Float.NEGATIVE_INFINITY && lowerPosition != Float.NEGATIVE_INFINITY)
+            throw new RuntimeException("Rotor control config can only contain either one of position or speed, not both!");
 
         return new RotorPlayerControlConfig(
-                type, speed.get(0).floatValue(), speed.get(1).floatValue(), acceleration, accumulator
+                type, lowerSpeed, upperSpeed, lowerPosition, upperPosition, Math.abs(acceleration), accumulator
         );
     }
 
     @Override
     public RotorPlayerControl createPlayerControl() {
-        return new RotorPlayerControl(lowerSpeed, upperSpeed, acceleration);
+        if(lowerPosition != Float.NEGATIVE_INFINITY){
+            return new RotorTargetPositionPlayerControl(lowerPosition, upperPosition, acceleration);
+        }
+        else
+            return new RotorSpeedPlayerControl(lowerSpeed, upperSpeed, acceleration);
     }
 }

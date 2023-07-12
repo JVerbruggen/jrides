@@ -20,6 +20,7 @@ public class RotorTest {
         rotor = new Rotor("", "", false, Collections.emptyList(), new FlatRideComponentSpeed(0, -1, 1));
         rotor.setAttachedTo(new FixedAttachment(rotor, new Vector3(0,0,0), new Quaternion()));
     }
+
     @Test
     public void hasPassed() {
         assertTrue(rotor.hasPassed(0));

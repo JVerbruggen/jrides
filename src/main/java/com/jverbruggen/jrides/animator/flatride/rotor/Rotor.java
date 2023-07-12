@@ -93,16 +93,24 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Ha
 
     @Override
     public boolean hasPassed(double from, double target){
-        target = MathUtil.floorMod(target - from, 360d);
-        double currentPosition = MathUtil.floorMod(getCurrentPosition() - from, 360d);
+        return hasPassed(from, target, flatRideComponentSpeed.getSpeed() >= 0, 0);
+    }
 
-        boolean forwardsPassed = target <= currentPosition;
-        boolean backwardsPassed = currentPosition <= target;
-//        System.out.println("t: " + target + ", c: " + currentPosition + ", f: " + from);
+    private double wrap360(double non360){
+        return MathUtil.floorMod(non360, 360d);
+    }
 
-        boolean positiveSpeed = flatRideComponentSpeed.getSpeed() >= 0;
+    @Override
+    public boolean hasPassed(double from, double target, boolean positiveSpeed, double margin) {
+        target = wrap360(target - from);
+        double currentPosition = wrap360(getCurrentPosition() - from);
+
+        boolean forwardsPassed = target <= currentPosition + margin;
+        boolean backwardsPassed = currentPosition - margin <= target;
+        System.out.println("t: " + target + ", c: " + currentPosition + ", f: " + from + ", fw: " + forwardsPassed + ", bw: " + backwardsPassed);
+
         return (positiveSpeed && forwardsPassed)
-            || (!positiveSpeed && backwardsPassed);
+                || (!positiveSpeed && backwardsPassed);
     }
 
     private void addYaw(double addRotation){
