@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapView;
+import org.bukkit.map.MinecraftFont;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -58,7 +59,7 @@ public class RideCounterMap  {
 
         // For each line, draw text on the map
         lines.forEach((index, height) -> {
-            currentGraphics.drawText(0, height, "Test " + index, ColorCache.rgbToMap(0, 0, 0), 1);
+            drawHorizontallyCenteredText("Test " + index, height, currentGraphics);
         });
     }
 
@@ -85,6 +86,12 @@ public class RideCounterMap  {
 
     private void sendMap(ClientsideMap map, Player player) {
         map.sendTo(new VersionAdapterFactory().makeAdapter(), player.getBukkitPlayer());
+    }
+
+    private void drawHorizontallyCenteredText(String text, int h, ClientsideMapGraphics graphics) {
+        MinecraftFont font = MinecraftFont.Font;
+        int x = (128 - font.getWidth(text)) / 2;
+        graphics.drawText(x, h, text, ColorCache.rgbToMap(0, 0, 0), 1);
     }
 
 }
