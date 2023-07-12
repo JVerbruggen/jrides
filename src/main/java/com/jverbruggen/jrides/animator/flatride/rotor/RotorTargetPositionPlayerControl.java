@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.animator.flatride.rotor;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.flatride.AbstractPlayerControl;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.models.math.MathUtil;
@@ -54,7 +55,7 @@ public class RotorTargetPositionPlayerControl extends AbstractPlayerControl impl
 
         boolean positiveAcceleration = acceleration >= 0;
         boolean positiveSpeed = currentSpeed > 0 || (currentSpeed == 0 && positiveAcceleration);
-        float currentPosition = rotor.getCurrentPosition();
+        double currentPosition = rotor.getCurrentPosition();
 
         float targetPosition = positiveAcceleration ? this.upperPosition : this.lowerPosition;
 //        float fromPosition = positiveAcceleration
@@ -73,12 +74,12 @@ public class RotorTargetPositionPlayerControl extends AbstractPlayerControl impl
                 targetPosition,
                 0);
 
-        Bukkit.broadcastMessage("s: " + currentSpeed + "(" + positiveSpeed + ") a: " + acceleration);
-        Bukkit.broadcastMessage("f: " + fromPosition + " t: " + targetPosition + " b: " + breakPosition);
+        JRidesPlugin.getLogger().debug("s: " + currentSpeed + "(" + positiveSpeed + ") a: " + acceleration);
+        JRidesPlugin.getLogger().debug("f: " + fromPosition + " t: " + targetPosition + " b: " + breakPosition);
 
         boolean shouldBreak = rotor.hasPassed(fromPosition, breakPosition, positiveSpeed, this.margin);
 
-        Bukkit.broadcastMessage("break: " + shouldBreak + "\n----");
+        JRidesPlugin.getLogger().debug("break: " + shouldBreak + "\n----");
 
         if(shouldBreak){
             rotor.getFlatRideComponentSpeed().accelerateTowards(this.acceleration, 0);

@@ -58,7 +58,7 @@ public class ServiceProviderConfigurator {
         Logger logger = plugin.getLogger();
         logger.setLevel(Level.CONFIG);
         ServiceProvider.register(Logger.class, logger);
-        ServiceProvider.register(JRidesLogger.class, new JRidesLogger(logger, false));
+        ServiceProvider.register(JRidesLogger.class, new JRidesLogger(logger, false, true));
 
         ServiceProvider.register(PluginManager.class, Bukkit.getPluginManager());
         ServiceProvider.register(ConfigManager.class, new ConfigManager(plugin));

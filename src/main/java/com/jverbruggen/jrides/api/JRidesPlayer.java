@@ -5,4 +5,6 @@ public interface JRidesPlayer {
     String getName();
     String getIdentifier();
     boolean isSeated();
+
+    void sendTitle(String title, String subtitle, int stay);
 }
