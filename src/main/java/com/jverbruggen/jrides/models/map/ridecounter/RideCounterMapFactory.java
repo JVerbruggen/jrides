@@ -14,6 +14,7 @@ import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.Bukkit;
 import org.bukkit.map.MapView;
+import org.bukkit.map.MinecraftFont;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
@@ -83,6 +84,7 @@ public class RideCounterMapFactory {
         for(RideCounterMapConfig rideCounterMapConfig : rideHandle.getRideCounterMapConfigs().getRideCounterMapConfigs().values()) {
             List<Integer> mapIds = rideCounterMapConfig.getMapIds();
             List<BufferedImage> backgroundImages = rideCounterMapConfig.getBackgroundImages();
+            int bufferPixels = 2 * MinecraftFont.Font.getHeight() + 2;
             int mapIndex = 0;
             int ridecountIndex = 0;
             for(Integer mapId : mapIds) {
@@ -102,6 +104,13 @@ public class RideCounterMapFactory {
                     int currentRangeMin = mapIndex * 128;
                     int currentRangeMax = currentRangeMin + 128;
                     int currentLine = rideCounterMapConfig.getLines().get(i);
+
+                    if(currentLine >= currentRangeMin - bufferPixels && currentLine < currentRangeMin) {
+                        int difference = currentRangeMin - currentLine;
+                        mapLines.put(ridecountIndex - 1, -difference);
+                        continue;
+                    }
+
                     if(currentLine >= currentRangeMin && currentLine < currentRangeMax) {
                         mapLines.put(ridecountIndex++, currentLine - currentRangeMin);
                     }
@@ -117,7 +126,7 @@ public class RideCounterMapFactory {
                 mapView.setLocked(true);
                 mapView.setTrackingPosition(false);
 
-                RideCounterMap map = new RideCounterMap(rideHandle, mapView, mapLines, backgroundImage);
+                RideCounterMap map = new RideCounterMap(rideHandle, mapView, mapLines, rideCounterMapConfig.getLineFormat(), backgroundImage);
                 rideCounterMaps.put(String.format("%s %s_%s", rideIdentifier, rideCounterMapConfig.getRideCounterMapIdentifier(), mapIndex++), map);
             }
         }
