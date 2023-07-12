@@ -19,6 +19,7 @@ import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +84,7 @@ public class RideCounterMapFactory {
             List<Integer> mapIds = rideCounterMapConfig.getMapIds();
             List<BufferedImage> backgroundImages = rideCounterMapConfig.getBackgroundImages();
             int mapIndex = 0;
+            int ridecountIndex = 0;
             for(Integer mapId : mapIds) {
                 if(mapId == -1) {
                     JRidesPlugin.getLogger().warning("No ride counter map id configured for " + rideIdentifier + ", so skipping");
@@ -95,6 +97,16 @@ public class RideCounterMapFactory {
                 }
                 if(backgroundImage == null) backgroundImage = defaultBackgroundImage;
 
+                Map<Integer, Integer> mapLines = new HashMap<>();
+                for(int i = 0; i < rideCounterMapConfig.getLines().size(); i++) {
+                    int currentRangeMin = mapIndex * 128;
+                    int currentRangeMax = currentRangeMin + 128;
+                    int currentLine = rideCounterMapConfig.getLines().get(i);
+                    if(currentLine >= currentRangeMin && currentLine < currentRangeMax) {
+                        mapLines.put(ridecountIndex++, currentLine - currentRangeMin);
+                    }
+                }
+
                 MapView mapView = Bukkit.getMap(mapId);
                 if(mapView == null) {
                     JRidesPlugin.getLogger().warning("No map found for id " + mapId + ". first create the map and assign the ID to the map configuration afterwards");
@@ -105,7 +117,7 @@ public class RideCounterMapFactory {
                 mapView.setLocked(true);
                 mapView.setTrackingPosition(false);
 
-                RideCounterMap map = new RideCounterMap(rideHandle, mapView, backgroundImage);
+                RideCounterMap map = new RideCounterMap(rideHandle, mapView, mapLines, backgroundImage);
                 rideCounterMaps.put(String.format("%s %s_%s", rideIdentifier, rideCounterMapConfig.getRideCounterMapIdentifier(), mapIndex++), map);
             }
         }
