@@ -10,8 +10,10 @@ import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Logger;
+
 public class JRidesPlugin {
-    private static JRidesLogger logger;
+    private static JRidesLogger logger = null;
     private static JavaPlugin plugin;
     private static PacketSender packetSender;
     private static SmoothAnimation smoothAnimation;
@@ -54,6 +56,9 @@ public class JRidesPlugin {
     }
 
     public static JRidesLogger getLogger() {
+        if(logger == null){ // Only occurs when not running as plugin
+            logger = new JRidesLogger(Logger.getGlobal(), false, false);
+        }
         return logger;
     }
 

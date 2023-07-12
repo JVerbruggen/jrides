@@ -2,19 +2,17 @@ package com.jverbruggen.jrides.animator.flatride.timing.instruction;
 
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.interfaces.PlayerControllable;
+import org.bukkit.Bukkit;
 
 public class ControlInstruction implements Instruction {
     private final boolean allowControl;
-    private final float controlSpeed;
 
-    public ControlInstruction(boolean allowControl, float controlSpeed) {
+    public ControlInstruction(boolean allowControl) {
         this.allowControl = allowControl;
-        this.controlSpeed = controlSpeed;
     }
 
     public void execute(PlayerControllable playerControllable){
         playerControllable.setAllowControl(this.allowControl);
-        playerControllable.setControlSpeed(this.controlSpeed);
     }
 
     @Override
@@ -25,5 +23,10 @@ public class ControlInstruction implements Instruction {
     @Override
     public boolean canHandle(FlatRideComponent component) {
         return component instanceof PlayerControllable;
+    }
+
+    @Override
+    public void reset() {
+
     }
 }

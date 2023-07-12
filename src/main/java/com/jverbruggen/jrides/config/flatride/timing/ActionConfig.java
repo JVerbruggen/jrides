@@ -2,10 +2,7 @@ package com.jverbruggen.jrides.config.flatride.timing;
 
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
-import com.jverbruggen.jrides.animator.flatride.timing.instruction.ControlInstruction;
-import com.jverbruggen.jrides.animator.flatride.timing.instruction.InstructionBinding;
-import com.jverbruggen.jrides.animator.flatride.timing.instruction.SpeedInstruction;
-import com.jverbruggen.jrides.animator.flatride.timing.instruction.TimingAction;
+import com.jverbruggen.jrides.animator.flatride.timing.instruction.*;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -19,15 +16,15 @@ public class ActionConfig extends BaseConfig {
     private final String targetIdentifier;
     private Float speed;
     private Float accelerate;
-    private Float controlSpeed;
     private Boolean allowControl;
+    private Float targetPosition;
 
     public ActionConfig(String targetIdentifier) {
         this.targetIdentifier = targetIdentifier;
         speed = null;
         accelerate = null;
-        controlSpeed = null;
         allowControl = null;
+        targetPosition = null;
     }
 
     public Float getSpeed() {
@@ -46,20 +43,20 @@ public class ActionConfig extends BaseConfig {
         this.accelerate = accelerate;
     }
 
-    public float getControlSpeed() {
-        return controlSpeed == null ? 0 : controlSpeed;
-    }
-
-    public void setControlSpeed(Float controlSpeed) {
-        this.controlSpeed = controlSpeed;
-    }
-
     public Boolean allowsControl() {
         return allowControl;
     }
 
     public void setAllowControl(Boolean allowControl) {
         this.allowControl = allowControl;
+    }
+
+    public Float getTargetPosition() {
+        return targetPosition;
+    }
+
+    public void setTargetPosition(Float targetPosition) {
+        this.targetPosition = targetPosition;
     }
 
     public static List<ActionConfig> fromConfigurationSection(@Nullable ConfigurationSection configurationSection){
@@ -74,10 +71,10 @@ public class ActionConfig extends BaseConfig {
                 actionConfig.setSpeed((float) getDouble(actionConfigurationSection, "speed"));
             if(actionConfigurationSection.contains("accelerate"))
                 actionConfig.setAccelerate((float) getDouble(actionConfigurationSection, "accelerate"));
-            if(actionConfigurationSection.contains("controlSpeed"))
-                actionConfig.setControlSpeed((float) getDouble(actionConfigurationSection, "controlSpeed"));
             if(actionConfigurationSection.contains("allowControl"))
                 actionConfig.setAllowControl(getBoolean(actionConfigurationSection, "allowControl"));
+            if(actionConfigurationSection.contains("targetPosition"))
+                actionConfig.setTargetPosition((float) getDouble(actionConfigurationSection, "targetPosition"));
 
             actionConfigs.add(actionConfig);
         }
@@ -93,12 +90,19 @@ public class ActionConfig extends BaseConfig {
         if(targetedFlatRideComponents.size() == 0) return Collections.emptyList();
 
         List<TimingAction> timingActions = new ArrayList<>();
-        if(speed != null){
-            timingActions.add(new InstructionBinding(new SpeedInstruction(getAccelerate(), getSpeed()), targetedFlatRideComponents));
+        if(targetPosition != null){
+            timingActions.add(new InstructionBinding(
+                    new TowardsPositionInstruction(getAccelerate(), getSpeed(), getTargetPosition()), targetedFlatRideComponents));
+        }else if(speed != null){ // SpeedInstruction and TowardsPositionInstruction are mutually exclusive.
+            timingActions.add(new InstructionBinding(
+                    new SpeedInstruction(getAccelerate(), getSpeed()), targetedFlatRideComponents));
         }
         if(allowControl != null){
-            timingActions.add(new InstructionBinding(new ControlInstruction(allowsControl(), getControlSpeed()), targetedFlatRideComponents));
+            if(targetPosition != null) throw new RuntimeException("No support for target position and control");
+            timingActions.add(new InstructionBinding(
+                    new ControlInstruction(allowsControl()), targetedFlatRideComponents));
         }
+
         return timingActions;
     }
 }

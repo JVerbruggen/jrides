@@ -10,7 +10,9 @@ import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
+import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import com.jverbruggen.jrides.state.ride.SoftEjector;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractSeat implements Seat {
     private final RideHandle parentRideHandle;
@@ -124,6 +126,22 @@ public abstract class AbstractSeat implements Seat {
     @Override
     public RideHandle getParentRideHandle() {
         return parentRideHandle;
+    }
+
+    @Override
+    public boolean supportsPlayerControl() {
+        return false;
+    }
+
+    @NotNull
+    @Override
+    public PlayerControl getPlayerControl() {
+        throw new RuntimeException("Unimplemented player control");
+    }
+
+    @Override
+    public void sendPlayerControlInstruction(InstructionType instruction) {
+        // Do nothing
     }
 
     protected void onPassengerExit(Player passenger){

@@ -13,13 +13,15 @@ public class JRidesLogger extends Logger {
     private Level threshold;
     private boolean broadcastMode;
     private List<LogType> enabledLogTypes;
+    private boolean bukkitActive;
 
-    public JRidesLogger(Logger bukkitPluginLogger, boolean broadcastMode) {
+    public JRidesLogger(Logger bukkitPluginLogger, boolean broadcastMode, boolean bukkitActive) {
         super("JRidesLogger", null);
         this.bukkitPluginLogger = bukkitPluginLogger;
         this.threshold = Level.INFO;
         this.broadcastMode = broadcastMode;
         this.enabledLogTypes = new ArrayList<>();
+        this.bukkitActive = bukkitActive;
 
         enableLogType(LogType.CRASH);
 //        enableLogType(LogType.SECTIONS);
@@ -42,6 +44,17 @@ public class JRidesLogger extends Logger {
         if(enabledLogTypes.contains(logType)) log(Level.SEVERE, msg);
     }
 
+    /**
+     * Only to be used temporarily
+     */
+    public void debug(String msg) {
+        if(bukkitActive){
+            Bukkit.broadcastMessage(msg);
+        }else{
+            System.out.println(msg);
+        }
+    }
+
     @Override
     public void log(Level level, String msg) {
         if(level.intValue() < threshold.intValue()) return;
@@ -61,4 +74,5 @@ public class JRidesLogger extends Logger {
         } else
             bukkitPluginLogger.log(level, msg);
     }
+
 }

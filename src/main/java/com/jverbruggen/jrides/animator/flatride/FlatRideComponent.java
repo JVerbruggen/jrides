@@ -8,14 +8,16 @@ import com.jverbruggen.jrides.animator.flatride.seat.FlatRideSeat;
 import com.jverbruggen.jrides.animator.flatride.seat.SeatComponent;
 import com.jverbruggen.jrides.config.coaster.objects.cart.ModelConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
+import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorPlayerControlConfig;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.MatrixMath;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.ride.seat.Seat;
+import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -33,6 +35,7 @@ public interface FlatRideComponent {
     Vector3 getPosition();
     void tick();
     boolean equalsToIdentifier(String identifier);
+    @Nullable PlayerControl getPlayerControl();
 
     static FlatRideComponent findInHaystack(List<FlatRideComponent> components, String needle){
         return components.stream()
@@ -71,13 +74,13 @@ public interface FlatRideComponent {
                         rideHandle, seatIdentifier, identifier, attachedTo, seatQuaternion, offsetPosition, seatYawOffset, flatRideModelsConfig));
     }
 
-    static List<FlatRideComponent> createDistributedAttachedRotors(String identifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, List<ModelConfig> flatRideModelsConfig, int amount){
+    static List<FlatRideComponent> createDistributedAttachedRotors(String identifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, RotorPlayerControlConfig controlConfig, List<ModelConfig> flatRideModelsConfig, int amount){
         return createDistributedComponent(
                 identifier,
                 offsetRotation,
                 amount,
                 (rotorQuaternion, rotorIdentifier) -> FlatRideComponent.createAttachedRotor(
-                        rotorIdentifier, identifier, attachedTo, rotorQuaternion, offsetPosition, flatRideComponentSpeed.clone(), flatRideModelsConfig));
+                        rotorIdentifier, identifier, attachedTo, rotorQuaternion, offsetPosition, flatRideComponentSpeed.clone(), controlConfig, flatRideModelsConfig));
     }
 
     static List<FlatRideComponent> createDistributedLinearActuators(FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, LinearActuatorConfig linearActuatorConfig, int amount) {
@@ -91,7 +94,7 @@ public interface FlatRideComponent {
                         linearActuatorConfig.getSize(), linearActuatorConfig.getPhase(), linearActuatorConfig.getFlatRideModels()));
     }
 
-    static Rotor createAttachedRotor(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, List<ModelConfig> flatRideModelsConfig){
+    static Rotor createAttachedRotor(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, RotorPlayerControlConfig controlConfig, List<ModelConfig> flatRideModelsConfig){
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
         Vector3 spawnPosition = MatrixMath.rotateTranslate(
@@ -105,6 +108,7 @@ public interface FlatRideComponent {
                 .collect(Collectors.toList());
 
         Rotor rotor = new Rotor(identifier, groupIdentifier, false, flatRideModels, flatRideComponentSpeed);
+        rotor.createPlayerControl(controlConfig);
         attachedTo.attach(rotor, offsetRotation, offsetPosition);
 
         return rotor;
@@ -130,7 +134,7 @@ public interface FlatRideComponent {
     }
 
 
-    static SeatComponent createSeat(FlatRideHandle flatRideHandle, String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, int seatYawOffset,  List<ModelConfig> flatRideModelsConfig){
+    static SeatComponent createSeat(FlatRideHandle flatRideHandle, String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, int seatYawOffset, List<ModelConfig> flatRideModelsConfig){
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
         Vector3 spawnPosition = MatrixMath.rotateTranslate(
@@ -149,15 +153,19 @@ public interface FlatRideComponent {
                 .map(FlatRideModel::getEntity)
                 .orElseGet(() -> viewportManager.spawnVirtualArmorstand(spawnPosition));
 
-        Seat seat = new FlatRideSeat(flatRideHandle, null, seatEntity, Vector3.zero());
+        FlatRideSeat seat = new FlatRideSeat(flatRideHandle, null, seatEntity, Vector3.zero());
 
         Quaternion seatRotation = Quaternion.fromYawPitchRoll(0, seatYawOffset, 0);
         SeatComponent component = new SeatComponent(identifier, groupIdentifier, false, flatRideModels, seat, seatRotation, flatRideHandle.getVehicle());
         seat.setParentSeatHost(component);
         flatRideHandle.addSeatComponent(component);
 
-
         attachedTo.attach(component, offsetRotation, offsetPosition);
+
+        PlayerControl playerControl = attachedTo.getPlayerControl();
+        if(playerControl != null){
+            seat.setPlayerControl(playerControl);
+        }
 
         return component;
     }

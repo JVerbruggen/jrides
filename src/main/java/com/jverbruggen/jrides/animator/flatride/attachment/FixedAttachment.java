@@ -22,6 +22,11 @@ public record FixedAttachment(FlatRideComponent child, Vector3 position, Quatern
     }
 
     @Override
+    public FlatRideComponent getParent() {
+        return null;
+    }
+
+    @Override
     public void update() {
 
     }

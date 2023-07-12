@@ -21,6 +21,14 @@ public class FlatRideComponentSpeed {
         this.maxSpeed = speed;
     }
 
+    /**
+     * Discouraged. This is an abrupt speed change.
+     * Only use when absolutely necessary.
+     */
+    public void setHard(float speed){
+        this.speed = speed;
+    }
+
     public void accelerate(float acceleration){
         this.speed += acceleration;
         if(this.speed > this.maxSpeed) this.speed = this.maxSpeed;
@@ -28,16 +36,28 @@ public class FlatRideComponentSpeed {
     }
 
     public void accelerateTowards(float acceleration, float towards){
-        this.speed += acceleration;
+        if(this.speed > towards){
+            this.speed -= acceleration;
+            if(this.speed < towards) this.speed = towards;
+        }else if(this.speed < towards){
+            this.speed += acceleration;
+            if(this.speed > towards) this.speed = towards;
+        }
 
         if(this.speed > this.maxSpeed) this.speed = this.maxSpeed;
         else if(this.speed < this.minSpeed) this.speed = this.minSpeed;
-        else if(acceleration > 0 && this.speed > towards) this.speed = towards;
-        else if(acceleration < 0 && this.speed < towards) this.speed = towards;
     }
 
     public float getSpeed() {
         return speed;
+    }
+
+    public float getMinSpeed() {
+        return minSpeed;
+    }
+
+    public float getMaxSpeed() {
+        return maxSpeed;
     }
 
     public FlatRideComponentSpeed clone(){

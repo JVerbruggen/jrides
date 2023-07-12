@@ -27,4 +27,9 @@ public class SpeedInstruction implements Instruction {
     public boolean canHandle(FlatRideComponent component) {
         return component instanceof HasSpeed;
     }
+
+    @Override
+    public void reset() {
+
+    }
 }
