@@ -32,7 +32,10 @@ public class TowardsPositionInstruction implements Instruction {
 
 //        Bukkit.broadcastMessage("o: " + originalPosition + ", b: " + breakPosition + ", s: " + calcSpeed);
 
-        if(hasPosition.hasPassed(originalPosition, breakPosition)){
+        if(hasPosition.hasPassed(originalPosition, towardsPosition)) {
+            speedComponent.setHard(0);
+            hasPosition.setInstructionPosition(towardsPosition);
+        }else if(hasPosition.hasPassed(originalPosition, breakPosition)){
             speedComponent.accelerateTowards(this.acceleration, 0);
         }else{
             speedComponent.accelerateTowards(this.acceleration, this.speed);

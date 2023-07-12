@@ -55,33 +55,28 @@ public class RotorTargetPositionPlayerControl extends AbstractPlayerControl impl
 
         boolean positiveAcceleration = acceleration >= 0;
         boolean positiveSpeed = currentSpeed > 0 || (currentSpeed == 0 && positiveAcceleration);
-        double currentPosition = rotor.getCurrentPosition();
 
         float targetPosition = positiveAcceleration ? this.upperPosition : this.lowerPosition;
-//        float fromPosition = positiveAcceleration
-//                ? (rotor.hasPassed(this.lowerPosition, targetPosition, positiveSpeed, this.margin * 10) ? currentPosition : this.lowerPosition)
-//                : (rotor.hasPassed(this.upperPosition, targetPosition, positiveSpeed, this.margin * 10) ? currentPosition : this.upperPosition);
         float fromPosition = positiveAcceleration ? this.lowerPosition : this.upperPosition;
 
-//        float breakPosition = SpeedUtil.positionStartBraking(
-//                currentSpeed + (positiveSpeed ? 2*this.acceleration : -2*this.acceleration),
-//                positiveSpeed ? -this.acceleration : this.acceleration,
-//                targetPosition,
-//                0);
         float breakPosition = SpeedUtil.positionStartBraking(
                 currentSpeed,
                 positiveSpeed ? -this.acceleration : this.acceleration,
                 targetPosition,
                 0);
 
-        JRidesPlugin.getLogger().debug("s: " + currentSpeed + "(" + positiveSpeed + ") a: " + acceleration);
-        JRidesPlugin.getLogger().debug("f: " + fromPosition + " t: " + targetPosition + " b: " + breakPosition);
+//        JRidesPlugin.getLogger().debug("s: " + currentSpeed + "(" + positiveSpeed + ") a: " + acceleration);
+//        JRidesPlugin.getLogger().debug("f: " + fromPosition + " t: " + targetPosition + " b: " + breakPosition);
 
-        boolean shouldBreak = rotor.hasPassed(fromPosition, breakPosition, positiveSpeed, this.margin);
+        boolean shouldBreak = rotor.hasPassed(fromPosition, breakPosition, positiveAcceleration, this.margin);
+        boolean shouldHardBreak = rotor.hasPassed(fromPosition, targetPosition, positiveAcceleration, 0d);
 
-        JRidesPlugin.getLogger().debug("break: " + shouldBreak + "\n----");
+//        JRidesPlugin.getLogger().debug("break: " + shouldBreak + " hard: " + shouldHardBreak + "\n----");
 
-        if(shouldBreak){
+        if(shouldHardBreak){
+            rotor.getFlatRideComponentSpeed().setHard(0);
+            rotor.setRotorRotation(targetPosition);
+        }else if(shouldBreak){
             rotor.getFlatRideComponentSpeed().accelerateTowards(this.acceleration, 0);
         }else{
             float targetSpeed = positiveAcceleration ? componentSpeed.getMaxSpeed() : componentSpeed.getMinSpeed();

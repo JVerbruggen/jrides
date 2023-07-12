@@ -428,6 +428,7 @@ public class Quaternion implements Cloneable {
 
     /**
      * Rotates the Quaternion an angle around the y-axis
+     * Note: If rotating for yaw, Y should be negative
      *
      * @param angleDegrees to rotate
      */

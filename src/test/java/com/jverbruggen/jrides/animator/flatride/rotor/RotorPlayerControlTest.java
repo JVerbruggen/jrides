@@ -31,15 +31,15 @@ public class RotorPlayerControlTest {
     
     @Test
     public void rotorStaysAtZeroWithNoSpeed(){
-        assertTrue(equals(rotor.getCurrentPosition(), 0d));
+        assertTrue(equals(rotor.getRotorRotation(), 0d));
         rotorPlayerControl.apply();
-        assertTrue(equals(rotor.getCurrentPosition(), 0d));
+        assertTrue(equals(rotor.getRotorRotation(), 0d));
 
         for(int i = 0; i < 500; i++){
             rotorPlayerControl.apply();
         }
 
-        assertTrue(equals(rotor.getCurrentPosition(), 0d));
+        assertTrue(equals(rotor.getRotorRotation(), 0d));
     }
 
     private boolean equals(double a, double b){

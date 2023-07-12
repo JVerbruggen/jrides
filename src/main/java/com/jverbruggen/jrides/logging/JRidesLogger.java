@@ -49,7 +49,7 @@ public class JRidesLogger extends Logger {
      */
     public void debug(String msg) {
         if(bukkitActive){
-            log(Level.WARNING, msg);
+            Bukkit.broadcastMessage(msg);
         }else{
             System.out.println(msg);
         }

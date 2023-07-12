@@ -135,7 +135,7 @@ public class RotorTest {
         rotor.setInstructionPosition(200);
         rotor.getFlatRideComponentSpeed().accelerate(-2); // Make the speed negative
         double from = 290;
-        System.out.println(rotor.getCurrentPosition() + " curpos");
+        System.out.println(rotor.getRotorRotation() + " curpos");
 
         assertFalse(rotor.hasPassed(from, 50));
         assertFalse(rotor.hasPassed(from, 199));
@@ -159,7 +159,7 @@ public class RotorTest {
         rotor.setInstructionPosition(10);
         rotor.getFlatRideComponentSpeed().accelerate(-2); // Make the speed negative
         double from = 50;
-        System.out.println(rotor.getCurrentPosition() + " curpos");
+        System.out.println(rotor.getRotorRotation() + " curpos");
 
         assertFalse(rotor.hasPassed(from, 5));
         assertFalse(rotor.hasPassed(from, 9));

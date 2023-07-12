@@ -87,8 +87,14 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Ha
         playerControl.setRotor(this);
     }
 
-    public double getCurrentPosition(){
+    public double getRotorRotation(){
         return rotation.getYaw();
+    }
+
+    public void setRotorRotation(double toYaw){
+        double fromYaw = getRotorRotation();
+        double deltaYaw = toYaw - fromYaw;
+        rotation.rotateY(-deltaYaw);
     }
 
     @Override
@@ -103,7 +109,7 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Ha
     @Override
     public boolean hasPassed(double from, double target, boolean positiveSpeed, double margin) {
         target = wrap360(target - from);
-        double currentPosition = wrap360(getCurrentPosition() - from);
+        double currentPosition = wrap360(getRotorRotation() - from);
 
         boolean forwardsPassed = target <= currentPosition + margin;
         boolean backwardsPassed = currentPosition - margin <= target;
@@ -119,7 +125,7 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Ha
 
     @Override
     public void setInstructionPosition(double position) {
-        addYaw(position);
+        setRotorRotation(position);
     }
 
     @Override
