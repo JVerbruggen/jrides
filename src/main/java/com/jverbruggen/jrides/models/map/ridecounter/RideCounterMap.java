@@ -14,10 +14,8 @@ import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapView;
 import org.bukkit.map.MinecraftFont;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 public class RideCounterMap  {
@@ -25,15 +23,17 @@ public class RideCounterMap  {
     private final RideHandle rideHandle;
     private final MapView mapView;
     private final Map<Integer, Integer> lines;
+    private final String lineFormat;
     private final BufferedImage backgroundImage;
 
 
     private final ClientsideMapGraphics currentGraphics;
 
-    public RideCounterMap(RideHandle rideHandle, MapView mapView, Map<Integer, Integer> lines, BufferedImage backgroundImage) {
+    public RideCounterMap(RideHandle rideHandle, MapView mapView, Map<Integer, Integer> lines, String lineFormat, BufferedImage backgroundImage) {
         this.rideHandle = rideHandle;
         this.mapView = mapView;
         this.lines = lines;
+        this.lineFormat = lineFormat;
         this.backgroundImage = backgroundImage;
         this.currentGraphics = new ClientsideMapGraphics();
     }
@@ -59,7 +59,9 @@ public class RideCounterMap  {
 
         // For each line, draw text on the map
         lines.forEach((index, height) -> {
-            drawHorizontallyCenteredText("Test " + index, height, currentGraphics);
+            String line = lineFormat.replace("%RANK%", String.valueOf(index + 1)).replace("%COUNT%", "NaN");
+            drawHorizontallyCenteredText(line, height, ColorCache.rgbToMap(0, 0, 0), currentGraphics);
+            drawHorizontallyCenteredText("player", height + MinecraftFont.Font.getHeight() + 2, ColorCache.rgbToMap(0, 0, 0), currentGraphics);
         });
     }
 
@@ -88,10 +90,10 @@ public class RideCounterMap  {
         map.sendTo(new VersionAdapterFactory().makeAdapter(), player.getBukkitPlayer());
     }
 
-    private void drawHorizontallyCenteredText(String text, int h, ClientsideMapGraphics graphics) {
+    private void drawHorizontallyCenteredText(String text, int h, byte color, ClientsideMapGraphics graphics) {
         MinecraftFont font = MinecraftFont.Font;
         int x = (128 - font.getWidth(text)) / 2;
-        graphics.drawText(x, h, text, ColorCache.rgbToMap(0, 0, 0), 1);
+        graphics.drawText(x, h, text, color, 1);
     }
 
 }
