@@ -93,6 +93,8 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Ha
 
     public void setRotorRotation(double toYaw){
         double fromYaw = getRotorRotation();
+        if(fromYaw == toYaw) return;
+
         double deltaYaw = toYaw - fromYaw;
         rotation.rotateY(-deltaYaw);
     }
@@ -113,7 +115,7 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Ha
 
         boolean forwardsPassed = target <= currentPosition + margin;
         boolean backwardsPassed = currentPosition - margin <= target;
-        System.out.println("t: " + target + ", c: " + currentPosition + ", f: " + from + ", fw: " + forwardsPassed + ", bw: " + backwardsPassed);
+//        System.out.println("t: " + target + ", c: " + currentPosition + ", f: " + from + ", fw: " + forwardsPassed + ", bw: " + backwardsPassed);
 
         return (positiveSpeed && forwardsPassed)
                 || (!positiveSpeed && backwardsPassed);
