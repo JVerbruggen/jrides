@@ -56,26 +56,28 @@ public class RotorTargetPositionPlayerControl extends AbstractPlayerControl impl
         boolean positiveAcceleration = acceleration >= 0;
         boolean positiveSpeed = currentSpeed > 0 || (currentSpeed == 0 && positiveAcceleration);
 
-        float targetPosition = positiveAcceleration ? this.upperPosition : this.lowerPosition;
-        float fromPosition = positiveAcceleration ? this.lowerPosition : this.upperPosition;
+        float targetPositionAcc = positiveAcceleration ? this.upperPosition : this.lowerPosition;
+        float fromPositionAcc = positiveAcceleration ? this.lowerPosition : this.upperPosition;
+        float targetPositionSpd = positiveSpeed ? this.upperPosition : this.lowerPosition;
+        float fromPositionSpd = positiveSpeed ? this.lowerPosition : this.upperPosition;
 
         float breakPosition = SpeedUtil.positionStartBraking(
                 currentSpeed,
                 positiveSpeed ? -this.acceleration : this.acceleration,
-                targetPosition,
+                targetPositionAcc,
                 0);
 
 //        JRidesPlugin.getLogger().debug("s: " + currentSpeed + "(" + positiveSpeed + ") a: " + acceleration);
-//        JRidesPlugin.getLogger().debug("f: " + fromPosition + " t: " + targetPosition + " b: " + breakPosition);
+//        JRidesPlugin.getLogger().debug("f: " + fromPositionAcc + " t: " + targetPositionAcc + " b: " + breakPosition);
 
-        boolean shouldBreak = rotor.hasPassed(fromPosition, breakPosition, positiveAcceleration, this.margin);
-        boolean shouldHardBreak = rotor.hasPassed(fromPosition, targetPosition, positiveAcceleration, 0d);
+        boolean shouldBreak = rotor.hasPassed(fromPositionAcc, breakPosition, positiveAcceleration, this.margin);
+        boolean shouldHardBreak = rotor.hasPassed(fromPositionSpd, targetPositionSpd, positiveSpeed, 0d);
 
 //        JRidesPlugin.getLogger().debug("break: " + shouldBreak + " hard: " + shouldHardBreak + "\n----");
 
         if(shouldHardBreak){
             rotor.getFlatRideComponentSpeed().setHard(0);
-            rotor.setRotorRotation(targetPosition);
+            rotor.setRotorRotation(targetPositionSpd);
         }else if(shouldBreak){
             rotor.getFlatRideComponentSpeed().accelerateTowards(this.acceleration, 0);
         }else{
