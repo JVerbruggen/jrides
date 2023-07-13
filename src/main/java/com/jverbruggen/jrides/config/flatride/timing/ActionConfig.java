@@ -38,7 +38,7 @@ public class ActionConfig extends BaseConfig {
     }
 
     public Float getAccelerate() {
-        return accelerate == null ? 0 : accelerate;
+        return accelerate == null ? 0 : Math.abs(accelerate);
     }
 
     public void setAccelerate(Float accelerate) {
@@ -94,8 +94,8 @@ public class ActionConfig extends BaseConfig {
         List<TimingAction> timingActions = new ArrayList<>();
         if(targetPosition != null){
             HasPosition sampleComponent = (HasPosition) targetedFlatRideComponents.get(0);
-            float minSpeed = getSpeed() != null ? getSpeed() : sampleComponent.getFlatRideComponentSpeed().getMinSpeed();
-            float maxSpeed = getSpeed() != null ? -getSpeed() : sampleComponent.getFlatRideComponentSpeed().getMaxSpeed();
+            double minSpeed = getSpeed() != null ? getSpeed() : sampleComponent.getFlatRideComponentSpeed().getMinSpeed();
+            double maxSpeed = getSpeed() != null ? -getSpeed() : sampleComponent.getFlatRideComponentSpeed().getMaxSpeed();
 
             timingActions.add(new InstructionBinding(
                     new TowardsPositionInstruction(getAccelerate(), minSpeed, maxSpeed, getTargetPosition()), targetedFlatRideComponents));

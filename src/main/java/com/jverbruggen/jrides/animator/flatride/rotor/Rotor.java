@@ -6,8 +6,8 @@ import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.interfaces.HasPosition;
 import com.jverbruggen.jrides.animator.flatride.interfaces.HasSpeed;
 import com.jverbruggen.jrides.animator.flatride.interfaces.PlayerControllable;
+import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxis;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorPlayerControlConfig;
-import com.jverbruggen.jrides.models.math.MathUtil;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import org.jetbrains.annotations.Nullable;
@@ -15,24 +15,28 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class Rotor extends AbstractInterconnectedFlatRideComponent implements HasSpeed, PlayerControllable, HasPosition {
-    private final Quaternion rotation;
     private final FlatRideComponentSpeed flatRideComponentSpeed;
+    private final RotorAxis rotorAxis;
     private RotorPlayerControl playerControl;
     private boolean allowsControlState;
+    private double lowerOperatingRange;
+    private double upperOperatingRange;
 
-    public Rotor(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed) {
+    public Rotor(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, RotorAxis rotorAxis) {
         super(identifier, groupIdentifier, root, flatRideModels);
+        this.rotorAxis = rotorAxis;
         this.playerControl = null;
-        this.rotation = new Quaternion();
         this.flatRideComponentSpeed = flatRideComponentSpeed;
         this.allowsControlState = false;
+        this.lowerOperatingRange = 0;
+        this.upperOperatingRange = 360;
     }
 
     @Override
     public Quaternion getRotation() {
         if(getAttachedTo() == null) throw new RuntimeException("Rotor " + getIdentifier() + " not attached to anything");
 
-        return Quaternion.multiply(getAttachedTo().getRotation(), rotation);
+        return Quaternion.multiply(getAttachedTo().getRotation(), rotorAxis.getQuaternion());
     }
 
     public FlatRideComponentSpeed getFlatRideComponentSpeed() {
@@ -45,7 +49,7 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Ha
             playerControl.apply();
         }
 
-        addYaw(flatRideComponentSpeed.getSpeed());
+        rotorAxis.addRotation(flatRideComponentSpeed.getSpeed());
 
         for(Attachment attachment : getChildren()){
             attachment.update();
@@ -88,41 +92,11 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Ha
     }
 
     public double getRotorRotation(){
-        return rotation.getYaw();
+        return rotorAxis.getRotation();
     }
 
-    public void setRotorRotation(double toYaw){
-        double fromYaw = getRotorRotation();
-        if(fromYaw == toYaw) return;
-
-        double deltaYaw = toYaw - fromYaw;
-        rotation.rotateY(-deltaYaw);
-    }
-
-    @Override
-    public boolean hasPassed(double from, double target){
-        return hasPassed(from, target, flatRideComponentSpeed.getSpeed() >= 0, 0);
-    }
-
-    private double wrap360(double non360){
-        return MathUtil.floorMod(non360, 360d);
-    }
-
-    @Override
-    public boolean hasPassed(double from, double target, boolean positiveSpeed, double margin) {
-        target = wrap360(target - from);
-        double currentPosition = wrap360(getRotorRotation() - from);
-
-        boolean forwardsPassed = target <= currentPosition + margin;
-        boolean backwardsPassed = currentPosition - margin <= target;
-//        System.out.println("t: " + target + ", c: " + currentPosition + ", f: " + from + ", fw: " + forwardsPassed + ", bw: " + backwardsPassed);
-
-        return (positiveSpeed && forwardsPassed)
-                || (!positiveSpeed && backwardsPassed);
-    }
-
-    private void addYaw(double addRotation){
-        rotation.rotateY(-addRotation);
+    public void setRotorRotation(double toValue){
+        rotorAxis.setRotation(toValue);
     }
 
     @Override
@@ -132,6 +106,26 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Ha
 
     @Override
     public double getInstructionPosition() {
-        return rotation.getYaw();
+        return getRotorRotation();
+    }
+
+    @Override
+    public double getLowerOperatingRange() {
+        return lowerOperatingRange;
+    }
+
+    @Override
+    public double getUpperOperatingRange() {
+        return upperOperatingRange;
+    }
+
+    @Override
+    public void setLowerOperatingRange(double lower) {
+        lowerOperatingRange = lower;
+    }
+
+    @Override
+    public void setUpperOperatingRange(double upper) {
+        upperOperatingRange = upper;
     }
 }

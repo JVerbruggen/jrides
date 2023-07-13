@@ -19,7 +19,7 @@ public class LinearActuator extends AbstractInterconnectedFlatRideComponent impl
     private final float size;
     private final short phase;
 
-    private float sineState;
+    private double sineState;
 
     public LinearActuator(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, float size, short phase) {
         super(identifier, groupIdentifier, root, flatRideModels);

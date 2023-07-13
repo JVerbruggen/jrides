@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.animator.flatride.rotor.RotorSpeedPlayerControl;
 import com.jverbruggen.jrides.animator.flatride.rotor.RotorTargetPositionPlayerControl;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.config.flatride.structure.ControlConfig;
+import com.jverbruggen.jrides.models.math.MathUtil;
 import org.bukkit.configuration.ConfigurationSection;
 
 import javax.annotation.Nullable;
@@ -54,8 +55,8 @@ public class RotorPlayerControlConfig extends BaseConfig implements ControlConfi
 
         float lowerSpeed = speed.get(0).floatValue();
         float upperSpeed = speed.get(1).floatValue();
-        float lowerPosition = position.get(0).floatValue();
-        float upperPosition = position.get(1).floatValue();
+        float lowerPosition = MathUtil.floorMod(position.get(0).floatValue(), 360);
+        float upperPosition = MathUtil.floorMod(position.get(1).floatValue(), 360);
 
         if(lowerSpeed != Float.NEGATIVE_INFINITY && lowerPosition != Float.NEGATIVE_INFINITY)
             throw new RuntimeException("Rotor control config can only contain either one of position or speed, not both!");

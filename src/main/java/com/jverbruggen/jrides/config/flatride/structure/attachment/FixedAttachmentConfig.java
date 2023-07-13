@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.animator.flatride.attachment.FixedAttachment;
 import com.jverbruggen.jrides.animator.flatride.linearactuator.LinearActuator;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
 import com.jverbruggen.jrides.animator.flatride.rotor.Rotor;
+import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxisFactory;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorConfig;
@@ -69,7 +70,8 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
                 .collect(Collectors.toList());
 
         Rotor rotor = new Rotor(rotorConfig.getIdentifier(), rotorConfig.getIdentifier(), rotorConfig.isRoot(),
-                flatRideModels, rotorConfig.getFlatRideComponentSpeed());
+                flatRideModels, rotorConfig.getFlatRideComponentSpeed(),
+                RotorAxisFactory.createAxisFromString(rotorConfig.getRotorAxis()));
         rotor.createPlayerControl(rotorConfig.getPlayerControlConfig());
 
         Attachment attachment = new FixedAttachment(rotor, position, rotation);

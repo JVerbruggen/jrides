@@ -6,14 +6,14 @@ import com.jverbruggen.jrides.models.ride.seat.InstructionType;
 
 public class RotorTargetPositionPlayerControl extends AbstractPlayerControl implements RotorPlayerControl {
     private Rotor rotor;
-    private final float lowerPosition;
-    private final float upperPosition;
-    private final float acceleration;
-    private final float margin;
+    private final double lowerPosition;
+    private final double upperPosition;
+    private final double acceleration;
+    private final double margin;
 
-    private float pendingAcceleration;
+    private double pendingAcceleration;
 
-    public RotorTargetPositionPlayerControl(float lowerPosition, float upperPosition, float acceleration) {
+    public RotorTargetPositionPlayerControl(double lowerPosition, double upperPosition, double acceleration) {
         this.rotor = null;
         this.lowerPosition = lowerPosition;
         this.upperPosition = upperPosition;
@@ -24,6 +24,8 @@ public class RotorTargetPositionPlayerControl extends AbstractPlayerControl impl
 
     public void setRotor(Rotor rotor) {
         this.rotor = rotor;
+        rotor.setLowerOperatingRange(lowerPosition);
+        rotor.setUpperOperatingRange(upperPosition);
     }
 
     @Override

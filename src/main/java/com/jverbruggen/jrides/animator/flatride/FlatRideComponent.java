@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.linearactuator.LinearActuator;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
 import com.jverbruggen.jrides.animator.flatride.rotor.Rotor;
+import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxis;
 import com.jverbruggen.jrides.animator.flatride.seat.FlatRideSeat;
 import com.jverbruggen.jrides.animator.flatride.seat.SeatComponent;
 import com.jverbruggen.jrides.config.coaster.objects.cart.ModelConfig;
@@ -74,13 +75,13 @@ public interface FlatRideComponent {
                         rideHandle, seatIdentifier, identifier, attachedTo, seatQuaternion, offsetPosition, seatYawOffset, flatRideModelsConfig));
     }
 
-    static List<FlatRideComponent> createDistributedAttachedRotors(String identifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, RotorPlayerControlConfig controlConfig, List<ModelConfig> flatRideModelsConfig, int amount){
+    static List<FlatRideComponent> createDistributedAttachedRotors(String identifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, RotorPlayerControlConfig controlConfig, RotorAxis rotorAxis, List<ModelConfig> flatRideModelsConfig, int amount){
         return createDistributedComponent(
                 identifier,
                 offsetRotation,
                 amount,
                 (rotorQuaternion, rotorIdentifier) -> FlatRideComponent.createAttachedRotor(
-                        rotorIdentifier, identifier, attachedTo, rotorQuaternion, offsetPosition, flatRideComponentSpeed.clone(), controlConfig, flatRideModelsConfig));
+                        rotorIdentifier, identifier, attachedTo, rotorQuaternion, offsetPosition, flatRideComponentSpeed.clone(), controlConfig, rotorAxis, flatRideModelsConfig));
     }
 
     static List<FlatRideComponent> createDistributedLinearActuators(FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, LinearActuatorConfig linearActuatorConfig, int amount) {
@@ -94,7 +95,7 @@ public interface FlatRideComponent {
                         linearActuatorConfig.getSize(), linearActuatorConfig.getPhase(), linearActuatorConfig.getFlatRideModels()));
     }
 
-    static Rotor createAttachedRotor(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, RotorPlayerControlConfig controlConfig, List<ModelConfig> flatRideModelsConfig){
+    static Rotor createAttachedRotor(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, RotorPlayerControlConfig controlConfig, RotorAxis rotorAxis, List<ModelConfig> flatRideModelsConfig){
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
         Vector3 spawnPosition = MatrixMath.rotateTranslate(
@@ -107,7 +108,7 @@ public interface FlatRideComponent {
                 .map(config -> config.toFlatRideModel(spawnPosition, viewportManager))
                 .collect(Collectors.toList());
 
-        Rotor rotor = new Rotor(identifier, groupIdentifier, false, flatRideModels, flatRideComponentSpeed);
+        Rotor rotor = new Rotor(identifier, groupIdentifier, false, flatRideModels, flatRideComponentSpeed, rotorAxis);
         rotor.createPlayerControl(controlConfig);
         attachedTo.attach(rotor, offsetRotation, offsetPosition);
 
