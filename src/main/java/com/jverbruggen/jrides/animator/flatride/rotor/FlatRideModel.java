@@ -17,18 +17,6 @@ public class FlatRideModel {
         this.rotationOffset = rotationOffset;
     }
 
-    public VirtualEntity getEntity() {
-        return entity;
-    }
-
-    public Vector3 getOffset() {
-        return offset;
-    }
-
-    public Quaternion getRotationOffset() {
-        return rotationOffset;
-    }
-
     public void updateLocation(Vector3 parentLocation, Quaternion parentRotation){
         Matrix4x4 matrix = MatrixMath.rotateTranslate(parentLocation, parentRotation, offset, rotationOffset);
         entity.setLocation(matrix.toVector3());
