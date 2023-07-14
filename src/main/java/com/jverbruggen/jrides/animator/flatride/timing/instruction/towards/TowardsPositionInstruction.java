@@ -1,47 +1,59 @@
-package com.jverbruggen.jrides.animator.flatride.timing.instruction;
+package com.jverbruggen.jrides.animator.flatride.timing.instruction.towards;
 
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.animator.flatride.interfaces.HasPosition;
+import com.jverbruggen.jrides.animator.flatride.timing.instruction.Instruction;
 import com.jverbruggen.jrides.models.math.SpeedUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TowardsPositionInstruction implements Instruction {
-    private double acceleration;
+    private final double accelerate;
     private final double minSpeed;
     private final double maxSpeed;
     private final double towardsPosition;
+    private final Map<HasPosition, TowardsPositionInstructionState> states;
 
-    private Double originalPosition;
-
-    public TowardsPositionInstruction(double acceleration, double minSpeed, double maxSpeed, double towardsPosition) {
-        this.acceleration = acceleration;
+    public TowardsPositionInstruction(double accelerate, double minSpeed, double maxSpeed, double towardsPosition) {
+        this.accelerate = accelerate;
         this.minSpeed = minSpeed;
         this.maxSpeed = maxSpeed;
         this.towardsPosition = towardsPosition;
-        this.originalPosition = null;
+        this.states = new HashMap<>();
     }
 
     public void execute(HasPosition hasPosition){
-        if (originalPosition == null) {
-            originalPosition = hasPosition.getInstructionPosition();
+        if(!states.containsKey(hasPosition)){
+            TowardsPositionInstructionState state = new TowardsPositionInstructionState();
+            states.put(hasPosition, state);
+            execute(hasPosition, state);
+        }else{
+            execute(hasPosition, states.get(hasPosition));
+        }
+    }
+
+    public void execute(HasPosition hasPosition, TowardsPositionInstructionState state){
+        if (state.getOriginalState() == null) {
+            state.setOriginalState(hasPosition.getInstructionPosition());
 
             double lowerOperatingRange = hasPosition.getLowerOperatingRange();
-            boolean positiveFrom = lowerOperatingRange <= hasPosition.getUpperOperatingRange();
 
-//            JRidesPlugin.getLogger().debug("l: " + lowerOperatingRange + ", x: " + originalPosition + ", t: " + towardsPosition + ", p: " + positiveFrom);
+//            JRidesPlugin.getLogger().debug("l: " + lowerOperatingRange + ", x: " + state.getOriginalState() + ", t: " + towardsPosition + ", p: " + positiveFrom);
 
-            if(!SpeedUtil.aboveInRange(lowerOperatingRange, originalPosition, towardsPosition, 0, true)){
-                acceleration = -acceleration;
-//                JRidesPlugin.getLogger().debug("Flipped " + acceleration);
+            if(!SpeedUtil.aboveInRange(lowerOperatingRange, state.getOriginalState(), towardsPosition, 0, true)){
+                state.setAcceleration(-accelerate);
+//                JRidesPlugin.getLogger().debug("Flipped " + state.getAcceleration());
             }
         }
 
-        double lowerPosition = this.acceleration >= 0 ? this.originalPosition : this.towardsPosition;
-        double upperPosition = this.acceleration >= 0 ? this.towardsPosition : this.originalPosition;
+        double lowerPosition = state.getAcceleration() >= 0 ? state.getOriginalState() : this.towardsPosition;
+        double upperPosition = state.getAcceleration() >= 0 ? this.towardsPosition : state.getOriginalState();
 
         TowardsPositionInstruction.run(
                 hasPosition,
-                this.acceleration,
+                state.getAcceleration(),
                 lowerPosition,
                 upperPosition,
                 0d,
@@ -61,8 +73,11 @@ public class TowardsPositionInstruction implements Instruction {
 
     @Override
     public void reset() {
-        originalPosition = null;
-        acceleration = Math.abs(acceleration);
+        states.values().forEach(s -> {
+                s.setAcceleration(accelerate);
+                s.setOriginalState(null);
+            }
+        );
     }
 
     @Override
