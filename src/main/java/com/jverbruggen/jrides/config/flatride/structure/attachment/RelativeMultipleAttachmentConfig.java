@@ -2,9 +2,9 @@ package com.jverbruggen.jrides.config.flatride.structure.attachment;
 
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
-import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxisFactory;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorConfig;
+import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
 import com.jverbruggen.jrides.config.flatride.structure.basic.StaticStructureConfig;
 import com.jverbruggen.jrides.config.flatride.structure.seat.SeatConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
@@ -14,9 +14,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.List;
 
 public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAttachmentConfig {
+    private final RelativeAttachmentJointConfig joint;
 
-    protected RelativeMultipleAttachmentConfig(String toComponentIdentifier, Vector3 offsetPosition, int amount) {
+    protected RelativeMultipleAttachmentConfig(String toComponentIdentifier, Vector3 offsetPosition, int amount, RelativeAttachmentJointConfig joint) {
         super(toComponentIdentifier, offsetPosition, amount);
+        this.joint = joint;
     }
 
     public static AttachmentConfig fromConfigurationSection(ConfigurationSection configurationSection) {
@@ -30,7 +32,9 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
 
         int armDuplicate = getInt(configurationSection, "armDuplicate", 1);
 
-        return new RelativeMultipleAttachmentConfig(armTo, offsetPosition, armDuplicate);
+        RelativeAttachmentJointConfig joint = RelativeAttachmentJointConfig.fromConfigurationSection(configurationSection.getConfigurationSection("armJoint"));
+
+        return new RelativeMultipleAttachmentConfig(armTo, offsetPosition, armDuplicate, joint);
     }
 
     @Override
