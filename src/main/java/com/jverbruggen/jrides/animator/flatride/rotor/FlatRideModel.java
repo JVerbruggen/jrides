@@ -1,7 +1,8 @@
 package com.jverbruggen.jrides.animator.flatride.rotor;
 
-import com.jverbruggen.jrides.animator.flatride.rotor.fixture.Fixture;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
+import com.jverbruggen.jrides.models.math.Matrix4x4;
+import com.jverbruggen.jrides.models.math.MatrixMath;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 
@@ -9,13 +10,11 @@ public class FlatRideModel {
     private final VirtualEntity entity;
     private final Vector3 offset;
     private final Quaternion rotationOffset;
-    private final Fixture fixture;
 
-    public FlatRideModel(VirtualEntity entity, Vector3 offset, Quaternion rotationOffset, Fixture fixture) {
+    public FlatRideModel(VirtualEntity entity, Vector3 offset, Quaternion rotationOffset) {
         this.entity = entity;
         this.offset = offset;
         this.rotationOffset = rotationOffset;
-        this.fixture = fixture;
     }
 
     public VirtualEntity getEntity() {
@@ -30,12 +29,9 @@ public class FlatRideModel {
         return rotationOffset;
     }
 
-    public Fixture getFixture() {
-        return fixture;
-    }
-
     public void updateLocation(Vector3 parentLocation, Quaternion parentRotation){
-        if(getFixture() == null) return;
-        getFixture().updateLocation(getEntity(), parentLocation, parentRotation, getOffset(), getRotationOffset());
+        Matrix4x4 matrix = MatrixMath.rotateTranslate(parentLocation, parentRotation, offset, rotationOffset);
+        entity.setLocation(matrix.toVector3());
+        entity.setRotation(matrix.getRotation());
     }
 }
