@@ -1,18 +1,16 @@
 package com.jverbruggen.jrides.config.flatride.timing;
 
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
-import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.animator.flatride.interfaces.HasPosition;
 import com.jverbruggen.jrides.animator.flatride.timing.instruction.*;
+import com.jverbruggen.jrides.animator.flatride.timing.instruction.towards.TowardsPositionInstruction;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class ActionConfig extends BaseConfig {
     private final String targetIdentifier;
