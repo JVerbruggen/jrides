@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.animator.flatride.rotor;
 import com.jverbruggen.jrides.animator.flatride.AbstractPlayerControl;
 import com.jverbruggen.jrides.animator.flatride.timing.instruction.TowardsPositionInstruction;
 import com.jverbruggen.jrides.models.ride.seat.InstructionType;
+import org.bukkit.Bukkit;
 
 public class RotorTargetPositionPlayerControl extends AbstractPlayerControl implements RotorPlayerControl {
     private Rotor rotor;

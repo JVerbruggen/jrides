@@ -97,7 +97,7 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
                     getOffsetPosition(),
                     rotorConfig.getFlatRideComponentSpeed(),
                     rotorConfig.getPlayerControlConfig(),
-                    RotorAxisFactory.createAxisFromString(rotorConfig.getRotorAxis()),
+                    rotorConfig.getRotorAxis(),
                     rotorConfig.getFlatRideModels(),
                     getAmount());
 

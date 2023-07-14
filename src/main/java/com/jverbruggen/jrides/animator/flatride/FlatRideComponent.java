@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.animator.flatride.linearactuator.LinearActuator;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
 import com.jverbruggen.jrides.animator.flatride.rotor.Rotor;
 import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxis;
+import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxisFactory;
 import com.jverbruggen.jrides.animator.flatride.seat.FlatRideSeat;
 import com.jverbruggen.jrides.animator.flatride.seat.SeatComponent;
 import com.jverbruggen.jrides.config.coaster.objects.cart.ModelConfig;
@@ -18,6 +19,7 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
+import org.bukkit.Bukkit;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -76,13 +78,14 @@ public interface FlatRideComponent {
                         rideHandle, seatIdentifier, identifier, attachedTo, seatQuaternion, offsetPosition, seatYawOffset, flatRideModelsConfig));
     }
 
-    static List<FlatRideComponent> createDistributedAttachedRotors(String identifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, RotorPlayerControlConfig controlConfig, RotorAxis rotorAxis, List<ModelConfig> flatRideModelsConfig, int amount){
+    static List<FlatRideComponent> createDistributedAttachedRotors(String identifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, RotorPlayerControlConfig controlConfig, String rotorAxisSpec, List<ModelConfig> flatRideModelsConfig, int amount){
         return createDistributedComponent(
                 identifier,
                 offsetRotation,
                 amount,
                 (rotorQuaternion, rotorIdentifier) -> FlatRideComponent.createAttachedRotor(
-                        rotorIdentifier, identifier, attachedTo, rotorQuaternion, offsetPosition, flatRideComponentSpeed.clone(), controlConfig, rotorAxis, flatRideModelsConfig));
+                        rotorIdentifier, identifier, attachedTo, rotorQuaternion, offsetPosition,
+                        flatRideComponentSpeed.clone(), controlConfig, RotorAxisFactory.createAxisFromString(rotorAxisSpec), flatRideModelsConfig));
     }
 
     static List<FlatRideComponent> createDistributedLinearActuators(FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, LinearActuatorConfig linearActuatorConfig, int amount) {

@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.animator.flatride.rotor.RotorTargetPositionPlayerC
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.config.flatride.structure.ControlConfig;
 import com.jverbruggen.jrides.models.math.MathUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import javax.annotation.Nullable;
