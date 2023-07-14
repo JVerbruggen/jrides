@@ -7,16 +7,16 @@ public class RotorSpeedPlayerControl extends AbstractPlayerControl implements Ro
     private Rotor rotor;
     private final double lowerSpeed;
     private final double upperSpeed;
-    private final double acceleration;
+    private final double accelerate;
 
     private double currentSpeed;
     private double pendingAcceleration;
 
-    public RotorSpeedPlayerControl(float lowerSpeed, float upperSpeed, float acceleration) {
+    public RotorSpeedPlayerControl(double lowerSpeed, double upperSpeed, double accelerate) {
         this.rotor = null;
         this.lowerSpeed = lowerSpeed;
         this.upperSpeed = upperSpeed;
-        this.acceleration = acceleration;
+        this.accelerate = accelerate;
         this.currentSpeed = 0f;
         this.pendingAcceleration = 0f;
     }
@@ -31,9 +31,9 @@ public class RotorSpeedPlayerControl extends AbstractPlayerControl implements Ro
         if(!rotor.allowsControl()) return;
 
         if(instruction == InstructionType.A){
-            pendingAcceleration = -acceleration;
+            pendingAcceleration = -accelerate;
         }else if(instruction == InstructionType.D){
-            pendingAcceleration = acceleration;
+            pendingAcceleration = accelerate;
         }
     }
 
