@@ -52,7 +52,7 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
                 .collect(Collectors.toList());
 
         LinearActuator linearActuator = new LinearActuator(
-                linearActuatorConfig.getIdentifier(), linearActuatorConfig.getIdentifier(), linearActuatorConfig.isRoot(),
+                linearActuatorConfig.getIdentifier(), linearActuatorConfig.getIdentifier(), linearActuatorConfig.isRoot(), null,
                 flatRideModels, linearActuatorConfig.getFlatRideComponentSpeed(), linearActuatorConfig.getSize(),
                 linearActuatorConfig.getPhase().get().shortValue());
 
@@ -76,7 +76,7 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
                 .collect(Collectors.toList());
 
         Rotor rotor = new Rotor(rotorConfig.getIdentifier(), rotorConfig.getIdentifier(), rotorConfig.isRoot(),
-                flatRideModels, rotorConfig.getFlatRideComponentSpeed(),
+                null, flatRideModels, rotorConfig.getFlatRideComponentSpeed(),
                 RotorAxisFactory.createAxisFromString(rotorConfig.getRotorAxis()));
         rotor.createPlayerControl(rotorConfig.getPlayerControlConfig());
 

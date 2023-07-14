@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.animator.flatride.interfaces.HasSpeed;
 import com.jverbruggen.jrides.animator.flatride.interfaces.PlayerControllable;
 import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxis;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorPlayerControlConfig;
+import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import org.jetbrains.annotations.Nullable;
@@ -22,8 +23,8 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Ha
     private double lowerOperatingRange;
     private double upperOperatingRange;
 
-    public Rotor(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, RotorAxis rotorAxis) {
-        super(identifier, groupIdentifier, root, flatRideModels);
+    public Rotor(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, RotorAxis rotorAxis) {
+        super(identifier, groupIdentifier, root, joint, flatRideModels);
         this.rotorAxis = rotorAxis;
         this.playerControl = null;
         this.flatRideComponentSpeed = flatRideComponentSpeed;

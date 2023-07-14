@@ -21,6 +21,10 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
         this.joint = joint;
     }
 
+    public RelativeAttachmentJointConfig getJoint() {
+        return joint;
+    }
+
     public static AttachmentConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         String armTo = getString(configurationSection, "arm");
         Vector3 offsetPosition;
@@ -82,6 +86,7 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
                     attachedTo,
                     new Quaternion(),
                     getOffsetPosition(),
+                    getJoint(),
                     config.getFlatRideModels()
             );
 
@@ -101,6 +106,7 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
                     getOffsetPosition(),
                     rotorConfig.getFlatRideComponentSpeed(),
                     rotorConfig.getPlayerControlConfig(),
+                    getJoint(),
                     rotorConfig.getRotorAxis(),
                     rotorConfig.getFlatRideModels(),
                     getAmount());

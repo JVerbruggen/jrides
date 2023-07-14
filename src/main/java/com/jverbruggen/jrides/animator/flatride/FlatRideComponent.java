@@ -12,6 +12,7 @@ import com.jverbruggen.jrides.animator.flatride.seat.SeatComponent;
 import com.jverbruggen.jrides.config.coaster.objects.cart.ModelConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorPlayerControlConfig;
+import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.MatrixMath;
 import com.jverbruggen.jrides.models.math.Quaternion;
@@ -19,7 +20,6 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
-import org.bukkit.Bukkit;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -40,12 +40,6 @@ public interface FlatRideComponent {
     void tick();
     boolean equalsToIdentifier(String identifier);
     @Nullable PlayerControl getPlayerControl();
-
-    static FlatRideComponent findInHaystack(List<FlatRideComponent> components, String needle){
-        return components.stream()
-                .filter(c -> c.equalsToIdentifier(needle))
-                .findFirst().orElseThrow(() -> new RuntimeException("Could not find parent '" + needle + "' for rotor"));
-    }
 
     static List<FlatRideComponent> findAllMatching(List<FlatRideComponent> components, String needle){
         return components.stream()
@@ -78,14 +72,14 @@ public interface FlatRideComponent {
                         rideHandle, seatIdentifier, identifier, attachedTo, seatQuaternion, offsetPosition, seatYawOffset, flatRideModelsConfig));
     }
 
-    static List<FlatRideComponent> createDistributedAttachedRotors(String identifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, RotorPlayerControlConfig controlConfig, String rotorAxisSpec, List<ModelConfig> flatRideModelsConfig, int amount){
+    static List<FlatRideComponent> createDistributedAttachedRotors(String identifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, RotorPlayerControlConfig controlConfig, RelativeAttachmentJointConfig jointConfig, String rotorAxisSpec, List<ModelConfig> flatRideModelsConfig, int amount){
         return createDistributedComponent(
                 identifier,
                 offsetRotation,
                 amount,
                 (rotorQuaternion, rotorIdentifier) -> FlatRideComponent.createAttachedRotor(
                         rotorIdentifier, identifier, attachedTo, rotorQuaternion, offsetPosition,
-                        flatRideComponentSpeed.clone(), controlConfig, RotorAxisFactory.createAxisFromString(rotorAxisSpec), flatRideModelsConfig));
+                        flatRideComponentSpeed.clone(), controlConfig, jointConfig, RotorAxisFactory.createAxisFromString(rotorAxisSpec), flatRideModelsConfig));
     }
 
     static List<FlatRideComponent> createDistributedLinearActuators(FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, LinearActuatorConfig linearActuatorConfig, int amount) {
@@ -99,7 +93,7 @@ public interface FlatRideComponent {
                         linearActuatorConfig.getSize(), linearActuatorConfig.getPhase(), linearActuatorConfig.getFlatRideModels()));
     }
 
-    static Rotor createAttachedRotor(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, RotorPlayerControlConfig controlConfig, RotorAxis rotorAxis, List<ModelConfig> flatRideModelsConfig){
+    static Rotor createAttachedRotor(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, RotorPlayerControlConfig controlConfig, RelativeAttachmentJointConfig jointConfig, RotorAxis rotorAxis, List<ModelConfig> flatRideModelsConfig){
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
         Vector3 spawnPosition = MatrixMath.rotateTranslate(
@@ -112,7 +106,7 @@ public interface FlatRideComponent {
                 .map(config -> config.toFlatRideModel(spawnPosition, viewportManager))
                 .collect(Collectors.toList());
 
-        Rotor rotor = new Rotor(identifier, groupIdentifier, false, flatRideModels, flatRideComponentSpeed, rotorAxis);
+        Rotor rotor = new Rotor(identifier, groupIdentifier, false, jointConfig, flatRideModels, flatRideComponentSpeed, rotorAxis);
         rotor.createPlayerControl(controlConfig);
         attachedTo.attach(rotor, offsetRotation, offsetPosition);
 
@@ -132,7 +126,7 @@ public interface FlatRideComponent {
                 .map(config -> config.toFlatRideModel(spawnPosition, viewportManager))
                 .collect(Collectors.toList());
 
-        LinearActuator linearActuator = new LinearActuator(identifier, groupIdentifier, false, flatRideModels, flatRideComponentSpeed, size, phase.get().shortValue());
+        LinearActuator linearActuator = new LinearActuator(identifier, groupIdentifier, false, null, flatRideModels, flatRideComponentSpeed, size, phase.get().shortValue());
         attachedTo.attach(linearActuator, offsetRotation, offsetPosition);
 
         return linearActuator;
@@ -171,7 +165,7 @@ public interface FlatRideComponent {
         return component;
     }
 
-    static StaticStructureComponent createStaticStructure(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, List<ModelConfig> flatRideModelsConfig){
+    static StaticStructureComponent createStaticStructure(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, RelativeAttachmentJointConfig joint, List<ModelConfig> flatRideModelsConfig){
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
         Vector3 spawnPosition = MatrixMath.rotateTranslate(
@@ -184,7 +178,7 @@ public interface FlatRideComponent {
                 .map(config -> config.toFlatRideModel(spawnPosition, viewportManager))
                 .collect(Collectors.toList());
 
-        StaticStructureComponent component = new StaticStructureComponent(identifier, groupIdentifier, false, flatRideModels);
+        StaticStructureComponent component = new StaticStructureComponent(identifier, groupIdentifier, false, joint, flatRideModels);
         attachedTo.attach(component, offsetRotation, offsetPosition);
 
         return component;
