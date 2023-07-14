@@ -39,6 +39,7 @@ public class TimingSequence {
 
         boolean finished = current.tick(state);
         if(finished) {
+            current.cleanUp();
             loadNext();
             state = 0;
             return this.current == null;

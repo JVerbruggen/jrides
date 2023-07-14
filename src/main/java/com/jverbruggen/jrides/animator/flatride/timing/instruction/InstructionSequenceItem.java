@@ -20,4 +20,10 @@ public class InstructionSequenceItem {
 
         return false;
     }
+
+    public void cleanUp(){
+        for(TimingAction action : actions){
+            action.cleanUp();
+        }
+    }
 }

@@ -32,4 +32,9 @@ public class SpeedInstruction implements Instruction {
     public void reset() {
 
     }
+
+    @Override
+    public void cleanUp(FlatRideComponent component) {
+
+    }
 }

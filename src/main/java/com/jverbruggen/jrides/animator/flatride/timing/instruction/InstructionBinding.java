@@ -18,4 +18,12 @@ public class InstructionBinding implements TimingAction {
             instruction.applyTo(flatRideComponent);
         }
     }
+
+    @Override
+    public void cleanUp() {
+        for(FlatRideComponent flatRideComponent : flatRideComponents){
+            instruction.cleanUp(flatRideComponent);
+        }
+        instruction.reset();
+    }
 }

@@ -1,6 +1,5 @@
 package com.jverbruggen.jrides.animator.flatride.timing.instruction;
 
-import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.animator.flatride.interfaces.HasPosition;
@@ -64,6 +63,11 @@ public class TowardsPositionInstruction implements Instruction {
     public void reset() {
         originalPosition = null;
         acceleration = Math.abs(acceleration);
+    }
+
+    @Override
+    public void cleanUp(FlatRideComponent component) {
+        ((HasPosition)component).setInstructionPosition(towardsPosition);
     }
 
     public static void run(HasPosition hasPosition, double acceleration, double lowerPosition, double upperPosition, double margin, double maxSpeed, double minSpeed){
