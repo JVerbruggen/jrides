@@ -46,12 +46,17 @@ public class VirtualBukkitEntity extends BaseVirtualEntity implements VirtualEnt
     }
 
     @Override
-    public void setLocation(Vector3 newLocation, Quaternion orientation) {
-        super.setLocation(newLocation, orientation);
+    public void setLocation(Vector3 newLocation) {
+        super.setLocation(newLocation);
+
+        syncPassenger(newLocation);
+    }
+
+    @Override
+    public void setRotation(Quaternion orientation) {
+        super.setRotation(orientation);
 
         if(orientation != null)
             this.yawRotation = orientation.getYaw() - 90;
-
-        syncPassenger(newLocation);
     }
 }

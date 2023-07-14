@@ -173,9 +173,9 @@ public class Transfer {
 
         Vector3 modelLocation = orientationMatrix.toVector3();
 
-        modelArmorstand.setLocation(modelLocation, null);
+        modelArmorstand.setLocation(modelLocation);
         modelOrientation.rotateYawPitchRoll(modelOffsetRotation);
-        modelArmorstand.setHeadpose(ArmorStandPose.getArmorStandPose(modelOrientation));
+        modelArmorstand.setRotation(modelOrientation);
     }
 
     private void moveTrain(){

@@ -111,7 +111,7 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     }
 
     @Override
-    public void setLocation(Vector3 newLocation, Quaternion orientation) {
+    public void setLocation(Vector3 newLocation) {
         final int chunkSize = viewportManager.getRenderChunkSize();
 
         if(Vector3.chunkRotated(location, newLocation, chunkSize)){
@@ -119,7 +119,7 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
         }
 
         double distanceSquared = newLocation.distanceSquared(this.location);
-        double packetYaw = orientation == null ? 0 : orientation.getPacketYaw();
+//        double packetYaw = orientation == null ? 0 : orientation.getPacketYaw();
 
         if(distanceSquared > 49 || teleportSyncCoundownState > 60) {
             Vector3 blockLocation = newLocation.toBlock();
@@ -127,16 +127,26 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
             teleportSyncCoundownState = 0;
 
             Vector3 delta = Vector3.subtract(newLocation, newLocation.toBlock());
-            moveEntity(delta, packetYaw);
+            moveEntity(delta, 0);
+//            moveEntity(delta, packetYaw);
         }
         else{
             Vector3 delta = Vector3.subtract(newLocation, this.location);
-            moveEntity(delta, packetYaw);
+            moveEntity(delta, 0);
+//            moveEntity(delta, packetYaw);
         }
 
         this.location = newLocation;
 
         teleportSyncCoundownState++;
+    }
+
+    @Override
+    public void setRotation(Quaternion orientation) {
+        if(orientation == null) return;
+        double packetYaw = orientation.getPacketYaw();
+
+        moveEntity(Vector3.zero(), packetYaw);
     }
 
     protected abstract void moveEntity(Vector3 delta, double yawRotation);

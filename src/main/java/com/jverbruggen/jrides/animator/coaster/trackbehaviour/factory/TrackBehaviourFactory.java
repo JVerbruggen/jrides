@@ -249,7 +249,7 @@ public class TrackBehaviourFactory {
             VirtualArmorstand virtualArmorstand = viewportManager.spawnVirtualArmorstand(
                     Vector3.add(originTransferPosition.getLocation(), modelOffsetPosition),
                     new TrainModelItem(ItemStackFactory.getCoasterStack(Material.DIAMOND_HOE, 2, true)));
-            virtualArmorstand.setHeadpose(ArmorStandPose.getArmorStandPose(modelOffsetOrientation));
+            virtualArmorstand.setRotation(modelOffsetOrientation);
 
             Transfer transfer = new Transfer(transferPositions, virtualArmorstand, origin, modelOffsetPosition, modelOffsetRotation);
             coasterHandle.addTransfer(transfer);

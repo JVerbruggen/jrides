@@ -6,9 +6,9 @@ import com.jverbruggen.jrides.models.entity.BaseVirtualEntity;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
+import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.packet.raw.ArmorstandRotationServerPacket;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
@@ -20,10 +20,10 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     private static final Vector3 HEAD_OFFSET = new Vector3(0, 1.7, 0);
 
     private double yawRotation;
-    private ArmorstandRotations rotations;
-    private ArmorstandModels models;
-    private boolean invisible;
-    private int leashedToEntity;
+    private final ArmorstandRotations rotations;
+    private final ArmorstandModels models;
+    private final boolean invisible;
+    private final int leashedToEntity;
 
     public VirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, double yawRotation, int entityId) {
         super(packetSender, viewportManager, location, entityId);
@@ -31,13 +31,17 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         this.yawRotation = yawRotation;
         this.rotations = new ArmorstandRotations();
         this.models = new ArmorstandModels();
-        this.invisible = true;
+        this.invisible = false;
         this.leashedToEntity = -1;
     }
 
     @Override
     public double getYaw() {
         return yawRotation;
+    }
+
+    public void setYaw(double yawRotation){
+        this.yawRotation = yawRotation;
     }
 
     @Override
@@ -60,7 +64,7 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         return false;
     }
 
-    public void setHeadpose(Vector3 rotation) {
+    protected void setHeadpose(Vector3 rotation) {
         rotations.setHead(rotation);
         packetSender.sendRotationPacket(viewers, entityId, ArmorstandRotationServerPacket.Type.HEAD, rotation);
     }
@@ -71,13 +75,20 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     }
 
     @Override
-    public void setLocation(Vector3 newLocation, Quaternion orientation) {
-        super.setLocation(newLocation, orientation);
-
-        if(orientation != null)
-            this.yawRotation = orientation.getYaw() - 90;
+    public void setLocation(Vector3 newLocation) {
+        super.setLocation(newLocation);
 
         syncPassenger(Vector3.add(newLocation, getHeadOffset()));
+    }
+
+    @Override
+    public void setRotation(Quaternion orientation) {
+//        super.setRotation(orientation);
+
+//        if(orientation != null)
+//            this.yawRotation = orientation.getYaw() - 90;
+
+        setHeadpose(ArmorStandPose.getArmorStandPose(orientation));
     }
 
     @Override

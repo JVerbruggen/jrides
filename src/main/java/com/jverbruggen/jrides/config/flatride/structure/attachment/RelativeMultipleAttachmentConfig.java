@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxisFactory;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorConfig;
+import com.jverbruggen.jrides.config.flatride.structure.basic.StaticStructureConfig;
 import com.jverbruggen.jrides.config.flatride.structure.seat.SeatConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -64,6 +65,23 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
                     getAmount());
 
             components.addAll(createdComponents);
+        }
+    }
+
+    @Override
+    public void createStaticStructureWithAttachment(StaticStructureConfig config, List<FlatRideComponent> components, FlatRideHandle rideHandle) {
+        List<FlatRideComponent> attachedToComponents = FlatRideComponent.findAllMatching(components, getToComponentIdentifier());
+        for(FlatRideComponent attachedTo : attachedToComponents) {
+            FlatRideComponent component = FlatRideComponent.createStaticStructure(
+                    config.getIdentifier(),
+                    config.getIdentifier(),
+                    attachedTo,
+                    new Quaternion(),
+                    getOffsetPosition(),
+                    config.getFlatRideModels()
+            );
+
+            components.add(component);
         }
     }
 

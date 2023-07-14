@@ -25,6 +25,17 @@ public abstract class AbstractInterconnectedFlatRideComponent extends AbstractFl
         children.add(attachment);
     }
 
+    @Override
+    public void tick() {
+        for(Attachment attachment : getChildren()){
+            attachment.update();
+            attachment.getChild().tick();
+        }
+
+        updateFlatRideModels();
+    }
+
+
     public List<Attachment> getChildren() {
         return children;
     }

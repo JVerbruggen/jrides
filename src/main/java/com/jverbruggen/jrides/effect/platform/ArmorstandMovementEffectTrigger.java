@@ -67,7 +67,7 @@ public class ArmorstandMovementEffectTrigger extends BaseTrainEffectTrigger {
 
         double multiplication = 1.0 / (getAnimationTimeTicks()-animationTickState);
         Vector3 newLocation = Vector3.add(Vector3.multiply(delta, multiplication), currentLocation);
-        armorstand.setLocation(newLocation, null);
+        armorstand.setLocation(newLocation);
 
         animationTickState++;
     }

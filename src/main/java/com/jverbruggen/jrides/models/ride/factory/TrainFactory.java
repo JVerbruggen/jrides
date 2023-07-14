@@ -93,7 +93,7 @@ public class TrainFactory {
             Vector3 cartLocation = CoasterCart.calculateLocation(trackLocation, cartOffset, orientation);
 
             VirtualArmorstand armorStand = viewportManager.spawnVirtualArmorstand(cartLocation, model);
-            Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> armorStand.setHeadpose(ArmorStandPose.getArmorStandPose(orientation)));
+            Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> armorStand.setRotation(orientation));
 
             List<Vector3> seatOffsets = cartTypeSpecConfig.getSeats().getPositions();
             List<CoasterSeat> seats = seatFactory.createCoasterSeats(coasterHandle, seatOffsets, cartLocation, orientation);

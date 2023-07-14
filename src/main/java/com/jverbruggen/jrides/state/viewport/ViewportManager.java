@@ -14,6 +14,7 @@ public interface ViewportManager {
     void updateVisuals(Player player);
     void updateVisuals(Player player, Vector3 playerLocation);
     void updateForEntity(VirtualEntity virtualEntity);
+    VirtualEntity spawnSeatEntity(Vector3 location, double yawRotation, TrainModelItem model);
     VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType);
     VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType, double yawRotation);
     VirtualArmorstand spawnVirtualArmorstand(Vector3 location);

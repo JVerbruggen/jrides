@@ -11,6 +11,7 @@ import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxisFactory;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorConfig;
+import com.jverbruggen.jrides.config.flatride.structure.basic.StaticStructureConfig;
 import com.jverbruggen.jrides.config.flatride.structure.seat.SeatConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -59,6 +60,11 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
         linearActuator.setAttachedTo(attachment);
 
         components.add(linearActuator);
+    }
+
+    @Override
+    public void createStaticStructureWithAttachment(StaticStructureConfig config, List<FlatRideComponent> components, FlatRideHandle rideHandle) {
+        throw new RuntimeException("Not implementing this functionality. Weird.");
     }
 
     @Override

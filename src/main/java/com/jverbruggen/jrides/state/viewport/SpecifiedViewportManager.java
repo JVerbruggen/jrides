@@ -47,6 +47,11 @@ public class SpecifiedViewportManager implements ViewportManager{
     }
 
     @Override
+    public VirtualEntity spawnSeatEntity(Vector3 location, double yawRotation, TrainModelItem model) {
+        return null;
+    }
+
+    @Override
     public VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType) {
         return null;
     }

@@ -52,14 +52,14 @@ public abstract class AbstractFlatRideComponent implements FlatRideComponent {
 
     @Override
     public Quaternion getRotation() {
-        if(attachedTo == null) throw new RuntimeException("Rotor " + identifier + " not attached to anything");
+        if(attachedTo == null) throw new RuntimeException("Component " + identifier + " not attached to anything");
 
         return attachedTo.getRotation();
     }
 
     @Override
     public Vector3 getPosition() {
-        if(attachedTo == null) throw new RuntimeException("Rotor " + identifier + " not attached to anything");
+        if(attachedTo == null) throw new RuntimeException("Component " + identifier + " not attached to anything");
 
         return attachedTo.getPosition();
     }

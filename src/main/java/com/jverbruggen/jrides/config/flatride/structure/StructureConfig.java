@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.config.flatride.structure;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorConfig;
+import com.jverbruggen.jrides.config.flatride.structure.basic.StaticStructureConfig;
 import com.jverbruggen.jrides.config.flatride.structure.seat.SeatConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -32,6 +33,7 @@ public class StructureConfig extends BaseConfig {
             String type = getString(itemConfigurationSection, "type");
 
             StructureConfigItem structureConfigItem = switch (type) {
+                case "static" -> StaticStructureConfig.fromConfigurationSection(itemConfigurationSection, key);
                 case "rotor" -> RotorConfig.fromConfigurationSection(itemConfigurationSection, key);
                 case "seat" -> SeatConfig.fromConfigurationSection(itemConfigurationSection, key);
                 case "linear_actuator" -> LinearActuatorConfig.fromConfigurationSection(itemConfigurationSection, key);

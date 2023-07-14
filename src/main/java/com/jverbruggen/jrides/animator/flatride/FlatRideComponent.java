@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.animator.flatride;
 
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
+import com.jverbruggen.jrides.animator.flatride.basic.StaticStructureComponent;
 import com.jverbruggen.jrides.animator.flatride.linearactuator.LinearActuator;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
 import com.jverbruggen.jrides.animator.flatride.rotor.Rotor;
@@ -148,11 +149,7 @@ public interface FlatRideComponent {
                 .map(config -> config.toFlatRideModel(spawnPosition, viewportManager))
                 .collect(Collectors.toList());
 
-        VirtualEntity seatEntity = flatRideModels.stream()
-                .filter(m -> m.getOffset().isZero())
-                .findAny()
-                .map(FlatRideModel::getEntity)
-                .orElseGet(() -> viewportManager.spawnVirtualArmorstand(spawnPosition));
+        VirtualEntity seatEntity = viewportManager.spawnSeatEntity(spawnPosition, 0, null);
 
         FlatRideSeat seat = new FlatRideSeat(flatRideHandle, null, seatEntity, Vector3.zero());
 
@@ -167,6 +164,25 @@ public interface FlatRideComponent {
         if(playerControl != null){
             seat.setPlayerControl(playerControl);
         }
+
+        return component;
+    }
+
+    static StaticStructureComponent createStaticStructure(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, List<ModelConfig> flatRideModelsConfig){
+        ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
+
+        Vector3 spawnPosition = MatrixMath.rotateTranslate(
+                attachedTo.getPosition(),
+                attachedTo.getRotation(),
+                offsetPosition,
+                offsetRotation).toVector3();
+
+        List<FlatRideModel> flatRideModels = flatRideModelsConfig.stream()
+                .map(config -> config.toFlatRideModel(spawnPosition, viewportManager))
+                .collect(Collectors.toList());
+
+        StaticStructureComponent component = new StaticStructureComponent(identifier, groupIdentifier, false, flatRideModels);
+        attachedTo.attach(component, offsetRotation, offsetPosition);
 
         return component;
     }

@@ -7,7 +7,6 @@ import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.event.player.PlayerSitDownEvent;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
-import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
@@ -23,10 +22,10 @@ import java.util.stream.Collectors;
 
 public class SimpleCoasterCart implements CoasterCart {
     private final String name;
-    private List<CoasterSeat> seats;
-    private VirtualArmorstand modelArmorstand;
-    private Vector3 trackOffset;
-    private Frame frame;
+    private final List<CoasterSeat> seats;
+    private final VirtualArmorstand modelArmorstand;
+    private final Vector3 trackOffset;
+    private final Frame frame;
     private Train parentTrain;
 
     private boolean hasEffects;
@@ -107,7 +106,7 @@ public class SimpleCoasterCart implements CoasterCart {
 
     private void updateOrientation(Quaternion orientation){
         currentOrientation = orientation;
-        modelArmorstand.setHeadpose(ArmorStandPose.getArmorStandPose(currentOrientation));
+        modelArmorstand.setRotation(currentOrientation);
     }
 
     @Override
@@ -118,7 +117,7 @@ public class SimpleCoasterCart implements CoasterCart {
 
     @Override
     public void setPosition(Vector3 position) {
-        modelArmorstand.setLocation(position, null);
+        modelArmorstand.setLocation(position);
         SeatFactory.moveCoasterSeats(seats, position, currentOrientation);
     }
 
