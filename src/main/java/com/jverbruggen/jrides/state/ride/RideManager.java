@@ -94,7 +94,7 @@ public class RideManager {
     }
 
     private void loadCoaster(World world, String rideIdentifier) throws CoasterLoadException {
-        RideState rideState = RideState.load(rideIdentifier);
+        RideState rideState = RideState.loadCoasterState(rideIdentifier);
         if(!rideState.shouldLoadRide()){
             logger.warning("Not loading ride " + rideIdentifier);
             return;
@@ -111,9 +111,9 @@ public class RideManager {
     }
 
     private void loadFlatRide(World world, String rideIdentifier){
-        RideState rideState = RideState.load(rideIdentifier);
+        RideState rideState = RideState.loadFlatrideState(rideIdentifier);
         if(!rideState.shouldLoadRide()){
-            logger.warning("Not loading ride " + rideIdentifier);
+            logger.warning("Not loading flatride " + rideIdentifier);
             return;
         }
 
