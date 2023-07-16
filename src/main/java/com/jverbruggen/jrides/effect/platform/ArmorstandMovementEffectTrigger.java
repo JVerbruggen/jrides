@@ -2,8 +2,8 @@ package com.jverbruggen.jrides.effect.platform;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
-import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.bukkit.Bukkit;
@@ -14,6 +14,8 @@ public class ArmorstandMovementEffectTrigger extends BaseTrainEffectTrigger {
 
     private final Vector3 locationFrom;
     private final Vector3 locationTo;
+    private final Quaternion rotationFrom;
+    private final Quaternion rotationTo;
     private final int animationTimeTicks;
 
     private Vector3 targetLocation;
@@ -23,11 +25,13 @@ public class ArmorstandMovementEffectTrigger extends BaseTrainEffectTrigger {
     private int bukkitTimerTracker;
     private boolean finished;
 
-    public ArmorstandMovementEffectTrigger(String identifier, VirtualArmorstand armorstand, Vector3 locationFrom, Vector3 locationTo, int animationTimeTicks) {
+    public ArmorstandMovementEffectTrigger(String identifier, VirtualArmorstand armorstand, Vector3 locationFrom, Vector3 locationTo, Quaternion rotationFrom, Quaternion rotationTo, int animationTimeTicks) {
         this.identifier = identifier;
         this.armorstand = armorstand;
         this.locationFrom = locationFrom;
         this.locationTo = locationTo;
+        this.rotationFrom = rotationFrom;
+        this.rotationTo = rotationTo;
         this.animationTimeTicks = animationTimeTicks;
 
         this.targetLocation = null;
@@ -44,14 +48,6 @@ public class ArmorstandMovementEffectTrigger extends BaseTrainEffectTrigger {
         return armorstand;
     }
 
-    public Vector3 getLocationFrom() {
-        return locationFrom;
-    }
-
-    public Vector3 getLocationTo() {
-        return locationTo;
-    }
-
     public int getAnimationTimeTicks() {
         return animationTimeTicks;
     }
@@ -62,14 +58,28 @@ public class ArmorstandMovementEffectTrigger extends BaseTrainEffectTrigger {
             return;
         }
 
+        lerpPosition();
+        lerpRotation();
+
+        animationTickState++;
+    }
+
+    private void lerpRotation(){
+        if(rotationFrom == null) return;
+
+        double lerpIncrement = 1d/(double)getAnimationTimeTicks();
+        double theta = lerpIncrement * animationTickState;
+        armorstand.setRotation(Quaternion.lerp(rotationFrom, rotationTo, theta));
+    }
+
+    private void lerpPosition(){
+        if(locationFrom == null) return;
+
         Vector3 currentLocation = armorstand.getLocation();
         Vector3 delta = Vector3.subtract(targetLocation, currentLocation);
-
         double multiplication = 1.0 / (getAnimationTimeTicks()-animationTickState);
         Vector3 newLocation = Vector3.add(Vector3.multiply(delta, multiplication), currentLocation);
         armorstand.setLocation(newLocation);
-
-        animationTickState++;
     }
 
     @Override
