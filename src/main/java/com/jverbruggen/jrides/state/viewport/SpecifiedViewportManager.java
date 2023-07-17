@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SpecifiedViewportManager implements ViewportManager{
-    private List<Viewport> viewports;
+    private final List<Viewport> viewports;
     private final int renderDistance;
     private final int renderChunkSize;
 
@@ -44,6 +44,11 @@ public class SpecifiedViewportManager implements ViewportManager{
                 viewport.removeEntity(virtualEntity);
             }
         }
+    }
+
+    @Override
+    public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel) {
+        return null;
     }
 
     @Override

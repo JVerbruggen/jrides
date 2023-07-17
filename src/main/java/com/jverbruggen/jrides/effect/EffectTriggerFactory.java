@@ -2,18 +2,12 @@ package com.jverbruggen.jrides.effect;
 
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.trigger.TriggerConfig;
-import com.jverbruggen.jrides.effect.cart.CartEffectTrigger;
-import com.jverbruggen.jrides.effect.cart.rotation.CartRotationEffectTrigger;
 import com.jverbruggen.jrides.effect.cart.rotation.CartRotationTriggerFactory;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
 import com.jverbruggen.jrides.effect.handle.cart.CartEffectTriggerHandle;
-import com.jverbruggen.jrides.effect.handle.cart.DefaultCartEffectTriggerHandle;
-import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
-import com.jverbruggen.jrides.effect.handle.train.DefaultTrainEffectTriggerHandle;
 import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
-import com.jverbruggen.jrides.effect.handle.train.ReversedTrainEffectTriggerHandle;
 import com.jverbruggen.jrides.effect.train.music.MusicEffectTriggerFactory;
-import com.jverbruggen.jrides.effect.platform.MultiArmorstandMovementEffectTriggerFactory;
+import com.jverbruggen.jrides.effect.platform.MultipleEffectExecutorTriggerFactory;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.frame.factory.FrameFactory;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
@@ -22,13 +16,12 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class EffectTriggerFactory {
     private final MusicEffectTriggerFactory musicEffectTriggerFactory;
     private final CartRotationTriggerFactory cartRotationTriggerFactory;
-    private final MultiArmorstandMovementEffectTriggerFactory platformEffectTriggerFactory;
+    private final MultipleEffectExecutorTriggerFactory platformEffectTriggerFactory;
     private final ConfigManager configManager;
     private final Map<String, EffectTrigger> effectTriggerMap;
     private final FrameFactory frameFactory;
@@ -36,7 +29,7 @@ public class EffectTriggerFactory {
     public EffectTriggerFactory() {
         this.musicEffectTriggerFactory = ServiceProvider.getSingleton(MusicEffectTriggerFactory.class);
         this.cartRotationTriggerFactory = ServiceProvider.getSingleton(CartRotationTriggerFactory.class);
-        this.platformEffectTriggerFactory = ServiceProvider.getSingleton(MultiArmorstandMovementEffectTriggerFactory.class);
+        this.platformEffectTriggerFactory = ServiceProvider.getSingleton(MultipleEffectExecutorTriggerFactory.class);
         this.configManager = ServiceProvider.getSingleton(ConfigManager.class);
         this.effectTriggerMap = new HashMap<>();
         this.frameFactory = ServiceProvider.getSingleton(FrameFactory.class);
@@ -48,19 +41,15 @@ public class EffectTriggerFactory {
         EffectTrigger effectTrigger;
         String mapKey = rideIdentifier + ":" + effectName;
         if(!effectTriggerMap.containsKey(mapKey)){
-            switch(triggerConfig.getType()){
-                case MUSIC:
-                    effectTrigger = musicEffectTriggerFactory.getMusicEffectTrigger(triggerConfig);
-                    break;
-                case MULTI_ARMORSTAND_MOVEMENT:
-                    effectTrigger = platformEffectTriggerFactory.getMultiArmorstandMovementEffectTrigger(triggerConfig);
-                    break;
-                case CART_ROTATE:
-                    effectTrigger = cartRotationTriggerFactory.getRotationEffectTrigger(triggerConfig);
-                    break;
-                default:
-                    throw new RuntimeException("Cannot resolve trigger type when creating effect trigger");
-            }
+            effectTrigger = switch (triggerConfig.getType()) {
+                case MUSIC ->
+                        musicEffectTriggerFactory.getMusicEffectTrigger(triggerConfig);
+                case MULTI_ARMORSTAND_MOVEMENT ->
+                        platformEffectTriggerFactory.getMultipleEffectExecutorTrigger(triggerConfig);
+                case CART_ROTATE ->
+                        cartRotationTriggerFactory.getRotationEffectTrigger(triggerConfig);
+                default -> throw new RuntimeException("Cannot resolve trigger type when creating effect trigger");
+            };
 
             effectTriggerMap.put(mapKey, effectTrigger);
         }else{

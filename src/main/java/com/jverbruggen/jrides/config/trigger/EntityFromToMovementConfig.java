@@ -1,15 +1,18 @@
 package com.jverbruggen.jrides.config.trigger;
 
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
+import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
+import com.jverbruggen.jrides.effect.platform.EntityFromToMovementEffectTrigger;
+import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
+import com.jverbruggen.jrides.models.entity.VirtualEntity;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
-import org.bukkit.Material;
+import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class ArmorstandAtoBMovementConfig extends BaseConfig {
+public class EntityFromToMovementConfig extends BaseConfig implements EntityMovementConfig {
     private final String identifier;
-    private final Material material;
-    private final int damage;
-    private final boolean unbreakable;
+    private final ItemConfig itemConfig;
 
     private final Vector3 locationFrom;
     private final Vector3 locationTo;
@@ -20,11 +23,9 @@ public class ArmorstandAtoBMovementConfig extends BaseConfig {
     private final boolean locationHasDelta;
     private final boolean rotationHasDelta;
 
-    public ArmorstandAtoBMovementConfig(String identifier, Material material, int damage, boolean unbreakable, Vector3 locationFrom, Vector3 locationTo, Vector3 rotationFrom, Vector3 rotationTo, int animationTimeTicks) {
+    public EntityFromToMovementConfig(String identifier, ItemConfig itemConfig, Vector3 locationFrom, Vector3 locationTo, Vector3 rotationFrom, Vector3 rotationTo, int animationTimeTicks) {
         this.identifier = identifier;
-        this.material = material;
-        this.damage = damage;
-        this.unbreakable = unbreakable;
+        this.itemConfig = itemConfig;
         this.locationFrom = locationFrom;
         this.locationTo = locationTo;
         this.rotationFrom = rotationFrom;
@@ -38,16 +39,8 @@ public class ArmorstandAtoBMovementConfig extends BaseConfig {
         return identifier;
     }
 
-    public Material getMaterial() {
-        return material;
-    }
-
-    public int getDamage() {
-        return damage;
-    }
-
-    public boolean isUnbreakable() {
-        return unbreakable;
+    public ItemConfig getItemConfig() {
+        return itemConfig;
     }
 
     public Vector3 getLocationFrom() {
@@ -78,12 +71,8 @@ public class ArmorstandAtoBMovementConfig extends BaseConfig {
         return rotationHasDelta;
     }
 
-    public static ArmorstandAtoBMovementConfig fromConfigurationSection(String identifier, ConfigurationSection configurationSection){
-        ConfigurationSection item = configurationSection.getConfigurationSection("item");
-
-        Material material = Material.valueOf(getString(item, "material"));
-        int damage = getInt(item, "damage");
-        boolean unbreakable = getBoolean(item, "unbreakable");
+    public static EntityFromToMovementConfig fromConfigurationSection(String identifier, ConfigurationSection configurationSection){
+        ItemConfig itemConfig = ItemConfig.fromConfigurationSection(configurationSection);
 
         Vector3 locationFrom = Vector3.fromDoubleList(getDoubleList(configurationSection, "locationFrom", null));
         Vector3 locationTo = Vector3.fromDoubleList(getDoubleList(configurationSection, "locationTo", null));
@@ -91,6 +80,26 @@ public class ArmorstandAtoBMovementConfig extends BaseConfig {
         Vector3 rotationTo = Vector3.fromDoubleList(getDoubleList(configurationSection, "rotationTo", null));
         int animationTimeTicks = getInt(configurationSection, "animationTimeTicks");
 
-        return new ArmorstandAtoBMovementConfig(identifier, material, damage, unbreakable, locationFrom, locationTo, rotationFrom, rotationTo, animationTimeTicks);
+        return new EntityFromToMovementConfig(identifier, itemConfig, locationFrom, locationTo, rotationFrom, rotationTo, animationTimeTicks);
+    }
+
+    @Override
+    public TrainEffectTrigger createTrigger(ViewportManager viewportManager) {
+        String identifier = getIdentifier();
+
+        boolean hasLocationDelta = isLocationHasDelta();
+        boolean hasRotationDelta = isRotationHasDelta();
+
+        Vector3 locationFrom = hasLocationDelta ? getLocationFrom() : null;
+        Vector3 locationTo = hasLocationDelta ? getLocationTo() : null;
+
+        Quaternion rotationFrom = hasRotationDelta ? Quaternion.fromAnglesVector(getRotationFrom()) : null;
+        Quaternion rotationTo = hasRotationDelta ? Quaternion.fromAnglesVector(getRotationTo()) : null;
+
+        ItemConfig itemConfig = getItemConfig();
+        VirtualEntity virtualEntity = itemConfig.spawnEntity(viewportManager, locationFrom);
+        int animationTimeTicks = getAnimationTimeTicks();
+
+        return new EntityFromToMovementEffectTrigger(identifier, virtualEntity, locationFrom, locationTo, rotationFrom, rotationTo, animationTimeTicks);
     }
 }

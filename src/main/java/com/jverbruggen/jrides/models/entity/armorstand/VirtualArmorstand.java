@@ -36,6 +36,11 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
     }
 
     @Override
+    public Quaternion getRotation() {
+        return Quaternion.fromYawPitchRoll(0, yawRotation, 0);
+    }
+
+    @Override
     public double getYaw() {
         return yawRotation;
     }
@@ -64,7 +69,7 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
         return false;
     }
 
-    protected void setHeadpose(Vector3 rotation) {
+    protected void setHeadPose(Vector3 rotation) {
         rotations.setHead(rotation);
         packetSender.sendRotationPacket(viewers, entityId, ArmorstandRotationServerPacket.Type.HEAD, rotation);
     }
@@ -83,12 +88,7 @@ public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntit
 
     @Override
     public void setRotation(Quaternion orientation) {
-//        super.setRotation(orientation);
-
-//        if(orientation != null)
-//            this.yawRotation = orientation.getYaw() - 90;
-
-        setHeadpose(ArmorStandPose.getArmorStandPose(orientation));
+        setHeadPose(ArmorStandPose.getArmorStandPose(orientation));
     }
 
     @Override

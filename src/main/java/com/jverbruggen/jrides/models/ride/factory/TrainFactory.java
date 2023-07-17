@@ -82,13 +82,13 @@ public class TrainFactory {
             else
                 cartTypeSpecConfig = cartSpecConfig.getDefault();
 
-            ItemConfig cartModelItemStackConfig = cartTypeSpecConfig.getModel().getItemConfig();
+            ItemConfig cartModelItemConfig = cartTypeSpecConfig.getModel().getItemConfig();
 
             Vector3 trackLocation = spawnSection.getLocationFor(cartFrame);
             Quaternion orientation = spawnSection.getOrientationFor(cartFrame);
             Vector3 cartLocation = CoasterCart.calculateLocation(trackLocation, cartOffset, orientation);
 
-            VirtualEntity virtualEntity = cartModelItemStackConfig.spawnEntity(viewportManager, cartLocation);
+            VirtualEntity virtualEntity = cartModelItemConfig.spawnEntity(viewportManager, cartLocation);
             Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> virtualEntity.setRotation(orientation));
 
             List<Vector3> seatOffsets = cartTypeSpecConfig.getSeats().getPositions();

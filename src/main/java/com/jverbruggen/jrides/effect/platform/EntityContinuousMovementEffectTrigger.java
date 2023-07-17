@@ -2,39 +2,41 @@ package com.jverbruggen.jrides.effect.platform;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
-import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
+import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.bukkit.Bukkit;
 
-public class ArmorstandMovementEffectTrigger extends BaseTrainEffectTrigger {
+public class EntityContinuousMovementEffectTrigger extends BaseTrainEffectTrigger {
     private final String identifier;
-    private final VirtualArmorstand armorstand;
+    private final VirtualEntity virtualEntity;
 
-    private final Vector3 locationFrom;
-    private final Vector3 locationTo;
-    private final Quaternion rotationFrom;
-    private final Quaternion rotationTo;
+    private final Vector3 initialLocation;
+    private final Quaternion initialRotation;
+    private final boolean resetOnStart;
+
+    private final Vector3 locationDelta;
+    private final Quaternion rotationDelta;
     private final int animationTimeTicks;
 
-    private Vector3 targetLocation;
     private int animationTickState;
 
     private boolean started;
     private int bukkitTimerTracker;
     private boolean finished;
 
-    public ArmorstandMovementEffectTrigger(String identifier, VirtualArmorstand armorstand, Vector3 locationFrom, Vector3 locationTo, Quaternion rotationFrom, Quaternion rotationTo, int animationTimeTicks) {
+    public EntityContinuousMovementEffectTrigger(String identifier, VirtualEntity virtualEntity, Vector3 initialLocation, Quaternion initialRotation, boolean resetOnStart, Vector3 locationDelta, Quaternion rotationDelta, int animationTimeTicks) {
         this.identifier = identifier;
-        this.armorstand = armorstand;
-        this.locationFrom = locationFrom;
-        this.locationTo = locationTo;
-        this.rotationFrom = rotationFrom;
-        this.rotationTo = rotationTo;
+        this.virtualEntity = virtualEntity;
+        this.locationDelta = locationDelta;
+        this.rotationDelta = rotationDelta;
         this.animationTimeTicks = animationTimeTicks;
 
-        this.targetLocation = null;
+        this.initialLocation = initialLocation;
+        this.initialRotation = initialRotation;
+        this.resetOnStart = resetOnStart;
+
         this.started = false;
         this.finished = false;
         this.bukkitTimerTracker = -1;
@@ -44,8 +46,8 @@ public class ArmorstandMovementEffectTrigger extends BaseTrainEffectTrigger {
         return identifier;
     }
 
-    public VirtualArmorstand getArmorstand() {
-        return armorstand;
+    public VirtualEntity getVirtualEntity() {
+        return virtualEntity;
     }
 
     public int getAnimationTimeTicks() {
@@ -58,44 +60,34 @@ public class ArmorstandMovementEffectTrigger extends BaseTrainEffectTrigger {
             return;
         }
 
-        lerpPosition();
-        lerpRotation();
+        addPosition();
+        addRotation();
 
         animationTickState++;
     }
 
-    private void lerpRotation(){
-        if(rotationFrom == null) return;
+    private void addRotation(){
+        if(rotationDelta == null) return;
 
-        double lerpIncrement = 1d/(double)getAnimationTimeTicks();
-        double theta = lerpIncrement * animationTickState;
-        armorstand.setRotation(Quaternion.lerp(rotationFrom, rotationTo, theta));
+        virtualEntity.setRotation(Quaternion.multiply(virtualEntity.getRotation(), rotationDelta));
     }
 
-    private void lerpPosition(){
-        if(locationFrom == null) return;
+    private void addPosition(){
+        if(locationDelta == null) return;
 
-        Vector3 currentLocation = armorstand.getLocation();
-        Vector3 delta = Vector3.subtract(targetLocation, currentLocation);
-        double multiplication = 1.0 / (getAnimationTimeTicks()-animationTickState);
-        Vector3 newLocation = Vector3.add(Vector3.multiply(delta, multiplication), currentLocation);
-        armorstand.setLocation(newLocation);
+        virtualEntity.setLocation(Vector3.add(locationDelta, virtualEntity.getLocation()));
     }
 
     @Override
     public void execute(Train train) {
         if(started) return;
 
-        targetLocation = locationTo;
         start();
     }
 
     @Override
     public void executeReversed(Train train) {
-        if(started) return;
-
-        targetLocation = locationFrom;
-        start();
+        execute(train);
     }
 
     protected void start(){
@@ -103,6 +95,11 @@ public class ArmorstandMovementEffectTrigger extends BaseTrainEffectTrigger {
         this.finished = false;
         this.started = true;
         animationTickState = 0;
+
+        if(resetOnStart){
+            virtualEntity.setLocation(initialLocation);
+            virtualEntity.setRotation(initialRotation);
+        }
 
         bukkitTimerTracker = Bukkit.getScheduler().runTaskTimer(JRidesPlugin.getBukkitPlugin(), this::tick, 1L, 1L).getTaskId();
     }

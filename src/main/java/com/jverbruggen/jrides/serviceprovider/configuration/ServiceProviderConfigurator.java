@@ -18,7 +18,7 @@ import com.jverbruggen.jrides.control.uiinterface.menu.button.factory.RideContro
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.effect.cart.rotation.CartRotationTriggerFactory;
 import com.jverbruggen.jrides.effect.train.music.MusicEffectTriggerFactory;
-import com.jverbruggen.jrides.effect.platform.MultiArmorstandMovementEffectTriggerFactory;
+import com.jverbruggen.jrides.effect.platform.MultipleEffectExecutorTriggerFactory;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.entity.EntityIdFactory;
@@ -80,7 +80,7 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(FrameFactory.class, new FrameFactory());
         ServiceProvider.register(SmoothAnimation.class, new SmoothCoastersSmoothAnimation(new SmoothCoastersAPI(plugin)));
         ServiceProvider.register(TriggerConfigFactory.class, new TriggerConfigFactory());
-        ServiceProvider.register(MultiArmorstandMovementEffectTriggerFactory.class, new MultiArmorstandMovementEffectTriggerFactory());
+        ServiceProvider.register(MultipleEffectExecutorTriggerFactory.class, new MultipleEffectExecutorTriggerFactory());
         ServiceProvider.register(MusicEffectTriggerFactory.class, new MusicEffectTriggerFactory());
         ServiceProvider.register(CartRotationTriggerFactory.class, new CartRotationTriggerFactory());
         ServiceProvider.register(EffectTriggerFactory.class, new EffectTriggerFactory());

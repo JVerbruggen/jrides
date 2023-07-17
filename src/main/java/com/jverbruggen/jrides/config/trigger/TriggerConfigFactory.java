@@ -24,7 +24,7 @@ public class TriggerConfigFactory {
                 triggerConfig = MusicTriggerConfig.fromConfigurationSection(configurationSection);
                 break;
             case MULTI_ARMORSTAND_MOVEMENT:
-                triggerConfig = MultiArmorstandMovementConfig.fromConfigurationSection(configurationSection);
+                triggerConfig = MultiEntityMovementConfig.fromConfigurationSection(configurationSection);
                 break;
             default:
                 throw new RuntimeException("Trigger type " + type + " is not supported");

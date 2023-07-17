@@ -30,6 +30,11 @@ public class VirtualBukkitEntity extends BaseVirtualEntity implements VirtualEnt
     }
 
     @Override
+    public Quaternion getRotation() {
+        return Quaternion.fromYawPitchRoll(0, yawRotation, 0);
+    }
+
+    @Override
     public double getYaw() {
         return yawRotation;
     }

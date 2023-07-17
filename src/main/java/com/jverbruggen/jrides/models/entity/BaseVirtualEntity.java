@@ -26,7 +26,7 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     protected Vector3 location;
     protected List<Player> viewers;
 
-    private int teleportSyncCoundownState; // If entity isn't teleported every few frames, it starts drifting due to only relative updates
+    private int teleportSyncCountdownState; // If entity isn't teleported every few frames, it starts drifting due to only relative updates
 
     public BaseVirtualEntity(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, int entityId) {
         this.passenger = null;
@@ -42,7 +42,7 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
         this.location = location;
         this.viewers = new ArrayList<>();
         this.spawned = true;
-        this.teleportSyncCoundownState = 0;
+        this.teleportSyncCountdownState = 0;
     }
 
     @Override
@@ -77,7 +77,7 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     @Override
     public void setHostSeat(Seat seat) {
         partOfSeat = seat;
-        setAllowsPassengerValue(true);
+        this.allowsPassengerValue = true;
     }
 
     @Override
@@ -119,26 +119,23 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
         }
 
         double distanceSquared = newLocation.distanceSquared(this.location);
-//        double packetYaw = orientation == null ? 0 : orientation.getPacketYaw();
 
-        if(distanceSquared > 49 || teleportSyncCoundownState > 60) {
+        if(distanceSquared > 49 || teleportSyncCountdownState > 60) {
             Vector3 blockLocation = newLocation.toBlock();
             teleportEntity(blockLocation);
-            teleportSyncCoundownState = 0;
+            teleportSyncCountdownState = 0;
 
             Vector3 delta = Vector3.subtract(newLocation, newLocation.toBlock());
             moveEntity(delta, 0);
-//            moveEntity(delta, packetYaw);
         }
         else{
             Vector3 delta = Vector3.subtract(newLocation, this.location);
             moveEntity(delta, 0);
-//            moveEntity(delta, packetYaw);
         }
 
         this.location = newLocation;
 
-        teleportSyncCoundownState++;
+        teleportSyncCountdownState++;
     }
 
     @Override
@@ -191,10 +188,6 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     @Override
     public boolean isAlive() {
         return spawned;
-    }
-
-    protected void setAllowsPassengerValue(boolean allowsPassengerValue) {
-        this.allowsPassengerValue = allowsPassengerValue;
     }
 
     protected void syncPassenger(Vector3 position){

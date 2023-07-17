@@ -57,13 +57,13 @@ public class GlobalViewportManager implements ViewportManager {
     @Override
     public void removeEntities(TrainHandle trainHandle) {
         trainHandle.getTrain().despawn();
-        flushDespawned();
+        flushDeadEntities();
     }
 
     @Override
     public void removeEntities(List<TrainHandle> trainHandles) {
         trainHandles.forEach(t -> t.getTrain().despawn());
-        flushDespawned();
+        flushDeadEntities();
     }
 
     @Override
@@ -79,6 +79,11 @@ public class GlobalViewportManager implements ViewportManager {
     @Override
     public void updateForEntity(VirtualEntity virtualEntity) {
         globalViewport.updateEntityViewers(virtualEntity);
+    }
+
+    @Override
+    public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel) {
+        return spawnVirtualArmorstand(location, headModel);
     }
 
     @Override
@@ -148,7 +153,7 @@ public class GlobalViewportManager implements ViewportManager {
         }
     }
 
-    private void flushDespawned(){
+    private void flushDeadEntities(){
         globalViewport.flushDeadEntities();
     }
 }
