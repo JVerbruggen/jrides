@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.models.map.ridecounter.RideCounterMapType;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import dev.cerus.maps.api.graphics.ColorCache;
 import org.bukkit.configuration.ConfigurationSection;
 
 import javax.imageio.ImageIO;
@@ -21,18 +22,32 @@ public class RideCounterMapConfig extends BaseConfig {
     private final List<Integer> mapIds;
     private final List<BufferedImage> backgroundImages;
     private final String lineFormat;
+    private final Integer rideNameLine;
+    private final Integer typeLine;
+    private final String typeText;
+    private final byte primaryColor;
+    private final byte secondaryColor;
+    private final byte tertiaryColor;
 
-    public RideCounterMapConfig(String rideCounterMapIdentifier, RideCounterMapType rideCounterMapType, List<Integer> lines, List<Integer> mapIds, List<BufferedImage> backgroundImages, String lineFormat) {
+    public RideCounterMapConfig(String rideCounterMapIdentifier, RideCounterMapType rideCounterMapType, List<Integer> lines, List<Integer> mapIds,
+                                List<BufferedImage> backgroundImages, String lineFormat, Integer rideNameLine, Integer typeLine, String typeText,
+                                byte primaryColor, byte secondaryColor, byte tertiaryColor) {
         this.rideCounterMapIdentifier = rideCounterMapIdentifier;
         this.rideCounterMapType = rideCounterMapType;
         this.lines = lines;
         this.mapIds = mapIds;
         this.backgroundImages = backgroundImages;
         this.lineFormat = lineFormat;
+        this.rideNameLine = rideNameLine;
+        this.typeLine = typeLine;
+        this.typeText = typeText;
+        this.primaryColor = primaryColor;
+        this.secondaryColor = secondaryColor;
+        this.tertiaryColor = tertiaryColor;
     }
 
     public RideCounterMapConfig() {
-        this(null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null, null, null, ColorCache.rgbToMap(0, 0, 0), ColorCache.rgbToMap(0, 0, 0), ColorCache.rgbToMap(0, 0, 0));
     }
 
     public String getRideCounterMapIdentifier() {
@@ -59,16 +74,52 @@ public class RideCounterMapConfig extends BaseConfig {
         return lineFormat;
     }
 
+    public Integer getRideNameLine() {
+        return rideNameLine;
+    }
+
+    public Integer getTypeLine() {
+        return typeLine;
+    }
+
+    public String getTypeText() {
+        return typeText;
+    }
+
+    public byte getPrimaryColor() {
+        return primaryColor;
+    }
+
+    public byte getSecondaryColor() {
+        return secondaryColor;
+    }
+
+    public byte getTertiaryColor() {
+        return tertiaryColor;
+    }
+
+    private static byte convertListToColorByte(List<Integer> colorList) {
+        if(colorList == null || colorList.size() != 3) return ColorCache.rgbToMap(0, 0, 0);
+        return ColorCache.rgbToMap(colorList.get(0), colorList.get(1), colorList.get(2));
+    }
+
     public static RideCounterMapConfig fromConfigurationSection(String rideIdentifier, ConfigurationSection configurationSection) {
         if(configurationSection == null) return new RideCounterMapConfig();
 
         ConfigManager configManager = ServiceProvider.getSingleton(ConfigManager.class);
 
         String rideCounterMapIdentifier = configurationSection.getName();
-        RideCounterMapType rideCounterMapType = RideCounterMapType.valueOf(getString(configurationSection, "type", "").toUpperCase());
+        RideCounterMapType rideCounterMapType = RideCounterMapType.valueOf(getString(configurationSection, "type", "top").toUpperCase());
         List<Integer> lines = getIntegerList(configurationSection, "lines", null);
         List<Integer> mapIds = getIntegerList(configurationSection, "mapIds", null);
         String lineFormat = getString(configurationSection, "lineFormat", "%RANK%. %NAME%: %COUNT%");
+        Integer rideNameLine = getInt(configurationSection, "rideNameLine", -1);
+        Integer typeLine = getInt(configurationSection, "typeLine", -1);
+        String typeText = getString(configurationSection, "typeText", rideCounterMapType.toString());
+
+        byte primaryColor = convertListToColorByte(getIntegerList(configurationSection, "primaryColor", null));
+        byte secondaryColor = convertListToColorByte(getIntegerList(configurationSection, "secondaryColor", null));
+        byte tertiaryColor = convertListToColorByte(getIntegerList(configurationSection, "tertiaryColor", null));
 
         List<BufferedImage> backgroundImages = new ArrayList<>();
 
@@ -88,6 +139,7 @@ public class RideCounterMapConfig extends BaseConfig {
             }
         }
 
-        return new RideCounterMapConfig(rideCounterMapIdentifier, rideCounterMapType, lines, mapIds, backgroundImages, lineFormat);
+        return new RideCounterMapConfig(rideCounterMapIdentifier, rideCounterMapType, lines, mapIds, backgroundImages, lineFormat, rideNameLine, typeLine, typeText,
+                primaryColor, secondaryColor, tertiaryColor);
     }
 }

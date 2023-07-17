@@ -20,7 +20,6 @@ import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,6 +115,20 @@ public class RideCounterMapFactory {
                     }
                 }
 
+                Integer rideNameLine = rideCounterMapConfig.getRideNameLine();
+                Integer typeLine = rideCounterMapConfig.getTypeLine();
+                String typeText = rideCounterMapConfig.getTypeText();
+                byte primaryColor = rideCounterMapConfig.getPrimaryColor();
+                byte secondaryColor = rideCounterMapConfig.getSecondaryColor();
+                byte tertiaryColor = rideCounterMapConfig.getTertiaryColor();
+
+                // If this is the second map in a list, remove the ride name and type lines
+                if(mapIndex > 0) {
+                    rideNameLine = null;
+                    typeLine = null;
+                    typeText = null;
+                }
+
                 MapView mapView = Bukkit.getMap(mapId);
                 if(mapView == null) {
                     JRidesPlugin.getLogger().warning("No map found for id " + mapId + ". first create the map and assign the ID to the map configuration afterwards");
@@ -126,7 +139,8 @@ public class RideCounterMapFactory {
                 mapView.setLocked(true);
                 mapView.setTrackingPosition(false);
 
-                RideCounterMap map = new RideCounterMap(rideHandle, mapView, mapLines, rideCounterMapConfig.getLineFormat(), backgroundImage);
+                RideCounterMap map = new RideCounterMap(rideHandle, mapView, mapLines, rideCounterMapConfig.getLineFormat(), backgroundImage, rideNameLine, typeLine,
+                        typeText, primaryColor, secondaryColor, tertiaryColor);
                 rideCounterMaps.put(String.format("%s %s_%s", rideIdentifier, rideCounterMapConfig.getRideCounterMapIdentifier(), mapIndex++), map);
             }
         }

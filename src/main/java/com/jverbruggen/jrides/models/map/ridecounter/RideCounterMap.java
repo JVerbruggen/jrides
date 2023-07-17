@@ -25,16 +25,29 @@ public class RideCounterMap  {
     private final Map<Integer, Integer> lines;
     private final String lineFormat;
     private final BufferedImage backgroundImage;
+    private final Integer rideNameLine;
+    private final Integer typeLine;
+    private final String typeText;
+    private final byte primaryColor;
+    private final byte secondaryColor;
+    private final byte tertiaryColor;
 
 
     private final ClientsideMapGraphics currentGraphics;
 
-    public RideCounterMap(RideHandle rideHandle, MapView mapView, Map<Integer, Integer> lines, String lineFormat, BufferedImage backgroundImage) {
+    public RideCounterMap(RideHandle rideHandle, MapView mapView, Map<Integer, Integer> lines, String lineFormat, BufferedImage backgroundImage,
+                          Integer rideNameLine, Integer typeLine, String typeText, byte primaryColor, byte secondaryColor, byte tertiaryColor) {
         this.rideHandle = rideHandle;
         this.mapView = mapView;
         this.lines = lines;
         this.lineFormat = lineFormat;
         this.backgroundImage = backgroundImage;
+        this.rideNameLine = rideNameLine;
+        this.typeLine = typeLine;
+        this.typeText = typeText;
+        this.primaryColor = primaryColor;
+        this.secondaryColor = secondaryColor;
+        this.tertiaryColor = tertiaryColor;
         this.currentGraphics = new ClientsideMapGraphics();
     }
 
@@ -54,14 +67,23 @@ public class RideCounterMap  {
     }
 
     public void updateVisuals() {
-        // TODO: Implement this functionality to show the ride counters
         currentGraphics.drawImage(backgroundImage, 0, 0);
+
+        // Draw the ride name if it is not null
+        if(rideNameLine != null) {
+            drawHorizontallyCenteredText(rideHandle.getRide().getDisplayName(), rideNameLine, primaryColor, currentGraphics);
+        }
+
+        // Draw the type line if it is not null
+        if(typeLine != null) {
+            drawHorizontallyCenteredText(typeText, typeLine, secondaryColor, currentGraphics);
+        }
 
         // For each line, draw text on the map
         lines.forEach((index, height) -> {
             String line = lineFormat.replace("%RANK%", String.valueOf(index + 1)).replace("%COUNT%", "NaN");
-            drawHorizontallyCenteredText(line, height, ColorCache.rgbToMap(0, 0, 0), currentGraphics);
-            drawHorizontallyCenteredText("player", height + MinecraftFont.Font.getHeight() + 2, ColorCache.rgbToMap(0, 0, 0), currentGraphics);
+            drawHorizontallyCenteredText(line, height, tertiaryColor, currentGraphics);
+            drawHorizontallyCenteredText("player", height + MinecraftFont.Font.getHeight() + 2, primaryColor, currentGraphics);
         });
     }
 
