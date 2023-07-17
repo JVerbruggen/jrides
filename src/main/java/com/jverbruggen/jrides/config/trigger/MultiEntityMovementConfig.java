@@ -1,7 +1,9 @@
 package com.jverbruggen.jrides.config.trigger;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.effect.platform.MultipleEffectExecutorTrigger;
 import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -47,5 +49,13 @@ public class MultiEntityMovementConfig extends BaseTriggerConfig{
         }
 
         return new MultiEntityMovementConfig(entityMovements);
+    }
+
+    @Override
+    public TrainEffectTrigger createTrigger() {
+        ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
+        List<TrainEffectTrigger> entityMovementTriggers = createTriggers(viewportManager);
+
+        return new MultipleEffectExecutorTrigger(entityMovementTriggers);
     }
 }

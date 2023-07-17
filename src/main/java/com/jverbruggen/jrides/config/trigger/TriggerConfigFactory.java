@@ -23,6 +23,9 @@ public class TriggerConfigFactory {
             case MUSIC:
                 triggerConfig = MusicTriggerConfig.fromConfigurationSection(configurationSection);
                 break;
+            case COMMAND:
+                triggerConfig = CommandTriggerConfig.fromConfigurationSection(configurationSection);
+                break;
             case MULTI_ARMORSTAND_MOVEMENT:
                 triggerConfig = MultiEntityMovementConfig.fromConfigurationSection(configurationSection);
                 break;
