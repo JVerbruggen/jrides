@@ -91,13 +91,24 @@ public class RideState extends BaseConfig implements ConfigurationSerializable {
 
     public void save(){
         ConfigManager configManager = ServiceProvider.getSingleton(ConfigManager.class);
-        String fileName = getFileName(configManager, rideIdentifier);
+        String fileName = getCoasterFileName(configManager, rideIdentifier);
         configManager.updateConfigFile(fileName, "state", this);
     }
 
-    public static RideState load(String rideIdentifier) {
+    public static RideState loadCoasterState(String rideIdentifier) {
         ConfigManager configManager = ServiceProvider.getSingleton(ConfigManager.class);
-        String fileName = getFileName(configManager, rideIdentifier);
+        String fileName = getCoasterFileName(configManager, rideIdentifier);
+        return load(rideIdentifier, fileName);
+    }
+
+    public static RideState loadFlatrideState(String rideIdentifier) {
+        ConfigManager configManager = ServiceProvider.getSingleton(ConfigManager.class);
+        String fileName = getFlatrideFileName(configManager, rideIdentifier);
+        return load(rideIdentifier, fileName);
+    }
+
+    private static RideState load(String rideIdentifier, String fileName){
+        ConfigManager configManager = ServiceProvider.getSingleton(ConfigManager.class);
 
         Optional<RideState> state = configManager.getConfigFileObject(fileName, "state", RideState.class);
 
@@ -110,10 +121,13 @@ public class RideState extends BaseConfig implements ConfigurationSerializable {
             configManager.updateConfigFile(fileName, "state", newState);
             return newState;
         });
-
     }
 
-    private static String getFileName(ConfigManager configManager, String rideIdentifier){
+    private static String getCoasterFileName(ConfigManager configManager, String rideIdentifier){
         return configManager.getCoasterFolder(rideIdentifier) + "/" + rideIdentifier + ".state.yml";
+    }
+
+    private static String getFlatrideFileName(ConfigManager configManager, String rideIdentifier){
+        return configManager.getFlatrideFolder(rideIdentifier) + "/" + rideIdentifier + ".state.yml";
     }
 }

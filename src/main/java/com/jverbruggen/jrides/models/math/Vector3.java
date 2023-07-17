@@ -280,6 +280,7 @@ public class Vector3 {
     }
 
     public static Vector3 fromDoubleList(List<Double> doubleList){
+        if(doubleList == null) return null;
         if(doubleList.size() != 3) throw new RuntimeException("Can only create vector from double list of length 3");
         return new Vector3(doubleList.get(0), doubleList.get(1), doubleList.get(2));
     }

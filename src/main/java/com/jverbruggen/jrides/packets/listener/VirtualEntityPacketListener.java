@@ -129,7 +129,6 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
             type = InstructionType.NONE;
         }
 
-
         seat.sendPlayerControlInstruction(type);
     }
 

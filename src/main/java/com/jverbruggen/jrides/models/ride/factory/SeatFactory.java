@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.models.ride.factory;
 
 import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
+import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Matrix4x4;
 import com.jverbruggen.jrides.models.math.Quaternion;
@@ -30,9 +31,9 @@ public class SeatFactory {
             Vector3 absoluteSeatLocation = Vector3.add(cartLocation, relativeSeatLocation);
 
             double yawRotation = orientation.getPacketYaw();
-            VirtualArmorstand seatArmorStand = viewportManager.spawnVirtualArmorstand(absoluteSeatLocation, yawRotation);
-            CoasterSeat seat = new CoasterSeat(coasterHandle, seatArmorStand, seatOffset);
-            seatArmorStand.setHostSeat(seat);
+            VirtualEntity seatEntity = viewportManager.spawnSeatEntity(absoluteSeatLocation, yawRotation, null);
+            CoasterSeat seat = new CoasterSeat(coasterHandle, seatEntity, seatOffset);
+            seatEntity.setHostSeat(seat);
             seats.add(seat);
         }
         return seats;

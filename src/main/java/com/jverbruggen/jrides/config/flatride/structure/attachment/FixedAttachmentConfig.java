@@ -7,9 +7,11 @@ import com.jverbruggen.jrides.animator.flatride.attachment.FixedAttachment;
 import com.jverbruggen.jrides.animator.flatride.linearactuator.LinearActuator;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
 import com.jverbruggen.jrides.animator.flatride.rotor.Rotor;
+import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxisFactory;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorConfig;
+import com.jverbruggen.jrides.config.flatride.structure.basic.StaticStructureConfig;
 import com.jverbruggen.jrides.config.flatride.structure.seat.SeatConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -50,7 +52,7 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
                 .collect(Collectors.toList());
 
         LinearActuator linearActuator = new LinearActuator(
-                linearActuatorConfig.getIdentifier(), linearActuatorConfig.getIdentifier(), linearActuatorConfig.isRoot(),
+                linearActuatorConfig.getIdentifier(), linearActuatorConfig.getIdentifier(), linearActuatorConfig.isRoot(), null,
                 flatRideModels, linearActuatorConfig.getFlatRideComponentSpeed(), linearActuatorConfig.getSize(),
                 linearActuatorConfig.getPhase().get().shortValue());
 
@@ -58,6 +60,11 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
         linearActuator.setAttachedTo(attachment);
 
         components.add(linearActuator);
+    }
+
+    @Override
+    public void createStaticStructureWithAttachment(StaticStructureConfig config, List<FlatRideComponent> components, FlatRideHandle rideHandle) {
+        throw new RuntimeException("Not implementing this functionality. Weird.");
     }
 
     @Override
@@ -69,7 +76,8 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
                 .collect(Collectors.toList());
 
         Rotor rotor = new Rotor(rotorConfig.getIdentifier(), rotorConfig.getIdentifier(), rotorConfig.isRoot(),
-                flatRideModels, rotorConfig.getFlatRideComponentSpeed());
+                null, flatRideModels, rotorConfig.getFlatRideComponentSpeed(),
+                RotorAxisFactory.createAxisFromString(rotorConfig.getRotorAxis()));
         rotor.createPlayerControl(rotorConfig.getPlayerControlConfig());
 
         Attachment attachment = new FixedAttachment(rotor, position, rotation);

@@ -29,4 +29,9 @@ public class ControlInstruction implements Instruction {
     public void reset() {
 
     }
+
+    @Override
+    public void cleanUp(FlatRideComponent component) {
+
+    }
 }

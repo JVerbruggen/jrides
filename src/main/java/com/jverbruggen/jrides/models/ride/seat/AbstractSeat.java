@@ -99,7 +99,8 @@ public abstract class AbstractSeat implements Seat {
 
     @Override
     public void setLocation(Vector3 location, Quaternion orientation) {
-        virtualEntity.setLocation(location, orientation);
+        virtualEntity.setLocation(location);
+        virtualEntity.setRotation(orientation);
 
         if(hasPassenger()){
             Quaternion smoothAnimationRotation = orientation.clone();

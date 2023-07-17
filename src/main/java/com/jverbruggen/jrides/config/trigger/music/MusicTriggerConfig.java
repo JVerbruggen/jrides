@@ -2,6 +2,8 @@ package com.jverbruggen.jrides.config.trigger.music;
 
 import com.jverbruggen.jrides.config.trigger.BaseTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.TriggerType;
+import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
+import com.jverbruggen.jrides.effect.train.music.ExternalMusicEffectTrigger;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class MusicTriggerConfig extends BaseTriggerConfig {
@@ -16,6 +18,7 @@ public class MusicTriggerConfig extends BaseTriggerConfig {
         this.descriptor = descriptor;
     }
 
+    @SuppressWarnings("unused")
     public MusicTriggerConfigHandler getHandler() {
         return handler;
     }
@@ -34,5 +37,10 @@ public class MusicTriggerConfig extends BaseTriggerConfig {
         String descriptor = getString(configurationSection, "descriptor", "default");
 
         return new MusicTriggerConfig(handler, resource, descriptor);
+    }
+
+    @Override
+    public TrainEffectTrigger createTrigger() {
+        return new ExternalMusicEffectTrigger(getResource(), getDescriptor());
     }
 }

@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.config.coaster;
 
 import com.jverbruggen.jrides.config.coaster.objects.*;
-import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
+import com.jverbruggen.jrides.config.coaster.objects.item.ItemStackConfig;
 import com.jverbruggen.jrides.config.gates.GatesConfig;
 import com.jverbruggen.jrides.config.ride.AbstractRideConfig;
 import com.jverbruggen.jrides.config.ride.RideCounterMapConfigs;
@@ -23,7 +23,7 @@ public class CoasterConfig extends AbstractRideConfig {
     private final int rideOverviewMapId;
 
     public CoasterConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription,
-                         ItemConfig displayItem, PlayerLocation warpLocation, TrackConfig track,
+                         ItemStackConfig displayItem, PlayerLocation warpLocation, TrackConfig track,
                          VehiclesConfig vehicles, CartSpecConfig cartSpec, GatesConfig gates, double gravityConstant, double dragConstant,
                          ControllerConfig controllerConfig, SoundsConfig soundsConfig, int rideOverviewMapId, boolean canExitDuringRide, RideCounterMapConfigs rideCounterMapConfigs) {
         super(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, soundsConfig, canExitDuringRide, rideCounterMapConfigs);
@@ -75,7 +75,7 @@ public class CoasterConfig extends AbstractRideConfig {
         if(displayDescription.size() == 1 && ChatColor.stripColor(displayDescription.get(0)).equals(""))
             displayDescription.clear();
 
-        ItemConfig displayItem = ItemConfig.fromConfigurationSection(configurationSection.getConfigurationSection("displayItem"));
+        ItemStackConfig displayItem = ItemStackConfig.fromConfigurationSection(configurationSection.getConfigurationSection("displayItem"));
         PlayerLocation warpLocation = PlayerLocation.fromDoubleList(configurationSection.getDoubleList("warpLocation"));
         double gravityConstant = getDouble(configurationSection, "gravityConstant", 0.15);
         double dragConstant = getDouble(configurationSection, "dragConstant", 0.9993);

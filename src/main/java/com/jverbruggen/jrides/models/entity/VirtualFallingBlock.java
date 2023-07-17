@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.models.entity;
 
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
@@ -37,6 +38,11 @@ public class VirtualFallingBlock extends BaseVirtualEntity implements VirtualEnt
     @Override
     public void setPassenger(Player player) {
         return;
+    }
+
+    @Override
+    public Quaternion getRotation() {
+        return new Quaternion();
     }
 
     @Override

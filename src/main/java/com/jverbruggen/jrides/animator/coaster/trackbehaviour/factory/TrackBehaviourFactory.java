@@ -35,6 +35,7 @@ import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
+import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
@@ -246,12 +247,12 @@ public class TrackBehaviourFactory {
             Quaternion modelOffsetOrientation = originTransferPosition.getOrientation().clone();
             modelOffsetOrientation.rotateYawPitchRoll(modelOffsetRotation);
 
-            VirtualArmorstand virtualArmorstand = viewportManager.spawnVirtualArmorstand(
+            VirtualEntity virtualEntity = viewportManager.spawnModelEntity(
                     Vector3.add(originTransferPosition.getLocation(), modelOffsetPosition),
                     new TrainModelItem(ItemStackFactory.getCoasterStack(Material.DIAMOND_HOE, 2, true)));
-            virtualArmorstand.setHeadpose(ArmorStandPose.getArmorStandPose(modelOffsetOrientation));
+            virtualEntity.setRotation(modelOffsetOrientation);
 
-            Transfer transfer = new Transfer(transferPositions, virtualArmorstand, origin, modelOffsetPosition, modelOffsetRotation);
+            Transfer transfer = new Transfer(transferPositions, virtualEntity, origin, modelOffsetPosition, modelOffsetRotation);
             coasterHandle.addTransfer(transfer);
 
             return new TrainDisplacerTransferTrackBehaviour(cartMovementFactory, 1.0, 0.1, 0.1, engageFrame, transfer);
@@ -263,8 +264,6 @@ public class TrackBehaviourFactory {
 
     public TrackBehaviour getTrackBehaviourFor(CoasterHandle coasterHandle, CoasterConfig coasterConfig, PointSectionConfig pointSectionConfig) {
         String type = pointSectionConfig.getType();
-        TrackConfig trackConfig = coasterConfig.getTrack();
-        String identifier = pointSectionConfig.getIdentifier();
 
         if(type.equalsIgnoreCase("switch")){
             return getSwitchBehaviour(pointSectionConfig.getSwitchSectionSpecConfig());

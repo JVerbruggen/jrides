@@ -18,8 +18,11 @@ public interface VirtualEntity {
     void setPassenger(Player player);
 
     Vector3 getLocation();
+    Quaternion getRotation();
+
     double getYaw();
-    void setLocation(Vector3 location, Quaternion orientation);
+    void setLocation(Vector3 location);
+    void setRotation(Quaternion orientation);
     List<Player> getViewers();
     void addViewer(Player player);
     void removeViewer(Player player);

@@ -2,7 +2,7 @@ package com.jverbruggen.jrides.config.ride;
 
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
-import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
+import com.jverbruggen.jrides.config.coaster.objects.item.ItemStackConfig;
 import com.jverbruggen.jrides.config.gates.GatesConfig;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 
@@ -13,14 +13,14 @@ public abstract class AbstractRideConfig extends BaseConfig {
     private final String identifier;
     private final String displayName;
     private final List<String> displayDescription;
-    private final ItemConfig displayItem;
+    private final ItemStackConfig displayItem;
     private final PlayerLocation warpLocation;
     private final GatesConfig gates;
     private final SoundsConfig soundsConfig;
     private final boolean canExitDuringRide;
     private final RideCounterMapConfigs rideCounterMapConfigs;
 
-    public AbstractRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemConfig displayItem, PlayerLocation warpLocation, GatesConfig gates, SoundsConfig soundsConfig, boolean canExitDuringRide, RideCounterMapConfigs rideCounterMapConfigs) {
+    public AbstractRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemStackConfig displayItem, PlayerLocation warpLocation, GatesConfig gates, SoundsConfig soundsConfig, boolean canExitDuringRide, RideCounterMapConfigs rideCounterMapConfigs) {
         this.manifestVersion = manifestVersion;
         this.identifier = identifier;
         this.displayName = displayName;
@@ -49,7 +49,7 @@ public abstract class AbstractRideConfig extends BaseConfig {
         return displayDescription;
     }
 
-    public ItemConfig getDisplayItem() {
+    public ItemStackConfig getDisplayItem() {
         return displayItem;
     }
 

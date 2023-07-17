@@ -6,4 +6,5 @@ public interface Instruction {
     void applyTo(FlatRideComponent component);
     boolean canHandle(FlatRideComponent component);
     void reset();
+    void cleanUp(FlatRideComponent component);
 }

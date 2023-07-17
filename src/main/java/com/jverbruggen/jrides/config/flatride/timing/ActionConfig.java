@@ -1,10 +1,10 @@
 package com.jverbruggen.jrides.config.flatride.timing;
 
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
-import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
+import com.jverbruggen.jrides.animator.flatride.interfaces.HasPosition;
 import com.jverbruggen.jrides.animator.flatride.timing.instruction.*;
+import com.jverbruggen.jrides.animator.flatride.timing.instruction.towards.TowardsPositionInstruction;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import javax.annotation.Nullable;
@@ -36,7 +36,7 @@ public class ActionConfig extends BaseConfig {
     }
 
     public Float getAccelerate() {
-        return accelerate == null ? 0 : accelerate;
+        return accelerate == null ? 0 : Math.abs(accelerate);
     }
 
     public void setAccelerate(Float accelerate) {
@@ -91,14 +91,18 @@ public class ActionConfig extends BaseConfig {
 
         List<TimingAction> timingActions = new ArrayList<>();
         if(targetPosition != null){
+            HasPosition sampleComponent = (HasPosition) targetedFlatRideComponents.get(0);
+            double minSpeed = getSpeed() != null ? getSpeed() : sampleComponent.getFlatRideComponentSpeed().getMinSpeed();
+            double maxSpeed = getSpeed() != null ? -getSpeed() : sampleComponent.getFlatRideComponentSpeed().getMaxSpeed();
+
             timingActions.add(new InstructionBinding(
-                    new TowardsPositionInstruction(getAccelerate(), getSpeed(), getTargetPosition()), targetedFlatRideComponents));
+                    new TowardsPositionInstruction(getAccelerate(), minSpeed, maxSpeed, getTargetPosition()), targetedFlatRideComponents));
         }else if(speed != null){ // SpeedInstruction and TowardsPositionInstruction are mutually exclusive.
             timingActions.add(new InstructionBinding(
                     new SpeedInstruction(getAccelerate(), getSpeed()), targetedFlatRideComponents));
         }
         if(allowControl != null){
-            if(targetPosition != null) throw new RuntimeException("No support for target position and control");
+            if(targetPosition != null && allowControl) throw new RuntimeException("No support for target position and control");
             timingActions.add(new InstructionBinding(
                     new ControlInstruction(allowsControl()), targetedFlatRideComponents));
         }

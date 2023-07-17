@@ -5,18 +5,18 @@ import com.jverbruggen.jrides.models.ride.seat.InstructionType;
 
 public class RotorSpeedPlayerControl extends AbstractPlayerControl implements RotorPlayerControl {
     private Rotor rotor;
-    private final float lowerSpeed;
-    private final float upperSpeed;
-    private final float acceleration;
+    private final double lowerSpeed;
+    private final double upperSpeed;
+    private final double accelerate;
 
-    private float currentSpeed;
-    private float pendingAcceleration;
+    private double currentSpeed;
+    private double pendingAcceleration;
 
-    public RotorSpeedPlayerControl(float lowerSpeed, float upperSpeed, float acceleration) {
+    public RotorSpeedPlayerControl(double lowerSpeed, double upperSpeed, double accelerate) {
         this.rotor = null;
         this.lowerSpeed = lowerSpeed;
         this.upperSpeed = upperSpeed;
-        this.acceleration = acceleration;
+        this.accelerate = accelerate;
         this.currentSpeed = 0f;
         this.pendingAcceleration = 0f;
     }
@@ -31,18 +31,18 @@ public class RotorSpeedPlayerControl extends AbstractPlayerControl implements Ro
         if(!rotor.allowsControl()) return;
 
         if(instruction == InstructionType.A){
-            pendingAcceleration = -acceleration;
+            pendingAcceleration = -accelerate;
         }else if(instruction == InstructionType.D){
-            pendingAcceleration = acceleration;
+            pendingAcceleration = accelerate;
         }
     }
 
     @Override
     public void apply() {
-        float acceleration = this.pendingAcceleration; // Synchronization?
+        double acceleration = this.pendingAcceleration; // Synchronization?
 
         currentSpeed = rotor.getFlatRideComponentSpeed().getSpeed();
-        float oldSpeed = currentSpeed;
+        double oldSpeed = currentSpeed;
         currentSpeed += acceleration;
         if(currentSpeed > upperSpeed){
             currentSpeed = upperSpeed;

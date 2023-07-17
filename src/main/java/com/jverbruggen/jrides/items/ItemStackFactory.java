@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.items;
 
-import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
+import com.jverbruggen.jrides.config.coaster.objects.item.ItemStackConfig;
 import com.jverbruggen.jrides.models.entity.Player;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,8 +29,8 @@ public class ItemStackFactory {
         return stack;
     }
 
-    public static ItemStack getCoasterStackFromConfig(ItemConfig itemConfig){
-        return getCoasterStack(itemConfig.getMaterial(), itemConfig.getDamage(), itemConfig.isUnbreakable());
+    public static ItemStack getCoasterStackFromConfig(ItemStackConfig itemStackConfig){
+        return getCoasterStack(itemStackConfig.getMaterial(), itemStackConfig.getDamage(), itemStackConfig.isUnbreakable());
     }
 
     public static ItemStack getRideControlButtonStack(Material material, String displayName){

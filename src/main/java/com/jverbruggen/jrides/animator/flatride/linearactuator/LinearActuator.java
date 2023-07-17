@@ -5,8 +5,8 @@ import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.interfaces.HasSpeed;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
+import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
 import com.jverbruggen.jrides.models.math.Vector3;
-import org.bukkit.Bukkit;
 
 import java.util.List;
 
@@ -19,10 +19,10 @@ public class LinearActuator extends AbstractInterconnectedFlatRideComponent impl
     private final float size;
     private final short phase;
 
-    private float sineState;
+    private double sineState;
 
-    public LinearActuator(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, float size, short phase) {
-        super(identifier, groupIdentifier, root, flatRideModels);
+    public LinearActuator(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, float size, short phase) {
+        super(identifier, groupIdentifier, root, joint, flatRideModels);
         this.flatRideComponentSpeed = flatRideComponentSpeed;
         this.size = size;
         this.phase = phase;

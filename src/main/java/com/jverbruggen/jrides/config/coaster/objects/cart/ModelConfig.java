@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.config.coaster.objects.item.EntityConfig;
 import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
+import com.jverbruggen.jrides.config.coaster.objects.item.ItemStackConfig;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
@@ -17,24 +18,14 @@ import java.util.List;
 import java.util.Set;
 
 public class ModelConfig extends BaseConfig {
-    private final ItemConfig item;
-    private final EntityConfig entity;
+    private final ItemConfig itemConfig;
     private final Vector3 position;
     private final Quaternion rotation;
 
-    public ModelConfig(ItemConfig item, EntityConfig entity, Vector3 position, Quaternion rotation) {
-        this.item = item;
-        this.entity = entity;
+    public ModelConfig(ItemConfig itemConfig, Vector3 position, Quaternion rotation) {
+        this.itemConfig = itemConfig;
         this.position = position;
         this.rotation = rotation;
-    }
-
-    public ItemConfig getItem() {
-        return item;
-    }
-
-    public EntityConfig getEntity() {
-        return entity;
     }
 
     public Vector3 getPosition() {
@@ -45,34 +36,26 @@ public class ModelConfig extends BaseConfig {
         return rotation;
     }
 
+    public ItemConfig getItemConfig() {
+        return itemConfig;
+    }
+
     public FlatRideModel toFlatRideModel(Vector3 rootPosition, ViewportManager viewportManager){
         Vector3 spawnPosition = Vector3.add(rootPosition, position);
-        VirtualEntity virtualEntity;
-        if(getItem() != null)
-            virtualEntity = viewportManager.spawnVirtualArmorstand(spawnPosition, new TrainModelItem(item.createItemStack()));
-        else if(getEntity() != null)
-            virtualEntity = viewportManager.spawnVirtualEntity(spawnPosition, getEntity().getEntityType());
-        else throw new RuntimeException("No model or entity configured in toFlatRideModel");
+        VirtualEntity virtualEntity = itemConfig.spawnEntity(viewportManager, spawnPosition);
 
         return new FlatRideModel(virtualEntity, position.clone(), rotation.clone());
     }
 
     public static ModelConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection) {
-        if(configurationSection == null) return new ModelConfig(null, null, Vector3.zero(), new Quaternion());
+        if(configurationSection == null) return new ModelConfig(null, Vector3.zero(), new Quaternion());
 
-        ItemConfig item = null;
-        EntityConfig entity = null;
-
-        if(configurationSection.contains("item"))
-            item = ItemConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "item"));
-        else if(configurationSection.contains("entity"))
-            entity = EntityConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "entity"));
-        else throw new RuntimeException("Model config needs an item or an entity");
+        ItemConfig itemConfig = ItemConfig.fromConfigurationSection(configurationSection);
 
         Vector3 vector = Vector3.fromDoubleList(getDoubleList(configurationSection, "position", List.of(0d,0d,0d)));
         Quaternion rotation = Quaternion.fromDoubleList(getDoubleList(configurationSection, "rotation", List.of(0d,0d,0d)));
 
-        return new ModelConfig(item, entity, vector, rotation);
+        return new ModelConfig(itemConfig, vector, rotation);
     }
 
     public static List<ModelConfig> multipleFromConfigurationSection(ConfigurationSection configurationSection){

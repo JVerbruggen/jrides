@@ -4,6 +4,8 @@ import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorConfig;
+import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
+import com.jverbruggen.jrides.config.flatride.structure.basic.StaticStructureConfig;
 import com.jverbruggen.jrides.config.flatride.structure.seat.SeatConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -12,9 +14,15 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.List;
 
 public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAttachmentConfig {
+    private final RelativeAttachmentJointConfig joint;
 
-    protected RelativeMultipleAttachmentConfig(String toComponentIdentifier, Vector3 offsetPosition, int amount) {
+    protected RelativeMultipleAttachmentConfig(String toComponentIdentifier, Vector3 offsetPosition, int amount, RelativeAttachmentJointConfig joint) {
         super(toComponentIdentifier, offsetPosition, amount);
+        this.joint = joint;
+    }
+
+    public RelativeAttachmentJointConfig getJoint() {
+        return joint;
     }
 
     public static AttachmentConfig fromConfigurationSection(ConfigurationSection configurationSection) {
@@ -28,7 +36,9 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
 
         int armDuplicate = getInt(configurationSection, "armDuplicate", 1);
 
-        return new RelativeMultipleAttachmentConfig(armTo, offsetPosition, armDuplicate);
+        RelativeAttachmentJointConfig joint = RelativeAttachmentJointConfig.fromConfigurationSection(configurationSection.getConfigurationSection("armJoint"));
+
+        return new RelativeMultipleAttachmentConfig(armTo, offsetPosition, armDuplicate, joint);
     }
 
     @Override
@@ -67,6 +77,24 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
     }
 
     @Override
+    public void createStaticStructureWithAttachment(StaticStructureConfig config, List<FlatRideComponent> components, FlatRideHandle rideHandle) {
+        List<FlatRideComponent> attachedToComponents = FlatRideComponent.findAllMatching(components, getToComponentIdentifier());
+        for(FlatRideComponent attachedTo : attachedToComponents) {
+            FlatRideComponent component = FlatRideComponent.createStaticStructure(
+                    config.getIdentifier(),
+                    config.getIdentifier(),
+                    attachedTo,
+                    new Quaternion(),
+                    getOffsetPosition(),
+                    getJoint(),
+                    config.getFlatRideModels()
+            );
+
+            components.add(component);
+        }
+    }
+
+    @Override
     public void createRotorWithAttachment(RotorConfig rotorConfig, List<FlatRideComponent> components, FlatRideHandle rideHandle) {
         List<FlatRideComponent> attachedToComponents = FlatRideComponent.findAllMatching(components, getToComponentIdentifier());
 
@@ -78,6 +106,8 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
                     getOffsetPosition(),
                     rotorConfig.getFlatRideComponentSpeed(),
                     rotorConfig.getPlayerControlConfig(),
+                    getJoint(),
+                    rotorConfig.getRotorAxis(),
                     rotorConfig.getFlatRideModels(),
                     getAmount());
 

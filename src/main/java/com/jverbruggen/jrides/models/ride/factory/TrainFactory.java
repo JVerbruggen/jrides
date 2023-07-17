@@ -7,11 +7,12 @@ import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.CartSpecConfig;
 import com.jverbruggen.jrides.config.coaster.objects.VehiclesConfig;
 import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
+import com.jverbruggen.jrides.config.coaster.objects.item.ItemStackConfig;
 import com.jverbruggen.jrides.config.coaster.objects.cart.CartTypeSpecConfig;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
+import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
-import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.AutoTrackUpdateFrame;
@@ -81,19 +82,14 @@ public class TrainFactory {
             else
                 cartTypeSpecConfig = cartSpecConfig.getDefault();
 
-            ItemConfig cartModelItemConfig = cartTypeSpecConfig.getModel().getItem();
-
-            Material modelMaterial = cartModelItemConfig.getMaterial();
-            int modelDamage = cartModelItemConfig.getDamage();
-            boolean unbreakable = cartModelItemConfig.isUnbreakable();
-            TrainModelItem model = new TrainModelItem(ItemStackFactory.getCoasterStack(modelMaterial, modelDamage, unbreakable));
+            ItemConfig cartModelItemConfig = cartTypeSpecConfig.getModel().getItemConfig();
 
             Vector3 trackLocation = spawnSection.getLocationFor(cartFrame);
             Quaternion orientation = spawnSection.getOrientationFor(cartFrame);
             Vector3 cartLocation = CoasterCart.calculateLocation(trackLocation, cartOffset, orientation);
 
-            VirtualArmorstand armorStand = viewportManager.spawnVirtualArmorstand(cartLocation, model);
-            Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> armorStand.setHeadpose(ArmorStandPose.getArmorStandPose(orientation)));
+            VirtualEntity virtualEntity = cartModelItemConfig.spawnEntity(viewportManager, cartLocation);
+            Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> virtualEntity.setRotation(orientation));
 
             List<Vector3> seatOffsets = cartTypeSpecConfig.getSeats().getPositions();
             List<CoasterSeat> seats = seatFactory.createCoasterSeats(coasterHandle, seatOffsets, cartLocation, orientation);
@@ -109,7 +105,7 @@ public class TrainFactory {
             CoasterCart cart = new SimpleCoasterCart(
                     cartName,
                     seats,
-                    armorStand,
+                    virtualEntity,
                     cartOffset,
                     cartFrame);
             carts.add(cart);

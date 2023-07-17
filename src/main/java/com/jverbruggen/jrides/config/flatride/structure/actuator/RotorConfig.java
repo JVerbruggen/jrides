@@ -40,7 +40,7 @@ public class RotorConfig extends AbstractActuatorConfig implements StructureConf
     public static StructureConfigItem fromConfigurationSection(ConfigurationSection configurationSection, String identifier) {
         boolean root = getBoolean(configurationSection, "root", false);
         String axis = getString(configurationSection, "axis", "y");
-        RotorPlayerControlConfig playerControlConfig = RotorPlayerControlConfig.fromConfigurationSection(configurationSection.getConfigurationSection("control"));
+        RotorPlayerControlConfig playerControlConfig = RotorPlayerControlConfig.fromConfigurationSection(identifier, configurationSection.getConfigurationSection("control"));
 
         AttachmentConfig attachmentConfig = null;
         if(configurationSection.contains("position")){

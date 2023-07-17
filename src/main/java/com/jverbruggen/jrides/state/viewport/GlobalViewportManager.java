@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.state.viewport;
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.models.entity.*;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
+import com.jverbruggen.jrides.models.entity.armorstand.YawRotatedVirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.render.GlobalViewport;
 import com.jverbruggen.jrides.packets.PacketSender;
@@ -56,13 +57,13 @@ public class GlobalViewportManager implements ViewportManager {
     @Override
     public void removeEntities(TrainHandle trainHandle) {
         trainHandle.getTrain().despawn();
-        flushDespawned();
+        flushDeadEntities();
     }
 
     @Override
     public void removeEntities(List<TrainHandle> trainHandles) {
         trainHandles.forEach(t -> t.getTrain().despawn());
-        flushDespawned();
+        flushDeadEntities();
     }
 
     @Override
@@ -81,6 +82,11 @@ public class GlobalViewportManager implements ViewportManager {
     }
 
     @Override
+    public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel) {
+        return spawnVirtualArmorstand(location, headModel);
+    }
+
+    @Override
     public VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType) {
         return spawnVirtualEntity(location, entityType, 0);
     }
@@ -94,6 +100,20 @@ public class GlobalViewportManager implements ViewportManager {
 
         updateForEntity(virtualEntity);
         return virtualEntity;
+    }
+
+    @Override
+    public VirtualArmorstand spawnSeatEntity(Vector3 location, double yawRotation, TrainModelItem model){
+        int entityId = entityIdFactory.newId();
+        VirtualArmorstand virtualArmorstand = new YawRotatedVirtualArmorstand(packetSender, this, location, yawRotation, entityId);
+        if(model != null){
+            virtualArmorstand.setModel(model);
+        }
+
+        addEntity(virtualArmorstand);
+
+        updateForEntity(virtualArmorstand);
+        return virtualArmorstand;
     }
 
     @Override
@@ -133,7 +153,7 @@ public class GlobalViewportManager implements ViewportManager {
         }
     }
 
-    private void flushDespawned(){
+    private void flushDeadEntities(){
         globalViewport.flushDeadEntities();
     }
 }

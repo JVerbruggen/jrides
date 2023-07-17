@@ -1,6 +1,8 @@
 package com.jverbruggen.jrides.animator.flatride.rotor;
 
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
+import com.jverbruggen.jrides.models.math.Matrix4x4;
+import com.jverbruggen.jrides.models.math.MatrixMath;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 
@@ -15,19 +17,9 @@ public class FlatRideModel {
         this.rotationOffset = rotationOffset;
     }
 
-    public VirtualEntity getEntity() {
-        return entity;
-    }
-
-    public Vector3 getOffset() {
-        return offset;
-    }
-
-    public Quaternion getRotationOffset() {
-        return rotationOffset;
-    }
-
     public void updateLocation(Vector3 parentLocation, Quaternion parentRotation){
-        entity.setLocation(Vector3.add(parentLocation, this.offset), Quaternion.multiply(parentRotation, this.rotationOffset));
+        Matrix4x4 matrix = MatrixMath.rotateTranslate(parentLocation, parentRotation, offset, rotationOffset);
+        entity.setLocation(matrix.toVector3());
+        entity.setRotation(matrix.getRotation());
     }
 }

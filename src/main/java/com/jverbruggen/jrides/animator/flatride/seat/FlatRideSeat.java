@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import com.jverbruggen.jrides.models.ride.seat.AbstractSeat;
 import com.jverbruggen.jrides.models.ride.seat.InstructionType;
 import com.jverbruggen.jrides.models.ride.seat.SeatHost;
+import org.bukkit.Bukkit;
 
 public class FlatRideSeat extends AbstractSeat {
     private PlayerControl playerControl;
