@@ -118,6 +118,7 @@ trigger:
             initialRotation: [0, 0, 0] # [pitch, yaw, roll]
             locationDelta: [0.0, 0.1, 0.0] 
             rotationDelta: [0.0, 1.0, 0.0]
+            resetOnStart: false # whether to set the entity back to its initial position every time
             animationTimeTicks: 60 # Duration of animation in ticks
 ```
 
