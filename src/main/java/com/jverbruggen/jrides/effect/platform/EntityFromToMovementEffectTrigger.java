@@ -1,17 +1,14 @@
 package com.jverbruggen.jrides.effect.platform;
 
 import com.jverbruggen.jrides.JRidesPlugin;
-import com.jverbruggen.jrides.config.trigger.EntityMovementConfig;
 import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
-import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Bukkit;
 
-public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger implements EntityMovementConfig {
+public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger {
     private final String identifier;
     private final VirtualEntity virtualEntity;
 
@@ -120,8 +117,4 @@ public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger im
         return finished;
     }
 
-    @Override
-    public TrainEffectTrigger createTrigger(ViewportManager viewportManager) {
-        return null;
-    }
 }

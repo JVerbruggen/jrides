@@ -78,7 +78,7 @@ public class EntityFromToMovementConfig extends BaseConfig implements EntityMove
         Vector3 locationTo = Vector3.fromDoubleList(getDoubleList(configurationSection, "locationTo", null));
         Vector3 rotationFrom = Vector3.fromDoubleList(getDoubleList(configurationSection, "rotationFrom", null));
         Vector3 rotationTo = Vector3.fromDoubleList(getDoubleList(configurationSection, "rotationTo", null));
-        int animationTimeTicks = getInt(configurationSection, "animationTimeTicks");
+        int animationTimeTicks = getInt(configurationSection, "animationTimeTicks", 20);
 
         return new EntityFromToMovementConfig(identifier, itemConfig, locationFrom, locationTo, rotationFrom, rotationTo, animationTimeTicks);
     }

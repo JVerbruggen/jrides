@@ -39,8 +39,8 @@ public class EntityContinuousMovementConfig extends BaseConfig implements Entity
         Vector3 initialRotation = Vector3.fromDoubleList(getDoubleList(configurationSection, "initialRotation", null));
         Vector3 locationDelta = Vector3.fromDoubleList(getDoubleList(configurationSection, "locationDelta", null));
         Vector3 rotationDelta = Vector3.fromDoubleList(getDoubleList(configurationSection, "rotationDelta", null));
-        int animationTimeTicks = getInt(configurationSection, "animationTimeTicks");
-        boolean resetOnStart = getBoolean(configurationSection, "resetOnStart");
+        int animationTimeTicks = getInt(configurationSection, "animationTimeTicks", 20);
+        boolean resetOnStart = getBoolean(configurationSection, "resetOnStart", true);
 
         return new EntityContinuousMovementConfig(identifier, itemConfig, initialLocation, initialRotation, resetOnStart, locationDelta, rotationDelta, animationTimeTicks);
     }
