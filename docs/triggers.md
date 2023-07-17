@@ -96,11 +96,17 @@ trigger:
                 material: APPLE
             entity: # item: and entity: cannot be used simultaneously
                 type: HORSE
-            locationFrom: [50.0, 10.0, 50.0] # [x, y, z]
-            locationTo: [50.0, 14.0, 50.0]
-            rotationFrom: [0.0, 0.0, 0.0] # [pitch, yaw, roll]
-            rotationTo: [0.0, 90.0, 0.0]
-            animationTimeTicks: 60 # Duration of animation in ticks
+            animation:
+                1:
+                    locationFrom: [50.0, 10.0, 50.0] # [x, y, z]
+                    locationTo: [50.0, 14.0, 50.0]
+                    rotationFrom: [0.0, 0.0, 0.0] # [pitch, yaw, roll]
+                    rotationTo: [0.0, 90.0, 0.0]
+                    animationTimeTicks: 60 # Duration of animation in ticks
+                2:
+                    locationFrom: [50, 14, 50]
+                    locationTo: [50, 12, 50]
+                    animationTimeTicks: 20
 ```
 
 **Initial position -> Continuous motion**
@@ -114,12 +120,14 @@ trigger:
         <entity_name>:
             item:
                 material: APPLE
-            initialLocation: [50.0, 10.0, 50.0] # [x, y, z]
-            initialRotation: [0, 0, 0] # [pitch, yaw, roll]
-            locationDelta: [0.0, 0.1, 0.0] 
-            rotationDelta: [0.0, 1.0, 0.0]
-            resetOnStart: false # whether to set the entity back to its initial position every time
-            animationTimeTicks: 60 # Duration of animation in ticks
+            animation:
+                1:
+                    initialLocation: [50.0, 10.0, 50.0] # [x, y, z]
+                    initialRotation: [0, 0, 0] # [pitch, yaw, roll]
+                    locationDelta: [0.0, 0.1, 0.0] 
+                    rotationDelta: [0.0, 1.0, 0.0]
+                    resetOnStart: false # whether to set the entity back to its initial position every time
+                    animationTimeTicks: 60 # Duration of animation in ticks
 ```
 
 

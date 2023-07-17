@@ -12,20 +12,20 @@ import java.util.List;
 import java.util.Set;
 
 public class MultiEntityMovementConfig extends BaseTriggerConfig{
-    private final List<EntityMovementConfig> entityMovements;
+    private final List<EntityMovementCollectionConfig> entityMovements;
 
-    public MultiEntityMovementConfig(List<EntityMovementConfig> entityMovements) {
+    public MultiEntityMovementConfig(List<EntityMovementCollectionConfig> entityMovements) {
         super(TriggerType.MULTI_ENTITY_MOVEMENT);
         this.entityMovements = entityMovements;
     }
 
-    public List<EntityMovementConfig> getEntityMovements() {
+    public List<EntityMovementCollectionConfig> getEntityMovements() {
         return entityMovements;
     }
 
     public List<TrainEffectTrigger> createTriggers(ViewportManager viewportManager){
         List<TrainEffectTrigger> armorstandMovements = new ArrayList<>();
-        for(EntityMovementConfig entityMovementConfig : getEntityMovements()) {
+        for(EntityMovementCollectionConfig entityMovementConfig : getEntityMovements()) {
             armorstandMovements.add(entityMovementConfig.createTrigger(viewportManager));
         }
 
@@ -38,14 +38,14 @@ public class MultiEntityMovementConfig extends BaseTriggerConfig{
 
         Set<String> entityIdentifiers = entitiesSection.getKeys(false);
 
-        List<EntityMovementConfig> entityMovements = new ArrayList<>();
+        List<EntityMovementCollectionConfig> entityMovements = new ArrayList<>();
         for(String identifier : entityIdentifiers){
-            EntityMovementConfig entityMovement = EntityMovementConfig.fromConfigurationSection(identifier, entitiesSection.getConfigurationSection(identifier));
-            if(entityMovement == null){
+            EntityMovementCollectionConfig entityMovementCollection = EntityMovementCollectionConfig.fromConfigurationSection(identifier, entitiesSection.getConfigurationSection(identifier));
+            if(entityMovementCollection == null){
                 JRidesPlugin.getLogger().warning("Entity movement " + identifier + " was null");
                 continue;
             }
-            entityMovements.add(entityMovement);
+            entityMovements.add(entityMovementCollection);
         }
 
         return new MultiEntityMovementConfig(entityMovements);

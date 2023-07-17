@@ -8,9 +8,9 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.bukkit.Bukkit;
 
-public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger {
-    private final String identifier;
+public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger implements EntityMovementTrigger {
     private final VirtualEntity virtualEntity;
+    private Runnable onFinishRunnable;
 
     private final Vector3 locationFrom;
     private final Vector3 locationTo;
@@ -25,9 +25,10 @@ public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger {
     private int bukkitTimerTracker;
     private boolean finished;
 
-    public EntityFromToMovementEffectTrigger(String identifier, VirtualEntity virtualEntity, Vector3 locationFrom, Vector3 locationTo, Quaternion rotationFrom, Quaternion rotationTo, int animationTimeTicks) {
-        this.identifier = identifier;
+    public EntityFromToMovementEffectTrigger(VirtualEntity virtualEntity, Vector3 locationFrom, Vector3 locationTo, Quaternion rotationFrom, Quaternion rotationTo, int animationTimeTicks) {
         this.virtualEntity = virtualEntity;
+        this.onFinishRunnable = null;
+
         this.locationFrom = locationFrom;
         this.locationTo = locationTo;
         this.rotationFrom = rotationFrom;
@@ -38,10 +39,6 @@ public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger {
         this.started = false;
         this.finished = false;
         this.bukkitTimerTracker = -1;
-    }
-
-    public String getIdentifier() {
-        return identifier;
     }
 
     public int getAnimationTimeTicks() {
@@ -107,6 +104,7 @@ public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger {
         if(bukkitTimerTracker == -1) return;
         this.started = false;
         this.finished = true;
+        if(onFinishRunnable != null) onFinishRunnable.run();
 
         Bukkit.getScheduler().cancelTask(bukkitTimerTracker);
         bukkitTimerTracker = -1;
@@ -117,4 +115,8 @@ public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger {
         return finished;
     }
 
+    @Override
+    public void onFinish(Runnable runnable) {
+        onFinishRunnable = runnable;
+    }
 }
