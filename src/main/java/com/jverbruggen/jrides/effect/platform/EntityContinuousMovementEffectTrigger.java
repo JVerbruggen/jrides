@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.bukkit.Bukkit;
 
+//TODO: Add common code with EntityFromToMovement in abstract base class or something similar
 public class EntityContinuousMovementEffectTrigger extends BaseTrainEffectTrigger implements EntityMovementTrigger {
     private final VirtualEntity virtualEntity;
     private Runnable onFinishRunnable;
@@ -19,19 +20,22 @@ public class EntityContinuousMovementEffectTrigger extends BaseTrainEffectTrigge
     private final Vector3 locationDelta;
     private final Quaternion rotationDelta;
     private final int animationTimeTicks;
+    private final int delayTicks;
 
     private int animationTickState;
+    private int delayTickState;
 
     private boolean started;
     private int bukkitTimerTracker;
     private boolean finished;
 
-    public EntityContinuousMovementEffectTrigger(VirtualEntity virtualEntity, Vector3 initialLocation, Quaternion initialRotation, boolean resetOnStart, Vector3 locationDelta, Quaternion rotationDelta, int animationTimeTicks) {
+    public EntityContinuousMovementEffectTrigger(VirtualEntity virtualEntity, Vector3 initialLocation, Quaternion initialRotation, boolean resetOnStart, Vector3 locationDelta, Quaternion rotationDelta, int animationTimeTicks, int delayTicks) {
         this.virtualEntity = virtualEntity;
         this.onFinishRunnable = null;
         this.locationDelta = locationDelta;
         this.rotationDelta = rotationDelta;
         this.animationTimeTicks = animationTimeTicks;
+        this.delayTicks = delayTicks;
 
         this.initialLocation = initialLocation;
         this.initialRotation = initialRotation;
@@ -51,6 +55,11 @@ public class EntityContinuousMovementEffectTrigger extends BaseTrainEffectTrigge
     }
 
     protected void tick(){
+        if(delayTickState < delayTicks){
+            delayTickState++;
+            return;
+        }
+
         if(animationTickState >= getAnimationTimeTicks()){
             stop();
             return;
@@ -91,6 +100,7 @@ public class EntityContinuousMovementEffectTrigger extends BaseTrainEffectTrigge
         this.finished = false;
         this.started = true;
         animationTickState = 0;
+        delayTickState = 0;
 
         if(resetOnStart){
             virtualEntity.setLocation(initialLocation);

@@ -17,15 +17,17 @@ public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger im
     private final Quaternion rotationFrom;
     private final Quaternion rotationTo;
     private final int animationTimeTicks;
+    private final int delayTicks;
 
     private Vector3 targetLocation;
     private int animationTickState;
+    private int delayTickState;
 
     private boolean started;
     private int bukkitTimerTracker;
     private boolean finished;
 
-    public EntityFromToMovementEffectTrigger(VirtualEntity virtualEntity, Vector3 locationFrom, Vector3 locationTo, Quaternion rotationFrom, Quaternion rotationTo, int animationTimeTicks) {
+    public EntityFromToMovementEffectTrigger(VirtualEntity virtualEntity, Vector3 locationFrom, Vector3 locationTo, Quaternion rotationFrom, Quaternion rotationTo, int animationTimeTicks, int delayTicks) {
         this.virtualEntity = virtualEntity;
         this.onFinishRunnable = null;
 
@@ -34,6 +36,7 @@ public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger im
         this.rotationFrom = rotationFrom;
         this.rotationTo = rotationTo;
         this.animationTimeTicks = animationTimeTicks;
+        this.delayTicks = delayTicks;
 
         this.targetLocation = null;
         this.started = false;
@@ -46,6 +49,11 @@ public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger im
     }
 
     protected void tick(){
+        if(delayTickState < delayTicks){
+            delayTickState++;
+            return;
+        }
+
         if(animationTickState >= getAnimationTimeTicks()){
             stop();
             return;
@@ -96,6 +104,7 @@ public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger im
         this.finished = false;
         this.started = true;
         animationTickState = 0;
+        delayTickState = 0;
 
         bukkitTimerTracker = Bukkit.getScheduler().runTaskTimer(JRidesPlugin.getBukkitPlugin(), this::tick, 1L, 1L).getTaskId();
     }

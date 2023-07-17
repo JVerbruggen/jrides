@@ -2,7 +2,6 @@ package com.jverbruggen.jrides.effect.train;
 
 import com.jverbruggen.jrides.effect.platform.EntityMovementTrigger;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import org.bukkit.Bukkit;
 
 import java.util.List;
 

@@ -16,14 +16,16 @@ public class EntityContinuousMovementConfig extends BaseConfig implements Entity
     private final Vector3 locationDelta;
     private final Vector3 rotationDelta;
     private final int animationTimeTicks;
+    private final int delayTicks;
 
-    public EntityContinuousMovementConfig(Vector3 initialLocation, Vector3 initialRotation, boolean resetOnStart, Vector3 locationDelta, Vector3 rotationDelta, int animationTimeTicks) {
+    public EntityContinuousMovementConfig(Vector3 initialLocation, Vector3 initialRotation, boolean resetOnStart, Vector3 locationDelta, Vector3 rotationDelta, int animationTimeTicks, int delayTicks) {
         this.initialLocation = initialLocation;
         this.initialRotation = initialRotation;
         this.resetOnStart = resetOnStart;
         this.locationDelta = locationDelta;
         this.rotationDelta = rotationDelta;
         this.animationTimeTicks = animationTimeTicks;
+        this.delayTicks = delayTicks;
     }
 
     public static EntityContinuousMovementConfig fromConfigurationSection(ConfigurationSection configurationSection){
@@ -32,9 +34,10 @@ public class EntityContinuousMovementConfig extends BaseConfig implements Entity
         Vector3 locationDelta = Vector3.fromDoubleList(getDoubleList(configurationSection, "locationDelta", null));
         Vector3 rotationDelta = Vector3.fromDoubleList(getDoubleList(configurationSection, "rotationDelta", null));
         int animationTimeTicks = getInt(configurationSection, "animationTimeTicks", 20);
+        int delayTicks = getInt(configurationSection, "delayTicks", 0);
         boolean resetOnStart = getBoolean(configurationSection, "resetOnStart", true);
 
-        return new EntityContinuousMovementConfig(initialLocation, initialRotation, resetOnStart, locationDelta, rotationDelta, animationTimeTicks);
+        return new EntityContinuousMovementConfig(initialLocation, initialRotation, resetOnStart, locationDelta, rotationDelta, animationTimeTicks, delayTicks);
     }
 
     @Override
@@ -44,7 +47,7 @@ public class EntityContinuousMovementConfig extends BaseConfig implements Entity
 
         Quaternion rotationDelta = Quaternion.fromAnglesVector(this.rotationDelta);
 
-        return new EntityContinuousMovementEffectTrigger(virtualEntity, initialLocation, initialRotation, resetOnStart, locationDelta, rotationDelta, animationTimeTicks);
+        return new EntityContinuousMovementEffectTrigger(virtualEntity, initialLocation, initialRotation, resetOnStart, locationDelta, rotationDelta, animationTimeTicks, delayTicks);
     }
 
     @Override

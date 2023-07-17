@@ -14,16 +14,18 @@ public class EntityFromToMovementConfig extends BaseConfig implements EntityMove
     private final Vector3 rotationFrom;
     private final Vector3 rotationTo;
     private final int animationTimeTicks;
+    private final int delayTicks;
 
     private final boolean locationHasDelta;
     private final boolean rotationHasDelta;
 
-    public EntityFromToMovementConfig(Vector3 locationFrom, Vector3 locationTo, Vector3 rotationFrom, Vector3 rotationTo, int animationTimeTicks) {
+    public EntityFromToMovementConfig(Vector3 locationFrom, Vector3 locationTo, Vector3 rotationFrom, Vector3 rotationTo, int animationTimeTicks, int delayTicks) {
         this.locationFrom = locationFrom;
         this.locationTo = locationTo;
         this.rotationFrom = rotationFrom;
         this.rotationTo = rotationTo;
         this.animationTimeTicks = animationTimeTicks;
+        this.delayTicks = delayTicks;
         this.locationHasDelta = locationFrom != null && locationTo != null && locationTo.distanceSquared(locationFrom) > 0.01;
         this.rotationHasDelta = rotationFrom != null && rotationTo != null && rotationTo.distanceSquared(rotationFrom) > 0.01;
     }
@@ -62,8 +64,9 @@ public class EntityFromToMovementConfig extends BaseConfig implements EntityMove
         Vector3 rotationFrom = Vector3.fromDoubleList(getDoubleList(configurationSection, "rotationFrom", null));
         Vector3 rotationTo = Vector3.fromDoubleList(getDoubleList(configurationSection, "rotationTo", null));
         int animationTimeTicks = getInt(configurationSection, "animationTimeTicks", 20);
+        int delayTicks = getInt(configurationSection, "delayTicks", 0);
 
-        return new EntityFromToMovementConfig(locationFrom, locationTo, rotationFrom, rotationTo, animationTimeTicks);
+        return new EntityFromToMovementConfig(locationFrom, locationTo, rotationFrom, rotationTo, animationTimeTicks, delayTicks);
     }
 
     @Override
@@ -79,7 +82,7 @@ public class EntityFromToMovementConfig extends BaseConfig implements EntityMove
 
         int animationTimeTicks = getAnimationTimeTicks();
 
-        return new EntityFromToMovementEffectTrigger(virtualEntity, locationFrom, locationTo, rotationFrom, rotationTo, animationTimeTicks);
+        return new EntityFromToMovementEffectTrigger(virtualEntity, locationFrom, locationTo, rotationFrom, rotationTo, animationTimeTicks, delayTicks);
     }
 
     @Override

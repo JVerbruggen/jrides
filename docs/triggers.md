@@ -103,6 +103,7 @@ trigger:
                     rotationFrom: [0.0, 0.0, 0.0] # [pitch, yaw, roll]
                     rotationTo: [0.0, 90.0, 0.0]
                     animationTimeTicks: 60 # Duration of animation in ticks
+                    delayTicks: 0 # Duration of delay in ticks until the animation starts
                 2:
                     locationFrom: [50, 14, 50]
                     locationTo: [50, 12, 50]
@@ -128,6 +129,7 @@ trigger:
                     rotationDelta: [0.0, 1.0, 0.0]
                     resetOnStart: false # whether to set the entity back to its initial position every time
                     animationTimeTicks: 60 # Duration of animation in ticks
+                    delayTicks: 0 # Duration of delay in ticks until the animation starts
 ```
 
 
