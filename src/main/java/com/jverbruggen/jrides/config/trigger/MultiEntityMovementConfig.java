@@ -15,7 +15,7 @@ public class MultiEntityMovementConfig extends BaseTriggerConfig{
     private final List<EntityMovementConfig> entityMovements;
 
     public MultiEntityMovementConfig(List<EntityMovementConfig> entityMovements) {
-        super(TriggerType.MULTI_ARMORSTAND_MOVEMENT);
+        super(TriggerType.MULTI_ENTITY_MOVEMENT);
         this.entityMovements = entityMovements;
     }
 

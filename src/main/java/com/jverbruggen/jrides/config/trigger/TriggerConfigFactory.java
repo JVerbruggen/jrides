@@ -26,7 +26,9 @@ public class TriggerConfigFactory {
                     MusicTriggerConfig.fromConfigurationSection(configurationSection);
             case COMMAND ->
                     CommandTriggerConfig.fromConfigurationSection(configurationSection);
-            case MULTI_ARMORSTAND_MOVEMENT ->
+            case COMMAND_FOR_PLAYER ->
+                    CommandForPlayerTriggerConfig.fromConfigurationSection(configurationSection);
+            case MULTI_ENTITY_MOVEMENT ->
                     MultiEntityMovementConfig.fromConfigurationSection(configurationSection);
             case EXTERNAL_EVENT ->
                     ExternalTriggerConfig.fromConfigurationSection(configurationSection);
