@@ -1,7 +1,6 @@
 package com.jverbruggen.jrides.config.trigger;
 
 import com.jverbruggen.jrides.effect.platform.ArmorstandMovementEffectTrigger;
-import com.jverbruggen.jrides.exception.CoasterLoadException;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
@@ -16,39 +15,39 @@ import java.util.List;
 import java.util.Set;
 
 public class MultiArmorstandMovementConfig extends BaseTriggerConfig{
-    private final List<ArmorstandMovementConfig> armorstands;
+    private final List<ArmorstandAtoBMovementConfig> armorstands;
 
-    public MultiArmorstandMovementConfig(List<ArmorstandMovementConfig> armorstands) {
+    public MultiArmorstandMovementConfig(List<ArmorstandAtoBMovementConfig> armorstands) {
         super(TriggerType.MULTI_ARMORSTAND_MOVEMENT);
         this.armorstands = armorstands;
     }
 
-    public List<ArmorstandMovementConfig> getArmorstands() {
+    public List<ArmorstandAtoBMovementConfig> getArmorstands() {
         return armorstands;
     }
 
     public List<ArmorstandMovementEffectTrigger> create(ViewportManager viewportManager){
         List<ArmorstandMovementEffectTrigger> armorstandMovements = new ArrayList<>();
-        for(ArmorstandMovementConfig armorstandMovementConfig : getArmorstands()) {
+        for(ArmorstandAtoBMovementConfig armorstandAtoBMovementConfig : getArmorstands()) {
             ItemStack itemStack = ItemStackFactory.getCoasterStack(
-                    armorstandMovementConfig.getMaterial(),
-                    armorstandMovementConfig.getDamage(),
-                    armorstandMovementConfig.isUnbreakable());
+                    armorstandAtoBMovementConfig.getMaterial(),
+                    armorstandAtoBMovementConfig.getDamage(),
+                    armorstandAtoBMovementConfig.isUnbreakable());
 
-            String identifier = armorstandMovementConfig.getIdentifier();
+            String identifier = armorstandAtoBMovementConfig.getIdentifier();
 
-            boolean hasLocationDelta = armorstandMovementConfig.isLocationHasDelta();
-            boolean hasRotationDelta = armorstandMovementConfig.isRotationHasDelta();
+            boolean hasLocationDelta = armorstandAtoBMovementConfig.isLocationHasDelta();
+            boolean hasRotationDelta = armorstandAtoBMovementConfig.isRotationHasDelta();
 
-            Vector3 locationFrom = hasLocationDelta ? armorstandMovementConfig.getLocationFrom() : null;
-            Vector3 locationTo = hasLocationDelta ? armorstandMovementConfig.getLocationTo() : null;
+            Vector3 locationFrom = hasLocationDelta ? armorstandAtoBMovementConfig.getLocationFrom() : null;
+            Vector3 locationTo = hasLocationDelta ? armorstandAtoBMovementConfig.getLocationTo() : null;
 
-            Quaternion rotationFrom = hasRotationDelta ? Quaternion.fromAnglesVector(armorstandMovementConfig.getRotationFrom()) : null;
-            Quaternion rotationTo = hasRotationDelta ? Quaternion.fromAnglesVector(armorstandMovementConfig.getRotationTo()) : null;
+            Quaternion rotationFrom = hasRotationDelta ? Quaternion.fromAnglesVector(armorstandAtoBMovementConfig.getRotationFrom()) : null;
+            Quaternion rotationTo = hasRotationDelta ? Quaternion.fromAnglesVector(armorstandAtoBMovementConfig.getRotationTo()) : null;
 
             TrainModelItem model = new TrainModelItem(itemStack);
             VirtualArmorstand armorstand = viewportManager.spawnVirtualArmorstand(locationFrom, 0, model);
-            int animationTimeTicks = armorstandMovementConfig.getAnimationTimeTicks();
+            int animationTimeTicks = armorstandAtoBMovementConfig.getAnimationTimeTicks();
 
             armorstandMovements.add(new ArmorstandMovementEffectTrigger(identifier, armorstand, locationFrom, locationTo, rotationFrom, rotationTo, animationTimeTicks));
         }
@@ -62,9 +61,9 @@ public class MultiArmorstandMovementConfig extends BaseTriggerConfig{
 
         Set<String> armorstandsIdentifiers = armorstandsSection.getKeys(false);
 
-        List<ArmorstandMovementConfig> armorstands = new ArrayList<>();
+        List<ArmorstandAtoBMovementConfig> armorstands = new ArrayList<>();
         for(String identifier : armorstandsIdentifiers){
-            ArmorstandMovementConfig movementConfig = ArmorstandMovementConfig.fromConfigurationSection(identifier, armorstandsSection.getConfigurationSection(identifier));
+            ArmorstandAtoBMovementConfig movementConfig = ArmorstandAtoBMovementConfig.fromConfigurationSection(identifier, armorstandsSection.getConfigurationSection(identifier));
             armorstands.add(movementConfig);
         }
 

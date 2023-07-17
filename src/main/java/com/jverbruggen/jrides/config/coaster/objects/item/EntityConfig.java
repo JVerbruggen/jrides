@@ -1,11 +1,14 @@
 package com.jverbruggen.jrides.config.coaster.objects.item;
 
+import com.jverbruggen.jrides.models.entity.VirtualEntity;
+import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 
 import javax.annotation.Nullable;
 
-public class EntityConfig {
+public class EntityConfig implements ItemConfig{
     private final EntityType entityType;
 
     public EntityConfig(EntityType entityType) {
@@ -14,6 +17,11 @@ public class EntityConfig {
 
     public EntityType getEntityType() {
         return entityType;
+    }
+
+    @Override
+    public VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition) {
+        return viewportManager.spawnVirtualEntity(spawnPosition, getEntityType());
     }
 
     public static EntityConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection) {

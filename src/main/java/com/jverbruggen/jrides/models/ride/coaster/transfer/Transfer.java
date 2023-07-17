@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.models.ride.coaster.transfer;
 
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
-import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
+import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.*;
 import com.jverbruggen.jrides.models.ride.coaster.train.CoasterCart;
 import com.jverbruggen.jrides.models.ride.section.Section;
@@ -22,9 +22,9 @@ public class Transfer {
     private boolean requestPending;
     private boolean moving;
     private boolean locked;
-    private List<CartOffsetFromTransferOrigin> cartPositions;
+    private final List<CartOffsetFromTransferOrigin> cartPositions;
 
-    private List<TransferPosition> possiblePositions;
+    private final List<TransferPosition> possiblePositions;
     private TransferPosition targetPosition;
     private Vector3 fromLocation;
     private Quaternion fromOrientation;
@@ -34,13 +34,12 @@ public class Transfer {
 
     private Vector3 bakedOffsetLocation;
     private Quaternion bakedOffsetOrientation;
-    private Matrix4x4 bakedOffsetRotationMatrix;
 
-    private VirtualArmorstand modelArmorstand;
-    private Vector3 modelOffset;
-    private Vector3 modelOffsetRotation;
+    private final VirtualEntity modelEntity;
+    private final Vector3 modelOffset;
+    private final Vector3 modelOffsetRotation;
 
-    public Transfer(List<TransferPosition> possiblePositions, VirtualArmorstand modelArmorstand, Vector3 origin, Vector3 modelOffset, Vector3 modelOffsetRotation) {
+    public Transfer(List<TransferPosition> possiblePositions, VirtualEntity modelEntity, Vector3 origin, Vector3 modelOffset, Vector3 modelOffsetRotation) {
         this.origin = origin;
         this.locked = false;
         this.moving = false;
@@ -61,7 +60,7 @@ public class Transfer {
 
         calculateBakedOffset();
 
-        this.modelArmorstand = modelArmorstand;
+        this.modelEntity = modelEntity;
         this.modelOffset = modelOffset;
         this.modelOffsetRotation = modelOffsetRotation;
 
@@ -173,9 +172,9 @@ public class Transfer {
 
         Vector3 modelLocation = orientationMatrix.toVector3();
 
-        modelArmorstand.setLocation(modelLocation);
+        modelEntity.setLocation(modelLocation);
         modelOrientation.rotateYawPitchRoll(modelOffsetRotation);
-        modelArmorstand.setRotation(modelOrientation);
+        modelEntity.setRotation(modelOrientation);
     }
 
     private void moveTrain(){
@@ -185,8 +184,8 @@ public class Transfer {
             Matrix4x4 matrix = new Matrix4x4();
             matrix.translate(getCurrentLocation());
 
-            Quaternion cartOrientation = cartProgramming.getOrientation();
-            Vector3 cartPosition = cartProgramming.getPosition();
+            Quaternion cartOrientation = cartProgramming.orientation();
+            Vector3 cartPosition = cartProgramming.position();
 
             matrix.translate(armorstandCompenstationVector);
             matrix.rotate(getCurrentOrientation());
@@ -195,7 +194,7 @@ public class Transfer {
             Quaternion newCartOrientation = matrix.getRotation().clone();
             newCartOrientation.multiply(cartOrientation);
 
-            cartProgramming.getCart().setPosition(matrix.toVector3(), newCartOrientation);
+            cartProgramming.cart().setPosition(matrix.toVector3(), newCartOrientation);
         }
     }
 
@@ -251,18 +250,6 @@ public class Transfer {
         bakedOffsetOrientation = Quaternion.diff(origin.getOrientation(), currentOrientation);
     }
 
-    public Vector3 getOffsetLocation(){
-        return bakedOffsetLocation;
-    }
-
-    public Quaternion getOffsetOrientation(){
-        return bakedOffsetOrientation;
-    }
-
-    public Matrix4x4 getOffsetRotationMatrix(){
-        return currentRotationMatrix;
-    }
-
     private Matrix4x4 calculateRotationMatrix(Vector3 location, Quaternion orientation){
         Matrix4x4 orientationMatrix = new Matrix4x4();
         orientationMatrix.translate(location);
@@ -315,26 +302,5 @@ public class Transfer {
     }
 }
 
-class CartOffsetFromTransferOrigin{
-    private final Vector3 position;
-    private final Quaternion orientation;
-    private final CoasterCart cart;
-
-    CartOffsetFromTransferOrigin(Vector3 position, Quaternion orientation, CoasterCart cart) {
-        this.position = position;
-        this.orientation = orientation;
-        this.cart = cart;
-    }
-
-    public CoasterCart getCart() {
-        return cart;
-    }
-
-    public Vector3 getPosition() {
-        return position;
-    }
-
-    public Quaternion getOrientation() {
-        return orientation;
-    }
+record CartOffsetFromTransferOrigin(Vector3 position, Quaternion orientation, CoasterCart cart) {
 }

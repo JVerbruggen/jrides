@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.config.flatride;
 
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
-import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
+import com.jverbruggen.jrides.config.coaster.objects.item.ItemStackConfig;
 import com.jverbruggen.jrides.config.flatride.structure.StructureConfig;
 import com.jverbruggen.jrides.config.flatride.timing.TimingConfig;
 import com.jverbruggen.jrides.config.gates.GatesConfig;
@@ -21,7 +21,7 @@ public class FlatRideConfig extends AbstractRideConfig {
     private final StructureConfig structureConfig;
     private final TimingConfig timingConfig;
 
-    public FlatRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemConfig displayItem, PlayerLocation warpLocation, GatesConfig gates, boolean canExitDuringRide, StationConfig stationConfig, SoundsConfig soundsConfig, StructureConfig structureConfig, TimingConfig timingConfig) {
+    public FlatRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemStackConfig displayItem, PlayerLocation warpLocation, GatesConfig gates, boolean canExitDuringRide, StationConfig stationConfig, SoundsConfig soundsConfig, StructureConfig structureConfig, TimingConfig timingConfig) {
         super(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, soundsConfig, canExitDuringRide);
         this.stationConfig = stationConfig;
         this.structureConfig = structureConfig;
@@ -51,7 +51,7 @@ public class FlatRideConfig extends AbstractRideConfig {
         if(displayDescription.size() == 1 && ChatColor.stripColor(displayDescription.get(0)).equals(""))
             displayDescription.clear();
 
-        ItemConfig displayItem = ItemConfig.fromConfigurationSection(configurationSection.getConfigurationSection("displayItem"));
+        ItemStackConfig displayItem = ItemStackConfig.fromConfigurationSection(configurationSection.getConfigurationSection("displayItem"));
         PlayerLocation warpLocation = PlayerLocation.fromDoubleList(configurationSection.getDoubleList("warpLocation"));
         GatesConfig gates = GatesConfig.fromConfigurationSection(configurationSection.getConfigurationSection("gates"));
         SoundsConfig sounds = SoundsConfig.fromConfigurationSection(configurationSection.getConfigurationSection("sounds"));

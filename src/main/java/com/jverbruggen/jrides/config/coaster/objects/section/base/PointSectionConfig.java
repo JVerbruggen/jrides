@@ -53,6 +53,8 @@ public class PointSectionConfig extends SectionConfig {
 
     public static PointSectionConfig fromConfigurationSection(ConfigurationSection configurationSection, String sectionIdentifier) {
         List<?> range = configurationSection.getList("at");
+        if(range == null) throw new RuntimeException("Point section " + sectionIdentifier + " requires 'at' keyword to define position of point section");
+
         int point = (Integer)range.get(0);
         String trackSource = "default";
         if(range.size() == 2)
@@ -74,10 +76,6 @@ public class PointSectionConfig extends SectionConfig {
         String sectionIdentifier = getIdentifier();
         String nextSectionIdentifier = getNextSection();
         String parentTrackIdentifier = getParentTrackIdentifier();
-
-        TrackDescription trackDescription = trackDescriptions.stream()
-                .filter(d -> d.getIdentifier().equalsIgnoreCase(getParentTrackIdentifier()))
-                .findFirst().orElseThrow();
 
         Frame point = new SimpleFrame(getPoint());
 

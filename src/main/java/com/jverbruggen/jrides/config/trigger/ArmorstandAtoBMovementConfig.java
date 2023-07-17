@@ -5,7 +5,7 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class ArmorstandMovementConfig extends BaseConfig {
+public class ArmorstandAtoBMovementConfig extends BaseConfig {
     private final String identifier;
     private final Material material;
     private final int damage;
@@ -20,7 +20,7 @@ public class ArmorstandMovementConfig extends BaseConfig {
     private final boolean locationHasDelta;
     private final boolean rotationHasDelta;
 
-    public ArmorstandMovementConfig(String identifier, Material material, int damage, boolean unbreakable, Vector3 locationFrom, Vector3 locationTo, Vector3 rotationFrom, Vector3 rotationTo, int animationTimeTicks) {
+    public ArmorstandAtoBMovementConfig(String identifier, Material material, int damage, boolean unbreakable, Vector3 locationFrom, Vector3 locationTo, Vector3 rotationFrom, Vector3 rotationTo, int animationTimeTicks) {
         this.identifier = identifier;
         this.material = material;
         this.damage = damage;
@@ -78,7 +78,7 @@ public class ArmorstandMovementConfig extends BaseConfig {
         return rotationHasDelta;
     }
 
-    public static ArmorstandMovementConfig fromConfigurationSection(String identifier, ConfigurationSection configurationSection){
+    public static ArmorstandAtoBMovementConfig fromConfigurationSection(String identifier, ConfigurationSection configurationSection){
         ConfigurationSection item = configurationSection.getConfigurationSection("item");
 
         Material material = Material.valueOf(getString(item, "material"));
@@ -91,6 +91,6 @@ public class ArmorstandMovementConfig extends BaseConfig {
         Vector3 rotationTo = Vector3.fromDoubleList(getDoubleList(configurationSection, "rotationTo", null));
         int animationTimeTicks = getInt(configurationSection, "animationTimeTicks");
 
-        return new ArmorstandMovementConfig(identifier, material, damage, unbreakable, locationFrom, locationTo, rotationFrom, rotationTo, animationTimeTicks);
+        return new ArmorstandAtoBMovementConfig(identifier, material, damage, unbreakable, locationFrom, locationTo, rotationFrom, rotationTo, animationTimeTicks);
     }
 }

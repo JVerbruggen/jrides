@@ -6,7 +6,7 @@ import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.event.player.PlayerSitDownEvent;
 import com.jverbruggen.jrides.models.entity.Player;
-import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
+import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class SimpleCoasterCart implements CoasterCart {
     private final String name;
     private final List<CoasterSeat> seats;
-    private final VirtualArmorstand modelArmorstand;
+    private final VirtualEntity modelEntity;
     private final Vector3 trackOffset;
     private final Frame frame;
     private Train parentTrain;
@@ -34,10 +34,10 @@ public class SimpleCoasterCart implements CoasterCart {
     private Quaternion currentOrientation;
     private Vector3 orientationOffset;
 
-    public SimpleCoasterCart(String name, List<CoasterSeat> seats, VirtualArmorstand modelArmorstand, Vector3 trackOffset, Frame frame) {
+    public SimpleCoasterCart(String name, List<CoasterSeat> seats, VirtualEntity modelEntity, Vector3 trackOffset, Frame frame) {
         this.name = name;
         this.seats = seats;
-        this.modelArmorstand = modelArmorstand;
+        this.modelEntity = modelEntity;
         this.trackOffset = trackOffset;
         this.frame = frame;
         this.parentTrain = null;
@@ -83,7 +83,7 @@ public class SimpleCoasterCart implements CoasterCart {
 
     @Override
     public Vector3 getPosition() {
-        return modelArmorstand.getLocation();
+        return modelEntity.getLocation();
     }
 
     @Override
@@ -106,7 +106,7 @@ public class SimpleCoasterCart implements CoasterCart {
 
     private void updateOrientation(Quaternion orientation){
         currentOrientation = orientation;
-        modelArmorstand.setRotation(currentOrientation);
+        modelEntity.setRotation(currentOrientation);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class SimpleCoasterCart implements CoasterCart {
 
     @Override
     public void setPosition(Vector3 position) {
-        modelArmorstand.setLocation(position);
+        modelEntity.setLocation(position);
         SeatFactory.moveCoasterSeats(seats, position, currentOrientation);
     }
 
@@ -219,6 +219,6 @@ public class SimpleCoasterCart implements CoasterCart {
 
     @Override
     public void despawn() {
-        modelArmorstand.despawn();
+        modelEntity.despawn();
     }
 }
