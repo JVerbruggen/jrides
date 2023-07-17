@@ -5,7 +5,6 @@ import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import dev.cerus.maps.api.ClientsideMap;
 import dev.cerus.maps.api.graphics.ClientsideMapGraphics;
-import dev.cerus.maps.api.graphics.ColorCache;
 import dev.cerus.maps.version.VersionAdapterFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -59,11 +58,6 @@ public class RideCounterMap  {
         itemStack.setItemMeta(mapMeta);
 
         player.getBukkitPlayer().getInventory().addItem(itemStack);
-
-        // Temporary update visuals call for testing
-        updateVisuals();
-
-        sendUpdate(player, true);
     }
 
     public void updateVisuals() {

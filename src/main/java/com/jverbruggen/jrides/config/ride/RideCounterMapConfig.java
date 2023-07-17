@@ -115,7 +115,9 @@ public class RideCounterMapConfig extends BaseConfig {
         String lineFormat = getString(configurationSection, "lineFormat", "%RANK%. %NAME%: %COUNT%");
         Integer rideNameLine = getInt(configurationSection, "rideNameLine", -1);
         Integer typeLine = getInt(configurationSection, "typeLine", -1);
-        String typeText = getString(configurationSection, "typeText", rideCounterMapType.toString());
+
+        String typeText = rideCounterMapType.toString().substring(0, 1).toUpperCase() + rideCounterMapType.toString().substring(1).toLowerCase() + " ridecounters";
+        typeText = getString(configurationSection, "typeText", typeText);
 
         byte primaryColor = convertListToColorByte(getIntegerList(configurationSection, "primaryColor", null));
         byte secondaryColor = convertListToColorByte(getIntegerList(configurationSection, "secondaryColor", null));
