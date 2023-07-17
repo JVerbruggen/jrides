@@ -18,6 +18,7 @@ public class MusicTriggerConfig extends BaseTriggerConfig {
         this.descriptor = descriptor;
     }
 
+    @SuppressWarnings("unused")
     public MusicTriggerConfigHandler getHandler() {
         return handler;
     }
