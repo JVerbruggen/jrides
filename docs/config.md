@@ -40,3 +40,8 @@ For all available language overrides, see [docs/language.md](./language.md)
 * * Example: `plugins/jrides/coasters/silverstar/silverstar.coaster.yml`
 
 The exact structure of this file can be found in [docs/coaster_yml.md](./coaster_yml.md)
+
+## trigger.yml
+* Add triggers to coaster tracks, to run effects, commands or animate entities.
+
+For more information, see [docs/triggers.md](./triggers.md)
