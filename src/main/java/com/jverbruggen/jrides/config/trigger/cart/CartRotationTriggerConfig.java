@@ -4,7 +4,6 @@ import com.jverbruggen.jrides.config.trigger.BaseTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.TriggerType;
 import com.jverbruggen.jrides.effect.EffectTrigger;
 import com.jverbruggen.jrides.effect.cart.rotation.CartRotationEffectTrigger;
-import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
 import com.jverbruggen.jrides.models.math.Vector3;
 import org.bukkit.configuration.ConfigurationSection;
 
