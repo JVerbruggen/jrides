@@ -51,6 +51,7 @@ public abstract class AbstractFlatRideComponent implements FlatRideComponent {
 
     @Override
     public Quaternion getRotation() {
+        Attachment attachedTo = getAttachedTo();
         if(attachedTo == null) throw new RuntimeException("Component " + identifier + " not attached to anything");
 
         return attachedTo.getRotation();
@@ -58,6 +59,7 @@ public abstract class AbstractFlatRideComponent implements FlatRideComponent {
 
     @Override
     public Vector3 getPosition() {
+        Attachment attachedTo = getAttachedTo();
         if(attachedTo == null) throw new RuntimeException("Component " + identifier + " not attached to anything");
 
         return attachedTo.getPosition();
@@ -76,10 +78,14 @@ public abstract class AbstractFlatRideComponent implements FlatRideComponent {
     @Nullable
     @Override
     public PlayerControl getPlayerControl() {
+        Attachment attachedTo = getAttachedTo();
         if(attachedTo == null) return null;
         if(attachedTo.getParent() == null) return null;
 
-        return attachedTo.getParent().getPlayerControl();
+        FlatRideComponent parent = attachedTo.getParent();
+        if(parent == null) throw new RuntimeException("Expected flat ride component " + identifier + " to have parent");
+
+        return parent.getPlayerControl();
     }
 
     protected void updateFlatRideModels(){
