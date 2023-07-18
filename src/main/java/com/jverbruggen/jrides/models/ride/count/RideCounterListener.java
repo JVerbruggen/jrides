@@ -22,7 +22,7 @@ public class RideCounterListener implements Listener {
         JRidesRide ride = event.getRide();
 
         RideCounterRecordCollection collection = rideCounterManager.getCollection(player.getIdentifier());
-        RideCounterRecord record = collection.findOrCreate(ride.getIdentifier());
+        RideCounterRecord record = collection.findOrCreate(ride.getIdentifier(), player);
 
         record.addOne();
 

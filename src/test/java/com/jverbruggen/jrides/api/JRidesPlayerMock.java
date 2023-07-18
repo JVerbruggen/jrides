@@ -1,5 +1,7 @@
 package com.jverbruggen.jrides.api;
 
+import java.util.UUID;
+
 import org.bukkit.entity.Player;
 
 public class JRidesPlayerMock implements JRidesPlayer {
@@ -18,6 +20,11 @@ public class JRidesPlayerMock implements JRidesPlayer {
     @Override
     public String getIdentifier() {
         return "mockplayer";
+    }
+    
+    @Override
+    public UUID getUniqueId(){
+        return UUID.randomUUID();
     }
 
     @Override
