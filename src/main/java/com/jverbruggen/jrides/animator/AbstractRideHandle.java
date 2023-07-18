@@ -28,7 +28,7 @@ public abstract class AbstractRideHandle implements RideHandle{
     private RideController rideController;
     private final SoundsConfig sounds;
 
-    private List<RideCounterRecordCollection> topRideCounters;
+    private List<RideCounterRecord> topRideCounters;
 
     public AbstractRideHandle(World world, Ride ride, RideState rideState, boolean loaded, SoundsConfig sounds) {
         this.world = world;
@@ -163,7 +163,7 @@ public abstract class AbstractRideHandle implements RideHandle{
     }
 
     @Override
-    public List<RideCounterRecordCollection> getTopRideCounters() {
+    public List<RideCounterRecord> getTopRideCounters() {
         return topRideCounters;
     }
 

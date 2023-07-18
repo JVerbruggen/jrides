@@ -118,7 +118,7 @@ public class FlatRideHandle extends AbstractRideHandle {
     }
 
     @Override
-    public List<RideCounterRecordCollection> getTopRideCounters() {
+    public List<RideCounterRecord> getTopRideCounters() {
         return null;
     }
 
