@@ -9,7 +9,6 @@ import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
 import java.util.List;

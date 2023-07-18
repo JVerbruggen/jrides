@@ -66,7 +66,7 @@ public class BlockSectionCommandExecutor extends BaseCommandExecutor {
             return true;
         }
 
-        ArrayList<Section> sections = new ArrayList<>(track.getSections());
+        List<Section> sections = new ArrayList<>(track.getSections());
         Collections.sort(sections);
 
         languageFile.sendMessage(messageAgent, "-- Block section occupations --");
