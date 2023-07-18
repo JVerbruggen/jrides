@@ -2,7 +2,6 @@ package com.jverbruggen.jrides.animator.flatride;
 
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
-import com.jverbruggen.jrides.config.flatride.structure.ControlConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;

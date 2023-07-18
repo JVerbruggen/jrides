@@ -150,7 +150,7 @@ public class TrainHandle {
     public void setCoasterHandle(CoasterHandle coasterHandle) {
         this.coasterHandle = coasterHandle;
 
-        EffectTriggerCollection effectTriggerCollection = coasterHandle.getEffectTriggerCollection();
+        EffectTriggerCollection<TrainEffectTriggerHandle> effectTriggerCollection = coasterHandle.getEffectTriggerCollection();
         if(effectTriggerCollection != null && effectTriggerCollection.size() > 0){
             hasEffects = true;
             resetEffects();

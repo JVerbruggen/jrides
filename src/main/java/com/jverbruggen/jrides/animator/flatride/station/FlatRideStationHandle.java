@@ -11,7 +11,6 @@ import com.jverbruggen.jrides.models.ride.gate.Gate;
 import java.util.List;
 
 public class FlatRideStationHandle extends StationHandle {
-    private FlatRideHandle flatRideHandle;
     private final FlatRideUniVehicle vehicle;
 
     public FlatRideStationHandle(String name, String shortName, List<Gate> entryGates, PlayerLocation ejectLocation, MinMaxWaitingTimer waitingTimer, TriggerContext triggerContext) {
@@ -31,7 +30,6 @@ public class FlatRideStationHandle extends StationHandle {
     }
 
     public void setFlatRideHandle(FlatRideHandle flatRideHandle) {
-        this.flatRideHandle = flatRideHandle;
         this.vehicle.setFlatRideHandle(flatRideHandle);
     }
 }

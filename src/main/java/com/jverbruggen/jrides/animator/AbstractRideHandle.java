@@ -112,7 +112,7 @@ public abstract class AbstractRideHandle implements RideHandle{
             return;
         }
 
-        boolean closed = attemptClose(authority);
+        attemptClose(authority);
     }
 
     private boolean attemptClose(@Nullable Player authority){

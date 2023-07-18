@@ -3,15 +3,12 @@ package com.jverbruggen.jrides.animator.flatride.seat;
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.flatride.AbstractFlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
-import com.jverbruggen.jrides.config.flatride.structure.ControlConfig;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
-import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.models.ride.seat.SeatHost;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
