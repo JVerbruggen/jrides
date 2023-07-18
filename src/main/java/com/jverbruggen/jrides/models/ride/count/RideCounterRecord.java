@@ -50,7 +50,7 @@ public class RideCounterRecord implements ConfigurationSerializable {
 
         config.put("rideIdentifier", this.ride.getIdentifier());
         config.put("playerName", this.playerName);
-        config.put("playerUUID", this.playerUUID);
+        config.put("playerUUID", this.playerUUID.toString());
         config.put("rideCount", this.rideCount);
 
         return config;
@@ -69,6 +69,6 @@ public class RideCounterRecord implements ConfigurationSerializable {
         String playerName = (String) config.get("playerName");
         String playerUUID = (String) config.get("playerUUID");
 
-        return new RideCounterRecord(ride, playerName, playerUUID, rideCount);
+        return new RideCounterRecord(ride, playerName, UUID.fromString(playerUUID), rideCount);
     }
 }
