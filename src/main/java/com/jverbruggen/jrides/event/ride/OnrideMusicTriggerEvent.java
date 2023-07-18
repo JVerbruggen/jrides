@@ -1,7 +1,6 @@
 package com.jverbruggen.jrides.event.ride;
 
 import com.jverbruggen.jrides.api.JRidesPlayer;
-import com.jverbruggen.jrides.models.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
