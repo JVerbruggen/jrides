@@ -2,7 +2,6 @@ package com.jverbruggen.jrides.config.flatride.structure.actuator.playercontrol;
 
 import com.jverbruggen.jrides.animator.flatride.rotor.RotorPlayerControl;
 import com.jverbruggen.jrides.animator.flatride.rotor.RotorSpeedPlayerControl;
-import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 
 public class SpeedControlConfig implements PlayerControlConfig {
     private final double lowerSpeed;

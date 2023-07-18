@@ -1,7 +1,6 @@
 package com.jverbruggen.jrides.config.flatride.timing;
 
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
-import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.animator.flatride.timing.instruction.InstructionSequenceItem;
 import com.jverbruggen.jrides.animator.flatride.timing.instruction.TimingAction;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
@@ -11,7 +10,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class TimingPhaseConfig extends BaseConfig {
-    private final String phaseIdentifier;
+    @SuppressWarnings("unused")
+    private final String phaseIdentifier; //TODO: integrate
     private final int durationTicks;
     private final List<ActionConfig> actions;
     public TimingPhaseConfig(String phaseIdentifier, int durationTicks, List<ActionConfig> actions) {

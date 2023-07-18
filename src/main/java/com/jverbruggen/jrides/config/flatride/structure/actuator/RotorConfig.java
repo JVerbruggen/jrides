@@ -13,7 +13,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RotorConfig extends AbstractActuatorConfig implements StructureConfigItem {
+public class RotorConfig extends AbstractActuatorConfig {
     private final String rotorAxis;
     private final RotorPlayerControlConfig playerControlConfig;
 

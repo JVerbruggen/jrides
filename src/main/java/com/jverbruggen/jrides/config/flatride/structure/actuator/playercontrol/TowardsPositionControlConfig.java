@@ -2,7 +2,6 @@ package com.jverbruggen.jrides.config.flatride.structure.actuator.playercontrol;
 
 import com.jverbruggen.jrides.animator.flatride.rotor.RotorPlayerControl;
 import com.jverbruggen.jrides.animator.flatride.rotor.RotorTargetPositionPlayerControl;
-import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 
 public class TowardsPositionControlConfig implements PlayerControlConfig {
     private final double lowerPosition;
