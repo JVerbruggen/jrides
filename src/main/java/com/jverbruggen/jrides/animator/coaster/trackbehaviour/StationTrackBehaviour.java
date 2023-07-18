@@ -21,7 +21,7 @@ import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResul
 
 import java.util.stream.Collectors;
 
-public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour{
+public class StationTrackBehaviour extends BaseTrackBehaviour {
     private final double deceleration;
     private final double acceleration;
     private final double driveSpeed;
@@ -80,6 +80,8 @@ public class StationTrackBehaviour extends BaseTrackBehaviour implements TrackBe
     public TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Section section) {
         Speed newSpeed = currentSpeed.clone();
         Train train = trainHandle.getTrain();
+
+        if(train == null) throw new RuntimeException("Train was null in StationTrackBehaviour");
 
         if(handlingTrain != null && !train.equals(handlingTrain)){
             logger.warning("Train " + train.getName() + " has entered station, train is blocked");

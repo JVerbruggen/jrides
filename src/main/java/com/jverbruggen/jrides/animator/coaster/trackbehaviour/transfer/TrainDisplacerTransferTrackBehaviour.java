@@ -3,7 +3,6 @@ package com.jverbruggen.jrides.animator.coaster.trackbehaviour.transfer;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.BaseTrackBehaviour;
-import com.jverbruggen.jrides.animator.coaster.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.logging.LogType;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
+public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
     private final double deceleration;
     private final double acceleration;
     private final double driveSpeed;
