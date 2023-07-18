@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.config.coaster.objects.section.ranged;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class StorageSectionSpecConfig {
+    @SuppressWarnings("unused")
     private final String sectionAtEnd;
 
     public StorageSectionSpecConfig(String sectionAtEnd) {

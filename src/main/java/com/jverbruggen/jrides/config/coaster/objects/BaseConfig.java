@@ -9,13 +9,10 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public abstract class BaseConfig {
-    private static Random random = new Random();
-
     private static String getAvailableKeys(ConfigurationSection configurationSection){
         if(configurationSection == null) return "<none>";
         return String.join(", ", configurationSection.getKeys(false));
