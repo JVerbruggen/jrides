@@ -11,7 +11,7 @@ import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.models.ride.Ride;
-import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecord;
 import org.bukkit.Sound;
 import org.bukkit.World;
 
