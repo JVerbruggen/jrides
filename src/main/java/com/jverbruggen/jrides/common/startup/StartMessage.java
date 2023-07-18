@@ -2,7 +2,6 @@ package com.jverbruggen.jrides.common.startup;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 import java.util.logging.Logger;

@@ -29,7 +29,6 @@ import com.jverbruggen.jrides.models.ride.coaster.SimpleCoaster;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.factory.ConfigAdvancedSplineTrackFactory;
-import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrackFactory;
 import com.jverbruggen.jrides.models.ride.factory.TrainFactory;
 import com.jverbruggen.jrides.models.ride.factory.track.TrackDescription;
@@ -55,7 +54,6 @@ public class CoasterLoader {
     private final File dataFolder;
     private final ConfigManager configManager;
     private final TrainFactory trainFactory;
-    private final SeatFactory seatFactory;
     private final EffectTriggerFactory effectTriggerFactory;
     private final RideControllerFactory rideControllerFactory;
     private final RideControlMenuFactory rideControlMenuFactory;
@@ -66,7 +64,6 @@ public class CoasterLoader {
         this.dataFolder = dataFolder;
         this.configManager = ServiceProvider.getSingleton(ConfigManager.class);
         this.trainFactory = ServiceProvider.getSingleton(TrainFactory.class);
-        this.seatFactory = ServiceProvider.getSingleton(SeatFactory.class);
         this.effectTriggerFactory = ServiceProvider.getSingleton(EffectTriggerFactory.class);
         this.rideControllerFactory = ServiceProvider.getSingleton(RideControllerFactory.class);
         this.rideControlMenuFactory = ServiceProvider.getSingleton(RideControlMenuFactory.class);

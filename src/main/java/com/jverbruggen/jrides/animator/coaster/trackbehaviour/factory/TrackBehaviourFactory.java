@@ -14,7 +14,6 @@ import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovemen
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.transfer.TrainDisplacerTransferTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.point.SwitchBehaviour;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
-import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.base.PointSectionConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.base.RangedSectionConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.point.SwitchSectionSpecConfig;
@@ -36,8 +35,6 @@ import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
-import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
-import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
@@ -153,7 +150,6 @@ public class TrackBehaviourFactory {
 
     public TrackBehaviour getTrackBehaviourFor(CoasterHandle coasterHandle, CoasterConfig coasterConfig, RangedSectionConfig rangedSectionConfig, int totalFrames){
         String type = rangedSectionConfig.getType();
-        TrackConfig trackConfig = coasterConfig.getTrack();
         String identifier = rangedSectionConfig.getIdentifier();
 
         if(type.equalsIgnoreCase("track")){
@@ -269,6 +265,6 @@ public class TrackBehaviourFactory {
             return getSwitchBehaviour(pointSectionConfig.getSwitchSectionSpecConfig());
         }
 
-        throw new RuntimeException("Not implemented"); // TODO: do
+        throw new RuntimeException("Unknown point section type " + type);
     }
 }

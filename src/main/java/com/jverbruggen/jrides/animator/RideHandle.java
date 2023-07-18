@@ -10,7 +10,7 @@ import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
-import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecord;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -29,7 +29,7 @@ public interface RideHandle {
     PlayerLocation getEjectLocation();
     List<StationHandle> getStationHandles();
 
-    List<RideCounterRecordCollection> getTopRideCounters();
+    List<RideCounterRecord> getTopRideCounters();
     List<Player> getPassengers();
 
     void setState(RideState state);

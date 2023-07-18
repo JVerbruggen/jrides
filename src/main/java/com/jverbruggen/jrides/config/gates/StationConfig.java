@@ -1,21 +1,13 @@
 package com.jverbruggen.jrides.config.gates;
 
-import com.jverbruggen.jrides.animator.RideHandle;
-import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
-import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.animator.flatride.station.FlatRideStationHandle;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.ranged.StationEffectsConfig;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
-import com.jverbruggen.jrides.effect.EffectTriggerFactory;
-import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
-import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
-import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
-import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;

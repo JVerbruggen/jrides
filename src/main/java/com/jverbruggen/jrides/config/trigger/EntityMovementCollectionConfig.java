@@ -16,7 +16,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EntityMovementCollectionConfig {
-    private final String identifier;
+    @SuppressWarnings("unused")
+    private final String identifier; //TODO: integrate
     private final ItemConfig itemConfig;
     private final List<EntityMovementConfig> entityMovementConfigs;
 

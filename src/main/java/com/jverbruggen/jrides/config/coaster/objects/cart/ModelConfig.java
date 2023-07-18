@@ -2,10 +2,7 @@ package com.jverbruggen.jrides.config.coaster.objects.cart;
 
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
-import com.jverbruggen.jrides.config.coaster.objects.item.EntityConfig;
 import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
-import com.jverbruggen.jrides.config.coaster.objects.item.ItemStackConfig;
-import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;

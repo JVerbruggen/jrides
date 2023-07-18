@@ -40,8 +40,9 @@ public abstract class AbstractInterconnectedFlatRideComponent extends AbstractFl
 
     @Override
     public Quaternion getRotation() {
-        if(getAttachedTo() == null) throw new RuntimeException("Interconnected component " + getIdentifier() + " not attached to anything");
-        Quaternion rotation = getAttachedTo().getRotation();
+        Attachment attachedTo = getAttachedTo();
+        if(attachedTo == null) throw new RuntimeException("Interconnected component " + getIdentifier() + " not attached to anything");
+        Quaternion rotation = attachedTo.getRotation();
 
         if(joint != null && joint.anyFixed()){
             double pitch = joint.isFixedX() ? -rotation.getPitch() + joint.getFixX() : 0;

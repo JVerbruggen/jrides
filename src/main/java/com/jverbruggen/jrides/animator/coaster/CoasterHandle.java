@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
+import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
@@ -29,7 +30,7 @@ public class CoasterHandle extends AbstractRideHandle {
     private List<CoasterStationHandle> stationHandles;
     private List<TrainHandle> trains;
     private final List<Transfer> transfers;
-    private EffectTriggerCollection effectTriggerCollection;
+    private EffectTriggerCollection<TrainEffectTriggerHandle> effectTriggerCollection;
 
     private final double dragConstant;
     private final double gravityConstant;
@@ -159,11 +160,11 @@ public class CoasterHandle extends AbstractRideHandle {
         }
     }
 
-    public EffectTriggerCollection getEffectTriggerCollection() {
+    public EffectTriggerCollection<TrainEffectTriggerHandle> getEffectTriggerCollection() {
         return effectTriggerCollection;
     }
 
-    public void setEffectTriggerCollection(EffectTriggerCollection effectTriggerCollection) {
+    public void setEffectTriggerCollection(EffectTriggerCollection<TrainEffectTriggerHandle> effectTriggerCollection) {
         this.effectTriggerCollection = effectTriggerCollection;
     }
 

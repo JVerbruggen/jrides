@@ -11,7 +11,7 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
-public class FreeMovementTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
+public class FreeMovementTrackBehaviour extends BaseTrackBehaviour {
     private final double gravityConstant;
     private final double dragConstant;
 

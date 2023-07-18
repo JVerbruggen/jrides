@@ -4,7 +4,6 @@ import com.jverbruggen.jrides.animator.flatride.AbstractInterconnectedFlatRideCo
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.interfaces.HasPosition;
-import com.jverbruggen.jrides.animator.flatride.interfaces.HasSpeed;
 import com.jverbruggen.jrides.animator.flatride.interfaces.PlayerControllable;
 import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxis;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorPlayerControlConfig;
@@ -15,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class Rotor extends AbstractInterconnectedFlatRideComponent implements HasSpeed, PlayerControllable, HasPosition {
+public class Rotor extends AbstractInterconnectedFlatRideComponent implements PlayerControllable, HasPosition {
     private final FlatRideComponentSpeed flatRideComponentSpeed;
     private final RotorAxis rotorAxis;
     private RotorPlayerControl playerControl;
@@ -35,9 +34,10 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Ha
 
     @Override
     public Quaternion getRotation() {
-        if(getAttachedTo() == null) throw new RuntimeException("Rotor " + getIdentifier() + " not attached to anything");
+        Attachment attachedTo = getAttachedTo();
+        if(attachedTo == null) throw new RuntimeException("Rotor " + getIdentifier() + " not attached to anything");
 
-        return Quaternion.multiply(getAttachedTo().getRotation(), rotorAxis.getQuaternion());
+        return Quaternion.multiply(attachedTo.getRotation(), rotorAxis.getQuaternion());
     }
 
     public FlatRideComponentSpeed getFlatRideComponentSpeed() {

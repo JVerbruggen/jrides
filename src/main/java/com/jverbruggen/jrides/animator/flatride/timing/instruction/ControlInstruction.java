@@ -2,7 +2,6 @@ package com.jverbruggen.jrides.animator.flatride.timing.instruction;
 
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.interfaces.PlayerControllable;
-import org.bukkit.Bukkit;
 
 public class ControlInstruction implements Instruction {
     private final boolean allowControl;

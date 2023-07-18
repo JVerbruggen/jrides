@@ -3,7 +3,6 @@ package com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive;
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.BaseTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.FreeMovementTrackBehaviour;
-import com.jverbruggen.jrides.animator.coaster.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.models.properties.Speed;
@@ -20,7 +19,7 @@ enum DriveAndReleasePhase{
     RELEASE,
 }
 
-public class DriveAndReleaseTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour {
+public class DriveAndReleaseTrackBehaviour extends BaseTrackBehaviour {
     private final double deceleration;
     private final double acceleration;
     private final double driveSpeed;

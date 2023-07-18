@@ -1,6 +1,5 @@
 package com.jverbruggen.jrides.config.flatride.structure.seat;
 
-import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;

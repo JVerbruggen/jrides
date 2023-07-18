@@ -304,12 +304,9 @@ public abstract class BaseSection implements Section{
     }
 
     @Override
-    public int compareTo(Object o) {
-        if(o instanceof Section){
-            Section otherSection = (Section) o;
-            if(this.getParentTrack().getIdentifier().compareTo(otherSection.getParentTrack().getIdentifier()) == 0)
-                return Integer.compare(getStartFrame().getValue(), otherSection.getStartFrame().getValue());
-        }
+    public int compareTo(Section otherSection) {
+        if(this.getParentTrack().getIdentifier().compareTo(otherSection.getParentTrack().getIdentifier()) == 0)
+            return Integer.compare(getStartFrame().getValue(), otherSection.getStartFrame().getValue());
         return 0;
     }
 

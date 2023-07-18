@@ -25,6 +25,7 @@ import org.bukkit.Sound;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Player implements MessageAgent, JRidesPlayer {
     private org.bukkit.entity.Player bukkitPlayer;
@@ -74,6 +75,10 @@ public class Player implements MessageAgent, JRidesPlayer {
 
     public org.bukkit.entity.Player getBukkitPlayer(){
         return bukkitPlayer;
+    }
+
+    public UUID getUniqueId(){
+        return bukkitPlayer.getUniqueId();
     }
 
     public void setSeatedOn(Seat seat){

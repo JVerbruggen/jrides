@@ -15,6 +15,8 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 public class CoasterStationConfig extends StationConfig {
     private final double engage;
     private final double driveSpeed;
@@ -58,7 +60,7 @@ public class CoasterStationConfig extends StationConfig {
         return new CoasterStationConfig(engage, driveSpeed, passThroughCount, forwardsDispatch, minimumWaitIntervalSeconds, maximumWaitIntervalSeconds, effects, ejectLocation);
     }
 
-    public CoasterStationHandle createStationHandle(String stationName, String shortStationName, TriggerContext triggerContext, CoasterHandle coasterHandle, List<Gate> gates, DispatchLock minimumWaitTimeDispatchLock){
+    public @Nonnull CoasterStationHandle createStationHandle(String stationName, String shortStationName, TriggerContext triggerContext, CoasterHandle coasterHandle, List<Gate> gates, DispatchLock minimumWaitTimeDispatchLock){
         EffectTriggerFactory effectTriggerFactory = ServiceProvider.getSingleton(EffectTriggerFactory.class);
 
         String rideIdentifier = coasterHandle.getRide().getIdentifier();

@@ -1,5 +1,7 @@
 package com.jverbruggen.jrides.models.ride.count;
 
+import com.jverbruggen.jrides.api.JRidesPlayer;
+import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideManager;
@@ -24,14 +26,14 @@ public class RideCounterRecordCollection implements ConfigurationSerializable {
         this.playerIdentifier = playerIdentifier;
     }
 
-    public RideCounterRecord findOrCreate(String rideIdentifier){
+    public RideCounterRecord findOrCreate(String rideIdentifier, JRidesPlayer player){
         RideCounterRecord record = this.records.get(rideIdentifier);
         if(record == null){
             Ride ride = ServiceProvider.getSingleton(RideManager.class)
                     .getRideHandle(rideIdentifier)
                     .getRide();
 
-            record = new RideCounterRecord(ride, 0);
+            record = new RideCounterRecord(ride, player.getName(), player.getUniqueId(), 0);
             this.records.put(rideIdentifier, record);
         }
 

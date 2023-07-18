@@ -4,7 +4,6 @@ import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 import java.util.List;

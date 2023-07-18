@@ -5,7 +5,7 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 
-public class VirtualFallingBlock extends BaseVirtualEntity implements VirtualEntity {
+public class VirtualFallingBlock extends BaseVirtualEntity {
     public VirtualFallingBlock(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, int entityId) {
         super(packetSender, viewportManager, location, entityId);
     }

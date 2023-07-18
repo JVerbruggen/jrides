@@ -1,7 +1,6 @@
 package com.jverbruggen.jrides.config.trigger;
 
 import com.jverbruggen.jrides.effect.EffectTrigger;
-import com.jverbruggen.jrides.effect.common.CommandEffectTrigger;
 import com.jverbruggen.jrides.effect.common.CommandForPlayerEffectTrigger;
 import org.bukkit.configuration.ConfigurationSection;
 

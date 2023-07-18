@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-public interface Section extends Comparable {
+public interface Section extends Comparable<Section> {
     Frame getSpawnFrame();
     Frame getStartFrame();
     Frame getEndFrame();

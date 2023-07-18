@@ -12,7 +12,7 @@ import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.models.ride.Ride;
-import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecord;
 import org.bukkit.Sound;
 import org.bukkit.World;
 
@@ -29,7 +29,7 @@ public abstract class AbstractRideHandle implements RideHandle{
     private RideController rideController;
     private final SoundsConfig sounds;
 
-    private List<RideCounterRecordCollection> topRideCounters;
+    private List<RideCounterRecord> topRideCounters;
     private RideCounterMapConfigs rideCounterMapConfigs;
 
     public AbstractRideHandle(World world, Ride ride, RideState rideState, boolean loaded, SoundsConfig sounds, RideCounterMapConfigs rideCounterMapConfigs) {
@@ -115,7 +115,7 @@ public abstract class AbstractRideHandle implements RideHandle{
             return;
         }
 
-        boolean closed = attemptClose(authority);
+        attemptClose(authority);
     }
 
     private boolean attemptClose(@Nullable Player authority){
@@ -166,7 +166,7 @@ public abstract class AbstractRideHandle implements RideHandle{
     }
 
     @Override
-    public List<RideCounterRecordCollection> getTopRideCounters() {
+    public List<RideCounterRecord> getTopRideCounters() {
         return topRideCounters;
     }
 

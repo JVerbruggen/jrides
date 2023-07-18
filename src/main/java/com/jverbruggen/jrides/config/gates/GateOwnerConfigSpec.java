@@ -1,7 +1,6 @@
 package com.jverbruggen.jrides.config.gates;
 
 import com.jverbruggen.jrides.JRidesPlugin;
-import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.SimpleDispatchLock;
 import com.jverbruggen.jrides.language.LanguageFile;
@@ -10,7 +9,6 @@ import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.gate.FenceGate;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
-import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 

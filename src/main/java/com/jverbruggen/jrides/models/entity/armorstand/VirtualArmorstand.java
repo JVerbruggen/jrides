@@ -5,7 +5,6 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.models.entity.BaseVirtualEntity;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
-import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.ArmorStandPose;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -16,7 +15,7 @@ import org.bukkit.Bukkit;
 
 import java.util.List;
 
-public class VirtualArmorstand extends BaseVirtualEntity implements VirtualEntity {
+public class VirtualArmorstand extends BaseVirtualEntity {
     private static final Vector3 HEAD_OFFSET = new Vector3(0, 1.7, 0);
 
     private double yawRotation;

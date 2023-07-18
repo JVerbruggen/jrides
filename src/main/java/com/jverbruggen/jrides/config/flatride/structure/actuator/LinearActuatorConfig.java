@@ -48,7 +48,9 @@ public class LinearActuatorConfig extends AbstractActuatorConfig{
         String axis = getString(configurationSection, "axis", "y");
         float size = (float)getDouble(configurationSection, "size", 1d);
         Supplier<Integer> phase = getIntSupplier(configurationSection, "phase", 0);
+        @SuppressWarnings("unused")
         String control = getString(configurationSection, "control", "continuous");
+         // TODO: integrate
 
         AttachmentConfig attachmentConfig = null;
         if(configurationSection.contains("position")){

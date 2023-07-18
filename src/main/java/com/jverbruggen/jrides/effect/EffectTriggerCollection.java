@@ -1,7 +1,6 @@
 package com.jverbruggen.jrides.effect;
 
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
-import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 
 import java.util.LinkedList;
 import java.util.List;

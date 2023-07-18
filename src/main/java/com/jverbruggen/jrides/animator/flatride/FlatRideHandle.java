@@ -16,13 +16,14 @@ import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
-import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecord;
 import org.bukkit.World;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
 
 public class FlatRideHandle extends AbstractRideHandle {
     private TimingSequence timingSequence;
@@ -101,7 +102,7 @@ public class FlatRideHandle extends AbstractRideHandle {
     }
 
     @Override
-    public TriggerContext getTriggerContext(@NotNull String contextOwner) {
+    public TriggerContext getTriggerContext(@Nonnull String contextOwner) {
         return getFirstTriggerContext();
     }
 
@@ -121,7 +122,7 @@ public class FlatRideHandle extends AbstractRideHandle {
     }
 
     @Override
-    public List<RideCounterRecordCollection> getTopRideCounters() {
+    public List<RideCounterRecord> getTopRideCounters() {
         return null;
     }
 

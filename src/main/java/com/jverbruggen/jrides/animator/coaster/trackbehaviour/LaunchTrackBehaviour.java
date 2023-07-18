@@ -12,7 +12,7 @@ import com.jverbruggen.jrides.models.ride.section.Section;
 
 import java.util.List;
 
-public class LaunchTrackBehaviour extends BaseTrackBehaviour implements TrackBehaviour{
+public class LaunchTrackBehaviour extends BaseTrackBehaviour {
     private final double deceleration;
     private final double acceleration;
     private final double driveSpeed;
