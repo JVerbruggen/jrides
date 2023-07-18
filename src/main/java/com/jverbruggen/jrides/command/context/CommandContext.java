@@ -17,6 +17,8 @@ public class CommandContext {
     }
 
     public <T> T get(Class<T> clazz){
-        return (T) objects.get(clazz);
+        Object object = objects.get(clazz);
+        if(!clazz.isInstance(object)) throw new RuntimeException("Non-matching type in command context for type " + clazz.getTypeName());
+        return clazz.cast(object);
     }
 }
