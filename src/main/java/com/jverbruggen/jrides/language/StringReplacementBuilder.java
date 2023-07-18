@@ -3,6 +3,8 @@ package com.jverbruggen.jrides.language;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 public class StringReplacementBuilder {
     private final Map<String, String> replacements;
 
@@ -19,7 +21,7 @@ public class StringReplacementBuilder {
         return replacements;
     }
 
-    public String apply(String input){
+    public @Nonnull String apply(@Nonnull String input){
         String output = input;
 
         if(replacements.size() > 0){
@@ -29,6 +31,7 @@ public class StringReplacementBuilder {
             }
         }
 
+        if(output == null) throw new RuntimeException("Unexpected output = null when applying input on StringReplacementBuilder");
         return output;
     }
 }

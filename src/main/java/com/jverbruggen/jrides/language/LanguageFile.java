@@ -5,7 +5,6 @@ import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
-import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.SimpleMessageReceiver;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.ChatColor;
@@ -135,94 +134,94 @@ public class LanguageFile {
         return value;
     }
 
-    public void sendMessage(MessageReceiver messageReceiver, LanguageFileField field){
+    public void sendMessage(MessageReceiver messageReceiver, @Nonnull LanguageFileField field){
         sendMessage(messageReceiver, field, defaultFeedbackType, null);
     }
 
-    public void sendMessage(MessageReceiver messageReceiver, String content){
+    public void sendMessage(MessageReceiver messageReceiver, @Nonnull String content){
         sendMessage(messageReceiver, content, defaultFeedbackType, null);
     }
 
-    public void sendMessage(MessageReceiver messageReceiver, LanguageFileField field, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
+    public void sendMessage(MessageReceiver messageReceiver, @Nonnull LanguageFileField field, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
         sendMessage(messageReceiver, field, defaultFeedbackType, builder);
     }
 
-    public void sendMessage(MessageReceiver messageReceiver, LanguageFileField field, FeedbackType feedbackType) {
+    public void sendMessage(MessageReceiver messageReceiver, @Nonnull LanguageFileField field, FeedbackType feedbackType) {
         sendMessage(messageReceiver, field, feedbackType, null);
     }
 
-    public void sendMessage(MessageReceiver messageReceiver, String content, FeedbackType feedbackType) {
+    public void sendMessage(MessageReceiver messageReceiver, @Nonnull String content, FeedbackType feedbackType) {
         sendMessage(messageReceiver, content, feedbackType, null);
     }
 
-    public void sendMessage(MessageReceiver messageReceiver, LanguageFileField field, FeedbackType feedbackType, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
+    public void sendMessage(MessageReceiver messageReceiver, @Nonnull LanguageFileField field, FeedbackType feedbackType, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
         String content = get(field);
         sendMessage(messageReceiver, content, feedbackType, builder);
     }
 
-    public void sendMessage(MessageReceiver messageReceiver, String content, FeedbackType feedbackType, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
+    public void sendMessage(MessageReceiver messageReceiver, @Nonnull String content, FeedbackType feedbackType, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
         String prefix = getChatFeedbackColor(feedbackType) + get(LanguageFileField.CHAT_FEEDBACK_PREFIX);
         sendMessage(messageReceiver, prefix, content, builder);
     }
 
-    public void sendMessage(CommandSender commandSender, String content){
+    public void sendMessage(CommandSender commandSender, @Nonnull String content){
         sendMessage(new SimpleMessageReceiver(commandSender), content);
     }
 
-    public void sendMessage(CommandSender commandSender, LanguageFileField field){
+    public void sendMessage(CommandSender commandSender, @Nonnull LanguageFileField field){
         sendMessage(new SimpleMessageReceiver(commandSender), field);
     }
 
-    public void sendMessage(CommandSender commandSender, LanguageFileField field, FeedbackType feedbackType){
+    public void sendMessage(CommandSender commandSender, @Nonnull LanguageFileField field, FeedbackType feedbackType){
         sendMessage(new SimpleMessageReceiver(commandSender), field, feedbackType, null);
     }
 
-    public void sendMessage(CommandSender commandSender, LanguageFileField field, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
+    public void sendMessage(CommandSender commandSender, @Nonnull LanguageFileField field, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
         sendMessage(new SimpleMessageReceiver(commandSender), field, defaultFeedbackType, builder);
     }
 
-    public void sendMultilineMessage(CommandSender commandSender, LanguageFileField field){
+    public void sendMultilineMessage(CommandSender commandSender, @Nonnull LanguageFileField field){
         sendMultilineMessage(new SimpleMessageReceiver(commandSender), field);
     }
 
-    public void sendMultilineMessage(CommandSender commandSender, LanguageFileField field, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
+    public void sendMultilineMessage(CommandSender commandSender, @Nonnull LanguageFileField field, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
         sendMultilineMessage(new SimpleMessageReceiver(commandSender), get(field), defaultFeedbackType, builder);
     }
 
-    public void sendMultilineMessage(CommandSender commandSender, String content){
+    public void sendMultilineMessage(CommandSender commandSender, @Nonnull String content){
         sendMultilineMessage(new SimpleMessageReceiver(commandSender), content);
     }
 
-    public void sendMultilineMessage(CommandSender commandSender, String content, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
+    public void sendMultilineMessage(CommandSender commandSender, @Nonnull String content, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
         sendMultilineMessage(new SimpleMessageReceiver(commandSender), content, defaultFeedbackType, builder);
     }
 
-    public void sendMultilineMessage(MessageReceiver messageReceiver, LanguageFileField field){
+    public void sendMultilineMessage(MessageReceiver messageReceiver, @Nonnull LanguageFileField field){
         sendMultilineMessage(messageReceiver, field, defaultFeedbackType);
     }
 
-    public void sendMultilineMessage(MessageReceiver messageReceiver, LanguageFileField field, FeedbackType feedbackType){
+    public void sendMultilineMessage(MessageReceiver messageReceiver, @Nonnull LanguageFileField field, FeedbackType feedbackType){
         sendMultilineMessage(messageReceiver, get(field), feedbackType, null);
     }
 
-    public void sendMultilineMessage(MessageReceiver messageReceiver, LanguageFileField field, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
+    public void sendMultilineMessage(MessageReceiver messageReceiver, @Nonnull LanguageFileField field, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
         sendMultilineMessage(messageReceiver, get(field), defaultFeedbackType, builder);
     }
 
-    public void sendMultilineMessage(MessageReceiver messageReceiver, String content){
+    public void sendMultilineMessage(MessageReceiver messageReceiver, @Nonnull String content){
         sendMultilineMessage(messageReceiver, content, defaultFeedbackType);
     }
 
-    public void sendMultilineMessage(MessageReceiver messageReceiver, String content, FeedbackType feedbackType){
+    public void sendMultilineMessage(MessageReceiver messageReceiver, @Nonnull String content, FeedbackType feedbackType){
         sendMultilineMessage(messageReceiver, content, feedbackType, null);
     }
 
-    public void sendMultilineMessage(MessageReceiver messageReceiver, String content, FeedbackType feedbackType, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
+    public void sendMultilineMessage(MessageReceiver messageReceiver, @Nonnull String content, FeedbackType feedbackType, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
         String prefix = getChatFeedbackColor(feedbackType);
         sendMessage(messageReceiver, prefix, content, builder);
     }
 
-    public void sendMultilineMessage(JRidesPlayer apiPlayer, LanguageFileField field, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
+    public void sendMultilineMessage(JRidesPlayer apiPlayer, @Nonnull LanguageFileField field, Function<StringReplacementBuilder, StringReplacementBuilder> builder){
         if(!(apiPlayer instanceof MessageReceiver)){
             throw new RuntimeException("Unexpected type in JRidesPlayer at languagefile");
         }
@@ -230,7 +229,7 @@ public class LanguageFile {
         sendMultilineMessage((MessageReceiver) apiPlayer, get(field), defaultFeedbackType, builder);
     }
 
-    public void sendMessage(MessageReceiver messageReceiver, String prefix, String content, Function<StringReplacementBuilder, StringReplacementBuilder> builderFunction){
+    public void sendMessage(MessageReceiver messageReceiver, String prefix, @Nonnull String content, Function<StringReplacementBuilder, StringReplacementBuilder> builderFunction){
         StringReplacementBuilder builder = new StringReplacementBuilder();
         if(builderFunction != null) builder = builderFunction.apply(builder);
 
