@@ -50,6 +50,8 @@ public class RideOverviewMapFactory {
     }
 
     private void loadCoasterOverviewMap(CoasterHandle coasterHandle){
+        if(rideOverviewMaps == null) throw new RuntimeException("Ride overview maps was still null while loading overview map");
+
         String rideIdentifier = coasterHandle.getRide().getIdentifier();
         int mapId = coasterHandle.getRideOverviewMapId();
         if(mapId == -1){
@@ -71,7 +73,7 @@ public class RideOverviewMapFactory {
         List<SectionVisual> sectionVisuals = sectionVisualFactory.createVisuals(coasterHandle, mapScope);
         List<TrainVisual> trainVisuals = trainVisualFactory.createVisuals(coasterHandle, mapScope);
 
-        RideOverviewMap map = new RideOverviewMap(coasterHandle, mapView, sectionVisuals, trainVisuals);
+        RideOverviewMap map = new RideOverviewMap(mapView, sectionVisuals, trainVisuals);
         rideOverviewMaps.put(rideIdentifier, map);
     }
 

@@ -1,7 +1,6 @@
 package com.jverbruggen.jrides.models.map.rideoverview;
 
 import com.jverbruggen.jrides.JRidesPlugin;
-import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector2;
 import com.jverbruggen.jrides.models.ride.section.Section;
@@ -20,9 +19,6 @@ import java.util.List;
 
 public class RideOverviewMap {
     private static final byte COLOR_BORDER_DARK = ColorCache.rgbToMap(55,55,55);
-    private static final byte COLOR_BORDER_LIGHT = ColorCache.rgbToMap(255,255,255);
-    private static final byte COLOR_BORDER_CORNER = ColorCache.rgbToMap(139,139,139);
-    private static final byte COLOR_BORDER_BROWN = ColorCache.rgbToMap(47,38,25);
     private static final byte COLOR_BORDER_DARK_LIGHTER = ColorCache.rgbToMap(110,110,110);
 
 
@@ -31,14 +27,12 @@ public class RideOverviewMap {
     private static final byte COLOR_OCCUPIED =  ColorCache.rgbToMap(27, 181, 0);
     private static final byte COLOR_RESERVED = ColorCache.rgbToMap(214, 143, 0);
 
-    private final CoasterHandle coasterHandle;
     private final MapView mapView;
     private final List<SectionVisual> sectionVisuals;
     private final ClientsideMapGraphics currentGraphics;
     private List<TrainVisual> trainVisuals;
 
-    public RideOverviewMap(CoasterHandle coasterHandle, MapView mapView, List<SectionVisual> sectionVisuals, List<TrainVisual> trainVisuals) {
-        this.coasterHandle = coasterHandle;
+    public RideOverviewMap(MapView mapView, List<SectionVisual> sectionVisuals, List<TrainVisual> trainVisuals) {
         this.mapView = mapView;
         this.sectionVisuals = sectionVisuals;
         this.currentGraphics = new ClientsideMapGraphics();

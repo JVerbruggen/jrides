@@ -6,7 +6,7 @@ import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.entity.EntityType;
 
-public class VirtualBukkitEntity extends BaseVirtualEntity implements VirtualEntity {
+public class VirtualBukkitEntity extends BaseVirtualEntity {
     private final EntityType entityType;
 
     private double yawRotation;
