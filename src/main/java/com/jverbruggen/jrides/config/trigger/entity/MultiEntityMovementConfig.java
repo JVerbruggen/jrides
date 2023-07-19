@@ -3,7 +3,7 @@ package com.jverbruggen.jrides.config.trigger.entity;
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.config.trigger.BaseTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.TriggerType;
-import com.jverbruggen.jrides.effect.platform.MultipleEffectExecutorTrigger;
+import com.jverbruggen.jrides.effect.entity.MultipleEffectExecutorTrigger;
 import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
@@ -17,7 +17,7 @@ public class MultiEntityMovementConfig extends BaseTriggerConfig {
     private final List<EntityMovementCollectionConfig> entityMovements;
 
     public MultiEntityMovementConfig(List<EntityMovementCollectionConfig> entityMovements) {
-        super(TriggerType.MULTI_ENTITY_MOVEMENT);
+        super(TriggerType.ANIMATION_SEQUENCE);
         this.entityMovements = entityMovements;
     }
 

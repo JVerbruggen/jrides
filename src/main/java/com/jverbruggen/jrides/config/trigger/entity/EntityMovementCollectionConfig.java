@@ -2,7 +2,7 @@ package com.jverbruggen.jrides.config.trigger.entity;
 
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
-import com.jverbruggen.jrides.effect.platform.EntityMovementTrigger;
+import com.jverbruggen.jrides.effect.entity.EntityMovementTrigger;
 import com.jverbruggen.jrides.effect.train.SequenceTrainEffectTrigger;
 import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
@@ -64,6 +64,8 @@ public class EntityMovementCollectionConfig extends BaseConfig {
             return EntityFromToMovementConfig.fromConfigurationSection(configurationSection);
         }else if(configurationSection.contains("locationDelta") || configurationSection.contains("rotationDelta")){
             return EntityContinuousMovementConfig.fromConfigurationSection(configurationSection);
+        }else if(configurationSection.contains("item")){
+            return ReplaceItemConfig.fromConfigurationSection(configurationSection);
         }
 
         throw new RuntimeException("Unknown entity movement in " + identifier);

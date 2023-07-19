@@ -1,13 +1,13 @@
-package com.jverbruggen.jrides.effect.common;
+package com.jverbruggen.jrides.effect.external;
 
 import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
-import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import org.bukkit.Bukkit;
 
-public class CommandAsPlayerEffectTrigger extends BaseTrainEffectTrigger {
+public class CommandEffectTrigger extends BaseTrainEffectTrigger {
     private final String command;
 
-    public CommandAsPlayerEffectTrigger(String command) {
+    public CommandEffectTrigger(String command) {
         this.command = command;
     }
 
@@ -18,9 +18,7 @@ public class CommandAsPlayerEffectTrigger extends BaseTrainEffectTrigger {
 
     @Override
     public void execute(Train train) {
-        for(Player player : train.getPassengers()){
-            player.getBukkitPlayer().performCommand(command);
-        }
+        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
     }
 
     @Override

@@ -35,7 +35,7 @@ public class TriggerConfigFactory {
                     CommandForPlayerTriggerConfig.fromConfigurationSection(configurationSection);
             case COMMAND_AS_PLAYER ->
                     CommandAsPlayerTriggerConfig.fromConfigurationSection(configurationSection);
-            case MULTI_ENTITY_MOVEMENT ->
+            case ANIMATION_SEQUENCE ->
                     MultiEntityMovementConfig.fromConfigurationSection(configurationSection);
             case EXTERNAL_EVENT ->
                     ExternalTriggerConfig.fromConfigurationSection(configurationSection);

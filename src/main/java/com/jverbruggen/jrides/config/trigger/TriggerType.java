@@ -8,7 +8,7 @@ public enum TriggerType {
     COMMAND_FOR_PLAYER,
     COMMAND_AS_PLAYER,
     EXTERNAL_EVENT,
-    MULTI_ENTITY_MOVEMENT,
+    ANIMATION_SEQUENCE,
     CART_ROTATE;
 
 
@@ -20,7 +20,7 @@ public enum TriggerType {
         else if(typeString.equalsIgnoreCase("command-for-player")) return COMMAND_FOR_PLAYER;
         else if(typeString.equalsIgnoreCase("command-as-player")) return COMMAND_AS_PLAYER;
         else if(typeString.equalsIgnoreCase("external")) return EXTERNAL_EVENT;
-        else if(typeString.equalsIgnoreCase("multi-entity-movement")) return MULTI_ENTITY_MOVEMENT;
+        else if(typeString.equalsIgnoreCase("animation-sequence")) return ANIMATION_SEQUENCE;
         else if(typeString.equalsIgnoreCase("cart-rotate")) return CART_ROTATE;
 
         throw new RuntimeException("Trigger type " + typeString + " is not supported");

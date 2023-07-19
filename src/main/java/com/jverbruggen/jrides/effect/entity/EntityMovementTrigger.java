@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.effect.platform;
+package com.jverbruggen.jrides.effect.entity;
 
 import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
 

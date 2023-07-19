@@ -51,6 +51,11 @@ public class VirtualBukkitEntity extends BaseVirtualEntity {
     }
 
     @Override
+    public void setModel(TrainModelItem model) {
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
     public void setLocation(Vector3 newLocation) {
         super.setLocation(newLocation);
 

@@ -3,7 +3,7 @@ package com.jverbruggen.jrides.config.trigger.external;
 import com.jverbruggen.jrides.config.trigger.BaseTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.TriggerType;
 import com.jverbruggen.jrides.effect.EffectTrigger;
-import com.jverbruggen.jrides.effect.common.CommandEffectTrigger;
+import com.jverbruggen.jrides.effect.external.CommandEffectTrigger;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class CommandTriggerConfig extends BaseTriggerConfig {

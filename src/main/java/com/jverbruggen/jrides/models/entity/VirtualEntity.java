@@ -35,4 +35,5 @@ public interface VirtualEntity {
     boolean isAlive();
     void setHostSeat(Seat seat);
     Seat getHostSeat();
+    void setModel(TrainModelItem model);
 }

@@ -1,17 +1,16 @@
-package com.jverbruggen.jrides.effect.platform;
+package com.jverbruggen.jrides.effect.entity;
 
-import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.effect.entity.common.DelayedEntityTask;
 import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import org.bukkit.Bukkit;
 
-//TODO: Add common code with EntityFromToMovement in abstract base class or something similar
 public class EntityContinuousMovementEffectTrigger extends BaseTrainEffectTrigger implements EntityMovementTrigger {
     private final VirtualEntity virtualEntity;
-    private Runnable onFinishRunnable;
+
+    private final DelayedEntityTask delayedEntityTask;
 
     private final Vector3 initialLocation;
     private final Quaternion initialRotation;
@@ -19,56 +18,26 @@ public class EntityContinuousMovementEffectTrigger extends BaseTrainEffectTrigge
 
     private final Vector3 locationDelta;
     private final Quaternion rotationDelta;
-    private final int animationTimeTicks;
-    private final int delayTicks;
-
-    private int animationTickState;
-    private int delayTickState;
-
-    private boolean started;
-    private int bukkitTimerTracker;
-    private boolean finished;
 
     public EntityContinuousMovementEffectTrigger(VirtualEntity virtualEntity, Vector3 initialLocation, Quaternion initialRotation, boolean resetOnStart, Vector3 locationDelta, Quaternion rotationDelta, int animationTimeTicks, int delayTicks) {
         this.virtualEntity = virtualEntity;
-        this.onFinishRunnable = null;
         this.locationDelta = locationDelta;
         this.rotationDelta = rotationDelta;
-        this.animationTimeTicks = animationTimeTicks;
-        this.delayTicks = delayTicks;
+
+        this.delayedEntityTask = new DelayedEntityTask(this::runTask, delayTicks, animationTimeTicks);
 
         this.initialLocation = initialLocation;
         this.initialRotation = initialRotation;
         this.resetOnStart = resetOnStart;
-
-        this.started = false;
-        this.finished = false;
-        this.bukkitTimerTracker = -1;
     }
 
     public VirtualEntity getVirtualEntity() {
         return virtualEntity;
     }
 
-    public int getAnimationTimeTicks() {
-        return animationTimeTicks;
-    }
-
-    protected void tick(){
-        if(delayTickState < delayTicks){
-            delayTickState++;
-            return;
-        }
-
-        if(animationTickState >= getAnimationTimeTicks()){
-            stop();
-            return;
-        }
-
+    private void runTask(){
         addPosition();
         addRotation();
-
-        animationTickState++;
     }
 
     private void addRotation(){
@@ -85,8 +54,6 @@ public class EntityContinuousMovementEffectTrigger extends BaseTrainEffectTrigge
 
     @Override
     public void execute(Train train) {
-        if(started) return;
-
         start();
     }
 
@@ -96,37 +63,23 @@ public class EntityContinuousMovementEffectTrigger extends BaseTrainEffectTrigge
     }
 
     protected void start(){
-        if(started) return;
-        this.finished = false;
-        this.started = true;
-        animationTickState = 0;
-        delayTickState = 0;
+        if(delayedEntityTask.isBusy()) return;
 
         if(resetOnStart){
             virtualEntity.setLocation(initialLocation);
             virtualEntity.setRotation(initialRotation);
         }
 
-        bukkitTimerTracker = Bukkit.getScheduler().runTaskTimer(JRidesPlugin.getBukkitPlugin(), this::tick, 1L, 1L).getTaskId();
-    }
-
-    protected void stop(){
-        if(bukkitTimerTracker == -1) return;
-        this.started = false;
-        this.finished = true;
-        if(onFinishRunnable != null) onFinishRunnable.run();
-
-        Bukkit.getScheduler().cancelTask(bukkitTimerTracker);
-        bukkitTimerTracker = -1;
+        delayedEntityTask.start();
     }
 
     @Override
     public boolean finishedPlaying() {
-        return finished;
+        return delayedEntityTask.isFinished();
     }
 
     @Override
     public void onFinish(Runnable runnable) {
-        onFinishRunnable = runnable;
+        delayedEntityTask.setOnFinishRunnable(runnable);
     }
 }
