@@ -16,6 +16,8 @@ import org.bukkit.map.MapView;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 public class RideOverviewMapFactory extends AbstractMapFactory {
     private static final int MAP_UPDATE_INTERVAL_TICKS = 1;
 
@@ -39,35 +41,6 @@ public class RideOverviewMapFactory extends AbstractMapFactory {
         }
     }
 
-    private void loadCoasterOverviewMap(CoasterHandle coasterHandle){
-        if(!hasMaps()) throw new RuntimeException("Ride overview maps was still null while loading overview map");
-
-        String rideIdentifier = coasterHandle.getRide().getIdentifier();
-        int mapId = coasterHandle.getRideOverviewMapId();
-        if(mapId == -1){
-            JRidesPlugin.getLogger().warning("No ride overview map id configured for " + rideIdentifier + ", so skipping");
-            return;
-        }
-
-        @SuppressWarnings("deprecation")
-        MapView mapView = Bukkit.getMap(mapId);
-        if(mapView == null){
-            JRidesPlugin.getLogger().severe("Configured ride overview map id for ride " + rideIdentifier + " did not exist, first create the map and assign the ID to the coaster afterwards");
-            return;
-        }
-        mapView.getRenderers().forEach(mapView::removeRenderer);
-        mapView.setLocked(true);
-        mapView.setTrackingPosition(false);
-
-        MapScope mapScope = new MapScope();
-
-        List<SectionVisual> sectionVisuals = sectionVisualFactory.createVisuals(coasterHandle, mapScope);
-        List<TrainVisual> trainVisuals = trainVisualFactory.createVisuals(coasterHandle, mapScope);
-
-        RideOverviewMap map = new RideOverviewMap(mapView, sectionVisuals, trainVisuals);
-        addMap(rideIdentifier, map);
-    }
-
     public void giveMap(Player player, CoasterHandle coasterHandle){
         if(!hasMaps()){
             languageFile.sendMessage(player, LanguageFileField.NOTIFICATION_PLUGIN_STILL_LOADING);
@@ -83,5 +56,42 @@ public class RideOverviewMapFactory extends AbstractMapFactory {
         }
 
         map.give(player);
+    }
+
+    private void loadCoasterOverviewMap(CoasterHandle coasterHandle){
+        if(!hasMaps()) throw new RuntimeException("Ride overview maps was still null while loading overview map");
+
+        String rideIdentifier = coasterHandle.getRide().getIdentifier();
+        int mapId = coasterHandle.getRideOverviewMapId();
+
+        MapView mapView = createMapView(rideIdentifier, mapId);
+        if(mapView == null) return;
+
+        MapScope mapScope = new MapScope();
+
+        List<SectionVisual> sectionVisuals = sectionVisualFactory.createVisuals(coasterHandle, mapScope);
+        List<TrainVisual> trainVisuals = trainVisualFactory.createVisuals(coasterHandle, mapScope);
+
+        RideOverviewMap map = new RideOverviewMap(mapView, sectionVisuals, trainVisuals);
+        addMap(rideIdentifier, map);
+    }
+
+    private @Nullable MapView createMapView(String rideIdentifier, int mapId){
+        if(mapId == -1){
+            JRidesPlugin.getLogger().warning("No ride overview map id configured for " + rideIdentifier + ", so skipping");
+            return null;
+        }
+
+        @SuppressWarnings("deprecation")
+        MapView mapView = Bukkit.getMap(mapId);
+        if(mapView == null){
+            JRidesPlugin.getLogger().severe("Configured ride overview map id for ride " + rideIdentifier + " did not exist, first create the map and assign the ID to the coaster afterwards");
+            return null;
+        }
+        
+        mapView.getRenderers().forEach(mapView::removeRenderer);
+        mapView.setLocked(true);
+        mapView.setTrackingPosition(false);
+        return mapView;
     }
 }
