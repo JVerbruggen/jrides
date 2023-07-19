@@ -89,4 +89,9 @@ public class EntityFromToMovementConfig extends BaseConfig implements EntityMove
     public Vector3 getInitialLocation() {
         return locationFrom;
     }
+
+    @Override
+    public Vector3 getInitialRotation() {
+        return rotationFrom;
+    }
 }

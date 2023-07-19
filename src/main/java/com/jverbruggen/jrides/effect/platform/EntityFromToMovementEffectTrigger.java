@@ -66,7 +66,7 @@ public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger im
     }
 
     private void lerpRotation(){
-        if(rotationFrom == null) return;
+        if(rotationFrom == null || rotationTo == null) return;
 
         double lerpIncrement = 1d/(double)getAnimationTimeTicks();
         double theta = lerpIncrement * animationTickState;
@@ -74,7 +74,7 @@ public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger im
     }
 
     private void lerpPosition(){
-        if(locationFrom == null) return;
+        if(locationFrom == null || locationTo == null) return;
 
         Vector3 currentLocation = virtualEntity.getLocation();
         Vector3 delta = Vector3.subtract(targetLocation, currentLocation);

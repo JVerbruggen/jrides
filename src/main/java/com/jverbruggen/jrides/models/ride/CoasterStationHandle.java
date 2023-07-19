@@ -15,13 +15,18 @@ import java.util.List;
 public class CoasterStationHandle extends StationHandle {
     private Train stationaryTrain;
     private CoasterHandle coasterHandle;
-    private final List<TrainEffectTriggerHandle> entryEffectTriggers;
+    private final List<TrainEffectTriggerHandle> entryBlockingEffectTriggers;
+    private final List<TrainEffectTriggerHandle> exitBlockingEffectTriggers;
     private final List<TrainEffectTriggerHandle> exitEffectTriggers;
 
-    public CoasterStationHandle(CoasterHandle coasterHandle, String name, String shortName, TriggerContext triggerContext, List<Gate> entryGates, MinMaxWaitingTimer waitingTimer, List<TrainEffectTriggerHandle> entryEffectTriggers, List<TrainEffectTriggerHandle> exitEffectTriggers, PlayerLocation ejectLocation){
+    public CoasterStationHandle(CoasterHandle coasterHandle, String name, String shortName, TriggerContext triggerContext,
+                                List<Gate> entryGates, MinMaxWaitingTimer waitingTimer, List<TrainEffectTriggerHandle> entryBlockingEffectTriggers,
+                                List<TrainEffectTriggerHandle> exitBlockingEffectTriggers, List<TrainEffectTriggerHandle> exitEffectTriggers,
+                                PlayerLocation ejectLocation){
         super(name, shortName, entryGates, ejectLocation, waitingTimer, triggerContext);
         this.coasterHandle = coasterHandle;
-        this.entryEffectTriggers = entryEffectTriggers;
+        this.entryBlockingEffectTriggers = entryBlockingEffectTriggers;
+        this.exitBlockingEffectTriggers = exitBlockingEffectTriggers;
         this.exitEffectTriggers = exitEffectTriggers;
         this.stationaryTrain = null;
 
@@ -41,23 +46,25 @@ public class CoasterStationHandle extends StationHandle {
     }
 
     public void runEntryEffectTriggers(Train train){
-        if(entryEffectTriggers == null) return;
-        entryEffectTriggers.forEach(t -> t.execute(train));
+        if(entryBlockingEffectTriggers == null) return;
+        entryBlockingEffectTriggers.forEach(t -> t.execute(train));
     }
 
     public void runExitEffectTriggers(Train train){
-        if(exitEffectTriggers == null) return;
-        exitEffectTriggers.forEach(t -> t.execute(train));
+        if(exitBlockingEffectTriggers != null)
+            exitBlockingEffectTriggers.forEach(t -> t.execute(train));
+        if(exitEffectTriggers != null)
+            exitEffectTriggers.forEach(t -> t.execute(train));
     }
 
     public boolean entryEffectTriggersDone(){
-        if(entryEffectTriggers == null) return true;
-        return entryEffectTriggers.stream().allMatch(t -> t.getTrainEffectTrigger().finishedPlaying());
+        if(entryBlockingEffectTriggers == null) return true;
+        return entryBlockingEffectTriggers.stream().allMatch(t -> t.getTrainEffectTrigger().finishedPlaying());
     }
 
     public boolean exitEffectTriggersDone(){
-        if(exitEffectTriggers == null) return true;
-        return exitEffectTriggers.stream().allMatch(t -> t.getTrainEffectTrigger().finishedPlaying());
+        if(exitBlockingEffectTriggers == null) return true;
+        return exitBlockingEffectTriggers.stream().allMatch(t -> t.getTrainEffectTrigger().finishedPlaying());
     }
 
     public void setStationaryTrain(Train train) {

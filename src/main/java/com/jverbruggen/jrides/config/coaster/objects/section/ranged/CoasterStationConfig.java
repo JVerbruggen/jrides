@@ -66,13 +66,14 @@ public class CoasterStationConfig extends StationConfig {
         String rideIdentifier = coasterHandle.getRide().getIdentifier();
 
         StationEffectsConfig stationEffectsConfig = getStationEffectsConfig();
-        List<TrainEffectTriggerHandle> entryEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, stationEffectsConfig.getEntryEffects());
+        List<TrainEffectTriggerHandle> entryBlockingEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, stationEffectsConfig.getEntryBlockingEffects());
+        List<TrainEffectTriggerHandle> exitBlockingEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, stationEffectsConfig.getExitBlockingEffects());
         List<TrainEffectTriggerHandle> exitEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, stationEffectsConfig.getExitEffects());
         PlayerLocation ejectLocation = getEjectLocation();
 
         MinMaxWaitingTimer waitingTimer = createWaitingTimer(minimumWaitTimeDispatchLock);
 
         return new CoasterStationHandle(coasterHandle, stationName, shortStationName, triggerContext, gates, waitingTimer,
-                entryEffectTriggers, exitEffectTriggers, ejectLocation);
+                entryBlockingEffectTriggers, exitBlockingEffectTriggers, exitEffectTriggers, ejectLocation);
     }
 }
