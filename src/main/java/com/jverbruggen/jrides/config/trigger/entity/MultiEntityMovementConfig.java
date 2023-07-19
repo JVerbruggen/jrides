@@ -1,6 +1,8 @@
-package com.jverbruggen.jrides.config.trigger;
+package com.jverbruggen.jrides.config.trigger.entity;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.config.trigger.BaseTriggerConfig;
+import com.jverbruggen.jrides.config.trigger.TriggerType;
 import com.jverbruggen.jrides.effect.platform.MultipleEffectExecutorTrigger;
 import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -11,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class MultiEntityMovementConfig extends BaseTriggerConfig{
+public class MultiEntityMovementConfig extends BaseTriggerConfig {
     private final List<EntityMovementCollectionConfig> entityMovements;
 
     public MultiEntityMovementConfig(List<EntityMovementCollectionConfig> entityMovements) {

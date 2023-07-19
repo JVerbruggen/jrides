@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.config.trigger;
 
+import com.jverbruggen.jrides.config.trigger.entity.MultiEntityMovementConfig;
 import com.jverbruggen.jrides.config.trigger.external.CommandAsPlayerTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.external.CommandForPlayerTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.external.CommandTriggerConfig;

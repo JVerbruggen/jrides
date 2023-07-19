@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.config.trigger;
+package com.jverbruggen.jrides.config.trigger.entity;
 
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.effect.platform.EntityFromToMovementEffectTrigger;
