@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.config.trigger;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.config.trigger.entity.MultiEntityMovementConfig;
 import com.jverbruggen.jrides.config.trigger.external.CommandAsPlayerTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.external.CommandForPlayerTriggerConfig;
@@ -24,7 +25,10 @@ public class TriggerConfigFactory {
         TriggerType type = TriggerType.fromString(configurationSection.getString("type"));
         TriggerConfig triggerConfig;
         String mapKey = rideIdentifier + ":" + effectName;
-        if(triggerConfigList.containsKey(mapKey)) return triggerConfigList.get(mapKey);
+        if(triggerConfigList.containsKey(mapKey)){
+            JRidesPlugin.getLogger().warning("Duplicate entity identifier in triggers of ride " + rideIdentifier + ": '" + effectName + "'. Ignoring new one.");
+            return triggerConfigList.get(mapKey);
+        }
 
         triggerConfig = switch (type) {
             case MUSIC ->
