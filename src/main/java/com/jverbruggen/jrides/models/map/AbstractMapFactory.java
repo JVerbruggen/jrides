@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import org.bukkit.Bukkit;
+import org.bukkit.map.MapView;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.models.entity.Player;
@@ -42,7 +43,8 @@ public abstract class AbstractMapFactory {
                         .forEach(m -> {
                             m.updateVisuals();
                             m.sendUpdate(players);
-                        });
+                    });
+                
             }, this.mapUpdateIntervalTicks, this.mapUpdateIntervalTicks);
     }
 
@@ -60,5 +62,22 @@ public abstract class AbstractMapFactory {
 
     protected boolean hasMaps(){
         return this.maps != null;
+    }
+
+    protected MapView createMapView(int mapId) throws MapCreationException {
+        if(mapId == -1){
+            throw new MapCreationException("No ride overview map id configured");
+        }
+
+        @SuppressWarnings("deprecation")
+        MapView mapView = Bukkit.getMap(mapId);
+        if(mapView == null){
+            throw new MapCreationException("Configured ride overview map id did not exist, first create the map and assign the ID to the coaster afterwards");
+        }
+        
+        mapView.getRenderers().forEach(mapView::removeRenderer);
+        mapView.setLocked(true);
+        mapView.setTrackingPosition(false);
+        return mapView;
     }
 }
