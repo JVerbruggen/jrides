@@ -1,5 +1,7 @@
-package com.jverbruggen.jrides.config.trigger;
+package com.jverbruggen.jrides.config.trigger.external;
 
+import com.jverbruggen.jrides.config.trigger.BaseTriggerConfig;
+import com.jverbruggen.jrides.config.trigger.TriggerType;
 import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
 import com.jverbruggen.jrides.effect.train.external.ExternalEffectTrigger;
 import org.bukkit.configuration.ConfigurationSection;

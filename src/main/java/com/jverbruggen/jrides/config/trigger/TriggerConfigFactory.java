@@ -1,5 +1,9 @@
 package com.jverbruggen.jrides.config.trigger;
 
+import com.jverbruggen.jrides.config.trigger.external.CommandAsPlayerTriggerConfig;
+import com.jverbruggen.jrides.config.trigger.external.CommandForPlayerTriggerConfig;
+import com.jverbruggen.jrides.config.trigger.external.CommandTriggerConfig;
+import com.jverbruggen.jrides.config.trigger.external.ExternalTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.music.MusicTriggerConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -28,6 +32,8 @@ public class TriggerConfigFactory {
                     CommandTriggerConfig.fromConfigurationSection(configurationSection);
             case COMMAND_FOR_PLAYER ->
                     CommandForPlayerTriggerConfig.fromConfigurationSection(configurationSection);
+            case COMMAND_AS_PLAYER ->
+                    CommandAsPlayerTriggerConfig.fromConfigurationSection(configurationSection);
             case MULTI_ENTITY_MOVEMENT ->
                     MultiEntityMovementConfig.fromConfigurationSection(configurationSection);
             case EXTERNAL_EVENT ->
