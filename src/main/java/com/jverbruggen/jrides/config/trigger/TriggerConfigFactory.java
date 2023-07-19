@@ -26,7 +26,7 @@ public class TriggerConfigFactory {
         TriggerConfig triggerConfig;
         String mapKey = rideIdentifier + ":" + effectName;
         if(triggerConfigList.containsKey(mapKey)){
-            JRidesPlugin.getLogger().warning("Duplicate entity identifier in triggers of ride " + rideIdentifier + ": '" + effectName + "'. Ignoring new one.");
+            JRidesPlugin.getLogger().warning("Duplicate trigger identifier in triggers of ride " + rideIdentifier + ": '" + effectName + "'. Ignoring new one.");
             return triggerConfigList.get(mapKey);
         }
 
