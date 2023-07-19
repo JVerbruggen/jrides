@@ -10,12 +10,10 @@ import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.map.AbstractMapFactory;
 import com.jverbruggen.jrides.models.map.VirtualMap;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.Bukkit;
 import org.bukkit.map.MapView;
 
-import java.util.Collection;
 import java.util.List;
 
 public class RideOverviewMapFactory extends AbstractMapFactory {
@@ -23,7 +21,6 @@ public class RideOverviewMapFactory extends AbstractMapFactory {
 
     private final SectionVisualFactory sectionVisualFactory;
     private final TrainVisualFactory trainVisualFactory;
-    private final PlayerManager playerManager;
     private final RideManager rideManager;
     private final LanguageFile languageFile;
 
@@ -31,7 +28,6 @@ public class RideOverviewMapFactory extends AbstractMapFactory {
         super(MAP_UPDATE_INTERVAL_TICKS);
         sectionVisualFactory = ServiceProvider.getSingleton(SectionVisualFactory.class);
         trainVisualFactory = ServiceProvider.getSingleton(TrainVisualFactory.class);
-        playerManager = ServiceProvider.getSingleton(PlayerManager.class);
         rideManager = ServiceProvider.getSingleton(RideManager.class);
         languageFile = ServiceProvider.getSingleton(LanguageFile.class);
     }
@@ -53,6 +49,7 @@ public class RideOverviewMapFactory extends AbstractMapFactory {
             return;
         }
 
+        @SuppressWarnings("deprecation")
         MapView mapView = Bukkit.getMap(mapId);
         if(mapView == null){
             JRidesPlugin.getLogger().severe("Configured ride overview map id for ride " + rideIdentifier + " did not exist, first create the map and assign the ID to the coaster afterwards");
@@ -86,10 +83,5 @@ public class RideOverviewMapFactory extends AbstractMapFactory {
         }
 
         map.give(player);
-    }
-
-    @Override
-    public Collection<Player> fetchViewers() {
-        return playerManager.getPlayers();
     }
 }

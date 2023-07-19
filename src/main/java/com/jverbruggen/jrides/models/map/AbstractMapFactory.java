@@ -10,12 +10,16 @@ import org.bukkit.Bukkit;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import com.jverbruggen.jrides.state.player.PlayerManager;
 
 public abstract class AbstractMapFactory {
+    private final PlayerManager playerManager;
     private final int mapUpdateIntervalTicks;
     private @Nullable Map<String, VirtualMap> maps;
 
     public AbstractMapFactory(int mapUpdateIntervalTicks){
+        this.playerManager = ServiceProvider.getSingleton(PlayerManager.class);
         this.mapUpdateIntervalTicks = mapUpdateIntervalTicks;
         this.maps = null;
     }
@@ -32,7 +36,7 @@ public abstract class AbstractMapFactory {
         Bukkit.getScheduler().runTaskTimer(JRidesPlugin.getBukkitPlugin(),
             () -> {
                 if(!hasMaps()) return;
-                Collection<Player> players = fetchViewers();
+                Collection<Player> players = playerManager.getPlayers();
 
                 maps.values()
                         .forEach(m -> {
@@ -53,8 +57,6 @@ public abstract class AbstractMapFactory {
     }
 
     public abstract void loadMaps();
-
-    public abstract Collection<Player> fetchViewers();
 
     protected boolean hasMaps(){
         return this.maps != null;
