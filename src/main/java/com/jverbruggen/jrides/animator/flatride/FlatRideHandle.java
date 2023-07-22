@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.animator.flatride.station.FlatRideStationHandle;
 import com.jverbruggen.jrides.animator.flatride.timing.TimingSequence;
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
+import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
@@ -45,6 +46,16 @@ public class FlatRideHandle extends AbstractRideHandle {
 
     @Override
     public void tick() {
+        if(!isLoaded()) return;
+
+        RideController rideController = getRideController();
+        if(rideController.isActive())
+            rideController.getControlMode().tick();
+
+        vehicleTick();
+    }
+
+    private void vehicleTick(){
         boolean dispatchActive = dispatchTrigger.isActive();
         if(finished && !dispatchActive) return;
 

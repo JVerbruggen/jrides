@@ -131,8 +131,6 @@ public class TrackBehaviourFactory {
                 stationName, shortStationName, triggerContext, coasterHandle,
                 gates, minimumWaitTimeDispatchLock);
 
-        triggerContext.setParentStation(stationHandle);
-
         return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, true, triggerContext,
                 stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock, restraintLock, driveSpeed,
                 coasterStationConfig.isForwardsDispatch(), coasterStationConfig.getPassThroughCount());
