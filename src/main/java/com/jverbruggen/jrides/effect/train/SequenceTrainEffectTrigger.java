@@ -42,6 +42,8 @@ public class SequenceTrainEffectTrigger extends BaseTrainEffectTrigger {
     }
 
     private void runNext(){
+        if(finishedPlaying()) return;
+
         if(running){
             shouldRunNext = true;
             return;
@@ -90,6 +92,7 @@ public class SequenceTrainEffectTrigger extends BaseTrainEffectTrigger {
         this.cachedTrain = train;
         this.started = true;
         this.finished = false;
+        this.running = false;
 
         runNext();
     }
