@@ -6,7 +6,7 @@ import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
-import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 
 public interface RideController {
     RideHandle getRideHandle();
@@ -18,9 +18,9 @@ public interface RideController {
 
     Ride getRide();
 
-    void onTrainArrive(Train train, StationHandle stationHandle);
+    void onVehicleArrive(Vehicle vehicle, StationHandle stationHandle);
 
-    void onTrainDepart(Train train, StationHandle stationHandle);
+    void onVehicleDepart(Vehicle vehicle, StationHandle stationHandle);
 
     ControlMode getControlMode();
     void setControlMode(ControlMode controlMode);

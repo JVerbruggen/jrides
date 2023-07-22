@@ -45,6 +45,6 @@ public class FlatRideSeat extends AbstractSeat {
     protected void onPassengerExit(Player passenger) {
         super.onPassengerExit(passenger);
 
-        playerControl.removeControlling(null);
+        playerControl.removeControlling(passenger);
     }
 }

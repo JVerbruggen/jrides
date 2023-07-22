@@ -59,15 +59,23 @@ public class FlatRideHandle extends AbstractRideHandle {
         boolean dispatchActive = dispatchTrigger.isActive();
         if(finished && !dispatchActive) return;
 
-        if(dispatchActive && this.timingSequence.isIdle()){
-            onRideStart();
-        }
+        checkForDispatch(dispatchActive);
 
         finished = this.timingSequence.tick();
         this.stationHandle.getVehicle().tick();
 
         if(finished)
             onRideFinish();
+    }
+
+    private void checkForDispatch(boolean dispatchActive){
+        if(dispatchActive && this.timingSequence.isIdle()){
+            onRideStart();
+
+            Vehicle vehicle = getVehicle();
+            getRideController().onVehicleDepart(vehicle, stationHandle);
+            vehicle.playDispatchSound();
+        }
     }
 
     private void onRideStart(){

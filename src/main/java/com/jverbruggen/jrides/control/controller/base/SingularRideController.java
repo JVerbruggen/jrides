@@ -9,7 +9,7 @@ import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
-import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 
 public abstract class SingularRideController extends BaseRideController implements RideController {
@@ -95,12 +95,12 @@ public abstract class SingularRideController extends BaseRideController implemen
 
 
     @Override
-    public void onTrainArrive(Train train, StationHandle stationHandle){
-        getControlMode().onVehicleArrive(train, stationHandle);
+    public void onVehicleArrive(Vehicle vehicle, StationHandle stationHandle){
+        getControlMode().onVehicleArrive(vehicle, stationHandle);
     }
 
     @Override
-    public void onTrainDepart(Train train, StationHandle stationHandle) {
+    public void onVehicleDepart(Vehicle train, StationHandle stationHandle) {
         getControlMode().onVehicleDepart(train, stationHandle);
     }
 }
