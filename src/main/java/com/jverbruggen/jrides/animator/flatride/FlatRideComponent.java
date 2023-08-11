@@ -142,13 +142,17 @@ public interface FlatRideComponent {
                 offsetPosition,
                 offsetRotation).toVector3();
 
+        VirtualEntity seatEntity = viewportManager.spawnSeatEntity(spawnPosition, 0, null);
+        FlatRideSeat seat = new FlatRideSeat(flatRideHandle, null, seatEntity, Vector3.zero());
+
         List<FlatRideModel> flatRideModels = flatRideModelsConfig.stream()
-                .map(config -> config.toFlatRideModel(spawnPosition, viewportManager))
+                .map(config -> {
+                    FlatRideModel flatRideModel = config.toFlatRideModel(spawnPosition, viewportManager);
+                    flatRideModel.getEntity().setHostSeat(seat);
+                    return flatRideModel;
+                })
                 .collect(Collectors.toList());
 
-        VirtualEntity seatEntity = viewportManager.spawnSeatEntity(spawnPosition, 0, null);
-
-        FlatRideSeat seat = new FlatRideSeat(flatRideHandle, null, seatEntity, Vector3.zero());
 
         Quaternion seatRotation = Quaternion.fromYawPitchRoll(0, seatYawOffset, 0);
         SeatComponent component = new SeatComponent(identifier, groupIdentifier, false, flatRideModels, seat, seatRotation, flatRideHandle.getVehicle());

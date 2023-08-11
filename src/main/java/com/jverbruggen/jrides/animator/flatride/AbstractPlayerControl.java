@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.animator.flatride;
 
+import com.jverbruggen.jrides.animator.flatride.rotor.controltype.ControlType;
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import org.bukkit.ChatColor;
@@ -9,8 +10,11 @@ import java.util.List;
 
 public abstract class AbstractPlayerControl implements PlayerControl {
     private List<JRidesPlayer> controlling;
+    private final ControlType controlType;
 
-    public AbstractPlayerControl() {
+
+    public AbstractPlayerControl(ControlType controlType) {
+        this.controlType = controlType;
         this.controlling = null;
     }
 
@@ -31,8 +35,15 @@ public abstract class AbstractPlayerControl implements PlayerControl {
     public void sendStartNotification() {
         if(controlling == null) return;
 
+        String title = controlType.getControlMessageTitle();
+        String subTitle = controlType.getControlMessageSubtitle();
+
         controlling.forEach(
-                p -> p.sendTitle(ChatColor.RED + "Control the cup!", ChatColor.GOLD + "Press A or D to control the cup", 60));
+                p -> p.sendTitle(title, subTitle, 60));
+    }
+
+    public ControlType getControlType() {
+        return controlType;
     }
 
     @Override

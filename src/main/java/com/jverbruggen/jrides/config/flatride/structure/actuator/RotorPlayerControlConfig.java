@@ -66,6 +66,14 @@ public class RotorPlayerControlConfig extends BaseConfig implements ControlConfi
 
     @Override
     public RotorPlayerControl createPlayerControl() {
-        return playerControlConfig.createPlayerControl();
+        if(type.equalsIgnoreCase("space_bar_control")){
+            return playerControlConfig.createSpaceBarPlayerControl();
+        }else if(type.equalsIgnoreCase("w_s_control")){
+            return playerControlConfig.createWSPlayerControl();
+        }else if(type.equalsIgnoreCase("a_d_control")){
+            return playerControlConfig.createADPlayerControl();
+        }
+
+        throw new RuntimeException("Unknown player control type '" + type + "'");
     }
 }

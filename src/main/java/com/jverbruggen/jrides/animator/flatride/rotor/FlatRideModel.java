@@ -22,4 +22,8 @@ public class FlatRideModel {
         entity.setLocation(matrix.toVector3());
         entity.setRotation(matrix.getRotation());
     }
+
+    public VirtualEntity getEntity() {
+        return entity;
+    }
 }

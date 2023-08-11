@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.animator.flatride.rotor;
 
 import com.jverbruggen.jrides.animator.flatride.AbstractPlayerControl;
+import com.jverbruggen.jrides.animator.flatride.rotor.controltype.ControlType;
 import com.jverbruggen.jrides.models.ride.seat.InstructionType;
 
 public class RotorSpeedPlayerControl extends AbstractPlayerControl implements RotorPlayerControl {
@@ -12,7 +13,8 @@ public class RotorSpeedPlayerControl extends AbstractPlayerControl implements Ro
     private double currentSpeed;
     private double pendingAcceleration;
 
-    public RotorSpeedPlayerControl(double lowerSpeed, double upperSpeed, double accelerate) {
+    public RotorSpeedPlayerControl(double lowerSpeed, double upperSpeed, double accelerate, ControlType controlType) {
+        super(controlType);
         this.rotor = null;
         this.lowerSpeed = lowerSpeed;
         this.upperSpeed = upperSpeed;
@@ -30,11 +32,7 @@ public class RotorSpeedPlayerControl extends AbstractPlayerControl implements Ro
     public void processInstructionAsync(InstructionType instruction) {
         if(!rotor.allowsControl()) return;
 
-        if(instruction == InstructionType.A){
-            pendingAcceleration = -accelerate;
-        }else if(instruction == InstructionType.D){
-            pendingAcceleration = accelerate;
-        }
+        pendingAcceleration = getControlType().processInstruction(instruction, accelerate);
     }
 
     @Override
