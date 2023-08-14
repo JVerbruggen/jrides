@@ -112,6 +112,8 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
 
     @Override
     public void setLocation(Vector3 newLocation) {
+        if(newLocation == null) return;
+
         final int chunkSize = viewportManager.getRenderChunkSize();
 
         if(Vector3.chunkRotated(location, newLocation, chunkSize)){

@@ -18,6 +18,7 @@ import java.util.List;
 public class VirtualArmorstand extends BaseVirtualEntity {
     private static final Vector3 HEAD_OFFSET = new Vector3(0, 1.7, 0);
 
+    private final Quaternion currentRotation;
     private double yawRotation;
     private final ArmorstandRotations rotations;
     private final ArmorstandModels models;
@@ -27,6 +28,7 @@ public class VirtualArmorstand extends BaseVirtualEntity {
     public VirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, double yawRotation, int entityId) {
         super(packetSender, viewportManager, location, entityId);
 
+        this.currentRotation = new Quaternion();
         this.yawRotation = yawRotation;
         this.rotations = new ArmorstandRotations();
         this.models = new ArmorstandModels();
@@ -36,7 +38,7 @@ public class VirtualArmorstand extends BaseVirtualEntity {
 
     @Override
     public Quaternion getRotation() {
-        return Quaternion.fromYawPitchRoll(0, yawRotation, 0);
+        return currentRotation;
     }
 
     @Override
@@ -82,11 +84,16 @@ public class VirtualArmorstand extends BaseVirtualEntity {
     public void setLocation(Vector3 newLocation) {
         super.setLocation(newLocation);
 
+        if(newLocation == null) return;
+
         syncPassenger(Vector3.add(newLocation, getHeadOffset()));
     }
 
     @Override
     public void setRotation(Quaternion orientation) {
+        if(orientation == null) return;
+
+        currentRotation.copyFrom(orientation);
         setHeadPose(ArmorStandPose.getArmorStandPose(orientation));
     }
 

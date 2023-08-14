@@ -934,4 +934,11 @@ public class Quaternion implements Cloneable {
         tmp += 1.0;
         return ((x < 0.0) ? -0.5 : 0.5) / Math.sqrt(tmp);
     }
+
+    public void copyFrom(Quaternion orientation) {
+        this.x = orientation.getX();
+        this.y = orientation.getY();
+        this.z = orientation.getZ();
+        this.w = orientation.getW();
+    }
 }

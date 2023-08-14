@@ -42,8 +42,11 @@ public class EntityContinuousMovementConfig extends BaseConfig implements Entity
 
     @Override
     public EntityMovementTrigger createTrigger(VirtualEntity virtualEntity) {
-        Quaternion initialRotation = Quaternion.fromAnglesVector(this.initialRotation);
-        virtualEntity.setRotation(initialRotation);
+        Quaternion initialRotation = null;
+        if(this.initialRotation != null){
+            initialRotation = Quaternion.fromAnglesVector(this.initialRotation);
+            virtualEntity.setRotation(initialRotation);
+        }
 
         Quaternion rotationDelta = Quaternion.fromAnglesVector(this.rotationDelta);
 

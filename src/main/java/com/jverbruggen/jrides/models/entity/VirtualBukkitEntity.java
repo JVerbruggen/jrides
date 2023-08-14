@@ -58,6 +58,7 @@ public class VirtualBukkitEntity extends BaseVirtualEntity {
     @Override
     public void setLocation(Vector3 newLocation) {
         super.setLocation(newLocation);
+        if(newLocation == null) return;
 
         syncPassenger(newLocation);
     }
