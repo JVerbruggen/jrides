@@ -63,6 +63,7 @@ The `trigger_type` can be either one of the following values:
 
 * [type: multi-entity-movement](#type-multi-entity-movement)
 * [type: command](#type-command)
+* [type: eject](#type-eject)
 * [type: command-for-player](#type-command-for-player)
 * [type: command-as-player](#type-command-as-player)
 * [type: external](#type-external-for-developers)
