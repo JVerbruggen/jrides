@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.control.uiinterface.menu.button.common.StatefulBut
 import com.jverbruggen.jrides.control.uiinterface.menu.button.common.StaticButtonVisual;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.menu.ButtonVisual;
 import com.jverbruggen.jrides.models.menu.MenuButton;
 import com.jverbruggen.jrides.models.menu.SimpleMenuButton;
@@ -35,11 +36,11 @@ public class RideOverviewMenuButtonFactory {
         List<String> maintenanceLore = new ArrayList<>(lore);
 
         openLore.add("");
-        openLore.add(ChatColor.GREEN + "This ride is currently opened");
+        openLore.add(ChatColor.GREEN + languageFile.get(LanguageFileField.MENU_RIDE_OVERVIEW_STATUS_OPEN));
         closedLore.add("");
-        closedLore.add(ChatColor.RED + "This ride is currently closed");
+        closedLore.add(ChatColor.RED + languageFile.get(LanguageFileField.MENU_RIDE_OVERVIEW_STATUS_CLOSED));
         maintenanceLore.add("");
-        maintenanceLore.add(ChatColor.DARK_GRAY + "This ride is currently in maintenance");
+        maintenanceLore.add(ChatColor.DARK_GRAY + languageFile.get(LanguageFileField.MENU_RIDE_OVERVIEW_STATUS_MAINTENANCE));
 
         ButtonVisual openVisual = new StaticButtonVisual(displayItem, ChatColor.GOLD, rideHandle.getRide().getDisplayName(), openLore);
         ButtonVisual closedVisual = new StaticButtonVisual(displayItem, ChatColor.RED, rideHandle.getRide().getDisplayName(), closedLore);

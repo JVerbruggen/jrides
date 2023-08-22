@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.event.player.PlayerTeleportByJRidesEvent;
 import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -56,6 +57,7 @@ public class WarpCommandExecutor extends BaseCommandExecutor {
         PlayerTeleportByJRidesEvent.sendEvent(player, rideHandle.getRide().getWarpLocation(), false);
 
         player.teleport(rideHandle.getRide().getWarpLocation());
+        languageFile.sendMessage(player, LanguageFileField.NOTIFICATION_WARPED, b -> b.add(LanguageFileTag.rideDisplayName, rideHandle.getRide().getDisplayName()));
         return true;
     }
 

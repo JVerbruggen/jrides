@@ -62,6 +62,7 @@ public class Player implements MessageAgent, JRidesPlayer {
 
     @Override
     public void sendMessage(String message){
+        if(message.equals("")) return;
         bukkitPlayer.sendMessage(message);
     }
 

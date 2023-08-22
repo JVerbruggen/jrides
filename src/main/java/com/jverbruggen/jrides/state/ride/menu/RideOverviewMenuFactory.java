@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.state.ride.menu;
 
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.language.LanguageFile;
+import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.models.menu.SimpleMenu;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -25,7 +26,7 @@ public class RideOverviewMenuFactory {
             // TODO: Large quantity of rides in menu support with pages
             throw new RuntimeException("Menus for a large quantity of rides is not yet supported.");
 
-        SimpleMenu rideOverviewMenu = new SimpleMenu(3, "Ride overview menu");
+        SimpleMenu rideOverviewMenu = new SimpleMenu(3, languageFile.get(LanguageFileField.MENU_RIDE_OVERVIEW_TITLE));
         for(int i = 0; i < count; i++){
             rideOverviewMenu.addButton(rideOverviewMenuButtonFactory.createRideStatusButton(rideHandles.get(i), i));
         }

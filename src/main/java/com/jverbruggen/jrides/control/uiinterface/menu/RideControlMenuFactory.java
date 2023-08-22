@@ -11,12 +11,12 @@ import com.jverbruggen.jrides.control.trigger.StationTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.factory.RideControlButtonFactory;
 import com.jverbruggen.jrides.language.LanguageFile;
-import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.models.menu.MenuButton;
 import com.jverbruggen.jrides.models.menu.SimpleMenu;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import org.bukkit.inventory.Inventory;
 
 import java.util.*;
 
@@ -62,7 +62,7 @@ public class RideControlMenuFactory {
         MenuButton gateButton            = rideControlButtonFactory.createGateButton(gateTrigger, 15);
         MenuButton restraintButton       = rideControlButtonFactory.createRestraintButton(restraintTrigger, 16);
 
-        SimpleMenu rideControlMenu = new SimpleMenu(3, "Ride control menu");
+        SimpleMenu rideControlMenu = new SimpleMenu(3, getRideControlMenuTitle(rideController));
         rideControlMenu.addButton(claimOperatingButton);
         rideControlMenu.addButton(dispatchButton);
         rideControlMenu.addButton(problemList);
@@ -95,7 +95,7 @@ public class RideControlMenuFactory {
         MenuButton rightGateButton           = rideControlButtonFactory.createGateButton(rightGateTrigger, 16);
         MenuButton rightRestraintButton      = rideControlButtonFactory.createRestraintButton(rightRestraintTrigger, 17);
 
-        Menu rideControlMenu = new SimpleMenu(3, "Ride control menu");
+        Menu rideControlMenu = new SimpleMenu(3, getRideControlMenuTitle(rideController));
         rideControlMenu.addButton(claimOperatingButton);
         rideControlMenu.addButton(leftProblemList);
         rideControlMenu.addButton(leftDispatchButton);
@@ -120,12 +120,22 @@ public class RideControlMenuFactory {
         MenuButton openRideButton        = rideControlButtonFactory.createStateOpenRideButton(rideHandle, 3);
         MenuButton closeRideButton       = rideControlButtonFactory.createStateCloseRideButton(rideHandle, 5);
 
-        Menu adminRideControlMenu = new SimpleMenu(1, "Admin control menu");
+        Menu adminRideControlMenu = new SimpleMenu(1, getAdminRideControlMenuTitle(rideController));
         adminRideControlMenu.addButton(openRideButton);
         adminRideControlMenu.addButton(closeRideButton);
 
         adminRideControlMenus.put(rideController, adminRideControlMenu);
 
         return adminRideControlMenu;
+    }
+
+    private String getRideControlMenuTitle(RideController rideController){
+        return languageFile.get(LanguageFileField.MENU_RIDE_CONTROL_TITLE,
+                b -> b.add(LanguageFileTag.rideDisplayName, rideController.getRide().getDisplayName()));
+    }
+
+    private String getAdminRideControlMenuTitle(RideController rideController){
+        return languageFile.get(LanguageFileField.MENU_ADMIN_RIDE_CONTROL_TITLE,
+                b -> b.add(LanguageFileTag.rideDisplayName, rideController.getRide().getDisplayName()));
     }
 }
