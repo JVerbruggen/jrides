@@ -63,6 +63,8 @@ public class LanguageFile {
         setLanguageDefault(LanguageFileField.NOTIFICATION_CANNOT_ENTER_RIDE, "You currently cannot enter this ride, try again later");
         setLanguageDefault(LanguageFileField.NOTIFICATION_CANNOT_ENTER_RIDE_CLOSED, "This ride is currently closed");
 
+        setLanguageDefault(LanguageFileField.NOTIFICATION_OPERATOR_IDLE_TOO_LONG, "You were idle for too long while operating %" + LanguageFileTag.rideDisplayName + "%");
+
         setLanguageDefault(LanguageFileField.ELEVATED_OPERATOR_OVERRIDE_VICTIM_MESSAGE, "Player %" + LanguageFileTag.player + "% took over control of the operating cabin");
 
         setLanguageDefault(LanguageFileField.ERROR_SMOOTH_COASTERS_DISABLED, "Smoother ride experience is disabled, please install SmoothCoasters");

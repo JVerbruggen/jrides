@@ -51,10 +51,20 @@ public abstract class BaseControlMode implements ControlMode {
         if(triggerContext.getVehiclePresentLock().isUnlocked()) waitingTimer.increment(tickInterval);
     }
 
+    /**
+     * Kicks current operator out of control mode.
+     * Should only be used in combination with RideController,
+     * since the RideController manages switching between
+     * control modes.
+     * @param newOperator
+     * @return
+     */
     @Override
     public boolean setOperator(Player newOperator) {
         if(newOperator == null){
-            operator = null;
+            if(operator == null) return true;
+
+            removeCurrentOperator();
             return true;
         }
         if(newOperator.equals(operator)){
@@ -65,14 +75,21 @@ public abstract class BaseControlMode implements ControlMode {
             return true;
         }
         if(newOperator.getBukkitPlayer().hasPermission(Permissions.ELEVATED_OPERATOR_OVERRIDE)){
-            operator.getBukkitPlayer().closeInventory();
+            removeCurrentOperator();
             languageFile.sendMessage(operator, LanguageFileField.ELEVATED_OPERATOR_OVERRIDE_VICTIM_MESSAGE,
                     b -> b.add(LanguageFileTag.player, newOperator.getName()));
-            operator.clearOperating();
             operator = newOperator;
             return true;
         }
         return false;
+    }
+
+    private void removeCurrentOperator(){
+        if(operator == null) return;
+
+        operator.getBukkitPlayer().closeInventory();
+        operator.clearOperating();
+        operator = null;
     }
 
     @Override

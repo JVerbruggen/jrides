@@ -172,6 +172,10 @@ public class Player implements MessageAgent, JRidesPlayer {
         operating = null;
     }
 
+    public RideController getOperating(){
+        return operating;
+    }
+
     public void addViewing(VirtualEntity virtualEntity){
         if(isViewing(virtualEntity)) return;
         viewing.add(virtualEntity);

@@ -61,12 +61,16 @@ public abstract class SingularRideController extends BaseRideController implemen
         Player previousOperator = this.getControlMode().getOperator();
         if(previousOperator == player) return true;
 
+        boolean result = true;
+
         if(player == null){
+            result = this.getControlMode().setOperator(null);
             this.changeMode(this.controlModeFactory.getForWithoutOperator(this.rideHandle));
         }else if(previousOperator == null){
             this.changeMode(this.controlModeFactory.getForWithOperator(this.rideHandle));
+            result = this.getControlMode().setOperator(player);
         }
-        return this.getControlMode().setOperator(player);
+        return result;
     }
 
     @Override
