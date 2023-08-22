@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 public enum TriggerType {
     MUSIC,
     COMMAND,
+    EJECT,
     COMMAND_FOR_PLAYER,
     COMMAND_AS_PLAYER,
     EXTERNAL_EVENT,
@@ -17,6 +18,7 @@ public enum TriggerType {
 
         if(typeString.equalsIgnoreCase("music")) return MUSIC;
         else if(typeString.equalsIgnoreCase("command")) return COMMAND;
+        else if(typeString.equalsIgnoreCase("eject")) return EJECT;
         else if(typeString.equalsIgnoreCase("command-for-player")) return COMMAND_FOR_PLAYER;
         else if(typeString.equalsIgnoreCase("command-as-player")) return COMMAND_AS_PLAYER;
         else if(typeString.equalsIgnoreCase("external")) return EXTERNAL_EVENT;

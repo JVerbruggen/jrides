@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.config.trigger.external.CommandForPlayerTriggerCon
 import com.jverbruggen.jrides.config.trigger.external.CommandTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.external.ExternalTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.music.MusicTriggerConfig;
+import com.jverbruggen.jrides.config.trigger.train.EjectTriggerConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
@@ -35,6 +36,8 @@ public class TriggerConfigFactory {
                     MusicTriggerConfig.fromConfigurationSection(configurationSection);
             case COMMAND ->
                     CommandTriggerConfig.fromConfigurationSection(configurationSection);
+            case EJECT ->
+                    EjectTriggerConfig.fromConfigurationSection(configurationSection);
             case COMMAND_FOR_PLAYER ->
                     CommandForPlayerTriggerConfig.fromConfigurationSection(configurationSection);
             case COMMAND_AS_PLAYER ->

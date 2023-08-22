@@ -135,6 +135,16 @@ trigger:
 
 ---
 
+### type: eject
+The `eject` trigger allows to eject players early in a coaster. This is helpful (for example) when you want to eject players before the station was reached.
+
+```yml
+trigger:
+    type: eject
+    asFinished: true # Process the ejection as if the ride was finished. Default = true
+```
+---
+
 ### type: command
 
 The `command` trigger allows for flexible linkage of jrides triggers to your plugins or minecraft commands. The command defined in this trigger is ran by the console, so be careful about what is filled in here.
