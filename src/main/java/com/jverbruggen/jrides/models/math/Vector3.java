@@ -31,6 +31,7 @@ import com.jverbruggen.jrides.api.JRidesPlayerLocation;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
+import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -161,6 +162,10 @@ public class Vector3 {
         float y = (float) this.y;
         float z = (float) this.z;
         return new Vector3F(x, y, z);
+    }
+
+    public Vector3f toVector3fJoml(){
+        return new Vector3f((float) x, (float) y, (float) z);
     }
 
     public Vector3 toBlock(){
