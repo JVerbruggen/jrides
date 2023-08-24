@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.effect.common;
+package com.jverbruggen.jrides.effect.external;
 
 import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
 import com.jverbruggen.jrides.models.entity.Player;

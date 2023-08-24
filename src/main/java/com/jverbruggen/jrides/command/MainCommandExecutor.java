@@ -7,7 +7,7 @@ import org.bukkit.ChatColor;
 public class MainCommandExecutor extends BaseCommandExecutor {
     public MainCommandExecutor() {
         super(0);
-        registerSubCommand(new HelpCommandExecutor());
+        registerSubCommand(new HelpCommandExecutor(this));
         registerSubCommand(new BlockSectionCommandExecutor());
         registerSubCommand(new VisualizeCommandExecutor());
         registerSubCommand(new ControlCommandExecutor());

@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net" modified="2023-07-19T14:27:19.298Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="XToplSWqCIMrkEDx93uR" version="21.3.6" type="device">
+  <diagram name="Page-1" id="jNRemmmj7_WjL-q7rc49">
+    <mxGraphModel dx="1050" dy="541" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="EDEQa70NWInMGwwUGn1H-4" value="Export" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="EDEQa70NWInMGwwUGn1H-1" target="EDEQa70NWInMGwwUGn1H-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="EDEQa70NWInMGwwUGn1H-1" value="Create coaster in NoLimits2" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EDEQa70NWInMGwwUGn1H-6" value="Move to" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="EDEQa70NWInMGwwUGn1H-3" target="EDEQa70NWInMGwwUGn1H-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="EDEQa70NWInMGwwUGn1H-3" value="Coaster&lt;br&gt;spline&lt;br&gt;(.csv)" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
+          <mxGeometry x="250" y="220" width="80" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="EDEQa70NWInMGwwUGn1H-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="EDEQa70NWInMGwwUGn1H-5" target="EDEQa70NWInMGwwUGn1H-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="EDEQa70NWInMGwwUGn1H-5" value="Plugin track folder" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EDEQa70NWInMGwwUGn1H-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="EDEQa70NWInMGwwUGn1H-7" target="EDEQa70NWInMGwwUGn1H-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="EDEQa70NWInMGwwUGn1H-7" value="Register coaster in rides.yml" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="330" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EDEQa70NWInMGwwUGn1H-12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="EDEQa70NWInMGwwUGn1H-9" target="EDEQa70NWInMGwwUGn1H-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="EDEQa70NWInMGwwUGn1H-9" value="Create coaster.yml" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="550" y="330" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="EDEQa70NWInMGwwUGn1H-11" value="Start or reload jrides plugin" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="700" y="330" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

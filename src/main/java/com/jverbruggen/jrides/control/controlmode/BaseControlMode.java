@@ -11,7 +11,7 @@ import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.StationHandle;
-import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 
 public abstract class BaseControlMode implements ControlMode {
     protected final RideHandle rideHandle;
@@ -21,7 +21,6 @@ public abstract class BaseControlMode implements ControlMode {
     protected Player operator;
 
     protected final long tickInterval;
-    private boolean started;
 
     private int tickIntervalState;
 
@@ -52,10 +51,20 @@ public abstract class BaseControlMode implements ControlMode {
         if(triggerContext.getVehiclePresentLock().isUnlocked()) waitingTimer.increment(tickInterval);
     }
 
+    /**
+     * Kicks current operator out of control mode.
+     * Should only be used in combination with RideController,
+     * since the RideController manages switching between
+     * control modes.
+     * @param newOperator
+     * @return
+     */
     @Override
     public boolean setOperator(Player newOperator) {
         if(newOperator == null){
-            operator = null;
+            if(operator == null) return true;
+
+            removeCurrentOperator();
             return true;
         }
         if(newOperator.equals(operator)){
@@ -66,14 +75,21 @@ public abstract class BaseControlMode implements ControlMode {
             return true;
         }
         if(newOperator.getBukkitPlayer().hasPermission(Permissions.ELEVATED_OPERATOR_OVERRIDE)){
-            operator.getBukkitPlayer().closeInventory();
+            removeCurrentOperator();
             languageFile.sendMessage(operator, LanguageFileField.ELEVATED_OPERATOR_OVERRIDE_VICTIM_MESSAGE,
                     b -> b.add(LanguageFileTag.player, newOperator.getName()));
-            operator.clearOperating();
             operator = newOperator;
             return true;
         }
         return false;
+    }
+
+    private void removeCurrentOperator(){
+        if(operator == null) return;
+
+        operator.getBukkitPlayer().closeInventory();
+        operator.clearOperating();
+        operator = null;
     }
 
     @Override
@@ -82,12 +98,12 @@ public abstract class BaseControlMode implements ControlMode {
     }
 
     @Override
-    public void onVehicleArrive(Train train, StationHandle stationHandle) {
+    public void onVehicleArrive(Vehicle vehicle, StationHandle stationHandle) {
         waitingTimer.reset();
     }
 
     @Override
-    public void onVehicleDepart(Train train, StationHandle stationHandle) {
+    public void onVehicleDepart(Vehicle vehicle, StationHandle stationHandle) {
         waitingTimer.reset();
     }
 

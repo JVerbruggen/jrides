@@ -804,7 +804,10 @@ public class Quaternion implements Cloneable {
 
     public static Quaternion fromAnglesVector(Vector3 anglesVector){
         Quaternion quaternion = new Quaternion();
-        quaternion.rotateYawPitchRoll(anglesVector.getX(), anglesVector.getY(), anglesVector.getZ());
+
+        if(anglesVector != null)
+            quaternion.rotateYawPitchRoll(anglesVector.getX(), anglesVector.getY(), anglesVector.getZ());
+
         return quaternion;
     }
 
@@ -930,5 +933,12 @@ public class Quaternion implements Cloneable {
         tmp *= tmp;
         tmp += 1.0;
         return ((x < 0.0) ? -0.5 : 0.5) / Math.sqrt(tmp);
+    }
+
+    public void copyFrom(Quaternion orientation) {
+        this.x = orientation.getX();
+        this.y = orientation.getY();
+        this.z = orientation.getZ();
+        this.w = orientation.getW();
     }
 }

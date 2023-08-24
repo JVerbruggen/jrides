@@ -1,8 +1,8 @@
-package com.jverbruggen.jrides.config.trigger;
+package com.jverbruggen.jrides.config.trigger.entity;
 
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
-import com.jverbruggen.jrides.effect.platform.EntityContinuousMovementEffectTrigger;
-import com.jverbruggen.jrides.effect.platform.EntityMovementTrigger;
+import com.jverbruggen.jrides.effect.entity.EntityContinuousMovementEffectTrigger;
+import com.jverbruggen.jrides.effect.entity.EntityMovementTrigger;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -42,8 +42,11 @@ public class EntityContinuousMovementConfig extends BaseConfig implements Entity
 
     @Override
     public EntityMovementTrigger createTrigger(VirtualEntity virtualEntity) {
-        Quaternion initialRotation = Quaternion.fromAnglesVector(this.initialRotation);
-        virtualEntity.setRotation(initialRotation);
+        Quaternion initialRotation = null;
+        if(this.initialRotation != null){
+            initialRotation = Quaternion.fromAnglesVector(this.initialRotation);
+            virtualEntity.setRotation(initialRotation);
+        }
 
         Quaternion rotationDelta = Quaternion.fromAnglesVector(this.rotationDelta);
 
@@ -53,5 +56,10 @@ public class EntityContinuousMovementConfig extends BaseConfig implements Entity
     @Override
     public Vector3 getInitialLocation() {
         return initialLocation;
+    }
+
+    @Override
+    public Vector3 getInitialRotation() {
+        return initialRotation;
     }
 }

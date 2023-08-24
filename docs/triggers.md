@@ -63,6 +63,7 @@ The `trigger_type` can be either one of the following values:
 
 * [type: multi-entity-movement](#type-multi-entity-movement)
 * [type: command](#type-command)
+* [type: eject](#type-eject)
 * [type: command-for-player](#type-command-for-player)
 * [type: command-as-player](#type-command-as-player)
 * [type: external](#type-external-for-developers)
@@ -133,6 +134,16 @@ trigger:
 ```
 
 
+---
+
+### type: eject
+The `eject` trigger allows to eject players early in a coaster. This is helpful (for example) when you want to eject players before the station was reached.
+
+```yml
+trigger:
+    type: eject
+    asFinished: true # Process the ejection as if the ride was finished. Default = true
+```
 ---
 
 ### type: command

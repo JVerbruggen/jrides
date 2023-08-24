@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.animator.flatride.timing.TimingSequence;
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.config.ride.RideCounterMapConfigs;
+import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
@@ -47,18 +48,36 @@ public class FlatRideHandle extends AbstractRideHandle {
 
     @Override
     public void tick() {
+        if(!isLoaded()) return;
+
+        RideController rideController = getRideController();
+        if(rideController.isActive())
+            rideController.getControlMode().tick();
+
+        vehicleTick();
+    }
+
+    private void vehicleTick(){
         boolean dispatchActive = dispatchTrigger.isActive();
         if(finished && !dispatchActive) return;
 
-        if(dispatchActive && this.timingSequence.isIdle()){
-            onRideStart();
-        }
+        checkForDispatch(dispatchActive);
 
         finished = this.timingSequence.tick();
         this.stationHandle.getVehicle().tick();
 
         if(finished)
             onRideFinish();
+    }
+
+    private void checkForDispatch(boolean dispatchActive){
+        if(dispatchActive && this.timingSequence.isIdle()){
+            onRideStart();
+
+            Vehicle vehicle = getVehicle();
+            getRideController().onVehicleDepart(vehicle, stationHandle);
+            vehicle.playDispatchSound();
+        }
     }
 
     private void onRideStart(){

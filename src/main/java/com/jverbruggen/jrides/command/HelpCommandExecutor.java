@@ -1,23 +1,14 @@
 package com.jverbruggen.jrides.command;
 
-import com.jverbruggen.jrides.command.control.ControlCommandExecutor;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class HelpCommandExecutor extends BaseCommandExecutor {
-    private final VisualizeCommandExecutor visualizeCommandExecutor;
-    private final BlockSectionCommandExecutor blockSectionCommandExecutor;
-    private final ControlCommandExecutor controlCommandExecutor;
-    private final WarpCommandExecutor warpCommandExecutor;
-    private final RideOverviewMapCommandExecutor rideOverviewMapCommandExecutor;
-    private final RideCounterMapCommandExecutor rideCounterMapCommandExecutor;
+    private final MainCommandExecutor mainCommandExecutor;
 
-    public HelpCommandExecutor() {
+    public HelpCommandExecutor(MainCommandExecutor mainCommandExecutor) {
         super(1);
-        this.blockSectionCommandExecutor = new BlockSectionCommandExecutor();
-        this.visualizeCommandExecutor = new VisualizeCommandExecutor();
-        this.controlCommandExecutor = new ControlCommandExecutor();
-        this.warpCommandExecutor = new WarpCommandExecutor();
-        this.rideOverviewMapCommandExecutor = new RideOverviewMapCommandExecutor();
-        this.rideCounterMapCommandExecutor = new RideCounterMapCommandExecutor();
+        this.mainCommandExecutor = mainCommandExecutor;
     }
 
     @Override
@@ -27,11 +18,13 @@ public class HelpCommandExecutor extends BaseCommandExecutor {
 
     @Override
     public String getHelpMessageForParent() {
-        return visualizeCommandExecutor.getHelpMessageForParent() + "\n" +
-                blockSectionCommandExecutor.getHelpMessageForParent() + "\n" +
-                controlCommandExecutor.getHelpMessageForParent() + "\n" +
-                warpCommandExecutor.getHelpMessageForParent() + "\n" +
-                rideOverviewMapCommandExecutor.getHelpMessageForParent() + "\n" +
-                rideCounterMapCommandExecutor.getHelpMessageForParent();
+        return mainCommandExecutor.subCommands.values().stream()
+                .map(executor -> {
+                    if(executor == this) return null;
+                    return executor.getHelpMessageForParent();
+                })
+                .filter(Objects::nonNull)
+                .sorted()
+                .collect(Collectors.joining("\n"));
     }
 }

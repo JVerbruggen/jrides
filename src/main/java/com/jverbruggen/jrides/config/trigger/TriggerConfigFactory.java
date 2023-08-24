@@ -1,6 +1,13 @@
 package com.jverbruggen.jrides.config.trigger;
 
+import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.config.trigger.entity.MultiEntityMovementConfig;
+import com.jverbruggen.jrides.config.trigger.external.CommandAsPlayerTriggerConfig;
+import com.jverbruggen.jrides.config.trigger.external.CommandForPlayerTriggerConfig;
+import com.jverbruggen.jrides.config.trigger.external.CommandTriggerConfig;
+import com.jverbruggen.jrides.config.trigger.external.ExternalTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.music.MusicTriggerConfig;
+import com.jverbruggen.jrides.config.trigger.train.EjectTriggerConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
@@ -19,16 +26,23 @@ public class TriggerConfigFactory {
         TriggerType type = TriggerType.fromString(configurationSection.getString("type"));
         TriggerConfig triggerConfig;
         String mapKey = rideIdentifier + ":" + effectName;
-        if(triggerConfigList.containsKey(mapKey)) return triggerConfigList.get(mapKey);
+        if(triggerConfigList.containsKey(mapKey)){
+            JRidesPlugin.getLogger().warning("Duplicate trigger identifier in triggers of ride " + rideIdentifier + ": '" + effectName + "'. Ignoring new one.");
+            return triggerConfigList.get(mapKey);
+        }
 
         triggerConfig = switch (type) {
             case MUSIC ->
                     MusicTriggerConfig.fromConfigurationSection(configurationSection);
             case COMMAND ->
                     CommandTriggerConfig.fromConfigurationSection(configurationSection);
+            case EJECT ->
+                    EjectTriggerConfig.fromConfigurationSection(configurationSection);
             case COMMAND_FOR_PLAYER ->
                     CommandForPlayerTriggerConfig.fromConfigurationSection(configurationSection);
-            case MULTI_ENTITY_MOVEMENT ->
+            case COMMAND_AS_PLAYER ->
+                    CommandAsPlayerTriggerConfig.fromConfigurationSection(configurationSection);
+            case ANIMATION_SEQUENCE ->
                     MultiEntityMovementConfig.fromConfigurationSection(configurationSection);
             case EXTERNAL_EVENT ->
                     ExternalTriggerConfig.fromConfigurationSection(configurationSection);

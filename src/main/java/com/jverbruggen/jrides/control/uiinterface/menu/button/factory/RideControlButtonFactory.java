@@ -14,6 +14,7 @@ import com.jverbruggen.jrides.control.uiinterface.menu.button.common.CabinOccupa
 import com.jverbruggen.jrides.control.uiinterface.menu.button.common.StaticButtonVisual;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.menu.MenuButton;
 import com.jverbruggen.jrides.models.menu.SimpleMenuButton;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -30,12 +31,13 @@ public class RideControlButtonFactory {
     }
 
     public MenuButton createClaimRideButton(RideController rideController, int slot){
+        String rideDisplayName = rideController.getRide().getDisplayName();
         return new SimpleMenuButton(
                 new CabinOccupationVisual(rideController,
                         new StaticButtonVisual(Material.BLACK_CONCRETE_POWDER,
                             ChatColor.GOLD,
-                            languageFile.get(LanguageFileField.BUTTON_CLAIM_CABIN)),
-                            languageFile.get(LanguageFileField.BUTTON_CABIN_CLAIMED)),
+                            languageFile.get(LanguageFileField.BUTTON_CLAIM_CABIN, b -> b.add(LanguageFileTag.rideDisplayName, rideDisplayName))),
+                            languageFile.get(LanguageFileField.BUTTON_CABIN_CLAIMED, b -> b.add(LanguageFileTag.rideDisplayName, rideDisplayName))),
                 slot, new RunnableButtonWithContextAction((p, b) -> {
             if(!p.hasPermission(Permissions.CABIN_OPERATE)) return;
             if(p.equals(rideController.getOperator())){

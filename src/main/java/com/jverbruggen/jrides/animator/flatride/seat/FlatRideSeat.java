@@ -31,6 +31,8 @@ public class FlatRideSeat extends AbstractSeat {
 
     @Override
     public void sendPlayerControlInstruction(InstructionType instruction) {
+        if(playerControl == null) return;
+
         this.playerControl.processInstructionAsync(instruction);
     }
 
@@ -38,13 +40,15 @@ public class FlatRideSeat extends AbstractSeat {
     protected void onPassengerEnter(Player passenger) {
         super.onPassengerEnter(passenger);
 
-        playerControl.addControlling(passenger);
+        if(playerControl != null)
+            playerControl.addControlling(passenger);
     }
 
     @Override
     protected void onPassengerExit(Player passenger) {
         super.onPassengerExit(passenger);
 
-        playerControl.removeControlling(null);
+        if(playerControl != null)
+            playerControl.removeControlling(passenger);
     }
 }

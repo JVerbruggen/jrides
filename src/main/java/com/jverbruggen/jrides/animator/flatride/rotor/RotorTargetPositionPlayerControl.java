@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.animator.flatride.rotor;
 
 import com.jverbruggen.jrides.animator.flatride.AbstractPlayerControl;
+import com.jverbruggen.jrides.animator.flatride.rotor.controltype.ControlType;
 import com.jverbruggen.jrides.animator.flatride.timing.instruction.towards.TowardsPositionInstruction;
 import com.jverbruggen.jrides.models.ride.seat.InstructionType;
 
@@ -13,7 +14,8 @@ public class RotorTargetPositionPlayerControl extends AbstractPlayerControl impl
 
     private double pendingAcceleration;
 
-    public RotorTargetPositionPlayerControl(double lowerPosition, double upperPosition, double acceleration) {
+    public RotorTargetPositionPlayerControl(double lowerPosition, double upperPosition, double acceleration, ControlType controlType) {
+        super(controlType);
         this.rotor = null;
         this.lowerPosition = lowerPosition;
         this.upperPosition = upperPosition;
@@ -32,11 +34,7 @@ public class RotorTargetPositionPlayerControl extends AbstractPlayerControl impl
     public void processInstructionAsync(InstructionType instruction) {
         if(!rotor.allowsControl()) return;
 
-        if(instruction == InstructionType.A){
-            pendingAcceleration = -acceleration;
-        }else if(instruction == InstructionType.D){
-            pendingAcceleration = acceleration;
-        }
+        pendingAcceleration = getControlType().processInstruction(instruction, acceleration);
     }
 
     @Override

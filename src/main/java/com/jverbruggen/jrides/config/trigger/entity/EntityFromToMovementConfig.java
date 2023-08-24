@@ -1,8 +1,8 @@
-package com.jverbruggen.jrides.config.trigger;
+package com.jverbruggen.jrides.config.trigger.entity;
 
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
-import com.jverbruggen.jrides.effect.platform.EntityFromToMovementEffectTrigger;
-import com.jverbruggen.jrides.effect.platform.EntityMovementTrigger;
+import com.jverbruggen.jrides.effect.entity.EntityFromToMovementEffectTrigger;
+import com.jverbruggen.jrides.effect.entity.EntityMovementTrigger;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -88,5 +88,10 @@ public class EntityFromToMovementConfig extends BaseConfig implements EntityMove
     @Override
     public Vector3 getInitialLocation() {
         return locationFrom;
+    }
+
+    @Override
+    public Vector3 getInitialRotation() {
+        return rotationFrom;
     }
 }

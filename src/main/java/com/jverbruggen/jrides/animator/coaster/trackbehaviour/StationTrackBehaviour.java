@@ -142,7 +142,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour {
                             RideFinishedEvent.send(coasterHandle.getRide());
                         }
 
-                        coasterHandle.getRideController().onTrainArrive(train, stationHandle);
+                        coasterHandle.getRideController().onVehicleArrive(train, stationHandle);
                         trainInStationDispatchLock.unlock();
                         restraintsLock.setLocked(true);
                         train.setRestraintForAll(false);
@@ -187,7 +187,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour {
                         nextSection.setEntireBlockReservation(train);
                         phase = StationPhase.DEPARTING;
                         blockSectionOccupiedDispatchLock.lock();
-                        coasterHandle.getRideController().onTrainDepart(train, stationHandle);
+                        coasterHandle.getRideController().onVehicleDepart(train, stationHandle);
                         stationHandle.setStationaryTrain(null);
                         train.playDispatchSound();
                         goIntoSwitch = true;

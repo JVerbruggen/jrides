@@ -13,6 +13,8 @@ public class YawRotatedVirtualArmorstand extends VirtualArmorstand {
 
     @Override
     public void setRotation(Quaternion orientation) {
+        if(orientation == null) return;
+
         Vector3 headPose = ArmorStandPose.getArmorStandPose(orientation);
         headPose.y = 0;
 

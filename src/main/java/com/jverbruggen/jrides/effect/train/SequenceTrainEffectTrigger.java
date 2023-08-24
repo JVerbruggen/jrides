@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.effect.train;
 
-import com.jverbruggen.jrides.effect.platform.EntityMovementTrigger;
+import com.jverbruggen.jrides.effect.entity.EntityMovementTrigger;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 import java.util.List;
@@ -12,6 +12,8 @@ public class SequenceTrainEffectTrigger extends BaseTrainEffectTrigger {
     private boolean reversed;
     private boolean started;
     private boolean finished;
+    private boolean shouldRunNext;
+    private boolean running;
     private int triggerPointer;
 
     public SequenceTrainEffectTrigger(List<EntityMovementTrigger> triggerSequence){
@@ -20,6 +22,8 @@ public class SequenceTrainEffectTrigger extends BaseTrainEffectTrigger {
         this.reversed = false;
         this.started = false;
         this.finished = false;
+        this.shouldRunNext = false;
+        this.running = false;
         this.triggerPointer = 0;
     }
 
@@ -38,21 +42,37 @@ public class SequenceTrainEffectTrigger extends BaseTrainEffectTrigger {
     }
 
     private void runNext(){
-        if(reachedEnd()){
-            finish();
+        if(finishedPlaying()) return;
+
+        if(running){
+            shouldRunNext = true;
             return;
         }
 
-        EntityMovementTrigger trigger = triggerSequence.get(triggerPointer);
-        trigger.onFinish(this::onItemFinish);
+        shouldRunNext = true;
+        running = true;
 
-        if(reversed){
-            trigger.executeReversed(cachedTrain);
-        }else{
-            trigger.execute(cachedTrain);
+        while(shouldRunNext){
+            shouldRunNext = false;
+
+            if(reachedEnd()){
+                finish();
+                return;
+            }
+
+            EntityMovementTrigger trigger = triggerSequence.get(triggerPointer);
+            trigger.onFinish(this::onItemFinish);
+
+            if(reversed){
+                trigger.executeReversed(cachedTrain);
+            }else{
+                trigger.execute(cachedTrain);
+            }
+
+            incrementPointer();
         }
 
-        incrementPointer();
+        running = false;
     }
 
     private boolean reachedEnd(){
@@ -72,6 +92,7 @@ public class SequenceTrainEffectTrigger extends BaseTrainEffectTrigger {
         this.cachedTrain = train;
         this.started = true;
         this.finished = false;
+        this.running = false;
 
         runNext();
     }

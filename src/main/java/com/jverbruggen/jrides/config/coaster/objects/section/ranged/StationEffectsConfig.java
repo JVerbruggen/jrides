@@ -5,21 +5,28 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.List;
 
 public class StationEffectsConfig {
-    private final List<String> entryEffects;
+    private final List<String> entryBlockingEffects;
+    private final List<String> exitBlockingEffects;
     private final List<String> exitEffects;
 
-    public StationEffectsConfig(List<String> entryEffects, List<String> exitEffects) {
-        this.entryEffects = entryEffects;
+    public StationEffectsConfig(List<String> entryBlockingEffects, List<String> exitBlockingEffects, List<String> exitEffects) {
+        this.entryBlockingEffects = entryBlockingEffects;
+        this.exitBlockingEffects = exitBlockingEffects;
         this.exitEffects = exitEffects;
     }
 
     public StationEffectsConfig() {
-        this.entryEffects = null;
+        this.entryBlockingEffects = null;
+        this.exitBlockingEffects = null;
         this.exitEffects = null;
     }
 
-    public List<String> getEntryEffects() {
-        return entryEffects;
+    public List<String> getEntryBlockingEffects() {
+        return entryBlockingEffects;
+    }
+
+    public List<String> getExitBlockingEffects() {
+        return exitBlockingEffects;
     }
 
     public List<String> getExitEffects() {
@@ -28,10 +35,11 @@ public class StationEffectsConfig {
 
     public static StationEffectsConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         if(configurationSection == null) return new StationEffectsConfig();
-        List<String> entryEffects = configurationSection.getStringList("entry");
+        List<String> entryBlockingEffects = configurationSection.getStringList("entryBlocking");
+        List<String> exitBlockingEffects = configurationSection.getStringList("exitBlocking");
         List<String> exitEffects = configurationSection.getStringList("exit");
 
-        return new StationEffectsConfig(entryEffects, exitEffects);
+        return new StationEffectsConfig(entryBlockingEffects, exitBlockingEffects, exitEffects);
     }
 }
 

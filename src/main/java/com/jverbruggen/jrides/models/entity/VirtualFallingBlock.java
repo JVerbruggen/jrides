@@ -59,4 +59,9 @@ public class VirtualFallingBlock extends BaseVirtualEntity {
     public boolean shouldRenderFor(Player player) {
         return false;
     }
+
+    @Override
+    public void setModel(TrainModelItem model) {
+        throw new RuntimeException("Not implemented");
+    }
 }

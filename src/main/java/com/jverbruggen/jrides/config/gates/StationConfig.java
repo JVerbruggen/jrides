@@ -42,8 +42,8 @@ public class StationConfig extends BaseConfig {
     }
 
     public static StationConfig fromConfigurationSection(ConfigurationSection configurationSection) {
-        int minimumWaitIntervalSeconds = getInt(configurationSection, "minimumWaitIntervalSeconds", 0);
-        int maximumWaitIntervalSeconds = getInt(configurationSection, "maximumWaitIntervalSeconds", 60);
+        int minimumWaitIntervalSeconds = getInt(configurationSection, "minimumWaitIntervalSeconds", 15);
+        int maximumWaitIntervalSeconds = getInt(configurationSection, "maximumWaitIntervalSeconds", 45);
         StationEffectsConfig effects = StationEffectsConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "effects"));
         PlayerLocation ejectLocation = PlayerLocation.fromDoubleList(getDoubleList(configurationSection, "ejectLocation"));
 
@@ -60,6 +60,9 @@ public class StationConfig extends BaseConfig {
     public FlatRideStationHandle createFlatRideStationHandle(String stationName, String shortStationName, TriggerContext triggerContext, List<Gate> gates, DispatchLock minimumWaitTimeDispatchLock){
         MinMaxWaitingTimer waitingTimer = createWaitingTimer(minimumWaitTimeDispatchLock);
 
-        return new FlatRideStationHandle(stationName, shortStationName, gates, getEjectLocation(), waitingTimer, triggerContext);
+        FlatRideStationHandle stationHandle = new FlatRideStationHandle(stationName, shortStationName, gates, getEjectLocation(), waitingTimer, triggerContext);
+        triggerContext.setParentStation(stationHandle);
+
+        return stationHandle;
     }
 }

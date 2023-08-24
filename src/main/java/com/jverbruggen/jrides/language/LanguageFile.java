@@ -26,6 +26,8 @@ public class LanguageFile {
         this.logger = ServiceProvider.getSingleton(JRidesLogger.class);
         this.language = new HashMap<>();
 
+        // Start of language definitions (do not edit this line)
+
         setLanguageDefault(LanguageFileField.CHAT_FEEDBACK_PREFIX, "[jrides] ");
         setLanguageDefault(LanguageFileField.CHAT_FEEDBACK_INFO_COLOR, "&7");
         setLanguageDefault(LanguageFileField.CHAT_FEEDBACK_WARNING_COLOR, "&e");
@@ -63,6 +65,9 @@ public class LanguageFile {
         setLanguageDefault(LanguageFileField.NOTIFICATION_CANNOT_ENTER_RIDE, "You currently cannot enter this ride, try again later");
         setLanguageDefault(LanguageFileField.NOTIFICATION_CANNOT_ENTER_RIDE_CLOSED, "This ride is currently closed");
 
+        setLanguageDefault(LanguageFileField.NOTIFICATION_OPERATOR_IDLE_TOO_LONG, "You were idle for too long while operating %" + LanguageFileTag.rideDisplayName + "%");
+        setLanguageDefault(LanguageFileField.NOTIFICATION_WARPED, "");
+
         setLanguageDefault(LanguageFileField.ELEVATED_OPERATOR_OVERRIDE_VICTIM_MESSAGE, "Player %" + LanguageFileTag.player + "% took over control of the operating cabin");
 
         setLanguageDefault(LanguageFileField.ERROR_SMOOTH_COASTERS_DISABLED, "Smoother ride experience is disabled, please install SmoothCoasters");
@@ -74,6 +79,13 @@ public class LanguageFile {
         setLanguageDefault(LanguageFileField.ERROR_RIDE_CONTROL_MENU_NOT_FOUND, "Ride control menu was not found");
         setLanguageDefault(LanguageFileField.ERROR_RIDE_OVERVIEW_MAP_NOT_FOUND, "Could not retrieve map for ride %" + LanguageFileTag.rideIdentifier + "%, was the map id configured?");
 
+        setLanguageDefault(LanguageFileField.MENU_RIDE_OVERVIEW_TITLE, "Ride overview menu");
+        setLanguageDefault(LanguageFileField.MENU_RIDE_OVERVIEW_STATUS_OPEN, "This ride is currently opened");
+        setLanguageDefault(LanguageFileField.MENU_RIDE_OVERVIEW_STATUS_CLOSED, "This ride is currently closed");
+        setLanguageDefault(LanguageFileField.MENU_RIDE_OVERVIEW_STATUS_MAINTENANCE, "This ride is in maintenance");
+        setLanguageDefault(LanguageFileField.MENU_RIDE_CONTROL_TITLE, "Ride control menu");
+        setLanguageDefault(LanguageFileField.MENU_ADMIN_RIDE_CONTROL_TITLE, "Admin ride control menu");
+
         setLanguageDefault(LanguageFileField.BUTTON_CLAIM_CABIN, "Claim operating cabin");
         setLanguageDefault(LanguageFileField.BUTTON_CABIN_CLAIMED, "Claim operating cabin");
         setLanguageDefault(LanguageFileField.BUTTON_DISPATCH_STATE, "Dispatch");
@@ -83,6 +95,8 @@ public class LanguageFile {
         setLanguageDefault(LanguageFileField.BUTTON_GATES_CLOSED_STATE, "Gates are closed");
         setLanguageDefault(LanguageFileField.BUTTON_RESTRAINTS_OPEN_STATE, "Restraints are open");
         setLanguageDefault(LanguageFileField.BUTTON_RESTRAINTS_CLOSED_STATE, "Restraints are closed");
+
+        // End of language definitions (do not edit this line)
 
         fillOverrides();
     }
@@ -230,6 +244,8 @@ public class LanguageFile {
     }
 
     public void sendMessage(MessageReceiver messageReceiver, String prefix, @Nonnull String content, Function<StringReplacementBuilder, StringReplacementBuilder> builderFunction){
+        if(content.equals("")) return;
+
         StringReplacementBuilder builder = new StringReplacementBuilder();
         if(builderFunction != null) builder = builderFunction.apply(builder);
 

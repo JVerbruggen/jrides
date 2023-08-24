@@ -85,6 +85,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
         Seat seat = entity.getHostSeat();
         Player player = playerManager.getPlayer(bukkitPlayer);
 
+        if(seat == null) return;
         if(player.isSeated()) return;
 
         if(!seat.getParentRideHandle().isOpen()
@@ -106,7 +107,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
     }
 
     private void processPlayerControl(PacketEvent event, Seat seat){
-        if(!seat.supportsPlayerControl()){
+        if(seat == null || !seat.supportsPlayerControl()){
             return;
         }
 

@@ -62,6 +62,7 @@ public class Player implements MessageAgent, JRidesPlayer {
 
     @Override
     public void sendMessage(String message){
+        if(message.equals("")) return;
         bukkitPlayer.sendMessage(message);
     }
 
@@ -170,6 +171,10 @@ public class Player implements MessageAgent, JRidesPlayer {
 
     public void clearOperating(){
         operating = null;
+    }
+
+    public RideController getOperating(){
+        return operating;
     }
 
     public void addViewing(VirtualEntity virtualEntity){
