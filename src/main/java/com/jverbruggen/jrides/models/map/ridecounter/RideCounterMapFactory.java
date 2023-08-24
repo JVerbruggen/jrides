@@ -27,12 +27,14 @@ public class RideCounterMapFactory extends AbstractMapFactory {
     private final RideManager rideManager;
     private final LanguageFile languageFile;
     private BufferedImage defaultBackgroundImage;
+    private final Map<String, Map<RideCounterMapType, Integer>> linesPerType;
 
     public RideCounterMapFactory() {
         super(MAP_UPDATE_INTERVAL_TICKS);
         this.rideManager = ServiceProvider.getSingleton(RideManager.class);
         this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
         this.defaultBackgroundImage = null;
+        this.linesPerType = new HashMap<>();
     }
 
     public void loadMaps() {
@@ -91,6 +93,20 @@ public class RideCounterMapFactory extends AbstractMapFactory {
                 }
                 if(backgroundImage == null) backgroundImage = defaultBackgroundImage;
 
+                // Check and set the line count for this map type
+                if(!linesPerType.containsKey(rideIdentifier)) {
+                    linesPerType.put(rideIdentifier, new HashMap<>());
+                }
+                Map<RideCounterMapType, Integer> typeMap = linesPerType.get(rideIdentifier);
+                if(typeMap.containsKey(rideCounterMapConfig.getRideCounterMapType())) {
+                    Integer typeCount = typeMap.get(rideCounterMapConfig.getRideCounterMapType());
+                    if(rideCounterMapConfig.getLines().size() > typeCount) {
+                        linesPerType.get(rideIdentifier).put(rideCounterMapConfig.getRideCounterMapType(), rideCounterMapConfig.getLines().size());
+                    }
+                }else {
+                    linesPerType.get(rideIdentifier).put(rideCounterMapConfig.getRideCounterMapType(), rideCounterMapConfig.getLines().size());
+                }
+
                 Map<Integer, Integer> mapLines = new HashMap<>();
                 for(int i = 0; i < rideCounterMapConfig.getLines().size(); i++) {
                     int currentRangeMin = mapIndex * 128;
@@ -146,6 +162,12 @@ public class RideCounterMapFactory extends AbstractMapFactory {
                 .filter(key -> key.startsWith(rideIdentifier))
                 .map(key -> key.split(" ")[1])
                 .toList();
+    }
+
+    public Integer getLineCount(String rideIdentifier, RideCounterMapType rideCounterMapType) {
+        if(!linesPerType.containsKey(rideIdentifier)) return 0;
+        if(!linesPerType.get(rideIdentifier).containsKey(rideCounterMapType)) return 0;
+        return linesPerType.get(rideIdentifier).get(rideCounterMapType);
     }
 
     public void giveMap(Player player, RideHandle rideHandle, String rideCounterMapIdentifier) {
