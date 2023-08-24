@@ -12,7 +12,8 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import com.jverbruggen.jrides.state.ride.SoftEjector;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public abstract class AbstractSeat implements Seat {
     private final RideHandle parentRideHandle;
@@ -134,7 +135,7 @@ public abstract class AbstractSeat implements Seat {
         return false;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public PlayerControl getPlayerControl() {
         throw new RuntimeException("Unimplemented player control");

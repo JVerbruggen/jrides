@@ -1,8 +1,8 @@
 main: com.jverbruggen.jrides.Main
 name: jrides
-version: 1.19.2
+version: ${minecraft.version.short}
 authors: [MeneerPinguin]
-api-version: 1.19
+api-version: ${minecraft.version.apiversion}
 load: POSTWORLD
 depend: [ProtocolLib]
 permissions:

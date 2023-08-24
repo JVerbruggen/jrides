@@ -10,8 +10,8 @@ import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorPlayerCont
 import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class Rotor extends AbstractInterconnectedFlatRideComponent implements PlayerControllable, HasPosition {

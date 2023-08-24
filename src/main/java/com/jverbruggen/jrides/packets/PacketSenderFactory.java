@@ -8,6 +8,8 @@ public class PacketSenderFactory {
 
         if(currentVersion.contains("1.19.2")){
             return new PacketSender_1_19_2();
+        }else if(currentVersion.contains("1.20")){
+            return new PacketSender_1_19_2();
         }
 
         throw new RuntimeException("No packet sender implemented for bukkit version '" + currentVersion + "'");

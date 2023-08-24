@@ -3,10 +3,34 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.jverbruggen.jrides</groupId>
   <artifactId>jrides</artifactId>
-  <version>1.0</version>
+  <name>jrides</name>
+  <version>1.0_${minecraft.version.short}</version>
+  <description>Bring coasters to your Minecraft server!</description>
+  <url>https://github.com/JVerbruggen/jrides</url>
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/JVerbruggen/jrides/issues</url>
+  </issueManagement>
+  <inceptionYear>2023</inceptionYear>
+  <developers>
+    <developer>
+      <id>JVerbruggen</id>
+      <name>J Verbruggen</name>
+      <roles>
+        <role>Lead Developer</role>
+      </roles>
+    </developer>
+  </developers>
+  <licenses>
+    <license>
+      <name>GPL-3.0</name>
+      <url>https://www.gnu.org/licenses/gpl-3.0.html</url>
+    </license>
+  </licenses>
   <build>
     <resources>
       <resource>
+        <filtering>true</filtering>
         <directory>src/main/resources</directory>
         <includes>
           <include>plugin.yml</include>
@@ -76,6 +100,22 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>jrides-1.19.2</id>
+      <properties>
+        <minecraft.version.apiversion>1.19</minecraft.version.apiversion>
+        <minecraft.version.short>1.19.2</minecraft.version.short>
+      </properties>
+    </profile>
+    <profile>
+      <id>jrides-1.20.1</id>
+      <properties>
+        <minecraft.version.apiversion>1.20</minecraft.version.apiversion>
+        <minecraft.version.short>1.20.1</minecraft.version.short>
+      </properties>
+    </profile>
+  </profiles>
   <repositories>
     <repository>
       <id>spigot-repo</id>
@@ -128,13 +168,13 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.19.2-R0.1-SNAPSHOT</version>
+      <version>1.20.1-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.comphenix.protocol</groupId>
       <artifactId>ProtocolLib</artifactId>
-      <version>5.0.0-SNAPSHOT</version>
+      <version>5.1.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -157,15 +197,15 @@
     </dependency>
   </dependencies>
   <properties>
-    <project.artifactOutput>${testServer.location}/plugins</project.artifactOutput>
     <java.versioneasy>16</java.versioneasy>
-    <maven.compiler.target>16.0.1</maven.compiler.target>
     <java.version>16.0.1</java.version>
     <maven.compiler.source>16.0.1</maven.compiler.source>
     <project.artifactIdApi>jrides-api</project.artifactIdApi>
+    <project.artifactOutput>${testServer.location}/plugins</project.artifactOutput>
+    <maven.compiler.target>16.0.1</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <minecraft.version>1.19.2-R0.1-SNAPSHOT</minecraft.version>
+    <minecraft.version>${minecraft.version.short}-R0.1-SNAPSHOT</minecraft.version>
     <project.artifactIdApiOutput>/api</project.artifactIdApiOutput>
-    <testServer.location>../jrides_testserver/1.19.2</testServer.location>
+    <testServer.location>../jrides_testserver/${minecraft.version.short}</testServer.location>
   </properties>
 </project>

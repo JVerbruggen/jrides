@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.models.entity.BroadcastMessageReceiver;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -75,7 +76,7 @@ public class JRidesPlugin {
     }
 
     private static String getBukkitVersion(){
-        return "1.19.2";
+        return Bukkit.getServer().getBukkitVersion().split("-")[0];
     }
 
     public static String getVersion() {

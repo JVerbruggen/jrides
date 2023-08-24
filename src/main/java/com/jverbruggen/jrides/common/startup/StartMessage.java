@@ -21,16 +21,16 @@ public class StartMessage {
     public static void sendEnabledMessage(){
         Logger logger = ServiceProvider.getSingleton(Logger.class);
         sendSplash(logger);
-        logger.info("\u001b[32m" + enabled + " - " + JRidesPlugin.getVersion());
+        logger.info("\u001b[32m" + enabled + " - " + JRidesPlugin.getVersion() + "\u001b[0m");
     }
 
     public static void sendDisabledMessage(){
         Logger logger = ServiceProvider.getSingleton(Logger.class);
         sendSplash(logger);
-        logger.info("\u001b[31m" + disabled + " - " + JRidesPlugin.getVersion());
+        logger.info("\u001b[31m" + disabled + " - " + JRidesPlugin.getVersion() + "\u001b[0m");
     }
 
     private static void sendSplash(Logger logger){
-        List.of(splashLogo.split("\n")).forEach(line -> logger.info("\u001b[33m" + line));
+        List.of(splashLogo.split("\n")).forEach(line -> logger.info("\u001b[33m" + line + "\u001b[0m"));
     }
 }
