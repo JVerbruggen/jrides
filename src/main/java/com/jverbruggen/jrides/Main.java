@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.event.ButtonClickEventListener;
 import com.jverbruggen.jrides.control.uiinterface.menu.open.SignMenuListener;
 import com.jverbruggen.jrides.listener.PlayerTeleportToRideListener;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecordRideCollection;
 import com.jverbruggen.jrides.state.player.BukkitPlayerJoinEventListener;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgentManagerListener;
@@ -20,6 +21,7 @@ import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.serviceprovider.configuration.ServiceProviderConfigurator;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.player.PlayerManagerListener;
+import com.jverbruggen.jrides.state.ride.RideCounterManager;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import com.jverbruggen.jrides.state.ride.SoftEjector;
 import com.jverbruggen.jrides.state.ride.menu.RideMenuLoader;
@@ -59,6 +61,7 @@ public class Main extends JavaPlugin {
 
         ConfigurationSerialization.registerClass(RideCounterRecord.class);
         ConfigurationSerialization.registerClass(RideCounterRecordCollection.class);
+        ConfigurationSerialization.registerClass(RideCounterRecordRideCollection.class);
         ConfigurationSerialization.registerClass(RideState.class);
 
         MainCommandExecutor commandExecutor = new MainCommandExecutor();
@@ -90,6 +93,7 @@ public class Main extends JavaPlugin {
         PlayerManager playerManager = ServiceProvider.getSingleton(PlayerManager.class);
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
         RideManager rideManager = ServiceProvider.getSingleton(RideManager.class);
+        RideCounterManager rideCounterManager = ServiceProvider.getSingleton(RideCounterManager.class);
         MenuSessionManager menuSessionManager = ServiceProvider.getSingleton(MenuSessionManager.class);
 
         for(Player player : playerManager.getPlayers()){
@@ -99,6 +103,7 @@ public class Main extends JavaPlugin {
         menuSessionManager.closeAllOpenMenus();
         rideManager.unloadAllRides();
         viewportManager.despawnAll();
+        rideCounterManager.saveAndUnloadAll();
 
         StartMessage.sendDisabledMessage();
     }

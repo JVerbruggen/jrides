@@ -27,6 +27,7 @@ public class RideCounterListener implements Listener {
         record.addOne();
 
         rideCounterManager.sendRideCounterUpdateMessage(player, record);
+        rideCounterManager.synchronize(record);
         rideCounterManager.saveToFile(player.getIdentifier(), collection);
     }
 

@@ -13,14 +13,14 @@ import java.util.UUID;
 
 public class RideCounterRecord implements ConfigurationSerializable {
     private final Ride ride;
-    private final String playerName;
     private final UUID playerUUID;
+    private String playerName;
     private int rideCount;
 
     public RideCounterRecord(Ride ride, String playerName, UUID playerUUID, int rideCount) {
         this.ride = ride;
-        this.playerName = playerName;
         this.playerUUID = playerUUID;
+        this.playerName = playerName;
         this.rideCount = rideCount;
     }
 
@@ -38,6 +38,10 @@ public class RideCounterRecord implements ConfigurationSerializable {
 
     public int getRideCount() {
         return rideCount;
+    }
+
+    public UUID getPlayerUUID() {
+        return playerUUID;
     }
 
     public void addOne(){
@@ -70,5 +74,17 @@ public class RideCounterRecord implements ConfigurationSerializable {
         String playerUUID = (String) config.get("playerUUID");
 
         return new RideCounterRecord(ride, playerName, UUID.fromString(playerUUID), rideCount);
+    }
+
+    public boolean sameIdentityAs(RideCounterRecord otherRecord){
+        if(otherRecord == this) return true;
+
+        return otherRecord.getPlayerUUID() == this.playerUUID
+                && otherRecord.getRideIdentifier().equalsIgnoreCase(this.getRideIdentifier());
+    }
+
+    public void updateTo(RideCounterRecord otherRecord){
+        this.rideCount = otherRecord.rideCount;
+        this.playerName = otherRecord.playerName;
     }
 }
