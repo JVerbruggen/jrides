@@ -26,7 +26,8 @@ public class RideCounterMapListener implements Listener {
         // Add a small delay before updating the map, to make sure the ridecounters are updated
         Bukkit.getScheduler().runTaskLater(JRidesPlugin.getBukkitPlugin(),
                 () -> {
-                    rideCounterMapFactory.updateMapsByRide(e.getRide().getIdentifier());
+            // TODO: Reimplement this (or dont)
+            //rideCounterMapFactory.updateMapsByRide(e.getRide().getIdentifier());
                 },
                 10L);
     }

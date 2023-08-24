@@ -29,7 +29,7 @@ public class RideFinishedEvent extends Event {
         return HANDLERS;
     }
 
-    public static void send(JRidesRide ride){
+    public static void send(JRidesRide ride) {
         PluginManager pluginManager = ServiceProvider.getSingleton(PluginManager.class);
         pluginManager.callEvent(new RideFinishedEvent(ride));
     }
