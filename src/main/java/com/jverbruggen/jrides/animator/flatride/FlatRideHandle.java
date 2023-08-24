@@ -92,7 +92,7 @@ public class FlatRideHandle extends AbstractRideHandle {
                 .stream()
                 .map(p -> (JRidesPlayer)p)
                 .collect(Collectors.toList()), getRide());
-        RideFinishedEvent.send(getRide());
+        RideFinishedEvent.send(getRide(), getPassengers());
 
         stationHandle.getTriggerContext().getVehiclePresentLock().setLocked(false);
         stationHandle.getTriggerContext().getRestraintTrigger().getLock().setLocked(true);
