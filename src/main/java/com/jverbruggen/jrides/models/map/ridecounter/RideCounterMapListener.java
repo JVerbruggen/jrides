@@ -23,13 +23,7 @@ public class RideCounterMapListener implements Listener {
 
     @EventHandler
     public void onRideFinished(RideFinishedEvent e) {
-        // Add a small delay before updating the map, to make sure the ridecounters are updated
-        Bukkit.getScheduler().runTaskLater(JRidesPlugin.getBukkitPlugin(),
-                () -> {
-            // TODO: Reimplement this (or dont)
-            //rideCounterMapFactory.updateMapsByRide(e.getRide().getIdentifier());
-                },
-                10L);
+        // TODO: Update the top ridecounters
     }
 
 }
