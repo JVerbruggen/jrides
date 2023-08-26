@@ -33,7 +33,7 @@
 With built-in support for the [smooth-coasters client](https://www.curseforge.com/minecraft/mc-mods/smoothcoasters), you can go upside down! 
 
 ## ✨ And so much more!
-* Custom **Flat rides**
+* Custom **Flat rides** - i.e. TeaCups, Caroussels, Ferris Wheels, anything that rotates!
 * Flat ride passenger control
 * Navigation menu
 * Ride counters
@@ -49,10 +49,11 @@ With built-in support for the [smooth-coasters client](https://www.curseforge.co
 Click one of the versions below to start your download! Thank you and enjoy!
 
 | Version | Link |
-|---------|------|
-| 1.19.2  | <>   |
+|---------|-----|
+| 1.19.2  | tbd |
+| 1.20.1  | tbd |
 
-### Warning - jrides is currently in beta. Please report issues
+### Warning - jrides is currently in beta. Please report any issues in GitHub.
 
 <br>
 

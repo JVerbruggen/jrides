@@ -7,7 +7,6 @@ import com.comphenix.protocol.wrappers.WrappedDataValue;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.google.common.collect.Lists;
 import com.jverbruggen.jrides.models.math.Vector3;
-import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -23,13 +22,12 @@ public class ArmorstandRotationServerPacket extends com.jverbruggen.jrides.packe
 
         WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.getVectorSerializer();
 
-
-//        List<WrappedDataValue> values = Lists.newArrayList(
-//                new WrappedDataValue(rotationType, serializer, rotation.toVector3F())
-//        );
+        WrappedDataValue value = new WrappedDataValue(rotationType, serializer, null);
+        value.setValue(rotation.toVector3F());
         List<WrappedDataValue> values = Lists.newArrayList(
-                new WrappedDataValue(rotationType, WrappedDataWatcher.Registry.get(Vector3f.class), rotation.toVector3fJoml())
+                value
         );
+
         packet.getDataValueCollectionModifier().write(0, values);
 
         return packet;

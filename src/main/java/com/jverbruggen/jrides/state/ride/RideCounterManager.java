@@ -127,7 +127,7 @@ public class RideCounterManager {
      */
     public void synchronize(RideCounterRecord record){
         Ride ride = record.getRide();
-        RideCounterRecordRideCollection rideCounterRecordRideCollection = getCachedRideCollection(ride.getIdentifier());
+        RideCounterRecordRideCollection rideCounterRecordRideCollection = getCollectionRideBound(ride.getIdentifier());
 
         if(rideCounterRecordRideCollection.existsOn(record)){
             rideCounterRecordRideCollection.update(record);

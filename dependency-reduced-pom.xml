@@ -50,6 +50,39 @@
         </configuration>
       </plugin>
       <plugin>
+        <groupId>net.md-5</groupId>
+        <artifactId>specialsource-maven-plugin</artifactId>
+        <version>1.2.4</version>
+        <executions>
+          <execution>
+            <id>remap-obf</id>
+            <phase>package</phase>
+            <goals>
+              <goal>remap</goal>
+            </goals>
+            <configuration>
+              <srgIn>org.spigotmc:minecraft-server:${minecraft.version.spigot}:txt:maps-mojang</srgIn>
+              <reverse>true</reverse>
+              <remappedDependencies>org.spigotmc:spigot:${minecraft.version.spigot}:jar:remapped-mojang</remappedDependencies>
+              <remappedArtifactAttached>true</remappedArtifactAttached>
+              <remappedClassifierName>remapped-obf</remappedClassifierName>
+            </configuration>
+          </execution>
+          <execution>
+            <id>remap-spigot</id>
+            <phase>package</phase>
+            <goals>
+              <goal>remap</goal>
+            </goals>
+            <configuration>
+              <inputFile>${project.build.directory}/${project.artifactId}-${project.version}-remapped-obf.jar</inputFile>
+              <srgIn>org.spigotmc:minecraft-server:${minecraft.version.spigot}:csrg:maps-spigot</srgIn>
+              <remappedDependencies>org.spigotmc:spigot:${minecraft.version.spigot}:jar:remapped-obf</remappedDependencies>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.2.0</version>
         <executions>
@@ -111,6 +144,7 @@
     <profile>
       <id>jrides-1.20.1</id>
       <properties>
+        <minecraft.version.short.spigot>1.20.1</minecraft.version.short.spigot>
         <minecraft.version.apiversion>1.20</minecraft.version.apiversion>
         <minecraft.version.short>1.20.1</minecraft.version.short>
       </properties>
@@ -120,6 +154,10 @@
     <repository>
       <id>spigot-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+    </repository>
+    <repository>
+      <id>sonatype</id>
+      <url>https://oss.sonatype.org/content/groups/public/</url>
     </repository>
     <repository>
       <id>dmulloy2-repo</id>
@@ -172,6 +210,13 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot</artifactId>
+      <version>1.20.1-R0.1-SNAPSHOT</version>
+      <classifier>remapped-mojang</classifier>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.comphenix.protocol</groupId>
       <artifactId>ProtocolLib</artifactId>
       <version>5.1.0</version>
@@ -203,9 +248,11 @@
     <project.artifactIdApi>jrides-api</project.artifactIdApi>
     <project.artifactOutput>${testServer.location}/plugins</project.artifactOutput>
     <maven.compiler.target>16.0.1</maven.compiler.target>
+    <minecraft.version.short.spigot>${minecraft.version.short}</minecraft.version.short.spigot>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <minecraft.version>${minecraft.version.short}-R0.1-SNAPSHOT</minecraft.version>
     <project.artifactIdApiOutput>/api</project.artifactIdApiOutput>
     <testServer.location>../jrides_testserver/${minecraft.version.short}</testServer.location>
+    <minecraft.version.spigot>${minecraft.version.short.spigot}-R0.1-SNAPSHOT</minecraft.version.spigot>
   </properties>
 </project>

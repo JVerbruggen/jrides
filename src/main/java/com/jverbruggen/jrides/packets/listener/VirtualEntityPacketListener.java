@@ -9,11 +9,11 @@ import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimation;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.SeatedOnContext;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.seat.InstructionType;
-import com.jverbruggen.jrides.models.ride.seat.PlayerControlInstruction;
 import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.models.ride.coaster.train.CoasterSeat;
@@ -138,7 +138,10 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
 
         org.bukkit.entity.Player bukkitPlayer = event.getPlayer();
         Player player = playerManager.getPlayer(bukkitPlayer);
-        Seat seat = player.getSeatedOn();
+        SeatedOnContext seatedOnContext = player.getSeatedOnContext();
+        if(seatedOnContext == null) return;
+
+        Seat seat = seatedOnContext.getSeat();
 
         processPlayerControl(event, seat);
 
@@ -153,6 +156,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
 
         VirtualEntity entity = seat.getEntity();
 
+        if(entity.getPassenger() == null) return;
         if(!entity.getPassenger().getBukkitPlayer().getUniqueId().equals(bukkitPlayer.getUniqueId())){
             return; // Can only steer vehicle that one is in
         }

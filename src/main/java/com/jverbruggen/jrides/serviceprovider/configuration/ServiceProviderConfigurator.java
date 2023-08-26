@@ -27,6 +27,8 @@ import com.jverbruggen.jrides.models.message.MessageFactory;
 import com.jverbruggen.jrides.models.properties.frame.factory.FrameFactory;
 import com.jverbruggen.jrides.models.ride.factory.*;
 import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
+import com.jverbruggen.jrides.nms.NMSHandler;
+import com.jverbruggen.jrides.nms.NMSHandlerFactory;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.PacketSenderFactory;
 import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener;
@@ -73,6 +75,7 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(ProtocolManager.class, ProtocolLibrary.getProtocolManager());
         ServiceProvider.register(EntityIdFactory.class, new EntityIdFactory(1_500_000, Integer.MAX_VALUE));
         ServiceProvider.register(PacketSender.class, PacketSenderFactory.getPacketSender());
+        ServiceProvider.register(NMSHandler.class, NMSHandlerFactory.getNMSHandler());
         ServiceProvider.register(ViewportManager.class, new ViewportManagerFactory().createViewportManager(true));
         ServiceProvider.register(FrameFactory.class, new FrameFactory());
         ServiceProvider.register(SmoothAnimation.class, new SmoothCoastersSmoothAnimation(new SmoothCoastersAPI(plugin)));
