@@ -242,12 +242,12 @@
     </dependency>
   </dependencies>
   <properties>
-    <java.versioneasy>16</java.versioneasy>
-    <java.version>16.0.1</java.version>
-    <maven.compiler.source>16.0.1</maven.compiler.source>
+    <java.versioneasy>17</java.versioneasy>
+    <java.version>17.0.5</java.version>
+    <maven.compiler.source>17.0.5</maven.compiler.source>
     <project.artifactIdApi>jrides-api</project.artifactIdApi>
     <project.artifactOutput>${testServer.location}/plugins</project.artifactOutput>
-    <maven.compiler.target>16.0.1</maven.compiler.target>
+    <maven.compiler.target>17.0.5</maven.compiler.target>
     <minecraft.version.short.spigot>${minecraft.version.short}</minecraft.version.short.spigot>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <minecraft.version>${minecraft.version.short}-R0.1-SNAPSHOT</minecraft.version>
