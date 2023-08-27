@@ -18,9 +18,9 @@ public class ArmorstandRotationServerPacket extends SingularServerPacket impleme
         public static final int RIGHT_LEG = 21;
     }
 
-    private int entityId;
-    private int rotationType;
-    private Vector3 rotation;
+    protected final int entityId;
+    protected final int rotationType;
+    protected final Vector3 rotation;
 
     public ArmorstandRotationServerPacket(ProtocolManager protocolManager, int entityId, int rotationType, Vector3 rotation) {
         super(protocolManager);

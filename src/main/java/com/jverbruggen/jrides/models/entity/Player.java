@@ -16,6 +16,7 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
+import com.jverbruggen.jrides.nms.NMSHandler;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import net.md_5.bungee.api.ChatMessageType;
@@ -28,17 +29,17 @@ import java.util.List;
 import java.util.UUID;
 
 public class Player implements MessageAgent, JRidesPlayer {
-    private org.bukkit.entity.Player bukkitPlayer;
-    private Seat seatedOn;
+    private final org.bukkit.entity.Player bukkitPlayer;
+    private SeatedOnContext seatedOnContext;
     private SmoothAnimationSupport smoothAnimationSupport;
-    private LanguageFile languageFile;
+    private final LanguageFile languageFile;
     private RideController operating;
-    private List<VirtualEntity> viewing;
-    private RideCounterRecordCollection rideCounters;
+    private final List<VirtualEntity> viewing;
+    private final RideCounterRecordCollection rideCounters;
 
     public Player(org.bukkit.entity.Player bukkitPlayer, RideCounterRecordCollection rideCounters) {
         this.bukkitPlayer = bukkitPlayer;
-        this.seatedOn = null;
+        this.seatedOnContext = null;
         this.smoothAnimationSupport = SmoothAnimationSupport.UNKNOWN;
         this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
         this.operating = null;
@@ -82,20 +83,26 @@ public class Player implements MessageAgent, JRidesPlayer {
         return bukkitPlayer.getUniqueId();
     }
 
-    public void setSeatedOn(Seat seat){
-        this.seatedOn = seat;
+    public Seat getSeatedOn(){
+        if(!isSeated()) return null;
+        return this.seatedOnContext.getSeat();
     }
 
-    public Seat getSeatedOn(){
-        return this.seatedOn;
+    public void setSeatedOnContext(SeatedOnContext seatedOnContext) {
+        this.seatedOnContext = seatedOnContext;
+    }
+
+    public SeatedOnContext getSeatedOnContext() {
+        return seatedOnContext;
     }
 
     public boolean isSeated(){
-        return this.seatedOn != null;
+        return this.seatedOnContext != null;
     }
 
     public void setPositionWithoutTeleport(Vector3 position){
-        JRidesPlugin.getPacketSender().sendClientPositionPacket(this, position);
+//        JRidesPlugin.getPacketSender().sendClientPositionPacket(this, position);
+        ServiceProvider.getSingleton(NMSHandler.class).setPlayerLocationNoTeleport(this, position);
     }
 
     public boolean shouldResetSmoothAnimationSupport(){
