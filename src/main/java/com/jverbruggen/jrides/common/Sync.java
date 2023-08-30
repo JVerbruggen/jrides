@@ -15,4 +15,8 @@ public class Sync {
     public static void stopTask(int taskId){
         Bukkit.getScheduler().cancelTask(taskId);
     }
+
+    public static void runAfter(Runnable runnable, long afterTicks) {
+        Bukkit.getScheduler().runTaskLater(JRidesPlugin.getBukkitPlugin(), runnable, afterTicks);
+    }
 }
