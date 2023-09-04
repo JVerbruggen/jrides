@@ -20,7 +20,7 @@ public class ContinuousMode implements ActuatorMode {
         if(upperBound != null && currentSpeed >= 0 && actuatorState.y > upperBound){
             actuatorState.y = upperBound;
             flatRideComponentSpeed.setHard(0);
-        }else if(lowerBound != null && currentSpeed <= 0 && actuatorState.y < lowerBound){
+        }else if(lowerBound != null && currentSpeed < 0 && actuatorState.y < lowerBound){
             actuatorState.y = lowerBound;
             flatRideComponentSpeed.setHard(0);
         }
