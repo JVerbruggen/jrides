@@ -45,9 +45,19 @@ public abstract class BaseConfig {
         return configurationSection.getDouble(key);
     }
 
+    protected static Double getDoubleObj(ConfigurationSection configurationSection, String key){
+        assertPresence(configurationSection, key);
+        return configurationSection.getDouble(key);
+    }
+
     protected static double getDouble(ConfigurationSection configurationSection, String key, double defaultValue){
         if(!isPresent(configurationSection, key)) return defaultValue;
         return getDouble(configurationSection, key);
+    }
+
+    protected static Double getDoubleObj(ConfigurationSection configurationSection, String key, Double defaultValue){
+        if(!isPresent(configurationSection, key)) return defaultValue;
+        return getDoubleObj(configurationSection, key);
     }
 
     protected static int getInt(ConfigurationSection configurationSection, String key){
