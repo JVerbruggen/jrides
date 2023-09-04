@@ -7,7 +7,7 @@ import com.jverbruggen.jrides.animator.flatride.linearactuator.mode.LinearActuat
 import com.jverbruggen.jrides.config.coaster.objects.cart.ModelConfig;
 import com.jverbruggen.jrides.config.flatride.structure.StructureConfigItem;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.linearactuator.LinearActuatorTypeConfig;
-import com.jverbruggen.jrides.config.flatride.structure.actuator.linearactuator.LinearLinearActuatorConfig;
+import com.jverbruggen.jrides.config.flatride.structure.actuator.linearactuator.ContinuousLinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.linearactuator.SineLinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.AttachmentConfig;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.FixedAttachmentConfig;
@@ -46,8 +46,8 @@ public class LinearActuatorConfig extends AbstractActuatorConfig{
         String control = getString(configurationSection, "control", "continuous");
 
         LinearActuatorTypeConfig linearActuatorTypeConfig = switch (LinearActuatorModeEnum.from(control)){
-            case LINEAR -> SineLinearActuatorConfig.fromConfigurationSection(configurationSection);
-            case SINE -> LinearLinearActuatorConfig.fromConfigurationSection(configurationSection);
+            case SINE -> SineLinearActuatorConfig.fromConfigurationSection(configurationSection);
+            case CONTINUOUS -> ContinuousLinearActuatorConfig.fromConfigurationSection(configurationSection);
         };
 
         AttachmentConfig attachmentConfig = null;
