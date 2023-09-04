@@ -3,8 +3,11 @@ package com.jverbruggen.jrides.config.flatride.structure.actuator;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
+import com.jverbruggen.jrides.animator.flatride.linearactuator.mode.LinearActuatorModeEnum;
 import com.jverbruggen.jrides.config.coaster.objects.cart.ModelConfig;
 import com.jverbruggen.jrides.config.flatride.structure.StructureConfigItem;
+import com.jverbruggen.jrides.config.flatride.structure.actuator.linearactuator.LinearActuatorTypeConfig;
+import com.jverbruggen.jrides.config.flatride.structure.actuator.linearactuator.SineLinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.AttachmentConfig;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.FixedAttachmentConfig;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.RelativeMultipleAttachmentConfig;
@@ -12,30 +15,23 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 public class LinearActuatorConfig extends AbstractActuatorConfig{
     private final String axis;
-    private final float size;
-    private final Supplier<Integer> phase;
+    private final LinearActuatorTypeConfig linearActuatorTypeConfig;
 
-    public LinearActuatorConfig(String identifier, boolean root, String axis, float size, Supplier<Integer> phase, AttachmentConfig attachmentConfig, FlatRideComponentSpeed flatRideComponentSpeed, List<ModelConfig> flatRideModelsConfig) {
+    public LinearActuatorConfig(String identifier, boolean root, String axis, AttachmentConfig attachmentConfig, FlatRideComponentSpeed flatRideComponentSpeed, List<ModelConfig> flatRideModelsConfig, LinearActuatorTypeConfig linearActuatorTypeConfig) {
         super(identifier, root, attachmentConfig, flatRideComponentSpeed, flatRideModelsConfig);
         this.axis = axis;
-        this.size = size;
-        this.phase = phase;
+        this.linearActuatorTypeConfig = linearActuatorTypeConfig;
     }
 
     public String getAxis() {
         return axis;
     }
 
-    public float getSize() {
-        return size;
-    }
-
-    public Supplier<Integer> getPhase() {
-        return phase;
+    public LinearActuatorTypeConfig getLinearActuatorTypeConfig() {
+        return linearActuatorTypeConfig;
     }
 
     @Override
@@ -46,11 +42,12 @@ public class LinearActuatorConfig extends AbstractActuatorConfig{
     public static StructureConfigItem fromConfigurationSection(ConfigurationSection configurationSection, String identifier) {
         boolean root = getBoolean(configurationSection, "root", false);
         String axis = getString(configurationSection, "axis", "y");
-        float size = (float)getDouble(configurationSection, "size", 1d);
-        Supplier<Integer> phase = getIntSupplier(configurationSection, "phase", 0);
-        @SuppressWarnings("unused")
         String control = getString(configurationSection, "control", "continuous");
-         // TODO: integrate
+
+        LinearActuatorTypeConfig linearActuatorTypeConfig = switch (LinearActuatorModeEnum.from(control)){
+            case LINEAR -> SineLinearActuatorConfig.fromConfigurationSection((configurationSection));
+            case SINE -> null;
+        };
 
         AttachmentConfig attachmentConfig = null;
         if(configurationSection.contains("position")){
@@ -79,6 +76,6 @@ public class LinearActuatorConfig extends AbstractActuatorConfig{
             modelConfigs = ModelConfig.multipleFromConfigurationSection(getConfigurationSection(configurationSection, "models"));
         else modelConfigs = new ArrayList<>();
 
-        return new LinearActuatorConfig(identifier, root, axis, size, phase, attachmentConfig, flatRideComponentSpeed, modelConfigs);
+        return new LinearActuatorConfig(identifier, root, axis, attachmentConfig, flatRideComponentSpeed, modelConfigs, linearActuatorTypeConfig);
     }
 }
