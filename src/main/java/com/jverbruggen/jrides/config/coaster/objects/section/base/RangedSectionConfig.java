@@ -129,7 +129,7 @@ public class RangedSectionConfig extends SectionConfig {
 
     public static boolean accepts(String type){
         return switch (type) {
-            case "track", "drive", "driveAndRelease", "brake", "trim", "station", "blocksection", "transfer", "launch" -> true;
+            case "track", "drive", "driveAndRelease", "driveStopDrive", "brake", "trim", "station", "blocksection", "transfer", "launch" -> true;
             default -> false;
         };
     }
