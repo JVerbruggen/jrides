@@ -3,6 +3,8 @@ package com.jverbruggen.jrides.models.map.ridecounter;
 import com.jverbruggen.jrides.event.ride.RideFinishedEvent;
 import com.jverbruggen.jrides.event.ride.RideInitializedEvent;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecord;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
 import com.jverbruggen.jrides.models.ride.count.RideCounterRecordRideCollection;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.player.PlayerManager;
@@ -39,11 +41,11 @@ public class RideCounterMapListener implements Listener {
 
             // If the player is already in the list, update the record
             if (rideBoundCollection.existsOn(player)) {
-                rideBoundCollection.update(player.getRideCounters().findOrCreate(e.getRide().getIdentifier(), player));
+                rideBoundCollection.update(getPlayerRecord(player, e.getRide().getIdentifier()));
             } else {
                 // If the list is not full, add the player
                 if (rideBoundCollection.getRecords().size() < lineCount) {
-                    rideBoundCollection.add(player.getRideCounters().findOrCreate(e.getRide().getIdentifier(), player));
+                    rideBoundCollection.add(getPlayerRecord(player, e.getRide().getIdentifier()));
                 }else {
                     // Loop through the records and find the lowest one
                     int lowest = 0;
@@ -53,8 +55,8 @@ public class RideCounterMapListener implements Listener {
                         }
                     }
                     // If the player has more rides than the lowest, add them to the list
-                    if (player.getRideCounters().findOrCreate(e.getRide().getIdentifier(), player).getRideCount() > rideBoundCollection.getRecords().get(lowest).getRideCount()) {
-                        rideBoundCollection.add(player.getRideCounters().findOrCreate(e.getRide().getIdentifier(), player));
+                    if (getPlayerRecord(player, e.getRide().getIdentifier()).getRideCount() > rideBoundCollection.getRecords().get(lowest).getRideCount()) {
+                        rideBoundCollection.add(player.getRideCounters().getRecords().get(e.getRide().getIdentifier()));
                     }
                 }
             }
@@ -76,6 +78,11 @@ public class RideCounterMapListener implements Listener {
 
         // Save the ride counter collection
         rideCounterManager.saveToRideFile(e.getRide().getIdentifier(), rideBoundCollection);
+    }
+
+    private RideCounterRecord getPlayerRecord(Player player, String rideIdentifier){
+        RideCounterRecordCollection collection = rideCounterManager.getCollection(player.getIdentifier());
+        return collection.findOrCreate(rideIdentifier, player);
     }
 
 }
