@@ -52,9 +52,11 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
                 .collect(Collectors.toList());
 
         LinearActuator linearActuator = new LinearActuator(
-                linearActuatorConfig.getIdentifier(), linearActuatorConfig.getIdentifier(), linearActuatorConfig.isRoot(), null,
-                flatRideModels, linearActuatorConfig.getFlatRideComponentSpeed(), linearActuatorConfig.getSize(),
-                linearActuatorConfig.getPhase().get().shortValue());
+                linearActuatorConfig.getIdentifier(), linearActuatorConfig.getIdentifier(),
+                linearActuatorConfig.isRoot(), null,
+                flatRideModels,
+                linearActuatorConfig.getFlatRideComponentSpeed(),
+                linearActuatorConfig.getLinearActuatorTypeConfig().createActuatorMode());
 
         Attachment attachment = new FixedAttachment(linearActuator, position, rotation);
         linearActuator.setAttachedTo(attachment);

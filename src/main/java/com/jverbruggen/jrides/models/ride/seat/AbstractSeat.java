@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.event.player.PlayerStandUpEvent;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.SeatedOnContext;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -58,6 +59,8 @@ public abstract class AbstractSeat implements Seat {
         Player passenger = getPassenger();
 
         if(passenger != null){ // Overtaking seat or player = null
+            if(passenger == player) return;
+
             onPassengerExit(passenger);
         }
 
@@ -147,16 +150,19 @@ public abstract class AbstractSeat implements Seat {
     }
 
     protected void onPassengerExit(Player passenger){
-        passenger.setSeatedOn(null);
+        SeatedOnContext seatedOnContext = passenger.getSeatedOnContext();
+        if(seatedOnContext != null)
+            seatedOnContext.restore(passenger);
+
         virtualEntity.setPassenger(null);
-        passenger.clearSmoothAnimationRotation();
         PlayerStandUpEvent.send(passenger, getParentSeatHost().getRideHandle().getRide());
 
         seatHost.onPlayerExit(passenger);
     }
 
     protected void onPassengerEnter(Player passenger){
-        passenger.setSeatedOn(this);
+        SeatedOnContext seatedOnContext = SeatedOnContext.create(this, passenger);
+        seatedOnContext.setup(passenger);
 
         seatHost.onPlayerEnter(passenger);
     }

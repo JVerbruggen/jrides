@@ -120,6 +120,21 @@ public class RideCounterManager {
         return true;
     }
 
+    /**
+     * Synchronizes a record to the ride-bound collection.
+     * Used when a ride counter is updated
+     * @param record
+     */
+    public void synchronize(RideCounterRecord record){
+        Ride ride = record.getRide();
+        RideCounterRecordRideCollection rideCounterRecordRideCollection = getCollectionRideBound(ride.getIdentifier());
+
+        if(rideCounterRecordRideCollection.existsOn(record)){
+            rideCounterRecordRideCollection.update(record);
+            saveToRideFile(ride.getIdentifier(), rideCounterRecordRideCollection);
+        }
+    }
+
     public boolean saveToRideFile(String rideIdentifier, RideCounterRecordRideCollection rideCounterRecordRideCollection){
         if(rideCounterRecordRideCollection == null) return false;
 

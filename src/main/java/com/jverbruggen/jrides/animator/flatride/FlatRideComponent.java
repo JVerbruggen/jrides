@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.animator.flatride;
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.basic.StaticStructureComponent;
 import com.jverbruggen.jrides.animator.flatride.linearactuator.LinearActuator;
+import com.jverbruggen.jrides.animator.flatride.linearactuator.mode.ActuatorMode;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
 import com.jverbruggen.jrides.animator.flatride.rotor.Rotor;
 import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxis;
@@ -25,7 +26,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public interface FlatRideComponent {
@@ -90,7 +90,8 @@ public interface FlatRideComponent {
                 (linearActuatorQuaternion, linearActuatorIdentifier) -> FlatRideComponent.createLinearActuator(
                         linearActuatorIdentifier, linearActuatorConfig.getIdentifier(), attachedTo,
                         linearActuatorQuaternion, offsetPosition, linearActuatorConfig.getFlatRideComponentSpeed().clone(),
-                        linearActuatorConfig.getSize(), linearActuatorConfig.getPhase(), linearActuatorConfig.getFlatRideModels()));
+                        linearActuatorConfig.getLinearActuatorTypeConfig().createActuatorMode(),
+                        linearActuatorConfig.getFlatRideModels()));
     }
 
     static Rotor createAttachedRotor(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, RotorPlayerControlConfig controlConfig, RelativeAttachmentJointConfig jointConfig, RotorAxis rotorAxis, List<ModelConfig> flatRideModelsConfig){
@@ -113,7 +114,7 @@ public interface FlatRideComponent {
         return rotor;
     }
 
-    static LinearActuator createLinearActuator(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, float size, Supplier<Integer> phase, List<ModelConfig> flatRideModelsConfig){
+    static LinearActuator createLinearActuator(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, ActuatorMode actuatorMode, List<ModelConfig> flatRideModelsConfig){
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
         Vector3 spawnPosition = MatrixMath.rotateTranslate(
@@ -126,7 +127,7 @@ public interface FlatRideComponent {
                 .map(config -> config.toFlatRideModel(spawnPosition, viewportManager))
                 .collect(Collectors.toList());
 
-        LinearActuator linearActuator = new LinearActuator(identifier, groupIdentifier, false, null, flatRideModels, flatRideComponentSpeed, size, phase.get().shortValue());
+        LinearActuator linearActuator = new LinearActuator(identifier, groupIdentifier, false, null, flatRideModels, flatRideComponentSpeed, actuatorMode);
         attachedTo.attach(linearActuator, offsetRotation, offsetPosition);
 
         return linearActuator;

@@ -12,13 +12,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+enum RideType {
+    FLATRIDE,
+    COASTER
+}
+
 public class RideState extends BaseConfig implements ConfigurationSerializable {
     private final String rideIdentifier;
     private OpenState openState;
+    private final RideType rideType;
 
-    public RideState(String rideIdentifier, OpenState openState) {
+    public RideState(String rideIdentifier, OpenState openState, RideType rideType) {
         this.rideIdentifier = rideIdentifier;
         this.openState = openState;
+        this.rideType = rideType;
     }
 
     public OpenState getOpenState() {
@@ -73,6 +80,7 @@ public class RideState extends BaseConfig implements ConfigurationSerializable {
     public Map<String, Object> serialize() {
         Map<String, Object> serialized = new HashMap<>();
         serialized.put("rideIdentifier", rideIdentifier);
+        serialized.put("rideType", rideType.toString());
         serialized.put("openState", openState.toString());
 
         return serialized;
@@ -80,9 +88,10 @@ public class RideState extends BaseConfig implements ConfigurationSerializable {
 
     public static RideState deserialize(Map<String, Object> config){
         String rideIdentifier = getString(config, "rideIdentifier");
+        RideType rideType = RideType.valueOf(getString(config, "rideType"));
         OpenState openState = OpenState.valueOf(getString(config, "openState", "MAINTENANCE"));
 
-        return new RideState(rideIdentifier, openState);
+        return new RideState(rideIdentifier, openState, rideType);
     }
 
     public boolean shouldLoadRide(){
@@ -91,23 +100,27 @@ public class RideState extends BaseConfig implements ConfigurationSerializable {
 
     public void save(){
         ConfigManager configManager = ServiceProvider.getSingleton(ConfigManager.class);
-        String fileName = getCoasterFileName(configManager, rideIdentifier);
+        String fileName = switch (rideType) {
+            case FLATRIDE -> getFlatrideFileName(configManager, rideIdentifier);
+            case COASTER -> getCoasterFileName(configManager, rideIdentifier);
+        };
+
         configManager.updateConfigFile(fileName, "state", this);
     }
 
     public static RideState loadCoasterState(String rideIdentifier) {
         ConfigManager configManager = ServiceProvider.getSingleton(ConfigManager.class);
         String fileName = getCoasterFileName(configManager, rideIdentifier);
-        return load(rideIdentifier, fileName);
+        return load(rideIdentifier, fileName, RideType.COASTER);
     }
 
     public static RideState loadFlatrideState(String rideIdentifier) {
         ConfigManager configManager = ServiceProvider.getSingleton(ConfigManager.class);
         String fileName = getFlatrideFileName(configManager, rideIdentifier);
-        return load(rideIdentifier, fileName);
+        return load(rideIdentifier, fileName, RideType.FLATRIDE);
     }
 
-    private static RideState load(String rideIdentifier, String fileName){
+    private static RideState load(String rideIdentifier, String fileName, RideType rideType){
         ConfigManager configManager = ServiceProvider.getSingleton(ConfigManager.class);
 
         Optional<RideState> state = configManager.getConfigFileObject(fileName, "state", RideState.class);
@@ -116,8 +129,8 @@ public class RideState extends BaseConfig implements ConfigurationSerializable {
             JRidesPlugin.getLogger().warning("Could not get ride state for " + rideIdentifier + ", creating new one");
             RideState newState = new RideState(
                     rideIdentifier,
-                    OpenState.MAINTENANCE
-            );
+                    OpenState.MAINTENANCE,
+                    rideType);
             configManager.updateConfigFile(fileName, "state", newState);
             return newState;
         });

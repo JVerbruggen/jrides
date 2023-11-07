@@ -10,6 +10,7 @@ public enum TriggerType {
     COMMAND_AS_PLAYER,
     EXTERNAL_EVENT,
     ANIMATION_SEQUENCE,
+    ANIMATED_JAVA,
     CART_ROTATE;
 
 
@@ -23,6 +24,7 @@ public enum TriggerType {
         else if(typeString.equalsIgnoreCase("command-as-player")) return COMMAND_AS_PLAYER;
         else if(typeString.equalsIgnoreCase("external")) return EXTERNAL_EVENT;
         else if(typeString.equalsIgnoreCase("animation-sequence")) return ANIMATION_SEQUENCE;
+        else if(typeString.equalsIgnoreCase("animated-java")) return ANIMATED_JAVA;
         else if(typeString.equalsIgnoreCase("cart-rotate")) return CART_ROTATE;
 
         throw new RuntimeException("Trigger type " + typeString + " is not supported");

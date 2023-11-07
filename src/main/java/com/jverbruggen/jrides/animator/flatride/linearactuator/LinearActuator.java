@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.animator.flatride.AbstractInterconnectedFlatRideCo
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.interfaces.HasSpeed;
+import com.jverbruggen.jrides.animator.flatride.linearactuator.mode.ActuatorMode;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -11,37 +12,16 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import java.util.List;
 
 public class LinearActuator extends AbstractInterconnectedFlatRideComponent implements HasSpeed {
-    private static final float PI = 3.1415926535f;
-    private static final float PI2 = PI*2;
-
     private final FlatRideComponentSpeed flatRideComponentSpeed;
     private final Vector3 actuatorState;
-    private final float size;
-    private final short phase;
+    private final ActuatorMode actuatorMode;
 
-    private double sineState;
-
-    public LinearActuator(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, float size, short phase) {
+    public LinearActuator(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, ActuatorMode actuatorMode) {
         super(identifier, groupIdentifier, root, joint, flatRideModels);
         this.flatRideComponentSpeed = flatRideComponentSpeed;
-        this.size = size;
-        this.phase = phase;
 
         this.actuatorState = new Vector3(0,0,0);
-        resetToInitialPhase();
-    }
-
-    private void resetToInitialPhase(){
-        this.sineState = phase/180f*PI;
-    }
-
-    private void increaseSineState(){
-        sineState = (sineState + flatRideComponentSpeed.getSpeed()/180*PI) % PI2;
-        updateActuatorState();
-    }
-
-    private void updateActuatorState(){
-        actuatorState.y = Math.sin(sineState)*size;
+        this.actuatorMode = actuatorMode;
     }
 
     @Override
@@ -51,7 +31,7 @@ public class LinearActuator extends AbstractInterconnectedFlatRideComponent impl
 
     @Override
     public void tick() {
-        increaseSineState();
+        actuatorMode.tick(flatRideComponentSpeed, actuatorState);
 
         for(Attachment attachment : getChildren()){
             attachment.update();

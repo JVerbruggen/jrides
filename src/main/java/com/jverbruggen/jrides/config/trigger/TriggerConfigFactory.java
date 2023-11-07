@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.config.trigger.external.CommandAsPlayerTriggerConf
 import com.jverbruggen.jrides.config.trigger.external.CommandForPlayerTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.external.CommandTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.external.ExternalTriggerConfig;
+import com.jverbruggen.jrides.config.trigger.external.animation.AnimatedJavaTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.music.MusicTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.train.EjectTriggerConfig;
 import org.bukkit.configuration.ConfigurationSection;
@@ -44,6 +45,8 @@ public class TriggerConfigFactory {
                     CommandAsPlayerTriggerConfig.fromConfigurationSection(configurationSection);
             case ANIMATION_SEQUENCE ->
                     MultiEntityMovementConfig.fromConfigurationSection(configurationSection);
+            case ANIMATED_JAVA ->
+                    AnimatedJavaTriggerConfig.fromConfigurationSection(configurationSection);
             case EXTERNAL_EVENT ->
                     ExternalTriggerConfig.fromConfigurationSection(configurationSection);
             default ->

@@ -1,35 +1,36 @@
 package com.jverbruggen.jrides.models.entity.listener;
 
+import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import com.jverbruggen.jrides.state.player.PlayerManager;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 public class PassengerListener implements Listener {
-// TODO: alles hier
+    private final PlayerManager playerManager;
 
-//    @EventHandler
-//    public void onPlayerFly(PlayerToggleFlightEvent e) {
-//        Player p = e.getPlayer();
-//        if(!EntityStorage.currentlyInRideEntities.contains(e.getPlayer()))
-//            return;
-//        if(p.getAllowFlight()) {
-//            e.setCancelled(true);
-//            p.setFlying(true);
-//        }
-//    }
-//
-//    @EventHandler
-//    public void onQuit(PlayerQuitEvent e) {
-//        Player p = e.getPlayer();
-//        if(!EntityStorage.currentlyInRideEntities.contains(e.getPlayer()))
-//            return;
-//        EntityStorage.currentlyInRideEntities.remove(e.getPlayer());
-//        if(p.getAllowFlight()) {
-//            p.setAllowFlight(false);
-//            p.setFlying(false);
-//        }
-//        for(Ride ride : Main.rideAPI.getAllRides()) {
-//            if(ride.getViewers().contains(p)) {
-//                ride.removeViewer(p);
-//            }
-//        }
+    public PassengerListener(){
+        this.playerManager = ServiceProvider.getSingleton(PlayerManager.class);
+    }
 
+    @EventHandler
+    public void onPlayerFly(PlayerToggleFlightEvent e) {
+        org.bukkit.entity.Player bukkitPlayer = e.getPlayer();
+        Player player = playerManager.getPlayer(bukkitPlayer);
+        if(!player.isSeated()) return;
+
+        e.setCancelled(true);
+        bukkitPlayer.setFlying(true);
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        org.bukkit.entity.Player bukkitPlayer = e.getPlayer();
+        Player player = playerManager.getPlayer(bukkitPlayer);
+        if (!player.isSeated()) return;
+
+        player.getSeatedOnContext().restore(player);
+    }
 }

@@ -18,6 +18,7 @@ import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 import com.jverbruggen.jrides.models.ride.count.RideCounterRecord;
+import com.jverbruggen.jrides.models.ride.gate.Gate;
 import org.bukkit.World;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class FlatRideHandle extends AbstractRideHandle {
 
         stationHandle.setFlatRideHandle(this);
         stationHandle.getTriggerContext().getRestraintTrigger().getLock().addEventListener(c -> this.onRestraintLockUpdateEventListener(c.isUnlocked()));
+        stationHandle.getEntryGates().forEach(Gate::open);
     }
 
     @Override
@@ -85,6 +87,7 @@ public class FlatRideHandle extends AbstractRideHandle {
         this.timingSequence.restart();
         finished = false;
         stationHandle.getTriggerContext().getVehiclePresentLock().setLocked(true);
+        stationHandle.getEntryGates().forEach(Gate::close);
     }
 
     private void onRideFinish(){
@@ -97,6 +100,7 @@ public class FlatRideHandle extends AbstractRideHandle {
         stationHandle.getTriggerContext().getVehiclePresentLock().setLocked(false);
         stationHandle.getTriggerContext().getRestraintTrigger().getLock().setLocked(true);
         stationHandle.getVehicle().ejectPassengers();
+        stationHandle.getEntryGates().forEach(Gate::open);
     }
 
     private void onRestraintLockUpdateEventListener(boolean unlocked){

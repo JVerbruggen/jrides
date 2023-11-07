@@ -29,6 +29,7 @@ public class RangedSectionConfig extends SectionConfig {
     private final TrimBrakeSectionSpecConfig trimBrakeSectionSpecConfig;
     private final DriveSectionSpecConfig driveSectionSpec;
     private final DriveAndReleaseSectionSpecConfig driveAndReleaseSectionSpecConfig;
+    private final DriveStopDriveSectionSpecConfig driveStopDriveSectionSpecConfig;
     private final StorageSectionSpecConfig storageSectionSpec;
     private final TransferSectionSpecConfig transferSectionSpec;
     private final LaunchSectionSpecConfig launchSectionSpecConfig;
@@ -37,7 +38,7 @@ public class RangedSectionConfig extends SectionConfig {
                                String nextSection, List<String> conflictSections,
                                BlockSectionSpecConfig blockSectionSpec, CoasterStationConfig stationSectionSpec, BrakeSectionSpecConfig brakeSectionSpec,
                                TrimBrakeSectionSpecConfig trimBrakeSectionSpecConfig, DriveSectionSpecConfig driveSectionSpec, StorageSectionSpecConfig storageSectionSpec, TransferSectionSpecConfig transferSectionSpec,
-                               LaunchSectionSpecConfig launchSectionSpecConfig, DriveAndReleaseSectionSpecConfig driveAndReleaseSectionSpecConfig) {
+                               LaunchSectionSpecConfig launchSectionSpecConfig, DriveAndReleaseSectionSpecConfig driveAndReleaseSectionSpecConfig, DriveStopDriveSectionSpecConfig driveStopDriveSectionSpecConfig) {
         super(type, identifier);
         this.lowerRange = lowerRange;
         this.upperRange = upperRange;
@@ -55,6 +56,7 @@ public class RangedSectionConfig extends SectionConfig {
         this.storageSectionSpec = storageSectionSpec;
         this.transferSectionSpec = transferSectionSpec;
         this.launchSectionSpecConfig = launchSectionSpecConfig;
+        this.driveStopDriveSectionSpecConfig = driveStopDriveSectionSpecConfig;
     }
 
     public String getNextSection() {
@@ -101,6 +103,10 @@ public class RangedSectionConfig extends SectionConfig {
         return driveAndReleaseSectionSpecConfig;
     }
 
+    public DriveStopDriveSectionSpecConfig getDriveStopDriveSectionSpecConfig() {
+        return driveStopDriveSectionSpecConfig;
+    }
+
     public StorageSectionSpecConfig getStorageSectionSpec() {
         return storageSectionSpec;
     }
@@ -123,7 +129,7 @@ public class RangedSectionConfig extends SectionConfig {
 
     public static boolean accepts(String type){
         return switch (type) {
-            case "track", "drive", "driveAndRelease", "brake", "trim", "station", "blocksection", "transfer", "launch" -> true;
+            case "track", "drive", "driveAndRelease", "driveStopDrive", "brake", "trim", "station", "blocksection", "transfer", "launch" -> true;
             default -> false;
         };
     }
@@ -168,6 +174,10 @@ public class RangedSectionConfig extends SectionConfig {
         if(type.equals("driveAndRelease"))
             driveAndReleaseSectionSpec = DriveAndReleaseSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("driveAndReleaseSection"));
 
+        DriveStopDriveSectionSpecConfig driveStopDriveSectionSpecConfig = null;
+        if(type.equals("driveStopDrive"))
+            driveStopDriveSectionSpecConfig = DriveStopDriveSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("driveStopDriveSection"));
+
         StorageSectionSpecConfig storageSectionSpec = null;
         if(configurationSection.contains("storageSection"))
             storageSectionSpec = StorageSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("storageSection"));
@@ -182,7 +192,7 @@ public class RangedSectionConfig extends SectionConfig {
 
         return new RangedSectionConfig(sectionIdentifier, lowerRange, upperRange, jumpAtStart, jumpAtEnd, trackSource, type, nextSection, conflictSections,
                 blockSectionSpec, stationSectionSpec, brakeSectionSpec, trimBrakeSectionSpecConfig, driveSectionSpec, storageSectionSpec, transferSectionSpec, launchSectionSpec,
-                driveAndReleaseSectionSpec);
+                driveAndReleaseSectionSpec, driveStopDriveSectionSpecConfig);
     }
 
     @Override

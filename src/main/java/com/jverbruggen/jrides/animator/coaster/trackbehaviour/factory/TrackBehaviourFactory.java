@@ -6,10 +6,7 @@ import com.jverbruggen.jrides.animator.coaster.trackbehaviour.FreeMovementTrackB
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.LaunchTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.StationTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.TrackBehaviour;
-import com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive.BlockBrakeTrackBehaviour;
-import com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive.BrakeAndDriveTrackBehaviour;
-import com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive.DriveAndReleaseTrackBehaviour;
-import com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive.TrimBrakeTrackBehaviour;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive.*;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.transfer.TrainDisplacerTransferTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.point.SwitchBehaviour;
@@ -197,6 +194,23 @@ public class TrackBehaviourFactory {
 
             return new DriveAndReleaseTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, acceleration,
                     stopFrame, minWaitTicks, coasterConfig.getGravityConstant(), coasterConfig.getDragConstant());
+        }else if(type.equalsIgnoreCase("driveStopDrive")){
+            DriveStopDriveSectionSpecConfig driveStopDriveSectionSpecConfig = rangedSectionConfig.getDriveStopDriveSectionSpecConfig();
+            double driveSpeedIn = driveStopDriveSectionSpecConfig.getDriveSpeedIn();
+            double driveSpeedOut = driveStopDriveSectionSpecConfig.getDriveSpeedOut();
+            double acceleration = driveStopDriveSectionSpecConfig.getAcceleration();
+            double deceleration = driveStopDriveSectionSpecConfig.getDeceleration();
+
+            double engagePercentage = driveStopDriveSectionSpecConfig.getEngage();
+            Frame lowerRange = new SimpleFrame(rangedSectionConfig.getLowerRange());
+            Frame upperRange = new SimpleFrame(rangedSectionConfig.getUpperRange());
+
+            Frame stopFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
+
+            int minWaitTicks = driveStopDriveSectionSpecConfig.getWaitTicks();
+
+            return new DriveStopDriveTrackBehaviour(cartMovementFactory, minWaitTicks, stopFrame, deceleration, acceleration,
+                    driveSpeedIn, driveSpeedOut);
         }else if(type.equalsIgnoreCase("launch")){
             LaunchSectionSpecConfig launchSectionSpecConfig = rangedSectionConfig.getLaunchSectionSpecConfig();
             double engagePercentage = launchSectionSpecConfig.getEngage();

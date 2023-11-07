@@ -61,7 +61,7 @@ public class SeatConfig extends BaseConfig implements StructureConfigItem {
             modelConfigs = ModelConfig.multipleFromConfigurationSection(getConfigurationSection(configurationSection, "models"));
         else modelConfigs = new ArrayList<>();
 
-        int seatYawOffset = getInt(configurationSection, "seatRotationDegrees");
+        int seatYawOffset = getInt(configurationSection, "seatRotationDegrees", 0);
 
         return new SeatConfig(identifier, attachmentConfig, modelConfigs, seatYawOffset);
     }
