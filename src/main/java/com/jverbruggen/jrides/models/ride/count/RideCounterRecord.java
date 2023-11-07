@@ -44,6 +44,10 @@ public class RideCounterRecord implements ConfigurationSerializable {
         return playerUUID;
     }
 
+    public String getPlayerName() {
+        return playerName;
+    }
+
     public void addOne(){
         rideCount++;
     }

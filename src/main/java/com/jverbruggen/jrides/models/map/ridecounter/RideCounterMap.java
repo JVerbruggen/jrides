@@ -2,6 +2,10 @@ package com.jverbruggen.jrides.models.map.ridecounter;
 
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.models.map.AbstractMap;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecord;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecordRideCollection;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import com.jverbruggen.jrides.state.ride.RideCounterManager;
 import dev.cerus.maps.api.ClientsideMap;
 import dev.cerus.maps.api.Marker;
 import dev.cerus.maps.api.graphics.ClientsideMapGraphics;
@@ -23,6 +27,7 @@ public class RideCounterMap extends AbstractMap {
     private final byte primaryColor;
     private final byte secondaryColor;
     private final byte tertiaryColor;
+    private final RideCounterManager rideCounterManager;
 
 
     public RideCounterMap(RideHandle rideHandle, MapView mapView, Map<Integer, Integer> lines, String lineFormat, BufferedImage backgroundImage,
@@ -38,6 +43,7 @@ public class RideCounterMap extends AbstractMap {
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
         this.tertiaryColor = tertiaryColor;
+        this.rideCounterManager = ServiceProvider.getSingleton(RideCounterManager.class);
     }
 
     public void updateVisuals() {
@@ -54,11 +60,16 @@ public class RideCounterMap extends AbstractMap {
             drawHorizontallyCenteredText(typeText, typeLine, secondaryColor, currentGraphics);
         }
 
+        // Get the ridebound record collection
+        RideCounterRecordRideCollection collection = rideCounterManager.getCollectionRideBound(rideHandle.getRide().getIdentifier());
+
         // For each line, draw text on the map
         lines.forEach((index, height) -> {
-            String line = lineFormat.replace("%RANK%", String.valueOf(index + 1)).replace("%COUNT%", "NaN");
+            if(index >= collection.getRecords().size()) return;
+            RideCounterRecord record = collection.getRecords().get(index);
+            String line = lineFormat.replace("%RANK%", String.valueOf(index + 1)).replace("%COUNT%", String.valueOf(record.getRideCount()));
             drawHorizontallyCenteredText(line, height, tertiaryColor, currentGraphics);
-            drawHorizontallyCenteredText("player", height + MinecraftFont.Font.getHeight() + 2, primaryColor, currentGraphics);
+            drawHorizontallyCenteredText(record.getPlayerName(), height + MinecraftFont.Font.getHeight() + 2, primaryColor, currentGraphics);
         });
     }
 
