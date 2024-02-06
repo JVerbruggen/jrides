@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.config.coaster.objects.*;
 import com.jverbruggen.jrides.config.coaster.objects.item.ItemStackConfig;
 import com.jverbruggen.jrides.config.gates.GatesConfig;
 import com.jverbruggen.jrides.config.ride.AbstractRideConfig;
+import com.jverbruggen.jrides.config.ride.RideCounterMapConfigs;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -24,8 +25,8 @@ public class CoasterConfig extends AbstractRideConfig {
     public CoasterConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription,
                          ItemStackConfig displayItem, PlayerLocation warpLocation, TrackConfig track,
                          VehiclesConfig vehicles, CartSpecConfig cartSpec, GatesConfig gates, double gravityConstant, double dragConstant,
-                         ControllerConfig controllerConfig, SoundsConfig soundsConfig, int rideOverviewMapId, boolean canExitDuringRide) {
-        super(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, soundsConfig, canExitDuringRide);
+                         ControllerConfig controllerConfig, SoundsConfig soundsConfig, int rideOverviewMapId, boolean canExitDuringRide, RideCounterMapConfigs rideCounterMapConfigs) {
+        super(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, soundsConfig, canExitDuringRide, rideCounterMapConfigs);
         this.track = track;
         this.vehicles = vehicles;
         this.cartSpec = cartSpec;
@@ -86,9 +87,10 @@ public class CoasterConfig extends AbstractRideConfig {
         ControllerConfig controllerConfig = ControllerConfig.fromConfigurationSection(configurationSection.getConfigurationSection("controller"));
         int rideOverviewMapId = getInt(configurationSection, "rideOverviewMapId", -1);
         boolean canExitDuringRide = getBoolean(configurationSection, "canExitDuringRide", false);
+        RideCounterMapConfigs rideCounterMapConfigs = RideCounterMapConfigs.fromConfigurationSection(identifier, configurationSection.getConfigurationSection("rideCounterMaps"));
 
         return new CoasterConfig(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, track, vehicles,
                 cartSpec, gates, gravityConstant, dragConstant, controllerConfig, sounds, rideOverviewMapId,
-                canExitDuringRide);
+                canExitDuringRide, rideCounterMapConfigs);
     }
 }

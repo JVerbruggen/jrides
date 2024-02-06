@@ -6,10 +6,12 @@ import com.jverbruggen.jrides.animator.flatride.station.FlatRideStationHandle;
 import com.jverbruggen.jrides.animator.flatride.timing.TimingSequence;
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
+import com.jverbruggen.jrides.config.ride.RideCounterMapConfigs;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
+import com.jverbruggen.jrides.event.ride.RideFinishedEvent;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Ride;
@@ -33,8 +35,8 @@ public class FlatRideHandle extends AbstractRideHandle {
 
     private boolean finished;
 
-    public FlatRideHandle(World world, Ride ride, boolean loaded, FlatRideStationHandle stationHandle, SoundsConfig sounds) {
-        super(world, ride, null, loaded, sounds);
+    public FlatRideHandle(World world, Ride ride, boolean loaded, FlatRideStationHandle stationHandle, SoundsConfig sounds, RideCounterMapConfigs rideCounterMapConfigs) {
+        super(world, ride, null, loaded, sounds, rideCounterMapConfigs);
         this.stationHandle = stationHandle;
         this.timingSequence = null;
         this.dispatchTrigger = stationHandle.getTriggerContext().getDispatchTrigger();
@@ -93,6 +95,7 @@ public class FlatRideHandle extends AbstractRideHandle {
                 .stream()
                 .map(p -> (JRidesPlayer)p)
                 .collect(Collectors.toList()), getRide());
+        RideFinishedEvent.send(getRide(), getPassengers());
 
         stationHandle.getTriggerContext().getVehiclePresentLock().setLocked(false);
         stationHandle.getTriggerContext().getRestraintTrigger().getLock().setLocked(true);

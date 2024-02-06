@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
+import com.jverbruggen.jrides.event.ride.RideFinishedEvent;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
@@ -133,11 +134,13 @@ public class StationTrackBehaviour extends BaseTrackBehaviour {
                         phase = StationPhase.STATIONARY;
                         stationHandle.setStationaryTrain(train);
 
-                        if (stationHandle.isExit())
+                        if (stationHandle.isExit()) {
                             PlayerFinishedRideEvent.sendFinishedRideEvent(train.getPassengers()
                                     .stream()
                                     .map(p -> (JRidesPlayer) p)
                                     .collect(Collectors.toList()), coasterHandle.getRide());
+                            RideFinishedEvent.send(coasterHandle.getRide(), train.getPassengers());
+                        }
 
                         coasterHandle.getRideController().onVehicleArrive(train, stationHandle);
                         trainInStationDispatchLock.unlock();
