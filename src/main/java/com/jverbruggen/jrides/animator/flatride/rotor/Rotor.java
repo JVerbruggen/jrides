@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxis;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorPlayerControlConfig;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
+import com.jverbruggen.jrides.models.math.SpeedUtil;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 
 import javax.annotation.Nullable;
@@ -128,5 +129,57 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Pl
     @Override
     public void setUpperOperatingRange(double upper) {
         upperOperatingRange = upper;
+    }
+
+    @Override
+    public void goTowards(double targetPosition, double fromPosition, double acceleration, FlatRideComponentSpeed componentSpeed) {
+        double currentSpeed = componentSpeed.getSpeed();
+        double currentPosition = this.getInstructionPosition();
+        double absAcceleration = Math.abs(acceleration);
+        double maxSpeed = componentSpeed.getMaxSpeed();
+        double minSpeed = componentSpeed.getMinSpeed();
+
+        boolean positiveAcceleration = acceleration >= 0;
+        boolean goingForwards = currentSpeed > 0 || (currentSpeed == 0 && positiveAcceleration);
+
+        double breakPosition = SpeedUtil.positionStartBraking(
+                currentSpeed,
+                goingForwards ? -absAcceleration : absAcceleration,
+                targetPosition,
+                0);
+
+//        JRidesPlugin.getLogger().debug("s: " + currentSpeed + "(" + goingForwards + ") a: " + acceleration);
+//        JRidesPlugin.getLogger().debug("f: " + fromPositionAcc + " c: " + hasPosition.getInstructionPosition() + " t: " + targetPositionAcc + " b: " + breakPosition);
+
+        double margin = 0.1;
+
+        boolean shouldBreak = SpeedUtil.hasPassed(fromPosition, this.getInstructionPosition(), breakPosition,
+                positiveAcceleration, margin);
+        boolean shouldHardBreak = SpeedUtil.hasPassed(fromPosition, this.getInstructionPosition(), targetPosition,
+                goingForwards, absAcceleration);
+
+//        JRidesPlugin.getLogger().debug("break: " + shouldBreak + " hard: " + shouldHardBreak + "\n----");
+
+        if(shouldHardBreak){
+            componentSpeed.setHard(0);
+            if(Math.abs(targetPosition - this.getInstructionPosition()) < margin)
+                this.setInstructionPosition(targetPosition);
+        }else if(shouldBreak){
+            componentSpeed.accelerateTowards(absAcceleration, 0);
+            this.checkBump(currentPosition, componentSpeed, fromPosition, targetPosition, positiveAcceleration);
+        }else{
+            double targetSpeed = positiveAcceleration ? maxSpeed : minSpeed;
+
+            componentSpeed.accelerateTowards(absAcceleration, targetSpeed);
+            this.checkBump(currentPosition, componentSpeed, fromPosition, targetPosition, positiveAcceleration);
+        }
+    }
+
+    private void checkBump(double currentPosition, FlatRideComponentSpeed componentSpeed, double fromPosition, double targetPosition, boolean positiveSpeed){
+        double newPosition = currentPosition + componentSpeed.getSpeed();
+        if(SpeedUtil.hasPassed(fromPosition, newPosition, targetPosition, positiveSpeed, 0d)){
+            componentSpeed.setHard(0);
+            this.setInstructionPosition(targetPosition);
+        }
     }
 }

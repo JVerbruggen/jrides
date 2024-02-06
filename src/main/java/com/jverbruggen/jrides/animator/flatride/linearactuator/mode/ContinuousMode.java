@@ -25,4 +25,24 @@ public class ContinuousMode implements ActuatorMode {
             flatRideComponentSpeed.setHard(0);
         }
     }
+
+    @Override
+    public double getPosition(Vector3 actuatorState) {
+        return actuatorState.y;
+    }
+
+    @Override
+    public void setPosition(Vector3 actuatorState, double position) {
+        actuatorState.y = position;
+    }
+
+    @Override
+    public double getLowerBound() {
+        return lowerBound;
+    }
+
+    @Override
+    public double getUpperBound() {
+        return upperBound;
+    }
 }

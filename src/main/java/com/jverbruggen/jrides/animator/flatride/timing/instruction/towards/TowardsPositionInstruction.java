@@ -1,10 +1,12 @@
 package com.jverbruggen.jrides.animator.flatride.timing.instruction.towards;
 
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.animator.flatride.interfaces.HasPosition;
 import com.jverbruggen.jrides.animator.flatride.timing.instruction.Instruction;
 import com.jverbruggen.jrides.models.math.SpeedUtil;
+import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,23 +39,27 @@ public class TowardsPositionInstruction implements Instruction {
     public void execute(HasPosition hasPosition, TowardsPositionInstructionState state){
         if (state.getOriginalState() == null) {
             state.setOriginalState(hasPosition.getInstructionPosition());
+            state.setAcceleration(accelerate);
 
             double lowerOperatingRange = hasPosition.getLowerOperatingRange();
+            double upperOperatingRange = hasPosition.getUpperOperatingRange();
 
 //            JRidesPlugin.getLogger().debug("l: " + lowerOperatingRange + ", x: " + state.getOriginalState() + ", t: " + towardsPosition + ", p: " + positiveFrom);
 
-            if(!SpeedUtil.aboveInRange(lowerOperatingRange, state.getOriginalState(), towardsPosition, 0, true)){
+            if(!SpeedUtil.aboveInRange(lowerOperatingRange, state.getOriginalState(), towardsPosition, upperOperatingRange, true)){
                 state.setAcceleration(-accelerate);
 //                JRidesPlugin.getLogger().debug("Flipped " + state.getAcceleration());
             }
         }
 
-        double lowerPosition = state.getAcceleration() >= 0 ? state.getOriginalState() : this.towardsPosition;
-        double upperPosition = state.getAcceleration() >= 0 ? this.towardsPosition : state.getOriginalState();
+        double acc = state.getAcceleration();
+        double lowerPosition = acc >= 0 ? state.getOriginalState() : this.towardsPosition;
+        double upperPosition = acc >= 0 ? this.towardsPosition : state.getOriginalState();
 
+//        JRidesPlugin.getLogger().debug("" + lowerPosition + "," + upperPosition + "," + acc);
         TowardsPositionInstruction.run(
                 hasPosition,
-                state.getAcceleration(),
+                acc,
                 lowerPosition,
                 upperPosition,
                 0d,
@@ -87,54 +93,11 @@ public class TowardsPositionInstruction implements Instruction {
 
     public static void run(HasPosition hasPosition, double acceleration, double lowerPosition, double upperPosition, double margin, double maxSpeed, double minSpeed){
         FlatRideComponentSpeed componentSpeed = hasPosition.getFlatRideComponentSpeed();
-        double currentSpeed = componentSpeed.getSpeed();
-        double currentPosition = hasPosition.getInstructionPosition();
-        double absAcceleration = Math.abs(acceleration);
-
         boolean positiveAcceleration = acceleration >= 0;
-        boolean goingForwards = currentSpeed > 0 || (currentSpeed == 0 && positiveAcceleration);
 
-        double targetPositionAcc = positiveAcceleration ? upperPosition : lowerPosition;
-        double fromPositionAcc = positiveAcceleration ? lowerPosition : upperPosition;
-        double targetPositionSpd = goingForwards ? upperPosition : lowerPosition;
-        double fromPositionSpd = goingForwards ? lowerPosition : upperPosition;
+        double targetPosition = positiveAcceleration ? upperPosition : lowerPosition;
+        double fromPosition = positiveAcceleration ? lowerPosition : upperPosition;
 
-        double breakPosition = SpeedUtil.positionStartBraking(
-                currentSpeed,
-                goingForwards ? -absAcceleration : absAcceleration,
-                targetPositionAcc,
-                0);
-
-//        JRidesPlugin.getLogger().debug("s: " + currentSpeed + "(" + goingForwards + ") a: " + acceleration);
-//        JRidesPlugin.getLogger().debug("f: " + fromPositionAcc + " c: " + hasPosition.getInstructionPosition() + " t: " + targetPositionAcc + " b: " + breakPosition);
-
-        boolean shouldBreak = SpeedUtil.hasPassed(fromPositionAcc, hasPosition.getInstructionPosition(), breakPosition,
-                positiveAcceleration, margin);
-        boolean shouldHardBreak = SpeedUtil.hasPassed(fromPositionSpd, hasPosition.getInstructionPosition(), targetPositionSpd,
-                goingForwards, absAcceleration);
-
-//        JRidesPlugin.getLogger().debug("break: " + shouldBreak + " hard: " + shouldHardBreak + "\n----");
-
-        if(shouldHardBreak){
-            componentSpeed.setHard(0);
-            if(Math.abs(targetPositionSpd - hasPosition.getInstructionPosition()) < margin)
-                hasPosition.setInstructionPosition(targetPositionSpd);
-        }else if(shouldBreak){
-            componentSpeed.accelerateTowards(absAcceleration, 0);
-            checkBump(currentPosition, hasPosition, componentSpeed, fromPositionAcc, targetPositionAcc, positiveAcceleration);
-        }else{
-            double targetSpeed = positiveAcceleration ? maxSpeed : minSpeed;
-
-            componentSpeed.accelerateTowards(absAcceleration, targetSpeed);
-            checkBump(currentPosition, hasPosition, componentSpeed, fromPositionAcc, targetPositionAcc, positiveAcceleration);
-        }
-    }
-
-    private static void checkBump(double currentPosition, HasPosition hasPosition, FlatRideComponentSpeed componentSpeed, double fromPosition, double targetPosition, boolean positiveSpeed){
-        double newPosition = currentPosition + componentSpeed.getSpeed();
-        if(SpeedUtil.hasPassed(fromPosition, newPosition, targetPosition, positiveSpeed, 0d)){
-            componentSpeed.setHard(0);
-            hasPosition.setInstructionPosition(targetPosition);
-        }
+        hasPosition.goTowards(targetPosition, fromPosition, acceleration, componentSpeed);
     }
 }
