@@ -7,12 +7,8 @@ import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.CartSpecConfig;
 import com.jverbruggen.jrides.config.coaster.objects.VehiclesConfig;
 import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
-import com.jverbruggen.jrides.config.coaster.objects.item.ItemStackConfig;
 import com.jverbruggen.jrides.config.coaster.objects.cart.CartTypeSpecConfig;
-import com.jverbruggen.jrides.items.ItemStackFactory;
-import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
-import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.AutoTrackUpdateFrame;
@@ -24,7 +20,6 @@ import com.jverbruggen.jrides.models.ride.section.provider.SectionProvider;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +61,7 @@ public class TrainFactory {
         final Frame tailOfTrainFrame = new AutoTrackUpdateFrame(tailOfTrainFrameValue, spawnTrack, spawnSection);
 
         final Vector3 cartOffset = coasterConfig.getCartSpec().getDefault().getModel().getPosition();
+        final Quaternion cartRotationOffset = coasterConfig.getCartSpec().getDefault().getModel().getRotation();
 
         List<CoasterCart> carts = new ArrayList<>();
         for(int i = 0; i < amountOfCarts; i++){
@@ -86,7 +82,7 @@ public class TrainFactory {
 
             Vector3 trackLocation = spawnSection.getLocationFor(cartFrame);
             Quaternion orientation = spawnSection.getOrientationFor(cartFrame);
-            Vector3 cartLocation = CoasterCart.calculateLocation(trackLocation, cartOffset, orientation);
+            Vector3 cartLocation = CoasterCart.calculateLocation(trackLocation, cartOffset, orientation, cartRotationOffset);
 
             VirtualEntity virtualEntity = cartModelItemConfig.spawnEntity(viewportManager, cartLocation);
             Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> virtualEntity.setRotation(orientation));
@@ -107,6 +103,7 @@ public class TrainFactory {
                     seats,
                     virtualEntity,
                     cartOffset,
+                    cartRotationOffset,
                     cartFrame);
             carts.add(cart);
         }

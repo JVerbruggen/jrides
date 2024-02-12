@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.interfaces.HasPosition;
 import com.jverbruggen.jrides.animator.flatride.interfaces.PlayerControllable;
 import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxis;
+import com.jverbruggen.jrides.animator.flatride.rotor.mode.RotorActuatorMode;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorPlayerControlConfig;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
@@ -22,10 +23,12 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Pl
     private boolean allowsControlState;
     private double lowerOperatingRange;
     private double upperOperatingRange;
+    private final RotorActuatorMode actuatorMode;
 
-    public Rotor(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, RotorAxis rotorAxis) {
+    public Rotor(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, RotorAxis rotorAxis, RotorActuatorMode actuatorMode) {
         super(identifier, groupIdentifier, root, joint, flatRideModels);
         this.rotorAxis = rotorAxis;
+        this.actuatorMode = actuatorMode;
         this.playerControl = null;
         this.flatRideComponentSpeed = flatRideComponentSpeed;
         this.allowsControlState = false;
@@ -51,7 +54,7 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Pl
             playerControl.apply();
         }
 
-        rotorAxis.addRotation(flatRideComponentSpeed.getSpeed());
+        actuatorMode.tick(flatRideComponentSpeed, rotorAxis);
 
         for(Attachment attachment : getChildren()){
             attachment.update();

@@ -10,10 +10,11 @@ import com.jverbruggen.jrides.models.ride.seat.SeatHost;
 
 
 public interface CoasterCart extends SeatHost {
-    static Vector3 calculateLocation(Vector3 trackLocation, Vector3 cartOffset, Quaternion orientation){
+    static Vector3 calculateLocation(Vector3 trackLocation, Vector3 cartOffset, Quaternion orientation, Quaternion cartRotationOffset){
         Matrix4x4 matrix = new Matrix4x4();
         matrix.rotate(orientation);
         matrix.translate(cartOffset);
+        matrix.rotate(cartRotationOffset);
         Vector3 cartTrackOffsetVector = matrix.toVector3();
         Vector3 totalVector = Vector3.add(trackLocation, cartTrackOffsetVector);
 
@@ -32,6 +33,7 @@ public interface CoasterCart extends SeatHost {
     Vector3 getTrackOffset();
     Vector3 getPosition();
     Quaternion getOrientation();
+    Quaternion getRotationOffset();
     void setPosition(Vector3 position, Quaternion orientation);
     void setPosition(Vector3 position);
     void setPosition(CartMovement cartMovement);

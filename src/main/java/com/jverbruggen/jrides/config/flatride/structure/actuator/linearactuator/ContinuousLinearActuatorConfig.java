@@ -1,7 +1,7 @@
 package com.jverbruggen.jrides.config.flatride.structure.actuator.linearactuator;
 
-import com.jverbruggen.jrides.animator.flatride.linearactuator.mode.ActuatorMode;
 import com.jverbruggen.jrides.animator.flatride.linearactuator.mode.ContinuousMode;
+import com.jverbruggen.jrides.animator.flatride.linearactuator.mode.LinearActuatorMode;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -15,7 +15,7 @@ public class ContinuousLinearActuatorConfig extends BaseConfig implements Linear
     }
 
     @Override
-    public ActuatorMode createActuatorMode() {
+    public LinearActuatorMode createActuatorMode() {
         return new ContinuousMode(lowerBound, upperBound);
     }
 

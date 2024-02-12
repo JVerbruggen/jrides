@@ -3,7 +3,7 @@ package com.jverbruggen.jrides.animator.flatride.linearactuator.mode;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.models.math.Vector3;
 
-public class SineMode implements ActuatorMode {
+public class SineMode implements LinearActuatorMode {
     private static final float PI = 3.1415926535f;
     private static final float PI2 = PI*2;
 

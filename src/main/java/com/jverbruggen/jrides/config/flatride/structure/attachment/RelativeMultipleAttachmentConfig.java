@@ -105,6 +105,7 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
                     new Quaternion(),
                     getOffsetPosition(),
                     rotorConfig.getFlatRideComponentSpeed(),
+                    rotorConfig.getRotorTypeConfig().createActuatorMode(),
                     rotorConfig.getPlayerControlConfig(),
                     getJoint(),
                     rotorConfig.getRotorAxis(),

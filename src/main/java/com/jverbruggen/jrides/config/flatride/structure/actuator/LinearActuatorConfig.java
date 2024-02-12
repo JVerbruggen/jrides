@@ -43,9 +43,9 @@ public class LinearActuatorConfig extends AbstractActuatorConfig{
     public static StructureConfigItem fromConfigurationSection(ConfigurationSection configurationSection, String identifier) {
         boolean root = getBoolean(configurationSection, "root", false);
         String axis = getString(configurationSection, "axis", "y");
-        String control = getString(configurationSection, "control", "continuous");
+        String mode = getString(configurationSection, "mode", "continuous");
 
-        LinearActuatorTypeConfig linearActuatorTypeConfig = switch (LinearActuatorModeEnum.from(control)){
+        LinearActuatorTypeConfig linearActuatorTypeConfig = switch (LinearActuatorModeEnum.from(mode)){
             case SINE -> SineLinearActuatorConfig.fromConfigurationSection(configurationSection);
             case CONTINUOUS -> ContinuousLinearActuatorConfig.fromConfigurationSection(configurationSection);
         };

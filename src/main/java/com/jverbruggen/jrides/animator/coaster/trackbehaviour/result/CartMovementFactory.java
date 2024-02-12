@@ -36,7 +36,7 @@ public class CartMovementFactory {
 
 //            Bukkit.broadcastMessage("cart:" + cartFrame);
 
-            Vector3 cartPosition = CoasterCart.calculateLocation(cartPositionOnTrack, cart.getTrackOffset(), orientation);
+            Vector3 cartPosition = CoasterCart.calculateLocation(cartPositionOnTrack, cart.getTrackOffset(), orientation, cart.getRotationOffset());
 
             cartMovements.put(cart, new CartMovement(cartPosition, orientation));
         }

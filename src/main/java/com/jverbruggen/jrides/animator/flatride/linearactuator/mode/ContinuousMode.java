@@ -3,7 +3,7 @@ package com.jverbruggen.jrides.animator.flatride.linearactuator.mode;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.models.math.Vector3;
 
-public class ContinuousMode implements ActuatorMode {
+public class ContinuousMode implements LinearActuatorMode {
     private final Double lowerBound;
     private final Double upperBound;
 

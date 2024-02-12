@@ -1,6 +1,6 @@
 package com.jverbruggen.jrides.config.flatride.structure.actuator.linearactuator;
 
-import com.jverbruggen.jrides.animator.flatride.linearactuator.mode.ActuatorMode;
+import com.jverbruggen.jrides.animator.flatride.linearactuator.mode.LinearActuatorMode;
 import com.jverbruggen.jrides.animator.flatride.linearactuator.mode.SineMode;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,7 +17,7 @@ public class SineLinearActuatorConfig extends BaseConfig implements LinearActuat
     }
 
     @Override
-    public ActuatorMode createActuatorMode() {
+    public LinearActuatorMode createActuatorMode() {
         return new SineMode(size, phase.get().shortValue());
     }
 

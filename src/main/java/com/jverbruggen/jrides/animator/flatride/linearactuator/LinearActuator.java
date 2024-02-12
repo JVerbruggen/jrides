@@ -4,7 +4,7 @@ import com.jverbruggen.jrides.animator.flatride.AbstractInterconnectedFlatRideCo
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.interfaces.HasPosition;
-import com.jverbruggen.jrides.animator.flatride.linearactuator.mode.ActuatorMode;
+import com.jverbruggen.jrides.animator.flatride.linearactuator.mode.LinearActuatorMode;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -14,9 +14,9 @@ import java.util.List;
 public class LinearActuator extends AbstractInterconnectedFlatRideComponent implements HasPosition {
     private final FlatRideComponentSpeed flatRideComponentSpeed;
     private final Vector3 actuatorState;
-    private final ActuatorMode actuatorMode;
+    private final LinearActuatorMode actuatorMode;
 
-    public LinearActuator(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, ActuatorMode actuatorMode) {
+    public LinearActuator(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, LinearActuatorMode actuatorMode) {
         super(identifier, groupIdentifier, root, joint, flatRideModels);
         this.flatRideComponentSpeed = flatRideComponentSpeed;
 
