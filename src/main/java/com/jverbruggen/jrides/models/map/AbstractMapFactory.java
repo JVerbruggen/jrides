@@ -44,7 +44,7 @@ public abstract class AbstractMapFactory {
                             m.updateVisuals();
                             m.sendUpdate(players);
                     });
-                
+
             }, this.mapUpdateIntervalTicks, this.mapUpdateIntervalTicks);
     }
 
@@ -56,6 +56,11 @@ public abstract class AbstractMapFactory {
     public VirtualMap getMap(String identifier){
         if(!hasMaps()) return null;
         return maps.get(identifier);
+    }
+
+    public Map<String, VirtualMap> getMaps() {
+        if(!hasMaps()) return null;
+        return maps;
     }
 
     public abstract void loadMaps();
@@ -74,7 +79,7 @@ public abstract class AbstractMapFactory {
         if(mapView == null){
             throw new MapCreationException("Configured ride overview map id did not exist, first create the map and assign the ID to the coaster afterwards");
         }
-        
+
         mapView.getRenderers().forEach(mapView::removeRenderer);
         mapView.setLocked(true);
         mapView.setTrackingPosition(false);

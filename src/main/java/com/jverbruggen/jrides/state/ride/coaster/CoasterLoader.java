@@ -8,6 +8,7 @@ import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
+import com.jverbruggen.jrides.config.ride.RideCounterMapConfigs;
 import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.controller.RideControllerFactory;
@@ -110,7 +111,7 @@ public class CoasterLoader {
         SoundsConfig sounds = coasterConfig.getSoundsConfig();
 
         CoasterHandle coasterHandle = new CoasterHandle(ride, world, sounds, rideOverviewMapId, !rideState.isInactive(),
-                coasterConfig.getDragConstant(), coasterConfig.getGravityConstant());
+                coasterConfig.getDragConstant(), coasterConfig.getGravityConstant(), coasterConfig.getRideCounterMapConfigs());
 
         // Initialize Track
         if(!rideState.isInactive()){

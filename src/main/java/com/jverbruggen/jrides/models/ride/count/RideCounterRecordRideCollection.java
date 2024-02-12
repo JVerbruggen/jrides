@@ -40,6 +40,10 @@ public class RideCounterRecordRideCollection implements ConfigurationSerializabl
         return this.records.stream().anyMatch(r -> r.sameIdentityAs(record));
     }
 
+    public List<RideCounterRecord> getRecords() {
+        return records;
+    }
+
     public boolean update(RideCounterRecord record){
         if(!appliesToThisCollection(record)) return false;
 
