@@ -45,4 +45,6 @@ public interface TrackBehaviour {
 
     boolean definesNextAccepting();
     Section acceptAsNext(Train train, boolean canProcessPassed);
+
+    boolean canHandleBlockSectionSafety();
 }

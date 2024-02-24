@@ -19,6 +19,7 @@ import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.MatrixMath;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.math.Vector3PlusYaw;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
@@ -146,7 +147,7 @@ public interface FlatRideComponent {
                 offsetRotation).toVector3();
 
         VirtualEntity seatEntity = viewportManager.spawnSeatEntity(spawnPosition, 0, null);
-        FlatRideSeat seat = new FlatRideSeat(flatRideHandle, null, seatEntity, Vector3.zero());
+        FlatRideSeat seat = new FlatRideSeat(flatRideHandle, null, seatEntity, Vector3PlusYaw.zero());
 
         List<FlatRideModel> flatRideModels = flatRideModelsConfig.stream()
                 .map(config -> {

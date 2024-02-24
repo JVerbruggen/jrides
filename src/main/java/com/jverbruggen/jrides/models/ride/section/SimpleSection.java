@@ -69,6 +69,12 @@ public class SimpleSection extends BaseSection {
 
     @Override
     public BlockSectionSafetyResult getBlockSectionSafety(@Nullable Train train, boolean checkConflicts) {
+        Section next = next(train);
+
+        if(trackBehaviour.canHandleBlockSectionSafety()){
+            return ((SectionSafetyProvider) trackBehaviour).getEnteringSafety(train, next);
+        }
+
         if(!this.canReserveLocally(train)){
             String reservedByString = getReservedBy() != null ? getReservedBy().getName() : "null";
             return new BlockSectionSafetyResult(false, train, "Cannot reserve locally, reserved by " + reservedByString);
@@ -84,7 +90,6 @@ public class SimpleSection extends BaseSection {
 
         if(this.canBlock()) return new BlockSectionSafetyResult(true, train, "OK: Can block self");
 
-        Section next = next(train);
         if(next == null){
             throw new RuntimeException("Section was null for train when checking for block section safety");
         }

@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.math.Vector3PlusYaw;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import com.jverbruggen.jrides.models.ride.seat.AbstractSeat;
 import com.jverbruggen.jrides.models.ride.seat.InstructionType;
@@ -12,7 +13,7 @@ import com.jverbruggen.jrides.models.ride.seat.SeatHost;
 public class FlatRideSeat extends AbstractSeat {
     private PlayerControl playerControl;
 
-    public FlatRideSeat(FlatRideHandle parentRideHandle, SeatHost seatHost, VirtualEntity virtualEntity, Vector3 offset) {
+    public FlatRideSeat(FlatRideHandle parentRideHandle, SeatHost seatHost, VirtualEntity virtualEntity, Vector3PlusYaw offset) {
         super(parentRideHandle, seatHost, virtualEntity, offset);
         this.playerControl = null;
 

@@ -135,4 +135,9 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     public Section acceptAsNext(Train train, boolean canProcessPassed) {
         return null;
     }
+
+    @Override
+    public boolean canHandleBlockSectionSafety() {
+        return false;
+    }
 }

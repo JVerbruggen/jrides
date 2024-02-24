@@ -88,6 +88,10 @@ public class SimpleCoasterCart implements CoasterCart {
         return modelEntity.getLocation();
     }
 
+    /**
+     * Get total orientation that is used in display
+     * @return
+     */
     @Override
     public Quaternion getOrientation() {
         return currentOrientation;

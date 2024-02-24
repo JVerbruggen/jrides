@@ -178,6 +178,13 @@ public class TrackBehaviourFactory {
             double acceleration = driveSectionSpecConfig.getAcceleration();
             double deceleration = driveSectionSpecConfig.getDeceleration();
             return new BrakeAndDriveTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, acceleration);
+        }else if(type.equalsIgnoreCase("proximityDrive")){
+            ProximityDriveSectionSpecConfig driveSectionSpecConfig = rangedSectionConfig.getProximityDriveSectionSpec();
+            double driveSpeed = driveSectionSpecConfig.getDriveSpeed();
+            double acceleration = driveSectionSpecConfig.getAcceleration();
+            double deceleration = driveSectionSpecConfig.getDeceleration();
+            double minTrainDistance = driveSectionSpecConfig.getMinTrainDistance();
+            return new ProximityDriveTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, acceleration, minTrainDistance);
         }else if(type.equalsIgnoreCase("driveAndRelease")){
             DriveAndReleaseSectionSpecConfig driveAndReleaseSectionSpecConfig = rangedSectionConfig.getDriveAndReleaseSectionSpecConfig();
             double driveSpeed = driveAndReleaseSectionSpecConfig.getDriveSpeed();

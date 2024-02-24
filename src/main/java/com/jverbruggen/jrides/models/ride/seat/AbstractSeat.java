@@ -10,6 +10,7 @@ import com.jverbruggen.jrides.models.entity.SeatedOnContext;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.math.Vector3PlusYaw;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import com.jverbruggen.jrides.state.ride.SoftEjector;
@@ -20,11 +21,11 @@ public abstract class AbstractSeat implements Seat {
     private final RideHandle parentRideHandle;
     private Player passenger;
     private final VirtualEntity virtualEntity;
-    private final Vector3 offset;
+    private final Vector3PlusYaw offset;
     private boolean restraintLocked;
     private SeatHost seatHost;
 
-    public AbstractSeat(RideHandle parentRideHandle, SeatHost seatHost, VirtualEntity virtualEntity, Vector3 offset) {
+    public AbstractSeat(RideHandle parentRideHandle, SeatHost seatHost, VirtualEntity virtualEntity, Vector3PlusYaw offset) {
         this.parentRideHandle = parentRideHandle;
         this.seatHost = seatHost;
         this.passenger = null;
@@ -97,7 +98,7 @@ public abstract class AbstractSeat implements Seat {
     }
 
     @Override
-    public Vector3 getOffset() {
+    public Vector3PlusYaw getOffset() {
         return offset;
     }
 

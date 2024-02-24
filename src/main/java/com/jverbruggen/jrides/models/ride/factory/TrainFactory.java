@@ -11,6 +11,8 @@ import com.jverbruggen.jrides.config.coaster.objects.cart.CartTypeSpecConfig;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.math.Vector3PlusYaw;
+import com.jverbruggen.jrides.models.math.VectorQuaternionState;
 import com.jverbruggen.jrides.models.properties.frame.AutoTrackUpdateFrame;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
@@ -82,13 +84,16 @@ public class TrainFactory {
 
             Vector3 trackLocation = spawnSection.getLocationFor(cartFrame);
             Quaternion orientation = spawnSection.getOrientationFor(cartFrame);
-            Vector3 cartLocation = CoasterCart.calculateLocation(trackLocation, cartOffset, orientation, cartRotationOffset);
+
+            VectorQuaternionState vectorQuaternionState = CoasterCart.calculateLocation(trackLocation, cartOffset, orientation, cartRotationOffset);
+            Vector3 cartLocation = vectorQuaternionState.getVector();
+            Quaternion cartOrientation = vectorQuaternionState.getQuaternion();
 
             VirtualEntity virtualEntity = cartModelItemConfig.spawnEntity(viewportManager, cartLocation);
-            Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> virtualEntity.setRotation(orientation));
+            Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> virtualEntity.setRotation(cartOrientation));
 
-            List<Vector3> seatOffsets = cartTypeSpecConfig.getSeats().getPositions();
-            List<CoasterSeat> seats = seatFactory.createCoasterSeats(coasterHandle, seatOffsets, cartLocation, orientation);
+            List<Vector3PlusYaw> seatOffsets = cartTypeSpecConfig.getSeats().getPositions();
+            List<CoasterSeat> seats = seatFactory.createCoasterSeats(coasterHandle, seatOffsets, cartLocation, cartOrientation);
 
             Section cartSection = spawnSection;
             if(!cartSection.isInSection(cartFrame)){

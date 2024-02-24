@@ -28,6 +28,7 @@ public class RangedSectionConfig extends SectionConfig {
     private final BrakeSectionSpecConfig brakeSectionSpec;
     private final TrimBrakeSectionSpecConfig trimBrakeSectionSpecConfig;
     private final DriveSectionSpecConfig driveSectionSpec;
+    private final ProximityDriveSectionSpecConfig proximityDriveSectionSpecConfig;
     private final DriveAndReleaseSectionSpecConfig driveAndReleaseSectionSpecConfig;
     private final DriveStopDriveSectionSpecConfig driveStopDriveSectionSpecConfig;
     private final StorageSectionSpecConfig storageSectionSpec;
@@ -37,7 +38,7 @@ public class RangedSectionConfig extends SectionConfig {
     public RangedSectionConfig(String identifier, int lowerRange, int upperRange, boolean jumpAtStart, boolean jumpAtEnd, String trackSource, String type,
                                String nextSection, List<String> conflictSections,
                                BlockSectionSpecConfig blockSectionSpec, CoasterStationConfig stationSectionSpec, BrakeSectionSpecConfig brakeSectionSpec,
-                               TrimBrakeSectionSpecConfig trimBrakeSectionSpecConfig, DriveSectionSpecConfig driveSectionSpec, StorageSectionSpecConfig storageSectionSpec, TransferSectionSpecConfig transferSectionSpec,
+                               TrimBrakeSectionSpecConfig trimBrakeSectionSpecConfig, DriveSectionSpecConfig driveSectionSpec, ProximityDriveSectionSpecConfig proximityDriveSectionSpecConfig, StorageSectionSpecConfig storageSectionSpec, TransferSectionSpecConfig transferSectionSpec,
                                LaunchSectionSpecConfig launchSectionSpecConfig, DriveAndReleaseSectionSpecConfig driveAndReleaseSectionSpecConfig, DriveStopDriveSectionSpecConfig driveStopDriveSectionSpecConfig) {
         super(type, identifier);
         this.lowerRange = lowerRange;
@@ -52,6 +53,7 @@ public class RangedSectionConfig extends SectionConfig {
         this.brakeSectionSpec = brakeSectionSpec;
         this.trimBrakeSectionSpecConfig = trimBrakeSectionSpecConfig;
         this.driveSectionSpec = driveSectionSpec;
+        this.proximityDriveSectionSpecConfig = proximityDriveSectionSpecConfig;
         this.driveAndReleaseSectionSpecConfig = driveAndReleaseSectionSpecConfig;
         this.storageSectionSpec = storageSectionSpec;
         this.transferSectionSpec = transferSectionSpec;
@@ -99,6 +101,10 @@ public class RangedSectionConfig extends SectionConfig {
         return driveSectionSpec;
     }
 
+    public ProximityDriveSectionSpecConfig getProximityDriveSectionSpec() {
+        return proximityDriveSectionSpecConfig;
+    }
+
     public DriveAndReleaseSectionSpecConfig getDriveAndReleaseSectionSpecConfig() {
         return driveAndReleaseSectionSpecConfig;
     }
@@ -129,7 +135,7 @@ public class RangedSectionConfig extends SectionConfig {
 
     public static boolean accepts(String type){
         return switch (type) {
-            case "track", "drive", "driveAndRelease", "driveStopDrive", "brake", "trim", "station", "blocksection", "transfer", "launch" -> true;
+            case "track", "drive", "proximityDrive", "driveAndRelease", "driveStopDrive", "brake", "trim", "station", "blocksection", "transfer", "launch" -> true;
             default -> false;
         };
     }
@@ -170,6 +176,10 @@ public class RangedSectionConfig extends SectionConfig {
         if(type.equals("drive"))
             driveSectionSpec = DriveSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("driveSection"));
 
+        ProximityDriveSectionSpecConfig proximityDriveSectionSpecConfig = null;
+        if(type.equals("proximityDrive"))
+            proximityDriveSectionSpecConfig = ProximityDriveSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("proximityDriveSection"));
+
         DriveAndReleaseSectionSpecConfig driveAndReleaseSectionSpec = null;
         if(type.equals("driveAndRelease"))
             driveAndReleaseSectionSpec = DriveAndReleaseSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("driveAndReleaseSection"));
@@ -191,7 +201,7 @@ public class RangedSectionConfig extends SectionConfig {
             launchSectionSpec = LaunchSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("launchSection"));
 
         return new RangedSectionConfig(sectionIdentifier, lowerRange, upperRange, jumpAtStart, jumpAtEnd, trackSource, type, nextSection, conflictSections,
-                blockSectionSpec, stationSectionSpec, brakeSectionSpec, trimBrakeSectionSpecConfig, driveSectionSpec, storageSectionSpec, transferSectionSpec, launchSectionSpec,
+                blockSectionSpec, stationSectionSpec, brakeSectionSpec, trimBrakeSectionSpecConfig, driveSectionSpec, proximityDriveSectionSpecConfig, storageSectionSpec, transferSectionSpec, launchSectionSpec,
                 driveAndReleaseSectionSpec, driveStopDriveSectionSpecConfig);
     }
 
