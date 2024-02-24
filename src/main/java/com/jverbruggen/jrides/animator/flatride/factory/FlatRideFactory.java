@@ -95,7 +95,7 @@ public class FlatRideFactory {
                 .filter(FlatRideComponent::isRoot)
                 .forEach(flatRideHandle::addRootComponent);
 
-        TimingSequence timingSequence = flatRideConfig.getTimingConfig().createTimingSequence(components);
+        TimingSequence timingSequence = flatRideConfig.getTimingConfig().createTimingSequence(flatRideHandle, components);
         flatRideHandle.setTimingSequence(timingSequence);
 
         RideController rideController = rideControllerFactory.createFlatRideController(flatRideHandle);

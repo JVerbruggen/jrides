@@ -25,6 +25,11 @@ public class ControlInstruction implements Instruction {
     }
 
     @Override
+    public void tick() {
+
+    }
+
+    @Override
     public void reset() {
 
     }

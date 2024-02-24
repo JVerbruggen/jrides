@@ -1,12 +1,10 @@
 package com.jverbruggen.jrides.animator.flatride.timing.instruction.towards;
 
-import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.animator.flatride.interfaces.HasPosition;
 import com.jverbruggen.jrides.animator.flatride.timing.instruction.Instruction;
 import com.jverbruggen.jrides.models.math.SpeedUtil;
-import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -75,6 +73,11 @@ public class TowardsPositionInstruction implements Instruction {
     @Override
     public boolean canHandle(FlatRideComponent component) {
         return component instanceof HasPosition;
+    }
+
+    @Override
+    public void tick() {
+        
     }
 
     @Override

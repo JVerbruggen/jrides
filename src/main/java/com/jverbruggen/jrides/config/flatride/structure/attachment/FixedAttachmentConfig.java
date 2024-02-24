@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.config.flatride.structure.attachment;
 
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
+import com.jverbruggen.jrides.animator.flatride.Limb;
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.attachment.FixedAttachment;
 import com.jverbruggen.jrides.animator.flatride.linearactuator.LinearActuator;
@@ -9,6 +10,7 @@ import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
 import com.jverbruggen.jrides.animator.flatride.rotor.Rotor;
 import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxisFactory;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
+import com.jverbruggen.jrides.config.flatride.structure.actuator.LimbConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.basic.StaticStructureConfig;
@@ -62,6 +64,28 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
         linearActuator.setAttachedTo(attachment);
 
         components.add(linearActuator);
+    }
+
+    @Override
+    public void createLimb(LimbConfig limbConfig, List<FlatRideComponent> components, FlatRideHandle rideHandle) {
+        ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
+
+        List<FlatRideModel> flatRideModels = limbConfig.getFlatRideModels().stream()
+                .map(config -> config.toFlatRideModel(position, viewportManager))
+                .collect(Collectors.toList());
+
+        Limb limb = new Limb(
+                limbConfig.getIdentifier(),
+                limbConfig.getIdentifier(),
+                limbConfig.isRoot(),
+                null,
+                flatRideModels
+        );
+
+        Attachment attachment = new FixedAttachment(limb, position, rotation);
+        limb.setAttachedTo(attachment);
+
+        components.add(limb);
     }
 
     @Override

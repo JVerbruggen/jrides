@@ -29,6 +29,11 @@ public class SpeedInstruction implements Instruction {
     }
 
     @Override
+    public void tick() {
+
+    }
+
+    @Override
     public void reset() {
 
     }

@@ -251,6 +251,12 @@ public class Quaternion implements Cloneable {
         this.rotateZ(roll);
     }
 
+    public final void rotateYawPitchRollRadians(double pitch, double yaw, double roll) {
+        this.rotateYRadians(-yaw);
+        this.rotateXRadians(pitch);
+        this.rotateZRadians(roll);
+    }
+
     /**
      * Deduces the yaw/pitch/roll values in degrees that this quaternion transforms objects with
      *
@@ -399,6 +405,13 @@ public class Quaternion implements Cloneable {
         }
     }
 
+    public final void rotateXRadians(double angleRadians) {
+        if (angleRadians != 0.0) {
+            double r = 0.5 * angleRadians;
+            rotateX_unsafe(Math.cos(r), Math.sin(r));
+        }
+    }
+
     /**
      * Rotates the Quaternion an angle around the X-axis, the angle defined by the y/z vector.
      *
@@ -439,6 +452,13 @@ public class Quaternion implements Cloneable {
         }
     }
 
+    public final void rotateYRadians(double angleRadians) {
+        if (angleRadians != 0.0) {
+            double r = 0.5 * angleRadians;
+            rotateY_unsafe(Math.cos(r), Math.sin(r));
+        }
+    }
+
     /**
      * Rotates the Quaternion an angle around the y-axis, the angle defined by the x/z vector.
      *
@@ -474,6 +494,13 @@ public class Quaternion implements Cloneable {
     public final void rotateZ(double angleDegrees) {
         if (angleDegrees != 0.0) {
             double r = 0.5 * Math.toRadians(angleDegrees);
+            rotateZ_unsafe(Math.cos(r), Math.sin(r));
+        }
+    }
+
+    public final void rotateZRadians(double angleRadians) {
+        if (angleRadians != 0.0) {
+            double r = 0.5 * angleRadians;
             rotateZ_unsafe(Math.cos(r), Math.sin(r));
         }
     }

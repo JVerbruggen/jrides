@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.config.flatride.timing;
 
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
+import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.animator.flatride.timing.TimingSequence;
 import com.jverbruggen.jrides.animator.flatride.timing.instruction.InstructionSequenceItem;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
@@ -42,10 +43,10 @@ public class TimingConfig extends BaseConfig {
         return new TimingConfig(items);
     }
 
-    public TimingSequence createTimingSequence(List<FlatRideComponent> flatRideComponents) {
+    public TimingSequence createTimingSequence(FlatRideHandle flatRideHandle, List<FlatRideComponent> flatRideComponents) {
         List<InstructionSequenceItem> items = new ArrayList<>();
         for(TimingPhaseConfig phaseConfig : getPhases()){
-            items.add(phaseConfig.getInstructionSequenceItem(flatRideComponents));
+            items.add(phaseConfig.getInstructionSequenceItem(flatRideHandle, flatRideComponents));
         }
         return new TimingSequence(items);
     }

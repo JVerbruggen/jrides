@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.config.flatride.timing;
 
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
+import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.animator.flatride.timing.instruction.InstructionSequenceItem;
 import com.jverbruggen.jrides.animator.flatride.timing.instruction.TimingAction;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
@@ -24,26 +25,20 @@ public class TimingPhaseConfig extends BaseConfig {
         return durationTicks;
     }
 
-    public List<ActionConfig> getActions() {
-        return actions;
-    }
-
     public static TimingPhaseConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection, String phaseIdentifier) {
         if(configurationSection == null) return null;
 
         int durationTicks = getInt(configurationSection, "durationTicks");
-        List<ActionConfig> actions = ActionConfig.fromConfigurationSection(
+        List<ActionConfig> actions = ActionConfigFactory.fromConfigurationSection(
                 getConfigurationSection(configurationSection, "actions"));
 
         return new TimingPhaseConfig(phaseIdentifier, durationTicks, actions);
     }
 
-
-
-    public InstructionSequenceItem getInstructionSequenceItem(List<FlatRideComponent> flatRideComponents){
+    public InstructionSequenceItem getInstructionSequenceItem(FlatRideHandle flatRideHandle, List<FlatRideComponent> flatRideComponents){
         int durationTicks = this.getDurationTicks();
         List<TimingAction> timingActions = actions.stream()
-                .flatMap(a -> a.getTimingAction(flatRideComponents).stream())
+                .flatMap(a -> a.getTimingAction(flatRideHandle, flatRideComponents).stream())
                 .toList();
 
         return new InstructionSequenceItem(durationTicks, timingActions);

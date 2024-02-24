@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.config.flatride.structure.attachment;
 
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
+import com.jverbruggen.jrides.config.flatride.structure.actuator.LimbConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
@@ -71,6 +72,21 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
                     getOffsetPosition(),
                     linearActuatorConfig,
                     getAmount());
+
+            components.addAll(createdComponents);
+        }
+    }
+
+    @Override
+    public void createLimb(LimbConfig limbConfig, List<FlatRideComponent> components, FlatRideHandle rideHandle) {
+        List<FlatRideComponent> attachedToComponents = FlatRideComponent.findAllMatching(components, getToComponentIdentifier());
+
+        for(FlatRideComponent attachedTo : attachedToComponents){
+            List<FlatRideComponent> createdComponents = FlatRideComponent.createLimb(
+                    attachedTo,
+                    new Quaternion(),
+                    getOffsetPosition(),
+                    limbConfig);
 
             components.addAll(createdComponents);
         }

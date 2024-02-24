@@ -17,6 +17,7 @@ public class InstructionBinding implements TimingAction {
         for(FlatRideComponent flatRideComponent : flatRideComponents){
             instruction.applyTo(flatRideComponent);
         }
+        instruction.tick();
     }
 
     @Override

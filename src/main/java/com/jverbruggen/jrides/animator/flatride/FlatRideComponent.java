@@ -12,6 +12,7 @@ import com.jverbruggen.jrides.animator.flatride.rotor.mode.RotorActuatorMode;
 import com.jverbruggen.jrides.animator.flatride.seat.FlatRideSeat;
 import com.jverbruggen.jrides.animator.flatride.seat.SeatComponent;
 import com.jverbruggen.jrides.config.coaster.objects.cart.ModelConfig;
+import com.jverbruggen.jrides.config.flatride.structure.actuator.LimbConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorPlayerControlConfig;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
@@ -97,6 +98,16 @@ public interface FlatRideComponent {
                         linearActuatorConfig.getFlatRideModels()));
     }
 
+    static List<FlatRideComponent> createLimb(FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, LimbConfig limbConfig) {
+        return createDistributedComponent(
+                limbConfig.getIdentifier(),
+                offsetRotation,
+                1,
+                (limbQuaternion, limbIdentifier) -> FlatRideComponent.createLimb(
+                        limbIdentifier, limbConfig.getIdentifier(), attachedTo,
+                        limbQuaternion, offsetPosition, limbConfig.getFlatRideModels()));
+    }
+
     static Rotor createAttachedRotor(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, RotorPlayerControlConfig controlConfig, RelativeAttachmentJointConfig jointConfig, RotorAxis rotorAxis, RotorActuatorMode actuatorMode, List<ModelConfig> flatRideModelsConfig){
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
@@ -134,6 +145,25 @@ public interface FlatRideComponent {
         attachedTo.attach(linearActuator, offsetRotation, offsetPosition);
 
         return linearActuator;
+    }
+
+    static Limb createLimb(String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, List<ModelConfig> flatRideModelsConfig){
+        ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
+
+        Vector3 spawnPosition = MatrixMath.rotateTranslate(
+                attachedTo.getPosition(),
+                attachedTo.getRotation(),
+                offsetPosition,
+                offsetRotation).toVector3();
+
+        List<FlatRideModel> flatRideModels = flatRideModelsConfig.stream()
+                .map(config -> config.toFlatRideModel(spawnPosition, viewportManager))
+                .collect(Collectors.toList());
+
+        Limb limb = new Limb(identifier, groupIdentifier, false, null, flatRideModels);
+        attachedTo.attach(limb, offsetRotation, offsetPosition);
+
+        return limb;
     }
 
 
