@@ -20,6 +20,7 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
 
+import javax.annotation.Nullable;
 import java.util.stream.Collectors;
 
 public class StationTrackBehaviour extends BaseTrackBehaviour {
@@ -74,7 +75,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour {
         this.blockSectionOccupiedDispatchLock = blockSectionOccupiedDispatchLock;
         this.restraintsLock = restraintsLock;
 
-        trainExitedAtEnd();
+        trainExitedAtEnd(null);
     }
 
     @Override
@@ -223,12 +224,12 @@ public class StationTrackBehaviour extends BaseTrackBehaviour {
     }
 
     @Override
-    public void trainExitedAtStart() {
+    public void trainExitedAtStart(@Nullable Train train) {
         trainExited();
     }
 
     @Override
-    public void trainExitedAtEnd(){
+    public void trainExitedAtEnd(@Nullable Train train){
         trainExited();
     }
 

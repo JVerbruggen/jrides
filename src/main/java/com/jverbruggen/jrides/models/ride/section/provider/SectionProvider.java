@@ -49,31 +49,27 @@ public class SectionProvider {
         final Train train = trainHandle.getTrain();
 
         // If the section it is entering is occupied by some train
-        if(toSection.isOccupied()){
-            // If that train is a different train
-            if(!toSection.getOccupiedBy().equals(train)){
-                // .. crash
-                train.setCrashed(true);
-                sendTrainCrashMessage(train, toSection, null);
-                // else if that train is self
-            }else{
-                JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Occupied");
-                if(applyNewBehaviour) trainHandle.setTrackBehaviour(toSection.getTrackBehaviour());
-                if(!fromSection.spansOver(train)){
-                    JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Not spans over");
-                    fromSection.removeOccupation(train);
-                    train.removeCurrentSection(fromSection);
-                    fromSection.getTrackBehaviour().trainExitedAtEnd();
+        if(toSection.isOccupiedBy(train)){
+            JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Occupied");
+            if(applyNewBehaviour) trainHandle.setTrackBehaviour(toSection.getTrackBehaviour());
+            if(!fromSection.spansOver(train)){
+                JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Not spans over");
+                fromSection.removeOccupation(train);
+                train.removeCurrentSection(fromSection);
+                fromSection.getTrackBehaviour().trainExitedAtEnd(train);
 
-                    if(fromSection.canBlock()) fromSection.clearEntireBlockReservation(train);
-                }else{
-                    JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Yes spans over");
-                }
+                if(fromSection.canBlock()) fromSection.clearEntireBlockReservation(train);
+            }else{
+                JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Yes spans over");
             }
-            // else if the section is free
+        }else if(toSection.isOccupied() && !toSection.canHandleOccupation(train)){
+            // If that train is a different train, crash
+            train.setCrashed(true);
+            sendTrainCrashMessage(train, toSection, null);
+            // else if that train is self
         }else{
-            // .. occupy it
-            if(toSection.getReservedBy() != train){
+            // else if the section is free, occupy it
+            if(!toSection.isReservedBy(train)){
                 if(!toSection.getBlockSectionSafety(train).safe())
                     throw new RuntimeException("Logic error: Section " + toSection.getName() + " was not reserved in section occupation logic!");
                 toSection.setLocalReservation(train);

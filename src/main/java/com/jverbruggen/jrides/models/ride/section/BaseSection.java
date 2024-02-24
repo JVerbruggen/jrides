@@ -47,6 +47,10 @@ public abstract class BaseSection implements Section{
     public boolean canReserveLocally(@Nullable Train train) {
         if(train == null) return reservedBy == null;
 
+        if(trackBehaviour.canHandleBlockSectionSafety()) {
+            return ((SectionSafetyProvider)trackBehaviour).canHandleOccupation(train);
+        }
+
         boolean freeOfReservations = reservedBy == null || reservedBy == train;
         boolean freeOfOccupation = occupiedBy == null || occupiedBy == train;
 
@@ -100,6 +104,11 @@ public abstract class BaseSection implements Section{
 
     @Override
     public void setLocalReservation(@Nonnull Train train) {
+        if(trackBehaviour.canHandleBlockSectionSafety()) {
+            ((SectionSafetyProvider)trackBehaviour).handleNewReservation(train);
+            return;
+        }
+
         if(reservedBy == train) return;
         if(reservedBy != null)
             throw new RuntimeException("Cannot reserve an already-reserved section!");
@@ -111,6 +120,11 @@ public abstract class BaseSection implements Section{
 
     @Override
     public void clearLocalReservation(@Nonnull Train authority) {
+        if(trackBehaviour.canHandleBlockSectionSafety()) {
+            ((SectionSafetyProvider)trackBehaviour).handleClearReservation(authority);
+            return;
+        }
+
         if(reservedBy == null)
             return;
 
@@ -126,7 +140,20 @@ public abstract class BaseSection implements Section{
 
     @Override
     public boolean isReserved() {
+        if(trackBehaviour.canHandleBlockSectionSafety()) {
+            return ((SectionSafetyProvider)trackBehaviour).getReservation() != null;
+        }
+
         return reservedBy != null;
+    }
+
+    @Override
+    public boolean isReservedBy(Train train) {
+        if(trackBehaviour.canHandleBlockSectionSafety()) {
+            return ((SectionSafetyProvider)trackBehaviour).isReservedBy(train);
+        }
+
+        return reservedBy == train;
     }
 
     @Override
@@ -136,7 +163,28 @@ public abstract class BaseSection implements Section{
 
     @Override
     public boolean isOccupied() {
+        if(trackBehaviour.canHandleBlockSectionSafety()){
+            return ((SectionSafetyProvider)trackBehaviour).isOccupied();
+        }
+
         return occupiedBy != null;
+    }
+
+    @Override
+    public boolean isOccupiedBy(Train train) {
+        if(trackBehaviour.canHandleBlockSectionSafety()){
+            return ((SectionSafetyProvider)trackBehaviour).isOccupiedBy(train);
+        }
+        return occupiedBy == train;
+    }
+
+    @Override
+    public boolean canHandleOccupation(Train train) {
+        if(trackBehaviour.canHandleBlockSectionSafety()){
+            return ((SectionSafetyProvider)trackBehaviour).canHandleOccupation(train);
+        }
+
+        return getOccupiedBy().equals(train);
     }
 
     @Override
@@ -163,6 +211,11 @@ public abstract class BaseSection implements Section{
 
     @Override
     public void addOccupation(@NonNull Train train) {
+        if(trackBehaviour.canHandleBlockSectionSafety()) {
+            ((SectionSafetyProvider)trackBehaviour).handleNewOccupation(train);
+            return;
+        }
+
         if( occupiedBy != null && occupiedBy != train) throw new RuntimeException("Two trains cannot be in same section! "
                 + train.toString() + " trying to enter section with " + occupiedBy.toString());
 
@@ -176,6 +229,11 @@ public abstract class BaseSection implements Section{
 
     @Override
     public void removeOccupation(@NonNull Train train) {
+        if(trackBehaviour.canHandleBlockSectionSafety()) {
+            ((SectionSafetyProvider)trackBehaviour).handleClearOccupation(train);
+            return;
+        }
+
         if(occupiedBy != train){
             String occupationString = occupiedBy != null ? occupiedBy.toString() : "null";
             throw new RuntimeException("Trying to remove train " + train + " from section " + this + " while occupation is different: " + occupationString);

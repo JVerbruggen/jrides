@@ -24,7 +24,9 @@ public interface Section extends Comparable<Section> {
     void setParentTrack(Track track);
     TrackBehaviour getTrackBehaviour();
     boolean isOccupied();
+    boolean isOccupiedBy(Train train);
     Train getOccupiedBy();
+    boolean canHandleOccupation(Train train);
     boolean canBlock();
     BlockSectionSafetyResult getBlockSectionSafety(@Nullable Train train);
     BlockSectionSafetyResult getBlockSectionSafety(@Nullable Train train, boolean checkConflicts);
@@ -38,6 +40,7 @@ public interface Section extends Comparable<Section> {
     void clearEntireBlockReservation(@Nonnull Train authority, List<Section> done);
     @Nullable Train getReservedBy();
     boolean isReserved();
+    boolean isReservedBy(Train train);
 
     void addOccupation(@NonNull  Train train);
     void removeOccupation(@NonNull  Train train);

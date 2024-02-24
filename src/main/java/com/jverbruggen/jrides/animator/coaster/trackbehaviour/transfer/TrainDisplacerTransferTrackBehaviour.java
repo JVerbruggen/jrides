@@ -17,6 +17,7 @@ import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.TransferPosition;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -106,12 +107,12 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
     }
 
     @Override
-    public void trainExitedAtStart() {
+    public void trainExitedAtStart(@Nullable Train train) {
         throw new RuntimeException("Not supported exited train at start train displacer");
     }
 
     @Override
-    public void trainExitedAtEnd(){
+    public void trainExitedAtEnd(@Nullable Train train){
         phase = TransferPhase.IDLE;
         transfer.trainExitedTransfer();
     }

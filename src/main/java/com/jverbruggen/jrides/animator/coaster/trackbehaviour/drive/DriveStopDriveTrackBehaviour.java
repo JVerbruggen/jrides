@@ -10,6 +10,8 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
+import javax.annotation.Nullable;
+
 
 enum DriveStopDrivePhase {
     IDLE,
@@ -39,7 +41,7 @@ public class DriveStopDriveTrackBehaviour extends BaseTrackBehaviour {
         this.acceleration = acceleration;
         this.driveSpeedIn = driveSpeedIn;
         this.driveSpeedOut = driveSpeedOut;
-        trainExitedAtEnd();
+        trainExitedAtEnd(null);
     }
 
     @Override
@@ -91,12 +93,12 @@ public class DriveStopDriveTrackBehaviour extends BaseTrackBehaviour {
     }
 
     @Override
-    public void trainExitedAtStart() {
+    public void trainExitedAtStart(@Nullable Train train) {
         trainExited();
     }
 
     @Override
-    public void trainExitedAtEnd() {
+    public void trainExitedAtEnd(@Nullable Train train) {
         trainExited();
     }
 

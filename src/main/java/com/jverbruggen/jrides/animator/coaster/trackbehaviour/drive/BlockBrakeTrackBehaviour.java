@@ -10,6 +10,8 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
+import javax.annotation.Nullable;
+
 public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour {
     private final double deceleration;
     private final double acceleration;
@@ -34,7 +36,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour {
         this.minWaitTicks = minWaitTicks;
         this.minWaitTicksState = 0;
 
-        trainExitedAtEnd();
+        trainExitedAtEnd(null);
     }
 
     @Override
@@ -107,12 +109,12 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour {
     }
 
     @Override
-    public void trainExitedAtStart() {
+    public void trainExitedAtStart(@Nullable Train train) {
 
     }
 
     @Override
-    public void trainExitedAtEnd(){
+    public void trainExitedAtEnd(@Nullable Train train){
         this.phase = BlockBrakePhase.IDLE;
     }
 

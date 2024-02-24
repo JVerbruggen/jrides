@@ -39,4 +39,15 @@ public interface Frame {
 
         return inNormalSection || inCycledSection;
     }
+
+    static Frame getDistanceFromUpperFrame(Frame lowerFrame, Frame upperFrame, int distanceFromUpperFrame){
+        if(lowerFrame.getValue() >= upperFrame.getValue())
+            return upperFrame.clone();
+
+        Frame calculatedDistanceFromUpperFrame = upperFrame.clone().add(-distanceFromUpperFrame);
+        if(calculatedDistanceFromUpperFrame.getValue() < lowerFrame.getValue())
+            return lowerFrame.clone();
+
+        return calculatedDistanceFromUpperFrame;
+    }
 }

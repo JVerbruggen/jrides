@@ -11,13 +11,14 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
 public interface TrackBehaviour {
     TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Section section);
-    void trainExitedAtStart();
-    void trainExitedAtEnd();
+    void trainExitedAtStart(@Nullable Train train);
+    void trainExitedAtEnd(@Nullable Train train);
     void trainPassed(Train train);
 
     String getName();

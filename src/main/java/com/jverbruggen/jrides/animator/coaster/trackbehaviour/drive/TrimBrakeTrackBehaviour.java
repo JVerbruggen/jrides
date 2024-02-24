@@ -11,6 +11,8 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
+import javax.annotation.Nullable;
+
 public class TrimBrakeTrackBehaviour extends BaseTrackBehaviour {
     private final double gravityConstant;
     private final double dragConstantWithTrim;
@@ -33,12 +35,12 @@ public class TrimBrakeTrackBehaviour extends BaseTrackBehaviour {
     }
 
     @Override
-    public void trainExitedAtStart() {
+    public void trainExitedAtStart(@Nullable Train train) {
 
     }
 
     @Override
-    public void trainExitedAtEnd(){
+    public void trainExitedAtEnd(@Nullable Train train){
 
     }
 

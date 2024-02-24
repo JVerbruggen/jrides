@@ -7,9 +7,9 @@ public class ProximityDriveSectionSpecConfig extends BaseConfig {
     private final double driveSpeed;
     private final double acceleration;
     private final double deceleration;
-    private final double minTrainDistance;
+    private final int minTrainDistance;
 
-    public ProximityDriveSectionSpecConfig(double driveSpeed, double acceleration, double deceleration, double minTrainDistance) {
+    public ProximityDriveSectionSpecConfig(double driveSpeed, double acceleration, double deceleration, int minTrainDistance) {
         this.driveSpeed = driveSpeed;
         this.acceleration = acceleration;
         this.deceleration = deceleration;
@@ -28,7 +28,7 @@ public class ProximityDriveSectionSpecConfig extends BaseConfig {
         return deceleration;
     }
 
-    public double getMinTrainDistance() {
+    public int getMinTrainDistance() {
         return minTrainDistance;
     }
 
@@ -36,7 +36,7 @@ public class ProximityDriveSectionSpecConfig extends BaseConfig {
         double driveSpeed = getDouble(configurationSection, "driveSpeed", 1.0);
         double acceleration = getDouble(configurationSection, "acceleration", 1.0);
         double deceleration = getDouble(configurationSection, "deceleration", acceleration);
-        double minTrainDistance = getDouble(configurationSection, "minTrainDistance", 1.0);
+        int minTrainDistance = getInt(configurationSection, "minTrainDistance", 50);
 
         return new ProximityDriveSectionSpecConfig(driveSpeed, acceleration, deceleration, minTrainDistance);
     }

@@ -82,11 +82,11 @@ public class SwitchBehaviour extends BaseTrackBehaviour {
     }
 
     @Override
-    public void trainExitedAtStart() {
+    public void trainExitedAtStart(@Nullable Train train) {
     }
 
     @Override
-    public void trainExitedAtEnd() {
+    public void trainExitedAtEnd(@Nullable Train train) {
     }
 
     @Override
