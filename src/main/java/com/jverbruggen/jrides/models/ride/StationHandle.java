@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
+import org.bukkit.Bukkit;
 
 import java.util.List;
 

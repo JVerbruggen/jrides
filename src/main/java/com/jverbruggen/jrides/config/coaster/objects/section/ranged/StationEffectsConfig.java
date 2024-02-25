@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.config.coaster.objects.section.ranged;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
