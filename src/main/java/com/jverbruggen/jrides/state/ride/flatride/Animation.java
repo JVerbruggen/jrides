@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.state.ride.flatride;
 
 import com.jverbruggen.jrides.animator.flatride.BlenderExportPositionRecord;
+import com.jverbruggen.jrides.models.math.VectorQuaternionState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,5 +25,9 @@ public class Animation {
 
     public List<BlenderExportPositionRecord> getFrames() {
         return frames;
+    }
+
+    public VectorQuaternionState getInitialPose(){
+        return frames.get(0).toVectorQuaternionState();
     }
 }

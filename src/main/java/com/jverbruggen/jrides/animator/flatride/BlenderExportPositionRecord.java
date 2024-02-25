@@ -1,5 +1,9 @@
 package com.jverbruggen.jrides.animator.flatride;
 
+import com.jverbruggen.jrides.models.math.Quaternion;
+import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.math.VectorQuaternionState;
+
 public class BlenderExportPositionRecord {
     private final String object;
     private final int frame;
@@ -63,6 +67,28 @@ public class BlenderExportPositionRecord {
 
     public float getRz() {
         return rz;
+    }
+
+    public Vector3 toMinecraftVector(){
+        return new Vector3(
+                this.getPosx(),
+                this.getPosz(), // Minecraft Y = Blender Z
+                -this.getPosy());
+    }
+
+    public Quaternion toMinecraftQuaternion(){
+        return new Quaternion(
+                this.getRx(),
+                this.getRz(), // Minecraft Y = Blender Z
+                -this.getRy(),
+                this.getRw());
+    }
+
+    public VectorQuaternionState toVectorQuaternionState(){
+        return new VectorQuaternionState(
+                toMinecraftVector(),
+                toMinecraftQuaternion()
+        );
     }
 
     public static BlenderExportPositionRecord createFromCSVAttributes(String[] attributes){

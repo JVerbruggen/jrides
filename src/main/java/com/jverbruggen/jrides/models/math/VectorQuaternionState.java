@@ -16,4 +16,8 @@ public class VectorQuaternionState {
     public Quaternion getQuaternion() {
         return quaternion;
     }
+
+    public static VectorQuaternionState zero(){
+        return new VectorQuaternionState(new Vector3(), new Quaternion());
+    }
 }

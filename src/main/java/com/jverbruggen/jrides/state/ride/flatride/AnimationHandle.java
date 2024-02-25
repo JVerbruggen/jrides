@@ -14,6 +14,11 @@ public class AnimationHandle {
     }
 
     public Animation getAnimation(String animationIdentifier){
+        if(!animationHashMap.containsKey(animationIdentifier)){
+            String animationKeys = String.join(", ", animationHashMap.keySet());
+            throw new RuntimeException("Animation with key '" + animationIdentifier + "' does not exist. Existing: " + animationKeys);
+        }
+
         return animationHashMap.get(animationIdentifier);
     }
 

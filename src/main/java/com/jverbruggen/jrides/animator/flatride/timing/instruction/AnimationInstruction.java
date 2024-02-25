@@ -23,13 +23,8 @@ public class AnimationInstruction implements Instruction {
         BlenderExportPositionRecord position = animation.getFrames().get(frameIndexState);
 
         ((Component6DOFPosition)component).setPositionRotation(
-                position.getPosx(),
-                position.getPosz(), // Minecraft Y = Blender Z
-                -position.getPosy(),
-                position.getRw(),
-                position.getRx(),
-                position.getRz(),
-                -position.getRy());
+                position.toMinecraftVector(),
+                position.toMinecraftQuaternion());
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.config.flatride.structure.attachment;
 
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
+import com.jverbruggen.jrides.animator.flatride.Limb;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LimbConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.LinearActuatorConfig;
 import com.jverbruggen.jrides.config.flatride.structure.actuator.RotorConfig;
@@ -10,6 +11,7 @@ import com.jverbruggen.jrides.config.flatride.structure.basic.StaticStructureCon
 import com.jverbruggen.jrides.config.flatride.structure.seat.SeatConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.math.VectorQuaternionState;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
@@ -78,15 +80,19 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
     }
 
     @Override
-    public void createLimb(LimbConfig limbConfig, List<FlatRideComponent> components, FlatRideHandle rideHandle) {
+    public void createLimb(LimbConfig limbConfig, List<FlatRideComponent> components, FlatRideHandle rideHandle, String preloadAnim) {
         List<FlatRideComponent> attachedToComponents = FlatRideComponent.findAllMatching(components, getToComponentIdentifier());
+
+        String limbIdentifier = limbConfig.getIdentifier();
+        VectorQuaternionState initialPose = Limb.getInitialPoseFromAnimation(preloadAnim, limbIdentifier, rideHandle);
 
         for(FlatRideComponent attachedTo : attachedToComponents){
             List<FlatRideComponent> createdComponents = FlatRideComponent.createLimb(
                     attachedTo,
                     new Quaternion(),
                     getOffsetPosition(),
-                    limbConfig);
+                    limbConfig,
+                    initialPose);
 
             components.addAll(createdComponents);
         }

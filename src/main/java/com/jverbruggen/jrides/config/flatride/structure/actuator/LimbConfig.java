@@ -14,14 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LimbConfig extends AbstractStructureConfig {
+    private final String preloadAnim;
 
-    public LimbConfig(String identifier, boolean root, AttachmentConfig attachmentConfig, List<ModelConfig> flatRideModelsConfig) {
+    public LimbConfig(String identifier, boolean root, AttachmentConfig attachmentConfig, List<ModelConfig> flatRideModelsConfig, String preloadAnim) {
         super(identifier, root, flatRideModelsConfig, attachmentConfig);
+        this.preloadAnim = preloadAnim;
     }
 
     @Override
     public void createAndAddTo(List<FlatRideComponent> components, FlatRideHandle rideHandle) {
-        getAttachmentConfig().createLimb(this, components, rideHandle);
+        getAttachmentConfig().createLimb(this, components, rideHandle, preloadAnim);
     }
 
     public static StructureConfigItem fromConfigurationSection(ConfigurationSection configurationSection, String identifier) {
@@ -43,6 +45,8 @@ public class LimbConfig extends AbstractStructureConfig {
             modelConfigs = ModelConfig.multipleFromConfigurationSection(getConfigurationSection(configurationSection, "models"));
         else modelConfigs = new ArrayList<>();
 
-        return new LimbConfig(identifier, root, attachmentConfig, modelConfigs);
+        String preloadAnim = getString(configurationSection, "preloadAnim", null);
+
+        return new LimbConfig(identifier, root, attachmentConfig, modelConfigs, preloadAnim);
     }
 }

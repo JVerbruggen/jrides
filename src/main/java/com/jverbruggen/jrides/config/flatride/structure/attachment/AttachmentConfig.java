@@ -15,5 +15,5 @@ public interface AttachmentConfig {
     void createRotorWithAttachment(RotorConfig config, List<FlatRideComponent> components, FlatRideHandle rideHandle);
     void createSeatWithAttachment(SeatConfig config, List<FlatRideComponent> components, FlatRideHandle rideHandle);
     void createLinearActuator(LinearActuatorConfig linearActuatorConfig, List<FlatRideComponent> components, FlatRideHandle rideHandle);
-    void createLimb(LimbConfig linearActuatorConfig, List<FlatRideComponent> components, FlatRideHandle rideHandle);
+    void createLimb(LimbConfig linearActuatorConfig, List<FlatRideComponent> components, FlatRideHandle rideHandle, String preloadAnim);
 }

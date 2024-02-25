@@ -17,7 +17,11 @@ import com.jverbruggen.jrides.config.flatride.structure.basic.StaticStructureCon
 import com.jverbruggen.jrides.config.flatride.structure.seat.SeatConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.math.VectorQuaternionState;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import com.jverbruggen.jrides.state.ride.flatride.Animation;
+import com.jverbruggen.jrides.state.ride.flatride.AnimationHandle;
+import com.jverbruggen.jrides.state.ride.flatride.AnimationLoader;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -67,19 +71,23 @@ public class FixedAttachmentConfig extends BaseConfig implements AttachmentConfi
     }
 
     @Override
-    public void createLimb(LimbConfig limbConfig, List<FlatRideComponent> components, FlatRideHandle rideHandle) {
+    public void createLimb(LimbConfig limbConfig, List<FlatRideComponent> components, FlatRideHandle rideHandle, String preloadAnim) {
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
         List<FlatRideModel> flatRideModels = limbConfig.getFlatRideModels().stream()
                 .map(config -> config.toFlatRideModel(position, viewportManager))
                 .collect(Collectors.toList());
 
+        String limbIdentifier = limbConfig.getIdentifier();
+        VectorQuaternionState vectorQuaternionState = Limb.getInitialPoseFromAnimation(preloadAnim, limbIdentifier, rideHandle);
+
         Limb limb = new Limb(
-                limbConfig.getIdentifier(),
-                limbConfig.getIdentifier(),
+                limbIdentifier,
+                limbIdentifier,
                 limbConfig.isRoot(),
                 null,
-                flatRideModels
+                flatRideModels,
+                vectorQuaternionState
         );
 
         Attachment attachment = new FixedAttachment(limb, position, rotation);
