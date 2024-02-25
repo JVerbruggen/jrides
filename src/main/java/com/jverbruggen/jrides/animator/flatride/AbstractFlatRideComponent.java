@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.animator.flatride;
 
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
+import com.jverbruggen.jrides.models.math.Matrix4x4;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
@@ -63,6 +64,14 @@ public abstract class AbstractFlatRideComponent implements FlatRideComponent {
         if(attachedTo == null) throw new RuntimeException("Component " + identifier + " not attached to anything");
 
         return attachedTo.getPosition();
+    }
+
+    @Override
+    public Matrix4x4 getPositionMatrix(){
+        Attachment attachedTo = getAttachedTo();
+        if(attachedTo == null) throw new RuntimeException("Component " + identifier + " not attached to anything");
+
+        return attachedTo.getCachedMatrix();
     }
 
     @Override

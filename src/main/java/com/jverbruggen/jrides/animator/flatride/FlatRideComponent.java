@@ -37,6 +37,7 @@ public interface FlatRideComponent {
     void attach(FlatRideComponent child, Quaternion offsetRotation, Vector3 offsetPosition);
     Quaternion getRotation();
     Vector3 getPosition();
+    Matrix4x4 getPositionMatrix();
     void tick();
     boolean equalsToIdentifier(String identifier);
     @Nullable PlayerControl getPlayerControl();

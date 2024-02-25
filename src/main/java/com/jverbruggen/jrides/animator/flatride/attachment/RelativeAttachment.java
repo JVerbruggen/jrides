@@ -34,6 +34,11 @@ public class RelativeAttachment implements Attachment {
     }
 
     @Override
+    public Matrix4x4 getCachedMatrix() {
+        return cacheMatrix.clone();
+    }
+
+    @Override
     public FlatRideComponent getChild() {
         return child;
     }

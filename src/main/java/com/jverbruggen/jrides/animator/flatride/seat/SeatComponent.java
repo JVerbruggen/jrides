@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
+import com.jverbruggen.jrides.models.ride.factory.SeatFactory;
 import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.models.ride.seat.SeatHost;
 
@@ -28,7 +29,7 @@ public class SeatComponent extends AbstractFlatRideComponent implements SeatHost
     public void tick() {
         super.tick();
 
-        this.seat.setLocation(getPosition(), getRotation());
+        SeatFactory.moveFlatRideSeat(this.seat, getPositionMatrix(), getRotation());
     }
 
     @Override

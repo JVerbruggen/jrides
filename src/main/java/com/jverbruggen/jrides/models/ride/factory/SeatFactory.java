@@ -68,4 +68,9 @@ public class SeatFactory {
             orientation.rotateYawPitchRoll(0, -yaw, 0);
         }
     }
+
+    public static void moveFlatRideSeat(Seat seat, Matrix4x4 positionMatrix, Quaternion endRotation){
+        Vector3 position = calculateSeatLocationOnMatrix(positionMatrix, Vector3PlusYaw.zero());
+        seat.setLocation(position, endRotation);
+    }
 }
