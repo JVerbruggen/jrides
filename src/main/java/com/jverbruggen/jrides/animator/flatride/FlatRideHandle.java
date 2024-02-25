@@ -33,14 +33,14 @@ public class FlatRideHandle extends AbstractRideHandle {
     private final DispatchTrigger dispatchTrigger;
     private final List<SeatComponent> seatComponents;
 
-    private boolean finished;
+    private FlatRideState flatRideState;
 
     public FlatRideHandle(World world, Ride ride, boolean loaded, FlatRideStationHandle stationHandle, SoundsConfig sounds, RideCounterMapConfigs rideCounterMapConfigs) {
         super(world, ride, null, loaded, sounds, rideCounterMapConfigs);
         this.stationHandle = stationHandle;
         this.timingSequence = null;
         this.dispatchTrigger = stationHandle.getTriggerContext().getDispatchTrigger();
-        this.finished = false;
+        this.flatRideState = FlatRideState.IDLE;
         this.seatComponents = new ArrayList<>();
 
         stationHandle.setFlatRideHandle(this);
@@ -56,36 +56,62 @@ public class FlatRideHandle extends AbstractRideHandle {
         if(rideController.isActive())
             rideController.getControlMode().tick();
 
-        vehicleTick();
+        switch(this.flatRideState){
+            case IDLE -> {
+                vehicleTick();
+
+                boolean dispatchActive = dispatchTrigger.isActive();
+                if(dispatchActive){
+                    boolean dispatched = checkForDispatch(dispatchActive);
+                    if(dispatched){
+                        stationHandle.runExitEffectTriggers(null);
+                        this.flatRideState = FlatRideState.STARTING;
+                    }
+                }
+            }
+            case STARTING -> {
+                if(stationHandle.exitEffectTriggersDone()){
+                    this.flatRideState = FlatRideState.RUNNING;
+                }
+            }
+            case RUNNING -> {
+                boolean finished = vehicleTick();
+
+                if(finished) {
+                    stationHandle.runEntryEffectTriggers(null);
+                    this.flatRideState = FlatRideState.STOPPING;
+                }
+            }
+            case STOPPING -> {
+                if(stationHandle.entryEffectTriggersDone()){
+                    onRideFinish();
+                    this.flatRideState = FlatRideState.IDLE;
+                }
+            }
+        }
     }
 
-    private void vehicleTick(){
-        boolean dispatchActive = dispatchTrigger.isActive();
-        if(finished && !dispatchActive) return;
-
-        checkForDispatch(dispatchActive);
-
-        finished = this.timingSequence.tick();
+    private boolean vehicleTick(){
+        boolean finished = this.timingSequence.tick();
         this.stationHandle.getVehicle().tick();
 
-        if(finished)
-            onRideFinish();
+        return finished;
     }
 
-    private void checkForDispatch(boolean dispatchActive){
+    private boolean checkForDispatch(boolean dispatchActive){
         if(dispatchActive && this.timingSequence.isIdle()){
             onRideStart();
 
             Vehicle vehicle = getVehicle();
             getRideController().onVehicleDepart(vehicle, stationHandle);
             vehicle.playDispatchSound();
-        }
+            return true;
+        }else return false;
     }
 
     private void onRideStart(){
         dispatchTrigger.reset();
         this.timingSequence.restart();
-        finished = false;
         stationHandle.getTriggerContext().getVehiclePresentLock().setLocked(true);
         stationHandle.getEntryGates().forEach(Gate::close);
     }
@@ -161,4 +187,11 @@ public class FlatRideHandle extends AbstractRideHandle {
     public void addSeatComponent(SeatComponent seatComponent){
         this.seatComponents.add(seatComponent);
     }
+}
+
+enum FlatRideState{
+    IDLE,
+    STARTING,
+    RUNNING,
+    STOPPING
 }

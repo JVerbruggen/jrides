@@ -11,6 +11,7 @@ public enum TriggerType {
     EXTERNAL_EVENT,
     ANIMATION_SEQUENCE,
     ANIMATED_JAVA,
+    STRUCTURE,
     CART_ROTATE;
 
 
@@ -25,6 +26,7 @@ public enum TriggerType {
         else if(typeString.equalsIgnoreCase("external")) return EXTERNAL_EVENT;
         else if(typeString.equalsIgnoreCase("animation-sequence")) return ANIMATION_SEQUENCE;
         else if(typeString.equalsIgnoreCase("animated-java")) return ANIMATED_JAVA;
+        else if(typeString.equalsIgnoreCase("structure")) return STRUCTURE;
         else if(typeString.equalsIgnoreCase("cart-rotate")) return CART_ROTATE;
 
         throw new RuntimeException("Trigger type " + typeString + " is not supported");

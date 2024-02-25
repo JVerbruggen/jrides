@@ -77,6 +77,7 @@ public class FlatRideFactory {
                 : new ArrayList<>();
 
         FlatRideStationHandle stationHandle = flatRideConfig.getStationConfig().createFlatRideStationHandle(
+                rideIdentifier,
                 displayName + "_" + shortStationName, shortStationName, triggerContext, gates, minimumWaitTimeDispatchLock
         );
 

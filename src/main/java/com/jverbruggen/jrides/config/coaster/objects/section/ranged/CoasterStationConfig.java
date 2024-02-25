@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
+import com.jverbruggen.jrides.models.ride.RideType;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -67,9 +68,9 @@ public class CoasterStationConfig extends StationConfig {
         String rideIdentifier = coasterHandle.getRide().getIdentifier();
 
         StationEffectsConfig stationEffectsConfig = getStationEffectsConfig();
-        List<TrainEffectTriggerHandle> entryBlockingEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, stationEffectsConfig.getEntryBlockingEffects());
-        List<TrainEffectTriggerHandle> exitBlockingEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, stationEffectsConfig.getExitBlockingEffects());
-        List<TrainEffectTriggerHandle> exitEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, stationEffectsConfig.getExitEffects());
+        List<TrainEffectTriggerHandle> entryBlockingEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(RideType.COASTER, rideIdentifier, stationEffectsConfig.getEntryBlockingEffects());
+        List<TrainEffectTriggerHandle> exitBlockingEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(RideType.COASTER, rideIdentifier, stationEffectsConfig.getExitBlockingEffects());
+        List<TrainEffectTriggerHandle> exitEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(RideType.COASTER, rideIdentifier, stationEffectsConfig.getExitEffects());
         PlayerLocation ejectLocation = getEjectLocation();
 
         MinMaxWaitingTimer waitingTimer = createWaitingTimer(minimumWaitTimeDispatchLock);

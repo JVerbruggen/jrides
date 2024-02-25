@@ -38,6 +38,7 @@ import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.frame.FrameRange;
 import com.jverbruggen.jrides.models.properties.frame.SimpleFrame;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
+import com.jverbruggen.jrides.models.ride.RideType;
 import com.jverbruggen.jrides.models.ride.coaster.trackswitch.SwitchPosition;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.TransferPosition;
@@ -86,7 +87,7 @@ public class TrackBehaviourFactory {
 
     public TrackBehaviour getLaunchBehaviour(CoasterHandle coasterHandle, Frame engageFrame, double driveSpeed, double acceleration, double deceleration, int waitTicks, double launchAcceleration, double launchMaxSpeed, List<String> launchEffectStrings){
         String rideIdentifier = coasterHandle.getRide().getIdentifier();
-        List<TrainEffectTriggerHandle> launchEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(rideIdentifier, launchEffectStrings);
+        List<TrainEffectTriggerHandle> launchEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(RideType.COASTER, rideIdentifier, launchEffectStrings);
 
         return new LaunchTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, acceleration, waitTicks, engageFrame, launchAcceleration, launchMaxSpeed, launchEffectTriggers);
     }

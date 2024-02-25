@@ -17,7 +17,7 @@ public class ActionConfigFactory extends BaseConfig {
             assert actionConfigurationSection != null;
 
             if(actionConfigurationSection.contains("animation")){
-                actionConfigs.add(createAnimationActionConfig(actionConfigurationSection));
+                actionConfigs.add(createAnimationActionConfig(key, actionConfigurationSection));
                 continue;
             }
 
@@ -37,9 +37,9 @@ public class ActionConfigFactory extends BaseConfig {
         return actionConfigs;
     }
 
-    public static ActionConfig createAnimationActionConfig(@Nullable ConfigurationSection configurationSection){
+    public static ActionConfig createAnimationActionConfig(String targetIdentifier, @Nullable ConfigurationSection configurationSection){
         String animation = getString(configurationSection, "animation");
 
-        return new AnimationActionConfig(animation);
+        return new AnimationActionConfig(animation, targetIdentifier);
     }
 }

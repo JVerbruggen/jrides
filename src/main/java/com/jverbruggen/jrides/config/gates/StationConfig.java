@@ -5,9 +5,13 @@ import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.ranged.StationEffectsConfig;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
+import com.jverbruggen.jrides.effect.EffectTriggerFactory;
+import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
+import com.jverbruggen.jrides.models.ride.RideType;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
@@ -57,10 +61,15 @@ public class StationConfig extends BaseConfig {
         return new MinMaxWaitingTimer(minimumWaitingTime, maximumWaitingTime, dispatchLock);
     }
 
-    public FlatRideStationHandle createFlatRideStationHandle(String stationName, String shortStationName, TriggerContext triggerContext, List<Gate> gates, DispatchLock minimumWaitTimeDispatchLock){
-        MinMaxWaitingTimer waitingTimer = createWaitingTimer(minimumWaitTimeDispatchLock);
+    public FlatRideStationHandle createFlatRideStationHandle(String rideIdentifier, String stationName, String shortStationName, TriggerContext triggerContext, List<Gate> gates, DispatchLock minimumWaitTimeDispatchLock){
+        EffectTriggerFactory effectTriggerFactory = ServiceProvider.getSingleton(EffectTriggerFactory.class);
 
-        FlatRideStationHandle stationHandle = new FlatRideStationHandle(stationName, shortStationName, gates, getEjectLocation(), waitingTimer, triggerContext);
+        MinMaxWaitingTimer waitingTimer = createWaitingTimer(minimumWaitTimeDispatchLock);
+        List<TrainEffectTriggerHandle> entryBlockingEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(RideType.FLATRIDE, rideIdentifier, stationEffectsConfig.getEntryBlockingEffects());
+        List<TrainEffectTriggerHandle> exitBlockingEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(RideType.FLATRIDE, rideIdentifier, stationEffectsConfig.getExitBlockingEffects());
+        List<TrainEffectTriggerHandle> exitEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(RideType.FLATRIDE, rideIdentifier, stationEffectsConfig.getExitEffects());
+
+        FlatRideStationHandle stationHandle = new FlatRideStationHandle(stationName, shortStationName, gates, getEjectLocation(), waitingTimer, triggerContext, entryBlockingEffectTriggers, exitBlockingEffectTriggers, exitEffectTriggers);
         triggerContext.setParentStation(stationHandle);
 
         return stationHandle;

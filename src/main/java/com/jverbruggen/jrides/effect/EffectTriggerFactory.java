@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.effect.handle.cart.CartEffectTriggerHandle;
 import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.frame.factory.FrameFactory;
+import com.jverbruggen.jrides.models.ride.RideType;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.configuration.ConfigurationSection;
@@ -50,7 +51,7 @@ public class EffectTriggerFactory {
         return getEffectTrigger(rideIdentifier, effectName, reversed, frame, triggerConfig);
     }
 
-    public List<TrainEffectTriggerHandle> getFramelessEffectTriggers(String rideIdentifier, List<String> effectNames){
+    public List<TrainEffectTriggerHandle> getFramelessEffectTriggers(RideType rideType, String rideIdentifier, List<String> effectNames){
         if(effectNames == null) return null;
         return effectNames
                 .stream()
@@ -61,7 +62,7 @@ public class EffectTriggerFactory {
                     if(effectNameRawComponents.length == 2){
                         reversed = effectNameRawComponents[1].equalsIgnoreCase("reversed");
                     }
-                    return getTrainEffectTrigger(rideIdentifier, effectName, reversed, null, configManager.getTriggerConfig(rideIdentifier, effectName));
+                    return getTrainEffectTrigger(rideIdentifier, effectName, reversed, null, configManager.getTriggerConfig(rideType, rideIdentifier, effectName));
                 })
                 .collect(Collectors.toList());
     }
@@ -90,7 +91,7 @@ public class EffectTriggerFactory {
             Frame frame = effect.getKey();
             String effectName = effect.getValue();
 
-            T effectTrigger = getEffectTrigger(rideIdentifier, effectName, false, frame, configManager.getTriggerConfig(rideIdentifier, effectName));
+            T effectTrigger = getEffectTrigger(rideIdentifier, effectName, false, frame, configManager.getTriggerConfig(RideType.COASTER, rideIdentifier, effectName));
             if(effectTrigger == null) return null;
             if(previous != null) setNextFunction.accept(previous, effectTrigger);
             effectTriggers.add(effectTrigger);

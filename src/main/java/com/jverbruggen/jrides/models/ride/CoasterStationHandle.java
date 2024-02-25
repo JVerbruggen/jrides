@@ -9,26 +9,19 @@ import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
-import org.bukkit.Bukkit;
 
 import java.util.List;
 
 public class CoasterStationHandle extends StationHandle {
     private Train stationaryTrain;
     private CoasterHandle coasterHandle;
-    private final List<TrainEffectTriggerHandle> entryBlockingEffectTriggers;
-    private final List<TrainEffectTriggerHandle> exitBlockingEffectTriggers;
-    private final List<TrainEffectTriggerHandle> exitEffectTriggers;
 
     public CoasterStationHandle(CoasterHandle coasterHandle, String name, String shortName, TriggerContext triggerContext,
                                 List<Gate> entryGates, MinMaxWaitingTimer waitingTimer, List<TrainEffectTriggerHandle> entryBlockingEffectTriggers,
                                 List<TrainEffectTriggerHandle> exitBlockingEffectTriggers, List<TrainEffectTriggerHandle> exitEffectTriggers,
                                 PlayerLocation ejectLocation){
-        super(name, shortName, entryGates, ejectLocation, waitingTimer, triggerContext);
+        super(name, shortName, entryGates, ejectLocation, waitingTimer, triggerContext, entryBlockingEffectTriggers, exitBlockingEffectTriggers, exitEffectTriggers);
         this.coasterHandle = coasterHandle;
-        this.entryBlockingEffectTriggers = entryBlockingEffectTriggers;
-        this.exitBlockingEffectTriggers = exitBlockingEffectTriggers;
-        this.exitEffectTriggers = exitEffectTriggers;
         this.stationaryTrain = null;
 
         coasterHandle.addStationHandle(this);
@@ -44,28 +37,6 @@ public class CoasterStationHandle extends StationHandle {
 
     public CoasterHandle getCoasterHandle() {
         return coasterHandle;
-    }
-
-    public void runEntryEffectTriggers(Train train){
-        if(entryBlockingEffectTriggers == null) return;
-        entryBlockingEffectTriggers.forEach(t -> t.execute(train));
-    }
-
-    public void runExitEffectTriggers(Train train){
-        if(exitBlockingEffectTriggers != null)
-            exitBlockingEffectTriggers.forEach(t -> t.execute(train));
-        if(exitEffectTriggers != null)
-            exitEffectTriggers.forEach(t -> t.execute(train));
-    }
-
-    public boolean entryEffectTriggersDone(){
-        if(entryBlockingEffectTriggers == null) return true;
-        return entryBlockingEffectTriggers.stream().allMatch(t -> t.getTrainEffectTrigger().finishedPlaying());
-    }
-
-    public boolean exitEffectTriggersDone(){
-        if(exitBlockingEffectTriggers == null) return true;
-        return exitBlockingEffectTriggers.stream().allMatch(t -> t.getTrainEffectTrigger().finishedPlaying());
     }
 
     public void setStationaryTrain(Train train) {

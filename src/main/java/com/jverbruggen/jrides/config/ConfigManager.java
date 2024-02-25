@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.config.flatride.FlatRideConfig;
 import com.jverbruggen.jrides.config.ride.RidesConfig;
 import com.jverbruggen.jrides.config.trigger.TriggerConfig;
 import com.jverbruggen.jrides.config.trigger.TriggerConfigFactory;
+import com.jverbruggen.jrides.models.ride.RideType;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -141,8 +142,11 @@ public class ConfigManager {
         return "flatrides/" + rideIdentifier;
     }
 
-    public String getTriggerFolder(String rideIdentifier){
-        return getCoasterFolder(rideIdentifier) + "/triggers";
+    public String getTriggerFolder(RideType rideType, String rideIdentifier){
+        return switch (rideType){
+            case COASTER -> getCoasterFolder(rideIdentifier) + "/triggers";
+            case FLATRIDE -> getFlatrideFolder(rideIdentifier) + "/triggers";
+        };
     }
 
     public ConfigurationSection getAllEffectsConfigSection(String rideIdentifier, String trackIdentifier){
@@ -156,8 +160,8 @@ public class ConfigManager {
         return yamlConfiguration.getConfigurationSection("triggers");
     }
 
-    public TriggerConfig getTriggerConfig(String rideIdentifier, String effectName){
-        String fileName = getTriggerFolder(rideIdentifier) + "/" + effectName + ".yml";
+    public TriggerConfig getTriggerConfig(RideType rideType, String rideIdentifier, String effectName){
+        String fileName = getTriggerFolder(rideType, rideIdentifier) + "/" + effectName + ".yml";
         YamlConfiguration yamlConfiguration = getYamlConfiguration(fileName);
         if(yamlConfiguration == null){
             JRidesPlugin.getLogger().severe("Trigger " + effectName + " not found for ride " + rideIdentifier);
