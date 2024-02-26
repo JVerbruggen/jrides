@@ -116,6 +116,14 @@ public class RideCounterMapConfig extends BaseConfig {
         Integer rideNameLine = getInt(configurationSection, "rideNameLine", -1);
         Integer typeLine = getInt(configurationSection, "typeLine", -1);
 
+        if(lines.isEmpty()) {
+            JRidesPlugin.getLogger().warning("No lines configured for " + rideIdentifier + " ridecounter map " + rideCounterMapIdentifier + ", the map will not be generated");
+        }
+
+        if(mapIds.isEmpty()) {
+            JRidesPlugin.getLogger().warning("No map ids configured for " + rideIdentifier + " ridecounter map " + rideCounterMapIdentifier + ", the map will not be generated");
+        }
+
         String typeText = rideCounterMapType.toString().substring(0, 1).toUpperCase() + rideCounterMapType.toString().substring(1).toLowerCase() + " ridecounters";
         typeText = getString(configurationSection, "typeText", typeText);
 
