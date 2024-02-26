@@ -55,8 +55,10 @@ public class RideCounterMapListener implements Listener {
                         }
                     }
                     // If the player has more rides than the lowest, add them to the list
-                    if (getPlayerRecord(player, e.getRide().getIdentifier()).getRideCount() > rideBoundCollection.getRecords().get(lowest).getRideCount()) {
-                        rideBoundCollection.add(player.getRideCounters().getRecords().get(e.getRide().getIdentifier()));
+                    if(rideBoundCollection.getRecords().size() > lowest) {
+                        if (getPlayerRecord(player, e.getRide().getIdentifier()).getRideCount() > rideBoundCollection.getRecords().get(lowest).getRideCount()) {
+                            rideBoundCollection.add(player.getRideCounters().getRecords().get(e.getRide().getIdentifier()));
+                        }
                     }
                 }
             }
