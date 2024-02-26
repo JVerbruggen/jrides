@@ -7,19 +7,16 @@ import com.jverbruggen.jrides.models.ride.count.RideCounterRecord;
 import com.jverbruggen.jrides.models.ride.count.RideCounterRecordCollection;
 import com.jverbruggen.jrides.models.ride.count.RideCounterRecordRideCollection;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.ride.RideCounterManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class RideCounterMapListener implements Listener {
 
-    private final PlayerManager playerManager;
     private final RideCounterMapFactory rideCounterMapFactory;
     private final RideCounterManager rideCounterManager;
 
     public RideCounterMapListener() {
-        this.playerManager = ServiceProvider.getSingleton(PlayerManager.class);
         this.rideCounterMapFactory = ServiceProvider.getSingleton(RideCounterMapFactory.class);
         this.rideCounterManager = ServiceProvider.getSingleton(RideCounterManager.class);
     }
