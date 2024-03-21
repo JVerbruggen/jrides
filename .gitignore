@@ -110,6 +110,11 @@ cmake-build-*/
 
 # IntelliJ
 out/
+.idea
+jrides.iml
+
+# VS Code
+.vscode/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
