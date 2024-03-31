@@ -11,6 +11,7 @@ import org.bukkit.entity.EntityType;
 import java.util.List;
 
 public interface PacketSender {
+    String getIdentifier();
     void spawnVirtualEntity(Player player, int entityId, Vector3 location, double yawRotation,
                             EntityType entityType, boolean invisible, int leashedToEntity);
     void spawnVirtualArmorstand(Player player, int entityId, Vector3 location, double yawRotation,

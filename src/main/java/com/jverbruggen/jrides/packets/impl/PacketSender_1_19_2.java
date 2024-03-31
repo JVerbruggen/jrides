@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.packets;
+package com.jverbruggen.jrides.packets.impl;
 
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.wrappers.EnumWrappers;
@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandRotations;
 import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandModels;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.packet.raw.*;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.entity.EntityType;
@@ -80,6 +81,11 @@ public class PacketSender_1_19_2 implements PacketSender {
         new AttachEntityServerPacket(
                 protocolManager, entityId, leashToEntityId
         ).send(player);
+    }
+
+    @Override
+    public String getIdentifier() {
+        return "1.19.2";
     }
 
     @Override

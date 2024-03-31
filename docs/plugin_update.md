@@ -1,14 +1,17 @@
 # Plugin update
 
-To manuall build jrides on a new spigot version, follow this guide.
+To manually build jrides on a new spigot version, follow this guide.
 
-### TODO! THIS PAGE IS NOT DONE
+## 1. Run build tools
 
-
-## Run build tools
+Go to:
 https://www.spigotmc.org/wiki/buildtools/
 
-## Add new build profile to pom.xml
+and download the latest BuildTools.
+
+Run BuildTools with the '--remapped' option, or in the gui with 'Remapped Jars'.
+
+## 2. Add new build profile to pom.xml
 ```xml
 <profile>
     <id>jrides-1.20.1</id>
@@ -23,5 +26,15 @@ https://www.spigotmc.org/wiki/buildtools/
 </profile>
 ```
 
-## Check dependency versioning
-ProtocolLib usually has a new version for the new minecraft version.
+Make sure to select the new profile in your Maven configuration.
+
+## 3. Check dependency versioning
+ProtocolLib usually has a new version for the new minecraft version. Update all dependencies in maven and on your test server.
+
+## 4. Create a new PacketSender instance
+In the jrides repository, go to `com.jverbruggen.jrides.packets.impl` and create a new implementation for your new Minecraft version.
+
+Also make sure to register this implementation in the PacketSenderFactory.
+
+## 5. Build with Maven
+Finally, run a jrides build with Maven.

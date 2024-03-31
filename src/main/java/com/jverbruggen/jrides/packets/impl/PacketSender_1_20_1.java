@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.packets;
+package com.jverbruggen.jrides.packets.impl;
 
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -36,5 +36,10 @@ public class PacketSender_1_20_1 extends PacketSender_1_19_2 {
         new EntityMetadataServerPacket(
                 protocolManager, entityId, invisible
         ).send(player);
+    }
+
+    @Override
+    public String getIdentifier() {
+        return "1.20.1";
     }
 }
