@@ -36,5 +36,8 @@ In the jrides repository, go to `com.jverbruggen.jrides.packets.impl` and create
 
 Also make sure to register this implementation in the PacketSenderFactory.
 
-## 5. Build with Maven
+## 5. Update the maven workflow
+In jrides repository, go to .github/workflows and edit the maven.yml. Update the Action-SpigotMC version to the new latest version.
+
+## 6. Build with Maven
 Finally, run a jrides build with Maven.

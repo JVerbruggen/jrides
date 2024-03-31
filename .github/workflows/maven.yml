@@ -29,7 +29,7 @@ jobs:
         cache: maven
     - uses: SpraxDev/Action-SpigotMC@v4
       with:
-        versions: 1.20,
+        versions: 1.20.4,
         remapped: true
     - name: Build with Maven
       run: mvn -B package --file pom.xml
