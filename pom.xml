@@ -42,14 +42,19 @@
         <java.versioneasy>17</java.versioneasy>
         <maven.compiler.source>17.0.5</maven.compiler.source>
         <maven.compiler.target>17.0.5</maven.compiler.target>
+
         <minecraft.version.short></minecraft.version.short>
         <minecraft.version.short.spigot>${minecraft.version.short}</minecraft.version.short.spigot>
         <minecraft.version.apiversion></minecraft.version.apiversion>
         <minecraft.version>${minecraft.version.short}-R0.1-SNAPSHOT</minecraft.version>
         <minecraft.version.spigot>${minecraft.version.short.spigot}-R0.1-SNAPSHOT</minecraft.version.spigot>
+
         <project.artifactOutput>${testServer.location}/plugins</project.artifactOutput>
         <project.artifactIdApi>jrides-api</project.artifactIdApi>
         <project.artifactIdApiOutput>/api</project.artifactIdApiOutput>
+        <artifactFileNameSuffix></artifactFileNameSuffix>
+        <artifactFileName>${project.artifactId}${artifactFileNameSuffix}</artifactFileName>
+
         <testServer.location>../jrides_testserver/${minecraft.version.short}</testServer.location>
     </properties>
 
@@ -228,8 +233,8 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <finalName>${project.artifactId}</finalName>
-                            <outputFile>${project.artifactOutput}/${project.artifactId}.jar</outputFile>
+                            <finalName>${artifactFileName}</finalName>
+                            <outputFile>${project.artifactOutput}/${artifactFileName}.jar</outputFile>
                             <outputDirectory>${project.artifactOutput}</outputDirectory>
                         </configuration>
                     </execution>

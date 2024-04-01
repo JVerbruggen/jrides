@@ -14,6 +14,9 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  MINECRAFT_VERSION: 1.20.4
+
 jobs:
   build:
 
@@ -29,7 +32,12 @@ jobs:
         cache: maven
     - uses: SpraxDev/Action-SpigotMC@v4
       with:
-        versions: 1.20.4,
+        versions: $MINECRAFT_VERSION,
         remapped: true
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn '-Dproject.artifactOutput=/' '-DartifactFileNameSuffix=_devbuild_${{github.run_number}}' -B package --file pom.xml
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: jrides $MINECRAFT_VERSION DevBuild \#${{github.run_number}}
+        path: /jrides_devbuild_${{github.run_number}}.jar
