@@ -13,7 +13,7 @@ on:
 
 env:
   MINECRAFT_VERSION: 1.20.4
-  GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
   build:
