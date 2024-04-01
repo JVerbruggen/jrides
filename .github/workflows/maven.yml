@@ -35,9 +35,9 @@ jobs:
         versions: ${{ env.MINECRAFT_VERSION }},
         remapped: true
     - name: Build with Maven
-      run: mvn '-Dproject.artifactOutput=/' '-DartifactFileNameSuffix=_devbuild_${{ github.run_number }}' -B package --file pom.xml
+      run: mvn '-Dproject.artifactOutput=.' '-DartifactFileNameSuffix=_devbuild_${{ github.run_number }}' -B package --file pom.xml
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: jrides ${{ env.MINECRAFT_VERSION }} DevBuild \#${{ github.run_number }}
-        path: /jrides_devbuild_${{ github.run_number }}.jar
+        path: jrides_devbuild_${{ github.run_number }}.jar
