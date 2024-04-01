@@ -39,5 +39,5 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: jrides ${{ env.MINECRAFT_VERSION }} DevBuild \#${{ github.run_number }}
+        name: jrides ${{ env.MINECRAFT_VERSION }} DevBuild #${{ github.run_number }}
         path: jrides_devbuild_${{ github.run_number }}.jar
