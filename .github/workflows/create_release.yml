@@ -9,16 +9,15 @@
 name: Create release
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  workflow_dispatch:
 
 env:
   MINECRAFT_VERSION: 1.20.4
 
 jobs:
   build:
+    permissions:
+      contents: write
 
     runs-on: ubuntu-latest
 
@@ -39,7 +38,7 @@ jobs:
     - name: Create a Release
       uses: elgohr/Github-Release-Action@v5
       env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       with:
-        title: MyReleaseMessage
+        title: jrides ${{ env.MINECRAFT_VERSION }} nr.${{ github.run_number }} Full Build
         workdir: ./jrides_release/
