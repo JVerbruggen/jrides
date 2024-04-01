@@ -13,7 +13,6 @@ on:
 
 env:
   MINECRAFT_VERSION: 1.20.4
-  GH_TOKEN: ${{ github.token }}
 
 jobs:
   build:
@@ -35,9 +34,9 @@ jobs:
         versions: ${{ env.MINECRAFT_VERSION }},
         remapped: true
     - name: Build with Maven
-      run: mvn '-Dproject.artifactOutput=./jrides_release/' '-DartifactFileNameSuffix=_devbuild_${{ github.run_number }}' -B package --file pom.xml
-    - name: Create a Release
-      uses: elgohr/Github-Release-Action@v5
+      run: mvn '-Dproject.artifactOutput=.' -B package --file pom.xml
+    - name: Create Release
+      uses: ncipollo/release-action@v1.14.0
       with:
-        title: jrides ${{ env.MINECRAFT_VERSION }} nr.${{ github.run_number }} Full Build
-        workdir: ./jrides_release/
+        artifacts: jrides.jar
+        name: jrides ${{ env.MINECRAFT_VERSION }}-${{ github.run_number }}
