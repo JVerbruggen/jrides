@@ -40,3 +40,6 @@ jobs:
       with:
         artifacts: jrides.jar
         name: jrides ${{ env.MINECRAFT_VERSION }}-${{ github.run_number }}
+        makeLatest: true
+        commit: master
+        tag: release-${{ github.run_number }}
