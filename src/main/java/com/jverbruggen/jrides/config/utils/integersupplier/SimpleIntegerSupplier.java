@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.config.utils;
+package com.jverbruggen.jrides.config.utils.integersupplier;
 
 import java.util.function.Supplier;
 

@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.control.trigger;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.common.Result;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.language.LanguageFile;
@@ -34,8 +35,11 @@ public class RestraintTrigger implements StationTrigger {
 
     @Override
     public boolean execute(MessageAgent messageAgent) {
-        if(!canExecute(messageAgent))
+        Result canExecuteResult = canExecute(messageAgent);
+        if(!canExecuteResult.ok()){
+            canExecuteResult.sendMessageTo(messageAgent);
             return false;
+        }
 
         Vehicle stationaryTrain = stationHandle.getStationaryVehicle();
         if(!setRestraintsState(!stationaryTrain.getRestraintState())) {
@@ -47,25 +51,23 @@ public class RestraintTrigger implements StationTrigger {
     }
 
     @Override
-    public boolean canExecute(MessageAgent messageAgent) {
+    public Result canExecute(MessageAgent messageAgent) {
         if(messageAgent != null && !messageAgent.hasPermission(Permissions.CABIN_OPERATE)){
-            languageFile.sendMessage(messageAgent, LanguageFileField.ERROR_OPERATING_NO_PERMISSION);
-            return false;
+            return Result.isNotOk(languageFile.get(LanguageFileField.ERROR_OPERATING_NO_PERMISSION));
         }
 
         if(stationHandle == null){
             JRidesPlugin.getLogger().severe("No station handle set for restraint trigger");
-            return false;
+            return Result.isNotOk();
         }
 
         Vehicle stationaryTrain = stationHandle.getStationaryVehicle();
 
         if(stationaryTrain == null) {
-            languageFile.sendMessage(messageAgent, LanguageFileField.NOTIFICATION_RIDE_NO_TRAIN_PRESENT);
-            return false;
+            return Result.isNotOk(languageFile.get(LanguageFileField.NOTIFICATION_RIDE_NO_TRAIN_PRESENT));
         }
 
-        return true;
+        return Result.isOk();
     }
 
     public boolean setRestraintsState(boolean closed){

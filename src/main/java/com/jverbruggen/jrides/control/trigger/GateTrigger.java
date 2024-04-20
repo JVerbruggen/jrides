@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.control.trigger;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.common.Result;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.language.LanguageFile;
@@ -34,8 +35,11 @@ public class GateTrigger implements StationTrigger{
 
     @Override
     public boolean execute(MessageAgent messageAgent) {
-        if(!canExecute(messageAgent))
+        Result canExecuteResult = canExecute(messageAgent);
+        if(!canExecuteResult.ok()){
+            canExecuteResult.sendMessageTo(messageAgent);
             return false;
+        }
 
         boolean set = setGatesState(!stationHandle.areEntryGatesClosed());
         if(!set){
@@ -47,23 +51,22 @@ public class GateTrigger implements StationTrigger{
     }
 
     @Override
-    public boolean canExecute(MessageAgent messageAgent) {
+    public Result canExecute(MessageAgent messageAgent) {
         if(messageAgent != null && !messageAgent.hasPermission(Permissions.CABIN_OPERATE)){
-            languageFile.sendMessage(messageAgent, LanguageFileField.ERROR_OPERATING_NO_PERMISSION);
-            return false;
+            return Result.isNotOk(languageFile.get(LanguageFileField.ERROR_OPERATING_NO_PERMISSION));
         }
 
         if(stationHandle == null){
             JRidesPlugin.getLogger().severe("No station handle set for gate trigger");
-            return false;
+            return Result.isNotOk();
         }
 
         Vehicle stationaryTrain = stationHandle.getStationaryVehicle();
         if(stationaryTrain == null) {
-            return false;
+            return Result.isNotOk();
         }
 
-        return true;
+        return Result.isOk();
     }
 
     public boolean setGatesState(boolean closed){

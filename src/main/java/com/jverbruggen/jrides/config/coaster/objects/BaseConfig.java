@@ -1,8 +1,8 @@
 package com.jverbruggen.jrides.config.coaster.objects;
 
-import com.jverbruggen.jrides.config.utils.CycleIntegerSupplier;
-import com.jverbruggen.jrides.config.utils.RandomIntegerSupplier;
-import com.jverbruggen.jrides.config.utils.SimpleIntegerSupplier;
+import com.jverbruggen.jrides.config.utils.integersupplier.CycleIntegerSupplier;
+import com.jverbruggen.jrides.config.utils.integersupplier.RandomIntegerSupplier;
+import com.jverbruggen.jrides.config.utils.integersupplier.SimpleIntegerSupplier;
 import org.bukkit.configuration.ConfigurationSection;
 
 import javax.annotation.Nullable;
