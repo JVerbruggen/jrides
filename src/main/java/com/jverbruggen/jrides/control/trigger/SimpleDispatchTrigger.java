@@ -46,14 +46,17 @@ public class SimpleDispatchTrigger implements DispatchTrigger {
         return true;
     }
 
+    @Override
     public void reset(){
         active = false;
     }
 
+    @Override
     public boolean isActive(){
         return active;
     }
 
+    @Override
     public DispatchLockCollection getDispatchLockCollection() {
         return dispatchLockCollection;
     }

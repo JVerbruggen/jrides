@@ -1,21 +1,15 @@
 package com.jverbruggen.jrides.control.trigger;
 
 import com.jverbruggen.jrides.control.DispatchLockCollection;
-import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
-import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 
 import java.util.List;
 
 public class MultiDispatchTrigger implements DispatchTrigger {
-    private boolean active;
-    private final LanguageFile languageFile;
     private final List<DispatchTrigger> dispatchTriggerList;
     private final DispatchLockCollection dispatchLockCollection;
 
     public MultiDispatchTrigger(List<DispatchTrigger> dispatchTriggerList, DispatchLockCollection dispatchLockCollection) {
-        this.active = false;
-        this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
         this.dispatchTriggerList = dispatchTriggerList;
         this.dispatchLockCollection = dispatchLockCollection;
     }
@@ -25,7 +19,10 @@ public class MultiDispatchTrigger implements DispatchTrigger {
         if(!canExecute(messageAgent))
             return false;
 
-        active = true;
+        for(DispatchTrigger dispatchTrigger : dispatchTriggerList){
+            dispatchTrigger.execute(messageAgent);
+        }
+
         return true;
     }
 
@@ -41,14 +38,19 @@ public class MultiDispatchTrigger implements DispatchTrigger {
         return canExecute;
     }
 
+    @Override
     public void reset(){
-        active = false;
+        for(DispatchTrigger dispatchTrigger : dispatchTriggerList){
+            dispatchTrigger.reset();
+        }
     }
 
+    @Override
     public boolean isActive(){
-        return active;
+        return dispatchTriggerList.stream().anyMatch(DispatchTrigger::isActive);
     }
 
+    @Override
     public DispatchLockCollection getDispatchLockCollection() {
         return dispatchLockCollection;
     }
