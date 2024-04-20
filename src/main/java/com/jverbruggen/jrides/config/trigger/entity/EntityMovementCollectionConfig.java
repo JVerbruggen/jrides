@@ -60,6 +60,11 @@ public class EntityMovementCollectionConfig extends BaseConfig {
     static EntityMovementConfig getMovementConfig(String identifier, @Nullable ConfigurationSection configurationSection){
         if(configurationSection == null) return null;
 
+        String movementType = getString(configurationSection, "type", null);
+        if(movementType.equalsIgnoreCase("projectile")){
+            return EntityProjectileConfig.fromConfigurationSection(configurationSection);
+        }
+
         if(configurationSection.contains("locationFrom") || configurationSection.contains("rotationFrom")){
             return EntityFromToMovementConfig.fromConfigurationSection(configurationSection);
         }else if(configurationSection.contains("locationDelta") || configurationSection.contains("rotationDelta")){
@@ -80,7 +85,7 @@ public class EntityMovementCollectionConfig extends BaseConfig {
 
         LocRot initialLocation = null;
         for(EntityMovementConfig config : entityMovementConfigs){
-            Vector3 possibleLocation = config.getInitialLocation();
+            Vector3 possibleLocation = config.getInitialPosition();
             if(possibleLocation != null){
                 initialLocation = new LocRot(possibleLocation, config.getInitialRotation());
                 break;

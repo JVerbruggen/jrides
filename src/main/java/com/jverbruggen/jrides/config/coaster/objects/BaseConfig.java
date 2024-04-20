@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.config.utils.integersupplier.SimpleIntegerSupplier
 import org.bukkit.configuration.ConfigurationSection;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -194,6 +195,14 @@ public abstract class BaseConfig {
         if(object instanceof Integer){
             return (Integer) object;
         }else throw new RuntimeException("Cannot convert " + object + " to integer");
+    }
+
+    protected static List<Double> createDoubleList(double a, double b, double c){
+        List<Double> doubleList = new ArrayList<>();
+        doubleList.add(a);
+        doubleList.add(b);
+        doubleList.add(c);
+        return doubleList;
     }
 
 }

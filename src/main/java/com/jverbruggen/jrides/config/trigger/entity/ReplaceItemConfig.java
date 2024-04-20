@@ -25,7 +25,7 @@ public class ReplaceItemConfig extends BaseConfig implements EntityMovementConfi
     }
 
     @Override
-    public Vector3 getInitialLocation() {
+    public Vector3 getInitialPosition() {
         return null;
     }
 

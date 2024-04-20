@@ -315,4 +315,9 @@ public class Vector3 {
         return new Vector3(playerLocation.getX(), playerLocation.getY(), playerLocation.getZ());
     }
 
+    public void setTo(Vector3 other) {
+        this.x = other.x;
+        this.y = other.y;
+        this.z = other.z;
+    }
 }

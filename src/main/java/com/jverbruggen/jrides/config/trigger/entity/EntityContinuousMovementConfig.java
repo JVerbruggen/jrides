@@ -54,7 +54,7 @@ public class EntityContinuousMovementConfig extends BaseConfig implements Entity
     }
 
     @Override
-    public Vector3 getInitialLocation() {
+    public Vector3 getInitialPosition() {
         return initialLocation;
     }
 

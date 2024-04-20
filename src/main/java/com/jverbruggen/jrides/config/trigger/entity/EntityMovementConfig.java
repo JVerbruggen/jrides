@@ -6,6 +6,6 @@ import com.jverbruggen.jrides.models.math.Vector3;
 
 public interface EntityMovementConfig {
     EntityMovementTrigger createTrigger(VirtualEntity virtualEntity);
-    Vector3 getInitialLocation();
+    Vector3 getInitialPosition();
     Vector3 getInitialRotation();
 }
