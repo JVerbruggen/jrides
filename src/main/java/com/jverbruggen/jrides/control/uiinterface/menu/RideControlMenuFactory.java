@@ -4,11 +4,9 @@ import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.common.MenuSessionManager;
 import com.jverbruggen.jrides.config.coaster.objects.ControllerConfig;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
-import com.jverbruggen.jrides.control.controller.AlternateRideController;
+import com.jverbruggen.jrides.control.controller.DualRideController;
 import com.jverbruggen.jrides.control.controller.RideController;
-import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
-import com.jverbruggen.jrides.control.trigger.StationTrigger;
-import com.jverbruggen.jrides.control.trigger.TriggerContext;
+import com.jverbruggen.jrides.control.trigger.*;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.factory.RideControlButtonFactory;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
@@ -41,7 +39,9 @@ public class RideControlMenuFactory {
         if(type == null || type.equalsIgnoreCase(ControllerConfig.CONTROLLER_DEFAULT)){
             return getSimpleControlMenu(rideController);
         }else if(type.equalsIgnoreCase(ControllerConfig.CONTROLLER_ALTERNATE)){
-            return getAlternateControlMenu((AlternateRideController) rideController);
+            return getAlternateControlMenu((DualRideController) rideController);
+        }else if(type.equalsIgnoreCase(ControllerConfig.CONTROLLER_SIMULTANEOUS)){
+            return getSimultaneousMenu((DualRideController) rideController);
         }else
             throw new RuntimeException("Cannot create ride control menu of type " + type);
     }
@@ -52,7 +52,7 @@ public class RideControlMenuFactory {
 
         DispatchLockCollection dispatchLockCollection = rideController.getTriggerContext().getDispatchLockCollection();
 
-        DispatchTrigger dispatchTrigger = rideController.getTriggerContext().getDispatchTrigger();
+        SimpleDispatchTrigger dispatchTrigger = rideController.getTriggerContext().getDispatchTrigger();
         StationTrigger gateTrigger = rideController.getTriggerContext().getGateTrigger();
         StationTrigger restraintTrigger = rideController.getTriggerContext().getRestraintTrigger();
 
@@ -72,16 +72,16 @@ public class RideControlMenuFactory {
         return rideControlMenu;
     }
 
-    public Menu getAlternateControlMenu(AlternateRideController rideController){
+    public Menu getAlternateControlMenu(DualRideController rideController){
         if(!rideController.isActive())
             return null;
 
         TriggerContext leftStationTriggerContext    = rideController.getLeftStationTriggerContext();
-        DispatchTrigger leftDispatchTrigger         = leftStationTriggerContext.getDispatchTrigger();
+        SimpleDispatchTrigger leftDispatchTrigger         = leftStationTriggerContext.getDispatchTrigger();
         StationTrigger leftGateTrigger              = leftStationTriggerContext.getGateTrigger();
         StationTrigger leftRestraintTrigger         = leftStationTriggerContext.getRestraintTrigger();
         TriggerContext rightStationTriggerContext   = rideController.getRightStationTriggerContext();
-        DispatchTrigger rightDispatchTrigger        = rightStationTriggerContext.getDispatchTrigger();
+        SimpleDispatchTrigger rightDispatchTrigger        = rightStationTriggerContext.getDispatchTrigger();
         StationTrigger rightGateTrigger             = rightStationTriggerContext.getGateTrigger();
         StationTrigger rightRestraintTrigger        = rightStationTriggerContext.getRestraintTrigger();
 
@@ -103,6 +103,48 @@ public class RideControlMenuFactory {
         rideControlMenu.addButton(leftRestraintButton);
         rideControlMenu.addButton(rightProblemList);
         rideControlMenu.addButton(rightDispatchButton);
+        rideControlMenu.addButton(rightGateButton);
+        rideControlMenu.addButton(rightRestraintButton);
+
+        return rideControlMenu;
+    }
+
+    public Menu getSimultaneousMenu(DualRideController rideController){
+        if(!rideController.isActive())
+            return null;
+
+        TriggerContext leftStationTriggerContext    = rideController.getLeftStationTriggerContext();
+        SimpleDispatchTrigger leftDispatchTrigger         = leftStationTriggerContext.getDispatchTrigger();
+        StationTrigger leftGateTrigger              = leftStationTriggerContext.getGateTrigger();
+        StationTrigger leftRestraintTrigger         = leftStationTriggerContext.getRestraintTrigger();
+        TriggerContext rightStationTriggerContext   = rideController.getRightStationTriggerContext();
+        SimpleDispatchTrigger rightDispatchTrigger        = rightStationTriggerContext.getDispatchTrigger();
+        StationTrigger rightGateTrigger             = rightStationTriggerContext.getGateTrigger();
+        StationTrigger rightRestraintTrigger        = rightStationTriggerContext.getRestraintTrigger();
+
+        List<DispatchTrigger> dispatchTriggers      = List.of(leftDispatchTrigger, rightDispatchTrigger);
+        DispatchLockCollection hybridDispatchLockCollection = DispatchLockCollection.makeHybrid(
+                "Main locks",
+                leftDispatchTrigger.getDispatchLockCollection(),
+                rightDispatchTrigger.getDispatchLockCollection());
+        MultiDispatchTrigger simultaneousDispatchTrigger = new MultiDispatchTrigger(dispatchTriggers, hybridDispatchLockCollection);
+
+        MenuButton claimOperatingButton      = rideControlButtonFactory.createClaimRideButton(rideController, 4);
+        MenuButton dispatchButton            = rideControlButtonFactory.createDispatchButton(simultaneousDispatchTrigger, 9);
+        MenuButton leftProblemList           = rideControlButtonFactory.createProblemList(leftStationTriggerContext.getDispatchLockCollection(), 20);
+        MenuButton leftGateButton            = rideControlButtonFactory.createGateButton(leftGateTrigger, 11);
+        MenuButton leftRestraintButton       = rideControlButtonFactory.createRestraintButton(leftRestraintTrigger, 12);
+        MenuButton rightProblemList          = rideControlButtonFactory.createProblemList(rightStationTriggerContext.getDispatchLockCollection(), 23);
+        MenuButton rightGateButton           = rideControlButtonFactory.createGateButton(rightGateTrigger, 14);
+        MenuButton rightRestraintButton      = rideControlButtonFactory.createRestraintButton(rightRestraintTrigger, 15);
+
+        Menu rideControlMenu = new SimpleMenu(3, getRideControlMenuTitle(rideController));
+        rideControlMenu.addButton(claimOperatingButton);
+        rideControlMenu.addButton(dispatchButton);
+        rideControlMenu.addButton(leftProblemList);
+        rideControlMenu.addButton(leftGateButton);
+        rideControlMenu.addButton(leftRestraintButton);
+        rideControlMenu.addButton(rightProblemList);
         rideControlMenu.addButton(rightGateButton);
         rideControlMenu.addButton(rightRestraintButton);
 

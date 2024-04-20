@@ -7,13 +7,13 @@ import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovemen
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.control.DispatchLock;
+import com.jverbruggen.jrides.control.trigger.SimpleDispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
 import com.jverbruggen.jrides.event.ride.RideFinishedEvent;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
-import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
@@ -164,7 +164,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour {
                         blockSectionOccupiedDispatchLock.lock();
                         blockSectionOccupiedDispatchLock.setDebugStatus(safety.reason());
                     }
-                    DispatchTrigger dispatchTrigger = triggerContext.getDispatchTrigger();
+                    SimpleDispatchTrigger dispatchTrigger = triggerContext.getDispatchTrigger();
                     if (dispatching || dispatchTrigger.isActive()) {
                         trainInStationDispatchLock.lock();
                         dispatchTrigger.reset();

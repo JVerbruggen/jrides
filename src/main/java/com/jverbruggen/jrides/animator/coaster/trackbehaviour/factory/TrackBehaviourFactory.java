@@ -21,10 +21,7 @@ import com.jverbruggen.jrides.config.gates.GateOwnerConfigSpec;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.SimpleDispatchLock;
-import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
-import com.jverbruggen.jrides.control.trigger.GateTrigger;
-import com.jverbruggen.jrides.control.trigger.RestraintTrigger;
-import com.jverbruggen.jrides.control.trigger.TriggerContext;
+import com.jverbruggen.jrides.control.trigger.*;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
 import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.items.ItemStackFactory;
@@ -118,7 +115,7 @@ public class TrackBehaviourFactory {
         TriggerContext triggerContext = new TriggerContext(
                 dispatchLockCollection,
                 trainInStationDispatchLock,
-                new DispatchTrigger(dispatchLockCollection),
+                new SimpleDispatchTrigger(dispatchLockCollection),
                 new GateTrigger(gatesGenericLock),
                 new RestraintTrigger(restraintLock));
 

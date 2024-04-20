@@ -5,7 +5,7 @@ import com.jverbruggen.jrides.command.BaseCommandExecutor;
 import com.jverbruggen.jrides.command.context.CommandContext;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.controller.RideController;
-import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
+import com.jverbruggen.jrides.control.trigger.SimpleDispatchTrigger;
 import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.language.LanguageFileTag;
@@ -26,7 +26,7 @@ public class ControlDispatchCommandExecutor extends BaseCommandExecutor {
             return true;
         }
 
-        DispatchTrigger dispatchTrigger = rideController.getTriggerContext().getDispatchTrigger();
+        SimpleDispatchTrigger dispatchTrigger = rideController.getTriggerContext().getDispatchTrigger();
 
         boolean dispatched = dispatchTrigger.execute(messageAgent);
         if(dispatched)

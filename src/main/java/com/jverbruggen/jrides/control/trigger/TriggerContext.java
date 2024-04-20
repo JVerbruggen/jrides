@@ -10,12 +10,12 @@ import javax.annotation.Nullable;
 public class TriggerContext {
     private final DispatchLockCollection dispatchLockCollection;
     private final DispatchLock vehiclePresentLock;
-    private final DispatchTrigger dispatchTrigger;
+    private final SimpleDispatchTrigger dispatchTrigger;
     private final GateTrigger gateTrigger;
     private final RestraintTrigger restraintTrigger;
     private @Nullable StationHandle parentStation;
 
-    public TriggerContext(DispatchLockCollection dispatchLockCollection, DispatchLock vehiclePresentLock, DispatchTrigger dispatchTrigger, GateTrigger gateTrigger, RestraintTrigger restraintTrigger) {
+    public TriggerContext(DispatchLockCollection dispatchLockCollection, DispatchLock vehiclePresentLock, SimpleDispatchTrigger dispatchTrigger, GateTrigger gateTrigger, RestraintTrigger restraintTrigger) {
         this.dispatchLockCollection = dispatchLockCollection;
         this.vehiclePresentLock = vehiclePresentLock;
         this.dispatchTrigger = dispatchTrigger;
@@ -24,7 +24,7 @@ public class TriggerContext {
         this.parentStation = null;
     }
 
-    public DispatchTrigger getDispatchTrigger() {
+    public SimpleDispatchTrigger getDispatchTrigger() {
         return dispatchTrigger;
     }
 

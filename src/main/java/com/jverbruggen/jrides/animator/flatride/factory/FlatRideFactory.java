@@ -15,10 +15,7 @@ import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.SimpleDispatchLock;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.controller.RideControllerFactory;
-import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
-import com.jverbruggen.jrides.control.trigger.GateTrigger;
-import com.jverbruggen.jrides.control.trigger.RestraintTrigger;
-import com.jverbruggen.jrides.control.trigger.TriggerContext;
+import com.jverbruggen.jrides.control.trigger.*;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
@@ -67,7 +64,7 @@ public class FlatRideFactory {
         TriggerContext triggerContext = new TriggerContext(
                 dispatchLockCollection,
                 vehicleInStation,
-                new DispatchTrigger(dispatchLockCollection),
+                new SimpleDispatchTrigger(dispatchLockCollection),
                 new GateTrigger(gatesGenericLock),
                 new RestraintTrigger(restraintLock));
 

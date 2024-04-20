@@ -34,6 +34,20 @@ public class RestraintTrigger implements StationTrigger {
 
     @Override
     public boolean execute(MessageAgent messageAgent) {
+        if(!canExecute(messageAgent))
+            return false;
+
+        Vehicle stationaryTrain = stationHandle.getStationaryVehicle();
+        if(!setRestraintsState(!stationaryTrain.getRestraintState())) {
+            languageFile.sendMessage(messageAgent, LanguageFileField.NOTIFICATION_RIDE_NO_TRAIN_PRESENT);
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean canExecute(MessageAgent messageAgent) {
         if(messageAgent != null && !messageAgent.hasPermission(Permissions.CABIN_OPERATE)){
             languageFile.sendMessage(messageAgent, LanguageFileField.ERROR_OPERATING_NO_PERMISSION);
             return false;
@@ -46,7 +60,7 @@ public class RestraintTrigger implements StationTrigger {
 
         Vehicle stationaryTrain = stationHandle.getStationaryVehicle();
 
-        if(stationaryTrain == null || !setRestraintsState(!stationaryTrain.getRestraintState())) {
+        if(stationaryTrain == null) {
             languageFile.sendMessage(messageAgent, LanguageFileField.NOTIFICATION_RIDE_NO_TRAIN_PRESENT);
             return false;
         }

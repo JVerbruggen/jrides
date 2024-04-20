@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.config.ride.RideCounterMapConfigs;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
+import com.jverbruggen.jrides.control.trigger.SimpleDispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
 import com.jverbruggen.jrides.event.ride.RideFinishedEvent;
@@ -30,7 +31,7 @@ import javax.annotation.Nonnull;
 public class FlatRideHandle extends AbstractRideHandle {
     private TimingSequence timingSequence;
     private final FlatRideStationHandle stationHandle;
-    private final DispatchTrigger dispatchTrigger;
+    private final SimpleDispatchTrigger dispatchTrigger;
     private final List<SeatComponent> seatComponents;
 
     private FlatRideState flatRideState;

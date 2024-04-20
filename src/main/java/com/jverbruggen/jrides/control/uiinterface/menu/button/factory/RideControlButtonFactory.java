@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
+import com.jverbruggen.jrides.control.trigger.SimpleDispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.StationTrigger;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.LockResembledControlButton;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.action.RunnableButtonAction;

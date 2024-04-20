@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class DispatchLockCollection implements DispatchLock {
     private final String description;
@@ -66,6 +65,8 @@ public class DispatchLockCollection implements DispatchLock {
     }
 
     public void addDispatchLock(DispatchLock dispatchLock){
+        if(this.locks.contains(dispatchLock)) return;
+
         this.locks.add(dispatchLock);
     }
 
@@ -155,5 +156,25 @@ public class DispatchLockCollection implements DispatchLock {
                 ", locks=" + locks +
                 ", statusCached='" + statusCached + '\'' +
                 '}';
+    }
+
+    public static DispatchLockCollection makeHybrid(String description, DispatchLockCollection... dispatchLockCollections){
+        DispatchLockCollection hybrid = new DispatchLockCollection(description);
+
+        for(DispatchLockCollection dispatchLockCollection : dispatchLockCollections){
+            for(DispatchLock lock : dispatchLockCollection.locks){
+                hybrid.addDispatchLock(lock);
+            }
+
+            for(Consumer<DispatchLock> lockEventListener : dispatchLockCollection.lockEventListeners){
+                hybrid.addLockEventListener(lockEventListener);
+            }
+
+            for(Consumer<DispatchLock> unlockEventListener : dispatchLockCollection.unlockEventListeners){
+                hybrid.addUnlockEventListener(unlockEventListener);
+            }
+        }
+
+        return hybrid;
     }
 }

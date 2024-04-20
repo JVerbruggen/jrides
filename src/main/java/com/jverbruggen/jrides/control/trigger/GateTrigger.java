@@ -34,6 +34,20 @@ public class GateTrigger implements StationTrigger{
 
     @Override
     public boolean execute(MessageAgent messageAgent) {
+        if(!canExecute(messageAgent))
+            return false;
+
+        boolean set = setGatesState(!stationHandle.areEntryGatesClosed());
+        if(!set){
+            languageFile.sendMessage(messageAgent, LanguageFileField.NOTIFICATION_RIDE_NO_TRAIN_PRESENT);
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean canExecute(MessageAgent messageAgent) {
         if(messageAgent != null && !messageAgent.hasPermission(Permissions.CABIN_OPERATE)){
             languageFile.sendMessage(messageAgent, LanguageFileField.ERROR_OPERATING_NO_PERMISSION);
             return false;
@@ -44,9 +58,8 @@ public class GateTrigger implements StationTrigger{
             return false;
         }
 
-        boolean set = setGatesState(!stationHandle.areEntryGatesClosed());
-        if(!set){
-            languageFile.sendMessage(messageAgent, LanguageFileField.NOTIFICATION_RIDE_NO_TRAIN_PRESENT);
+        Vehicle stationaryTrain = stationHandle.getStationaryVehicle();
+        if(stationaryTrain == null) {
             return false;
         }
 
