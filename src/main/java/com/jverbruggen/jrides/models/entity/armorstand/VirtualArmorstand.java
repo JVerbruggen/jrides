@@ -53,6 +53,8 @@ public class VirtualArmorstand extends BaseVirtualEntity {
     @Override
     public void spawnFor(Player player) {
         addViewer(player);
+
+        if(!rendered) return;
         packetSender.spawnVirtualArmorstand(player, entityId, location, yawRotation, rotations, models, invisible, leashedToEntity);
 
         if(models.hasHead()){

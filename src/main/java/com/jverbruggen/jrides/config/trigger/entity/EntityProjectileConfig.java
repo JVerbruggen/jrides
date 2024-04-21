@@ -38,7 +38,7 @@ public class EntityProjectileConfig extends BaseConfig implements EntityMovement
         Vector3 initialRotation = Vector3.fromDoubleList(getDoubleList(configurationSection, "initialRotation", createDoubleList(0, 0, 0)));
         Vector3 initialPositionalVelocity = Vector3.fromDoubleList(getDoubleList(configurationSection, "initialPositionalVelocity"));
         Vector3 initialRotationalVelocity = Vector3.fromDoubleList(getDoubleList(configurationSection, "initialRotationalVelocity", createDoubleList(0, 0, 0)));
-        Vector3 positionalAcceleration = Vector3.fromDoubleList(getDoubleList(configurationSection, "positionalAcceleration"));
+        Vector3 positionalAcceleration = Vector3.fromDoubleList(getDoubleList(configurationSection, "positionalAcceleration", createDoubleList(0,  -0.08,0)));
         Vector3 rotationalAcceleration = Vector3.fromDoubleList(getDoubleList(configurationSection, "rotationalAcceleration", createDoubleList(0, 0, 0)));
         int animationTimeTicks = getInt(configurationSection, "animationTimeTicks", 60);
         int delayTicks = getInt(configurationSection, "delayTicks", 0);
@@ -50,21 +50,13 @@ public class EntityProjectileConfig extends BaseConfig implements EntityMovement
 
     @Override
     public EntityMovementTrigger createTrigger(VirtualEntity virtualEntity) {
-        Quaternion initialRotation = null;
-        if(this.initialRotation != null){
-            initialRotation = Quaternion.fromAnglesVector(this.initialRotation);
-            virtualEntity.setRotation(initialRotation);
-        }
-        Quaternion initialRotationalVelocity = null;
-        if(this.initialRotationalVelocity != null){
-            initialRotationalVelocity = Quaternion.fromAnglesVector(this.initialRotationalVelocity);
-            virtualEntity.setRotation(initialRotationalVelocity);
-        }
-        Quaternion rotationalAcceleration = null;
-        if(this.rotationalAcceleration != null){
-            rotationalAcceleration = Quaternion.fromAnglesVector(this.rotationalAcceleration);
-            virtualEntity.setRotation(rotationalAcceleration);
-        }
+        Quaternion initialRotation = Quaternion.fromAnglesVector(this.initialRotation);
+        Quaternion initialRotationalVelocity = Quaternion.fromAnglesVector(this.initialRotationalVelocity);
+        Quaternion rotationalAcceleration = Quaternion.fromAnglesVector(this.rotationalAcceleration);
+
+        virtualEntity.setRendered(false);
+        virtualEntity.setLocation(initialPosition);
+        virtualEntity.setRotation(initialRotation);
 
         return new EntityProjectileEffect(virtualEntity, resetOnStart, initialPosition, initialRotation, initialPositionalVelocity, initialRotationalVelocity,
                 positionalAcceleration, rotationalAcceleration, animationTimeTicks, delayTicks);

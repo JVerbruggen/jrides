@@ -81,6 +81,6 @@ public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger im
 
     @Override
     public void onFinish(Runnable runnable) {
-        delayedEntityTask.setOnFinishRunnable(runnable);
+        delayedEntityTask.addOnFinishRunnable(runnable);
     }
 }

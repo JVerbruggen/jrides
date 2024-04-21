@@ -42,7 +42,7 @@ public abstract class VirtualEntityViewport implements Viewport{
 
         for(VirtualEntity virtualEntity : virtualEntities){
             if(!virtualEntity.isViewer(player)) continue; // TODO: Same as this::removeEntity TODO
-            virtualEntity.despawnFor(player);
+            virtualEntity.despawnFor(player, true);
         }
     }
 
@@ -102,7 +102,7 @@ public abstract class VirtualEntityViewport implements Viewport{
         double distanceSquared = virtualEntity.getLocation().distanceSquared(playerLocation);
         if(player.isViewing(virtualEntity)){
             if(distanceSquared > maxRenderDistance*maxRenderDistance){
-                virtualEntity.despawnFor(player);
+                virtualEntity.despawnFor(player, true);
                 player.removeViewing(virtualEntity);
             }
         }

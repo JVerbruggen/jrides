@@ -3,9 +3,12 @@ package com.jverbruggen.jrides.effect.entity.common;
 import com.jverbruggen.jrides.JRidesPlugin;
 import org.bukkit.Bukkit;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DelayedEntityTask {
     private final Runnable runnable;
-    private Runnable onFinishRunnable;
+    private final List<Runnable> onFinishRunnables;
     private final int animationTicks;
     private final int delayTicks;
     private int bukkitTimerTracker;
@@ -17,7 +20,7 @@ public class DelayedEntityTask {
 
     public DelayedEntityTask(Runnable runnable, int delayTicks, int animationTicks){
         this.runnable = runnable;
-        this.onFinishRunnable = null;
+        this.onFinishRunnables = new ArrayList<>();
         this.animationTicks = animationTicks;
         this.delayTicks = delayTicks;
         this.started = false;
@@ -37,8 +40,8 @@ public class DelayedEntityTask {
         return started;
     }
 
-    public void setOnFinishRunnable(Runnable onFinishRunnable) {
-        this.onFinishRunnable = onFinishRunnable;
+    public void addOnFinishRunnable(Runnable onFinishRunnable) {
+        this.onFinishRunnables.add(onFinishRunnable);
     }
 
     public int getAnimationTicks() {
@@ -93,7 +96,8 @@ public class DelayedEntityTask {
         if(bukkitTimerTracker == -1) return;
         this.started = false;
         this.finished = true;
-        if(onFinishRunnable != null) onFinishRunnable.run();
+        if(!onFinishRunnables.isEmpty())
+            onFinishRunnables.forEach(Runnable::run);
 
         Bukkit.getScheduler().cancelTask(bukkitTimerTracker);
         bukkitTimerTracker = -1;

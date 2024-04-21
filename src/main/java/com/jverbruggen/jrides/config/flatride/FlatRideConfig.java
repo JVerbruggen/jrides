@@ -1,5 +1,6 @@
 package com.jverbruggen.jrides.config.flatride;
 
+import com.jverbruggen.jrides.config.coaster.objects.InteractionEntitiesConfig;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.config.coaster.objects.item.ItemStackConfig;
 import com.jverbruggen.jrides.config.flatride.structure.StructureConfig;
@@ -22,8 +23,8 @@ public class FlatRideConfig extends AbstractRideConfig {
     private final StructureConfig structureConfig;
     private final TimingConfig timingConfig;
 
-    public FlatRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemStackConfig displayItem, PlayerLocation warpLocation, GatesConfig gates, boolean canExitDuringRide, StationConfig stationConfig, SoundsConfig soundsConfig, StructureConfig structureConfig, TimingConfig timingConfig, RideCounterMapConfigs rideCounterMapConfigs) {
-        super(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, soundsConfig, canExitDuringRide, rideCounterMapConfigs);
+    public FlatRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemStackConfig displayItem, PlayerLocation warpLocation, GatesConfig gates, InteractionEntitiesConfig interactionEntities, boolean canExitDuringRide, StationConfig stationConfig, SoundsConfig soundsConfig, StructureConfig structureConfig, TimingConfig timingConfig, RideCounterMapConfigs rideCounterMapConfigs) {
+        super(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, soundsConfig, canExitDuringRide, interactionEntities, rideCounterMapConfigs);
         this.stationConfig = stationConfig;
         this.structureConfig = structureConfig;
         this.timingConfig = timingConfig;
@@ -57,12 +58,12 @@ public class FlatRideConfig extends AbstractRideConfig {
         GatesConfig gates = GatesConfig.fromConfigurationSection(configurationSection.getConfigurationSection("gates"));
         SoundsConfig sounds = SoundsConfig.fromConfigurationSection(configurationSection.getConfigurationSection("sounds"));
         boolean canExitDuringRide = getBoolean(configurationSection, "canExitDuringRide", false);
-
+        InteractionEntitiesConfig interactionEntities = InteractionEntitiesConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "interactionEntities"));
         StationConfig stationConfig = StationConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "station"));
         StructureConfig structureConfig = StructureConfig.fromConfigurationSection(Objects.requireNonNull(getConfigurationSection(configurationSection, "structure"), "Structure for flatride not present"));
         TimingConfig timingConfig = TimingConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "timing"));
         RideCounterMapConfigs rideCounterMapConfigs = RideCounterMapConfigs.fromConfigurationSection(identifier, getConfigurationSection(configurationSection, "rideCounterMaps"));
 
-        return new FlatRideConfig(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, canExitDuringRide, stationConfig, sounds, structureConfig, timingConfig, rideCounterMapConfigs);
+        return new FlatRideConfig(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, interactionEntities, canExitDuringRide, stationConfig, sounds, structureConfig, timingConfig, rideCounterMapConfigs);
     }
 }

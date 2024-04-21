@@ -6,7 +6,6 @@ import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import org.bukkit.Bukkit;
 
 public class EntityContinuousMovementEffectTrigger extends BaseTrainEffectTrigger implements EntityMovementTrigger {
     private final VirtualEntity virtualEntity;
@@ -82,6 +81,6 @@ public class EntityContinuousMovementEffectTrigger extends BaseTrainEffectTrigge
 
     @Override
     public void onFinish(Runnable runnable) {
-        delayedEntityTask.setOnFinishRunnable(runnable);
+        delayedEntityTask.addOnFinishRunnable(runnable);
     }
 }

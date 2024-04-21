@@ -113,6 +113,8 @@ public class CoasterLoader {
         CoasterHandle coasterHandle = new CoasterHandle(ride, world, sounds, rideOverviewMapId, !rideState.isInactive(),
                 coasterConfig.getDragConstant(), coasterConfig.getGravityConstant(), coasterConfig.getRideCounterMapConfigs());
 
+        coasterConfig.getInteractionEntities().spawnEntities(coasterHandle);
+
         // Initialize Track
         if(!rideState.isInactive()){
             TrackConfig trackConfig = coasterConfig.getTrack();

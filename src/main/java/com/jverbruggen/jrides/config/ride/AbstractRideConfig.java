@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.config.ride;
 
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
+import com.jverbruggen.jrides.config.coaster.objects.InteractionEntitiesConfig;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.config.coaster.objects.item.ItemStackConfig;
 import com.jverbruggen.jrides.config.gates.GatesConfig;
@@ -18,9 +19,10 @@ public abstract class AbstractRideConfig extends BaseConfig {
     private final GatesConfig gates;
     private final SoundsConfig soundsConfig;
     private final boolean canExitDuringRide;
+    private final InteractionEntitiesConfig interactionEntities;
     private final RideCounterMapConfigs rideCounterMapConfigs;
 
-    public AbstractRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemStackConfig displayItem, PlayerLocation warpLocation, GatesConfig gates, SoundsConfig soundsConfig, boolean canExitDuringRide, RideCounterMapConfigs rideCounterMapConfigs) {
+    public AbstractRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemStackConfig displayItem, PlayerLocation warpLocation, GatesConfig gates, SoundsConfig soundsConfig, boolean canExitDuringRide, InteractionEntitiesConfig interactionEntities, RideCounterMapConfigs rideCounterMapConfigs) {
         this.manifestVersion = manifestVersion;
         this.identifier = identifier;
         this.displayName = displayName;
@@ -30,6 +32,7 @@ public abstract class AbstractRideConfig extends BaseConfig {
         this.gates = gates;
         this.soundsConfig = soundsConfig;
         this.canExitDuringRide = canExitDuringRide;
+        this.interactionEntities = interactionEntities;
         this.rideCounterMapConfigs = rideCounterMapConfigs;
     }
 
@@ -67,6 +70,10 @@ public abstract class AbstractRideConfig extends BaseConfig {
 
     public boolean canExitDuringRide() {
         return canExitDuringRide;
+    }
+
+    public InteractionEntitiesConfig getInteractionEntities() {
+        return interactionEntities;
     }
 
     public RideCounterMapConfigs getRideCounterMapConfigs() {

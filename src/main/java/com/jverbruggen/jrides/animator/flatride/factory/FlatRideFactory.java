@@ -73,6 +73,7 @@ public class FlatRideFactory {
                 ? optionalGateOwner.get().createGates(shortStationName, world, gatesGenericLock)
                 : new ArrayList<>();
 
+
         FlatRideStationHandle stationHandle = flatRideConfig.getStationConfig().createFlatRideStationHandle(
                 rideIdentifier,
                 displayName + "_" + shortStationName, shortStationName, triggerContext, gates, minimumWaitTimeDispatchLock
@@ -81,6 +82,8 @@ public class FlatRideFactory {
         FlatRide flatRide = new FlatRide(rideIdentifier, displayName, displayDescription, displayItem,
                 warpLocation, canExitDuringRide);
         FlatRideHandle flatRideHandle = new FlatRideHandle(world, flatRide, true, stationHandle, flatRideConfig.getSoundsConfig(), flatRideConfig.getRideCounterMapConfigs());
+
+        flatRideConfig.getInteractionEntities().spawnEntities(flatRideHandle);
 
         List<FlatRideComponent> components = new ArrayList<>();
 

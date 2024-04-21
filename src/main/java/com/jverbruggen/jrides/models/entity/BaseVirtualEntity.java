@@ -1,10 +1,14 @@
 package com.jverbruggen.jrides.models.entity;
 
+import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.animator.RideHandle;
+import com.jverbruggen.jrides.event.action.RideAction;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +23,10 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     private boolean passengerSyncCounterActive;
     private int passengerSyncCounter;
     private Seat partOfSeat;
+    private String customName;
 
     protected boolean spawned;
+    protected boolean rendered;
     protected UUID uuid;
     protected int entityId;
     protected Vector3 location;
@@ -28,12 +34,16 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
 
     private int teleportSyncCountdownState; // If entity isn't teleported every few frames, it starts drifting due to only relative updates
 
+    private RideAction customAction;
+    private RideHandle belongsToRideHandle;
+
     public BaseVirtualEntity(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, int entityId) {
         this.passenger = null;
         this.allowsPassengerValue = false;
         this.passengerSyncCounterActive = false;
         this.passengerSyncCounter = 0;
         this.partOfSeat = null;
+        this.customName = null;
 
         this.packetSender = packetSender;
         this.viewportManager = viewportManager;
@@ -42,7 +52,10 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
         this.location = location;
         this.viewers = new ArrayList<>();
         this.spawned = true;
+        this.rendered = true;
         this.teleportSyncCountdownState = 0;
+        this.customAction = null;
+        this.belongsToRideHandle = null;
     }
 
     @Override
@@ -92,6 +105,8 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
 
     @Override
     public void addViewer(Player player) {
+        if(viewers.contains(player)) return;
+
         viewers.add(player);
     }
 
@@ -174,16 +189,25 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     }
 
     @Override
-    public void despawnFor(Player player) {
-        removeViewer(player);
+    public void despawnFor(Player player, boolean unview) {
+        if(unview)
+            removeViewer(player);
+
         packetSender.destroyVirtualEntity(player, entityId);
     }
 
     @Override
-    public void spawnForAll(List<Player> players) {
+    public void spawnForAll(List<Player> players, boolean hard) {
         for(Player player : players){
-            if(isViewer(player)) continue;
+            if(isViewer(player) && !hard) continue;
             spawnFor(player);
+        }
+    }
+
+    public void despawnForAll(List<Player> players, boolean unview){
+        for(Player player : List.copyOf(players)){
+            if(!isViewer(player)) continue;
+            despawnFor(player, unview);
         }
     }
 
@@ -200,5 +224,52 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
                 this.passenger.setPositionWithoutTeleport(position);
             }else passengerSyncCounter++;
         }
+    }
+
+    @Override
+    public void setCustomName(String customName) {
+        this.customName = customName;
+
+        // TODO: Apply custom name packets
+    }
+
+    @Override
+    public void setCustomAction(RideAction action) {
+        this.customAction = action;
+    }
+
+    @Override
+    public boolean hasCustomAction() {
+        return this.customAction != null;
+    }
+
+    @Override
+    public void runCustomAction(Player player) {
+        if(belongsToRideHandle == null){
+            JRidesPlugin.getLogger().severe("Custom action failed because it doesnot belong to a ride handle");
+            return;
+        }
+        this.customAction.accept(this, belongsToRideHandle, player);
+    }
+
+    @Override
+    public void setBelongsToRide(RideHandle rideHandle) {
+        belongsToRideHandle = rideHandle;
+    }
+
+    @Override
+    public void setRendered(boolean render) {
+        if(render && !rendered){
+            rendered = true;
+            spawnForAll(getViewers(), true);
+        }else if(!render && rendered){
+            rendered = false;
+            despawnForAll(getViewers(), false);
+        }
+    }
+
+    @Override
+    public boolean isRendered() {
+        return rendered;
     }
 }

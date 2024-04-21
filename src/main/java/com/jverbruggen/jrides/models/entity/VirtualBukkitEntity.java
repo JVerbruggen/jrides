@@ -42,6 +42,8 @@ public class VirtualBukkitEntity extends BaseVirtualEntity {
     @Override
     public void spawnFor(Player player) {
         addViewer(player);
+        if(!rendered) return;
+
         packetSender.spawnVirtualEntity(player, entityId, location, getYaw(), entityType, false, leashedToEntity);
     }
 

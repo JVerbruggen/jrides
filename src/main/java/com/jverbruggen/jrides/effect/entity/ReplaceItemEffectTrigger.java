@@ -40,6 +40,6 @@ public class ReplaceItemEffectTrigger extends BaseTrainEffectTrigger implements 
 
     @Override
     public void onFinish(Runnable runnable) {
-        delayedEntityTask.setOnFinishRunnable(runnable);
+        delayedEntityTask.addOnFinishRunnable(runnable);
     }
 }

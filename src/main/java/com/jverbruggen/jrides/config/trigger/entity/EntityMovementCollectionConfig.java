@@ -61,7 +61,7 @@ public class EntityMovementCollectionConfig extends BaseConfig {
         if(configurationSection == null) return null;
 
         String movementType = getString(configurationSection, "type", null);
-        if(movementType.equalsIgnoreCase("projectile")){
+        if(movementType != null && movementType.equalsIgnoreCase("projectile")){
             return EntityProjectileConfig.fromConfigurationSection(configurationSection);
         }
 

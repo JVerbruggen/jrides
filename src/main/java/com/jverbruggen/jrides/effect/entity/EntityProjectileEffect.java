@@ -6,6 +6,7 @@ import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import org.bukkit.Bukkit;
 
 public class EntityProjectileEffect extends BaseTrainEffectTrigger implements EntityMovementTrigger{
     private final VirtualEntity virtualEntity;
@@ -29,6 +30,7 @@ public class EntityProjectileEffect extends BaseTrainEffectTrigger implements En
                                   int animationTimeTicks, int delayTicks) {
         this.virtualEntity = virtualEntity;
         this.delayedEntityTask = new DelayedEntityTask(this::runTask, delayTicks, animationTimeTicks);
+        this.delayedEntityTask.addOnFinishRunnable(this::onFinishCallback);
         this.resetOnStart = resetOnStart;
 
         this.initialPosition = initialPosition;
@@ -77,6 +79,7 @@ public class EntityProjectileEffect extends BaseTrainEffectTrigger implements En
         }
 
         resetVelocity();
+        virtualEntity.setRendered(true);
 
         delayedEntityTask.start();
     }
@@ -86,6 +89,10 @@ public class EntityProjectileEffect extends BaseTrainEffectTrigger implements En
         this.currentRotationalVelocity.setTo(this.initialRotationalVelocity);
     }
 
+    private void onFinishCallback(){
+        virtualEntity.setRendered(false);
+    }
+
     @Override
     public boolean finishedPlaying() {
         return delayedEntityTask.isFinished();
@@ -93,7 +100,7 @@ public class EntityProjectileEffect extends BaseTrainEffectTrigger implements En
 
     @Override
     public void onFinish(Runnable runnable) {
-        delayedEntityTask.setOnFinishRunnable(runnable);
+        delayedEntityTask.addOnFinishRunnable(runnable);
     }
 
     @Override
