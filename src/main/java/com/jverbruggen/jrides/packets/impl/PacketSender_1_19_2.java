@@ -10,10 +10,10 @@ import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandRotations;
 import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandModels;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.PacketSender;
-import com.jverbruggen.jrides.packets.packet.raw.*;
+import com.jverbruggen.jrides.packets.object.VirtualArmorstandConfiguration;
+import com.jverbruggen.jrides.packets.packet.v1_19.*;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.entity.EntityType;
-import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.UUID;
@@ -105,7 +105,7 @@ public class PacketSender_1_19_2 implements PacketSender {
     }
 
     @Override
-    public void spawnVirtualArmorstand(Player player, int entityId, Vector3 location, double yawRotation, ArmorstandRotations rotations, ArmorstandModels models, boolean invisible, int leashedToEntity) {
+    public void spawnVirtualArmorstand(Player player, int entityId, Vector3 location, double yawRotation, VirtualArmorstandConfiguration configuration) {
         sendDebugLog("spawnVirtualArmorstand (single)");
 
         double locationX = location.getX();
@@ -113,11 +113,17 @@ public class PacketSender_1_19_2 implements PacketSender {
         double locationZ = location.getZ();
         UUID uuid = UUID.randomUUID();
 
+        boolean invisible = configuration.invisible();
+        ArmorstandModels models = configuration.models();
+        ArmorstandRotations rotations = configuration.rotations();
+        int leashedToEntity = configuration.leashedToEntity();
+        String customName = configuration.customName();
+
         new SpawnArmorstandServerPacket(
                 protocolManager, entityId, locationX, locationY, locationZ, yawRotation, uuid
         ).send(player);
 
-        sendEntityMetaDataPacket(player, entityId, invisible);
+        sendEntityMetaDataPacket(player, entityId, invisible, customName);
 
         sendApplyModelPacket(player, entityId, EnumWrappers.ItemSlot.HEAD, models.getHead());
         sendApplyModelPacket(player, entityId, EnumWrappers.ItemSlot.MAINHAND, models.getMainHand());
@@ -134,11 +140,11 @@ public class PacketSender_1_19_2 implements PacketSender {
     }
 
     @Override
-    public void spawnVirtualArmorstand(List<Player> players, int entityId, Vector3 location, double yawRotation, ArmorstandRotations rotations, ArmorstandModels models, boolean invisible, int leashedToEntity) {
+    public void spawnVirtualArmorstand(List<Player> players, int entityId, Vector3 location, double yawRotation, VirtualArmorstandConfiguration configuration) {
         sendDebugLog("spawnVirtualArmorstand (multiple)");
 
         for(Player player : players){
-            spawnVirtualArmorstand(player, entityId, location, yawRotation, rotations, models, invisible, leashedToEntity);
+            spawnVirtualArmorstand(player, entityId, location, yawRotation, configuration);
         }
     }
 
@@ -228,11 +234,11 @@ public class PacketSender_1_19_2 implements PacketSender {
         new PlayerPositionServerPacket(protocolManager, position).send(movedPlayer);
     }
 
-    public void sendEntityMetaDataPacket(Player player, int entityId, boolean invisible){
+    public void sendEntityMetaDataPacket(Player player, int entityId, boolean invisible, String customName){
         sendDebugLog("sendEntityMetaDataPacket (single)");
 
         new EntityMetadataServerPacket(
-                protocolManager, entityId, invisible
+                protocolManager, entityId, invisible, customName
         ).send(player);
     }
 }

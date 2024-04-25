@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.event.action;
 
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.common.MenuSessionManager;
+import com.jverbruggen.jrides.common.Sync;
 import com.jverbruggen.jrides.language.FeedbackType;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
@@ -14,6 +15,10 @@ import org.bukkit.inventory.Inventory;
 public class OperateRideAction implements RideAction {
     @Override
     public void accept(VirtualEntity virtualEntity, RideHandle rideHandle, Player player) {
+        Sync.runSynced(() -> acceptInternal(rideHandle, player));
+    }
+
+    private void acceptInternal(RideHandle rideHandle, Player player){
         MenuSessionManager menuSessionManager = ServiceProvider.getSingleton(MenuSessionManager.class);
         LanguageFile languageFile = ServiceProvider.getSingleton(LanguageFile.class);
 

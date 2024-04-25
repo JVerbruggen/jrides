@@ -108,6 +108,10 @@ public class DispatchLockCollection implements DispatchLock {
         if(parentCollection != null) parentCollection.onStatusUpdate(lock);
     }
 
+    public Consumer<DispatchLock> toStatusListener(){
+        return this::onStatusUpdate;
+    }
+
     @Override
     public String getDescription() {
         return description;
@@ -162,9 +166,7 @@ public class DispatchLockCollection implements DispatchLock {
         DispatchLockCollection hybrid = new DispatchLockCollection(description);
 
         for(DispatchLockCollection dispatchLockCollection : dispatchLockCollections){
-            for(DispatchLock lock : dispatchLockCollection.locks){
-                hybrid.addDispatchLock(lock);
-            }
+            hybrid.addDispatchLock(dispatchLockCollection);
 
             for(Consumer<DispatchLock> lockEventListener : dispatchLockCollection.lockEventListeners){
                 hybrid.addLockEventListener(lockEventListener);

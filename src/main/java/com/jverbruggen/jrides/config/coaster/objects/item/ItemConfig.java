@@ -8,7 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import javax.annotation.Nullable;
 
 public interface ItemConfig {
-    VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition);
+    VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition, String customName);
 
     static ItemConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection){
         if(configurationSection == null) return null;

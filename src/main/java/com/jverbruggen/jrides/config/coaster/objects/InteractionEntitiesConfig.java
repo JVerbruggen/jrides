@@ -31,7 +31,8 @@ public class InteractionEntitiesConfig extends BaseConfig {
         for(Map.Entry<String, ModelConfig> entry : interactionEntities.entrySet()){
             ModelConfig modelConfig = entry.getValue();
             Vector3 spawnPosition = modelConfig.getPosition();
-            VirtualEntity virtualEntity = modelConfig.getItemConfig().spawnEntity(viewportManager, spawnPosition);
+            String customName = "Controller";
+            VirtualEntity virtualEntity = modelConfig.getItemConfig().spawnEntity(viewportManager, spawnPosition, customName);
 
             virtualEntity.setCustomAction(new OperateRideAction());
             virtualEntity.setBelongsToRide(rideHandle);

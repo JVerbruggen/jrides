@@ -30,11 +30,11 @@ public class PacketSender_1_20_1 extends PacketSender_1_19_2 {
     }
 
     @Override
-    public void sendEntityMetaDataPacket(Player player, int entityId, boolean invisible) {
+    public void sendEntityMetaDataPacket(Player player, int entityId, boolean invisible, String customName) {
         sendDebugLog("sendEntityMetaDataPacket (single) 1.20.1");
 
         new EntityMetadataServerPacket(
-                protocolManager, entityId, invisible
+                protocolManager, entityId, invisible, customName
         ).send(player);
     }
 

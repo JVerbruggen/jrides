@@ -99,7 +99,7 @@ public class EntityMovementCollectionConfig extends BaseConfig {
 
     public TrainEffectTrigger createTrigger(ViewportManager viewportManager) {
         LocRot spawnLocation = getSpawnLocation();
-        VirtualEntity virtualEntity = itemConfig.spawnEntity(viewportManager, spawnLocation.location());
+        VirtualEntity virtualEntity = itemConfig.spawnEntity(viewportManager, spawnLocation.location(), null);
         virtualEntity.setRotation(Quaternion.fromAnglesVector(spawnLocation.rotation()));
 
         List<EntityMovementTrigger> triggerSequence = entityMovementConfigs.stream()

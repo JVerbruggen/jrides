@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.packets.packet.raw;
+package com.jverbruggen.jrides.packets.packet.v1_19;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
@@ -9,19 +9,17 @@ import org.bukkit.entity.EntityType;
 
 import java.util.UUID;
 
-public class SpawnBukkitEntityServerPacket extends SingularServerPacket implements Packet {
+public class SpawnArmorstandServerPacket extends SingularServerPacket implements Packet {
     private int entityId;
-    private EntityType entityType;
     private double locationX;
     private double locationY;
     private double locationZ;
     private double yawRotation;
     private UUID uuid;
 
-    public SpawnBukkitEntityServerPacket(ProtocolManager protocolManager, int entityId, EntityType entityType, double locationX, double locationY, double locationZ, double yawRotation, UUID uuid) {
+    public SpawnArmorstandServerPacket(ProtocolManager protocolManager, int entityId, double locationX, double locationY, double locationZ, double yawRotation, UUID uuid) {
         super(protocolManager);
         this.entityId = entityId;
-        this.entityType = entityType;
         this.locationX = locationX;
         this.locationY = locationY;
         this.locationZ = locationZ;
@@ -35,7 +33,7 @@ public class SpawnBukkitEntityServerPacket extends SingularServerPacket implemen
         packet.getIntegers()
                 .write(0, entityId);
         packet.getEntityTypeModifier()
-                .write(0, entityType);
+                .write(0, EntityType.ARMOR_STAND);
         packet.getDoubles()
                 .write(0, locationX)
                 .write(1, locationY)

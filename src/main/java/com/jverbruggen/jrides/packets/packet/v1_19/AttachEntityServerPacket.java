@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.packets.packet.raw;
+package com.jverbruggen.jrides.packets.packet.v1_19;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;

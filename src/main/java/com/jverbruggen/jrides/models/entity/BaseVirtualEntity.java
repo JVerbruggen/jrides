@@ -28,7 +28,7 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     protected boolean spawned;
     protected boolean rendered;
     protected UUID uuid;
-    protected int entityId;
+    protected final int entityId;
     protected Vector3 location;
     protected List<Player> viewers;
 

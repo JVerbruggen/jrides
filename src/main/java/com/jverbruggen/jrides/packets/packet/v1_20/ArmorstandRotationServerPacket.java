@@ -10,7 +10,7 @@ import com.jverbruggen.jrides.models.math.Vector3;
 
 import java.util.List;
 
-public class ArmorstandRotationServerPacket extends com.jverbruggen.jrides.packets.packet.raw.ArmorstandRotationServerPacket {
+public class ArmorstandRotationServerPacket extends com.jverbruggen.jrides.packets.packet.v1_19.ArmorstandRotationServerPacket {
     public ArmorstandRotationServerPacket(ProtocolManager protocolManager, int entityId, int rotationType, Vector3 rotation) {
         super(protocolManager, entityId, rotationType, rotation);
     }

@@ -20,7 +20,7 @@ public class EntityConfig implements ItemConfig{
     }
 
     @Override
-    public VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition) {
+    public VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition, String customName) {
         return viewportManager.spawnVirtualEntity(spawnPosition, getEntityType());
     }
 

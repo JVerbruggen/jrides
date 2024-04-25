@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.render.Viewport;
+import com.jverbruggen.jrides.packets.object.VirtualArmorstandConfiguration;
 import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
@@ -47,7 +48,12 @@ public class SpecifiedViewportManager implements ViewportManager{
     }
 
     @Override
-    public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel) {
+    public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem trainModelItem) {
+        return null;
+    }
+
+    @Override
+    public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem trainModelItem, String customName) {
         return null;
     }
 
@@ -77,12 +83,12 @@ public class SpecifiedViewportManager implements ViewportManager{
     }
 
     @Override
-    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem headModel) {
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem headModel, VirtualArmorstandConfiguration configuration) {
         return null;
     }
 
     @Override
-    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, double yawRotation, TrainModelItem headModel) {
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, double yawRotation, TrainModelItem headModel, VirtualArmorstandConfiguration configuration) {
         return null;
     }
 

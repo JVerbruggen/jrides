@@ -45,8 +45,8 @@ public class ItemStackConfig implements ItemConfig {
     }
 
     @Override
-    public VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition) {
-        return viewportManager.spawnModelEntity(spawnPosition, new TrainModelItem(createItemStack()));
+    public VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition, String customName) {
+        return viewportManager.spawnModelEntity(spawnPosition, new TrainModelItem(createItemStack()), customName);
     }
 
     public static ItemStackConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection) {

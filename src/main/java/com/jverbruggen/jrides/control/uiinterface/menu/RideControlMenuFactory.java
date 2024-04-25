@@ -114,19 +114,23 @@ public class RideControlMenuFactory {
             return null;
 
         TriggerContext leftStationTriggerContext    = rideController.getLeftStationTriggerContext();
-        SimpleDispatchTrigger leftDispatchTrigger         = leftStationTriggerContext.getDispatchTrigger();
+        SimpleDispatchTrigger leftDispatchTrigger   = leftStationTriggerContext.getDispatchTrigger();
         StationTrigger leftGateTrigger              = leftStationTriggerContext.getGateTrigger();
         StationTrigger leftRestraintTrigger         = leftStationTriggerContext.getRestraintTrigger();
         TriggerContext rightStationTriggerContext   = rideController.getRightStationTriggerContext();
-        SimpleDispatchTrigger rightDispatchTrigger        = rightStationTriggerContext.getDispatchTrigger();
+        SimpleDispatchTrigger rightDispatchTrigger  = rightStationTriggerContext.getDispatchTrigger();
         StationTrigger rightGateTrigger             = rightStationTriggerContext.getGateTrigger();
         StationTrigger rightRestraintTrigger        = rightStationTriggerContext.getRestraintTrigger();
 
-        List<DispatchTrigger> dispatchTriggers      = List.of(leftDispatchTrigger, rightDispatchTrigger);
+        List<DispatchTrigger> dispatchTriggers              = List.of(leftDispatchTrigger, rightDispatchTrigger);
+        DispatchLockCollection leftDispatchLockCollection   = leftDispatchTrigger.getDispatchLockCollection();
+        DispatchLockCollection rightDispatchLockCollection  = rightDispatchTrigger.getDispatchLockCollection();
         DispatchLockCollection hybridDispatchLockCollection = DispatchLockCollection.makeHybrid(
                 "Main locks",
-                leftDispatchTrigger.getDispatchLockCollection(),
-                rightDispatchTrigger.getDispatchLockCollection());
+                leftDispatchLockCollection,
+                rightDispatchLockCollection);
+        leftDispatchLockCollection.addEventListener(hybridDispatchLockCollection.toStatusListener());
+        rightDispatchLockCollection.addEventListener(hybridDispatchLockCollection.toStatusListener());
         MultiDispatchTrigger simultaneousDispatchTrigger = new MultiDispatchTrigger(dispatchTriggers, hybridDispatchLockCollection);
 
         MenuButton claimOperatingButton      = rideControlButtonFactory.createClaimRideButton(rideController, 4);

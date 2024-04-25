@@ -7,6 +7,7 @@ import com.jverbruggen.jrides.models.entity.armorstand.YawRotatedVirtualArmorsta
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.render.GlobalViewport;
 import com.jverbruggen.jrides.packets.PacketSender;
+import com.jverbruggen.jrides.packets.object.VirtualArmorstandConfiguration;
 import org.bukkit.entity.EntityType;
 
 import java.util.HashMap;
@@ -83,7 +84,12 @@ public class GlobalViewportManager implements ViewportManager {
 
     @Override
     public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel) {
-        return spawnVirtualArmorstand(location, headModel);
+        return spawnVirtualArmorstand(location, headModel, VirtualArmorstandConfiguration.createDefault());
+    }
+
+    @Override
+    public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel, String customName) {
+        return spawnVirtualArmorstand(location, headModel, VirtualArmorstandConfiguration.createWithName(customName));
     }
 
     @Override
@@ -105,7 +111,7 @@ public class GlobalViewportManager implements ViewportManager {
     @Override
     public VirtualArmorstand spawnSeatEntity(Vector3 location, double yawRotation, TrainModelItem model){
         int entityId = entityIdFactory.newId();
-        VirtualArmorstand virtualArmorstand = new YawRotatedVirtualArmorstand(packetSender, this, location, yawRotation, entityId);
+        VirtualArmorstand virtualArmorstand = new YawRotatedVirtualArmorstand(packetSender, this, location, yawRotation, entityId, VirtualArmorstandConfiguration.createDefault());
         if(model != null){
             virtualArmorstand.setModel(model);
         }
@@ -118,23 +124,23 @@ public class GlobalViewportManager implements ViewportManager {
 
     @Override
     public VirtualArmorstand spawnVirtualArmorstand(Vector3 location) {
-        return spawnVirtualArmorstand(location, null);
+        return spawnVirtualArmorstand(location, null, VirtualArmorstandConfiguration.createDefault());
     }
 
     @Override
     public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, double yawRotation) {
-        return spawnVirtualArmorstand(location, yawRotation, null);
+        return spawnVirtualArmorstand(location, yawRotation);
     }
 
     @Override
-    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem model) {
-        return spawnVirtualArmorstand(location, 0, model);
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem model, VirtualArmorstandConfiguration configuration) {
+        return spawnVirtualArmorstand(location, 0, model, configuration);
     }
 
     @Override
-    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, double yawRotation, TrainModelItem model) {
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, double yawRotation, TrainModelItem model, VirtualArmorstandConfiguration configuration) {
         int entityId = entityIdFactory.newId();
-        VirtualArmorstand virtualArmorstand = new VirtualArmorstand(packetSender, this, location, yawRotation, entityId);
+        VirtualArmorstand virtualArmorstand = new VirtualArmorstand(packetSender, this, location, yawRotation, entityId, configuration);
         if(model != null){
             virtualArmorstand.setModel(model);
         }
