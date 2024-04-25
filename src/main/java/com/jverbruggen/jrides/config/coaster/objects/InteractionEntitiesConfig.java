@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.config.coaster.objects.cart.ModelConfig;
 import com.jverbruggen.jrides.event.action.OperateRideAction;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
@@ -31,8 +32,9 @@ public class InteractionEntitiesConfig extends BaseConfig {
         for(Map.Entry<String, ModelConfig> entry : interactionEntities.entrySet()){
             ModelConfig modelConfig = entry.getValue();
             Vector3 spawnPosition = modelConfig.getPosition();
+            Quaternion spawnRotation = modelConfig.getRotation();
             String customName = "Controller";
-            VirtualEntity virtualEntity = modelConfig.getItemConfig().spawnEntity(viewportManager, spawnPosition, customName);
+            VirtualEntity virtualEntity = modelConfig.getItemConfig().spawnEntity(viewportManager, spawnPosition, spawnRotation, customName);
 
             virtualEntity.setCustomAction(new OperateRideAction());
             virtualEntity.setBelongsToRide(rideHandle);

@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.render.Viewport;
 import com.jverbruggen.jrides.packets.object.VirtualArmorstandConfiguration;
@@ -53,7 +54,7 @@ public class SpecifiedViewportManager implements ViewportManager{
     }
 
     @Override
-    public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem trainModelItem, String customName) {
+    public VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, TrainModelItem trainModelItem, String customName) {
         return null;
     }
 
@@ -83,12 +84,12 @@ public class SpecifiedViewportManager implements ViewportManager{
     }
 
     @Override
-    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, TrainModelItem headModel, VirtualArmorstandConfiguration configuration) {
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, Quaternion rotation, TrainModelItem headModel, VirtualArmorstandConfiguration configuration) {
         return null;
     }
 
     @Override
-    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, double yawRotation, TrainModelItem headModel, VirtualArmorstandConfiguration configuration) {
+    public VirtualArmorstand spawnVirtualArmorstand(Vector3 location, Quaternion rotation, double yawRotation, TrainModelItem headModel, VirtualArmorstandConfiguration configuration) {
         return null;
     }
 

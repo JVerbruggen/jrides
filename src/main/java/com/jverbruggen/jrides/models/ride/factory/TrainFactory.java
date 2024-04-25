@@ -89,7 +89,7 @@ public class TrainFactory {
             Vector3 cartLocation = vectorQuaternionState.getVector();
             Quaternion cartOrientation = vectorQuaternionState.getQuaternion();
 
-            VirtualEntity virtualEntity = cartModelItemConfig.spawnEntity(viewportManager, cartLocation, null);
+            VirtualEntity virtualEntity = cartModelItemConfig.spawnEntity(viewportManager, cartLocation, cartOrientation, null);
             Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> virtualEntity.setRotation(cartOrientation));
 
             List<Vector3PlusYaw> seatOffsets = cartTypeSpecConfig.getSeats().getPositions();

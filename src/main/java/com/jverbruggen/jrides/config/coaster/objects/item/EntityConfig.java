@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.config.coaster.objects.item;
 
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,7 +21,7 @@ public class EntityConfig implements ItemConfig{
     }
 
     @Override
-    public VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition, String customName) {
+    public VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition, Quaternion spawnRotation, String customName) {
         return viewportManager.spawnVirtualEntity(spawnPosition, getEntityType());
     }
 

@@ -24,10 +24,10 @@ public class VirtualArmorstand extends BaseVirtualEntity {
     private double yawRotation;
     private final VirtualArmorstandConfiguration configuration;
 
-    public VirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, double yawRotation, int entityId, @Nonnull VirtualArmorstandConfiguration configuration) {
+    public VirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, Quaternion rotation, double yawRotation, int entityId, @Nonnull VirtualArmorstandConfiguration configuration) {
         super(packetSender, viewportManager, location, entityId);
 
-        this.currentRotation = new Quaternion();
+        this.currentRotation = rotation;
         this.yawRotation = yawRotation;
         this.configuration = configuration;
     }
@@ -57,6 +57,8 @@ public class VirtualArmorstand extends BaseVirtualEntity {
         if(configuration.models().hasHead()){
             this.packetSender.sendApplyModelPacket(viewers, entityId, EnumWrappers.ItemSlot.HEAD, configuration.models().getHead());
         }
+
+        setHeadPose(ArmorStandPose.getArmorStandPose(this.currentRotation));
 
         if(getPassenger() != null){
             Bukkit.getScheduler().runTaskLater(JRidesPlugin.getBukkitPlugin(),

@@ -3,6 +3,7 @@ package com.jverbruggen.jrides.config.coaster.objects.item;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Material;
@@ -45,8 +46,8 @@ public class ItemStackConfig implements ItemConfig {
     }
 
     @Override
-    public VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition, String customName) {
-        return viewportManager.spawnModelEntity(spawnPosition, new TrainModelItem(createItemStack()), customName);
+    public VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition, Quaternion spawnRotation, String customName) {
+        return viewportManager.spawnModelEntity(spawnPosition, spawnRotation, new TrainModelItem(createItemStack()), customName);
     }
 
     public static ItemStackConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection) {

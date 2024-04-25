@@ -39,7 +39,7 @@ public class ModelConfig extends BaseConfig {
 
     public FlatRideModel toFlatRideModel(Vector3 rootPosition, ViewportManager viewportManager){
         Vector3 spawnPosition = Vector3.add(rootPosition, position);
-        VirtualEntity virtualEntity = itemConfig.spawnEntity(viewportManager, spawnPosition, null);
+        VirtualEntity virtualEntity = itemConfig.spawnEntity(viewportManager, spawnPosition, new Quaternion(), null);
 
         return new FlatRideModel(virtualEntity, position.clone(), rotation.clone());
     }

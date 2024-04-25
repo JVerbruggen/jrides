@@ -10,8 +10,8 @@ import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import javax.annotation.Nonnull;
 
 public class YawRotatedVirtualArmorstand extends VirtualArmorstand {
-    public YawRotatedVirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, double yawRotation, int entityId, @Nonnull VirtualArmorstandConfiguration configuration) {
-        super(packetSender, viewportManager, location, yawRotation, entityId, configuration);
+    public YawRotatedVirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, Quaternion rotation, double yawRotation, int entityId, @Nonnull VirtualArmorstandConfiguration configuration) {
+        super(packetSender, viewportManager, location, rotation, yawRotation, entityId, configuration);
     }
 
     @Override
