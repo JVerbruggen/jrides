@@ -5,6 +5,7 @@ import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.CoasterCart;
+import com.jverbruggen.jrides.models.ride.section.Section;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
@@ -62,6 +63,13 @@ public class ParticleTrackVisualisationTool extends ParticleVisualisationTool {
             bukkitPlayer.spawnParticle(Particle.DRIP_WATER, train.getTrain().getCurrentHeadLocation().toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
             for(CoasterCart cart : train.getTrain().getCarts()){
                 bukkitPlayer.spawnParticle(Particle.VILLAGER_HAPPY, cart.getPosition().toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
+
+                Section cartSection = cart.getFrame().getSection();
+                if(cart.getWheelDistance() != 0) {
+                    bukkitPlayer.spawnParticle(Particle.FIREWORKS_SPARK, cartSection.getLocationFor(cart.getFrame().clone().add(cart.getWheelDistance())).toBukkitLocation(world), 1, 0.01, 1, 0.01, 0);
+                    bukkitPlayer.spawnParticle(Particle.FIREWORKS_SPARK, cartSection.getLocationFor(cart.getFrame().clone().add(-cart.getWheelDistance())).toBukkitLocation(world), 1, 0.01, 1, 0.01, 0);
+                }
+
             }
             bukkitPlayer.spawnParticle(Particle.DRIP_LAVA, train.getTrain().getCurrentTailLocation().toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
         }

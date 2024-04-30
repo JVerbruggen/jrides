@@ -25,6 +25,7 @@ public class CartMovementFactory {
 
         for(CoasterCart cart : carts){
             Frame cartFrame = cart.getFrame();
+
             Frame newShadedCartFrame = cartFrame.clone().add(speedFrameIncrement);
 
             sectionProvider.addFramesWithSectionLogic(trainHandle, cartFrame, newShadedCartFrame.getValue());
@@ -34,6 +35,19 @@ public class CartMovementFactory {
             Quaternion orientation = cartSection.getOrientationFor(cartFrame).clone();
             if(cartFrame.isInvertedFrameAddition())
                 orientation.rotateY(180);
+
+            // If the front and rear wheel frames are the same, we can just use the cart frame
+            if(cart.getWheelDistance() != 0){
+                // Get the positions and orientations of the front and rear wheels
+                Vector3 frontWheelPosition = cartSection.getLocationFor(cartFrame.clone().add(cart.getWheelDistance()));
+                Vector3 rearWheelPosition = cartSection.getLocationFor(cartFrame.clone().add(-cart.getWheelDistance()));
+                Quaternion frontWheelOrientation = cartSection.getOrientationFor(cartFrame.clone().add(cart.getWheelDistance())).clone();
+                Quaternion rearWheelOrientation = cartSection.getOrientationFor(cartFrame.clone().add(-cart.getWheelDistance())).clone();
+
+                // Calculate the center vector3 of the front and rear wheels
+                cartPositionOnTrack = Vector3.average(frontWheelPosition, rearWheelPosition);
+                orientation = Quaternion.slerp(frontWheelOrientation, rearWheelOrientation, 0.5);
+            }
 
             VectorQuaternionState vectorQuaternionState = CoasterCart.calculateLocation(cartPositionOnTrack, cart.getTrackOffset(), orientation, cart.getRotationOffset());
 

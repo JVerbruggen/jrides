@@ -31,6 +31,7 @@ public interface CoasterCart extends SeatHost {
 
     String getName();
     Frame getFrame();
+    int getWheelDistance();
     Vector3 getTrackOffset();
     Vector3 getPosition();
 
