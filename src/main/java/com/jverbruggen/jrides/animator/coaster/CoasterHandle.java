@@ -145,6 +145,10 @@ public class CoasterHandle extends AbstractRideHandle {
         return getCoasterStationHandles().get(index);
     }
 
+    public boolean hasStation(){
+        return getStationHandles().size() > 0;
+    }
+
     public void tick(){
         if(!isLoaded()) return;
 

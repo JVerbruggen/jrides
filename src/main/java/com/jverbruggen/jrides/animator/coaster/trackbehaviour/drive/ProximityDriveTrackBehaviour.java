@@ -2,6 +2,7 @@ package com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive;
 
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.BaseTrackBehaviour;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.ProximityUtils;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.models.properties.Speed;
@@ -100,23 +101,7 @@ public class ProximityDriveTrackBehaviour extends BaseTrackBehaviour implements 
     }
 
     private boolean isTooCloseToOtherTrains(Train train){
-        boolean tooCloseToOther = false;
-        int trainFrameValue = train.getMiddleOfTrainFrame().getValue();
-
-        for(Map.Entry<Train, ProximityDrivePhase> entry : trainPhases.entrySet()){
-            Train otherTrain = entry.getKey();
-            if(otherTrain == train) continue;
-
-            int otherTrainFrameValue = otherTrain.getMiddleOfTrainFrame().getValue();
-            if(otherTrainFrameValue < trainFrameValue)
-                break; // Do not care about trains behind us
-
-            int distanceFrom = otherTrainFrameValue - trainFrameValue;
-            if(distanceFrom < minTrainDistance){
-                tooCloseToOther = true;
-            }
-        }
-        return tooCloseToOther;
+        return ProximityUtils.isTooCloseToOtherTrains(train, trainPhases.keySet().stream().toList(), minTrainDistance);
     }
 
     @Override
@@ -156,7 +141,7 @@ public class ProximityDriveTrackBehaviour extends BaseTrackBehaviour implements 
 
     @Override
     protected void setParentTrackOnFrames(Track parentTrack) {
-
+        stopFrame.setTrack(parentTrack);
     }
 
     @Override

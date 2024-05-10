@@ -1,10 +1,13 @@
-package com.jverbruggen.jrides.animator.coaster.trackbehaviour;
+package com.jverbruggen.jrides.animator.coaster.trackbehaviour.station;
 
 import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.BaseTrackBehaviour;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.FreeMovementTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.TrainMovement;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.station.StationPhase;
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.trigger.SimpleDispatchTrigger;

@@ -31,5 +31,6 @@ public interface RideController {
 
     boolean isActive();
     void setActive(boolean active);
+    boolean supportsMenu();
 
 }

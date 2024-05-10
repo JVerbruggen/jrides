@@ -24,4 +24,14 @@ public class SimpleRideController extends SingularRideController implements Ride
     public TriggerContext getTriggerContext() {
         return triggerContext;
     }
+
+    public static SimpleRideController createVoid(RideHandle rideHandle){
+        SimpleRideController simpleRideController = new SimpleRideController(rideHandle, new TriggerContext(
+                null, null, null, null, null
+        ));
+
+        simpleRideController.supportsMenu = false;
+
+        return simpleRideController;
+    }
 }

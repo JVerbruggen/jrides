@@ -1,10 +1,7 @@
 package com.jverbruggen.jrides.control.controlmode.factory;
 
 import com.jverbruggen.jrides.animator.RideHandle;
-import com.jverbruggen.jrides.control.controlmode.AutomaticAlternateMode;
-import com.jverbruggen.jrides.control.controlmode.AutomaticMode;
-import com.jverbruggen.jrides.control.controlmode.ControlMode;
-import com.jverbruggen.jrides.control.controlmode.SemiAutomaticMode;
+import com.jverbruggen.jrides.control.controlmode.*;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 
@@ -31,7 +28,7 @@ public class ControlModeFactory {
         List<StationHandle> stationHandles = rideHandle.getStationHandles();
         int size = stationHandles.size();
         if(size == 0)
-            return null;
+            return new VoidMode();
         else if(size == 1)
             return createSimpleAutomaticMode(rideHandle, stationHandles.get(0));
         else{

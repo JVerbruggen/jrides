@@ -1,4 +1,4 @@
-package com.jverbruggen.jrides.animator.coaster.trackbehaviour;
+package com.jverbruggen.jrides.animator.coaster.trackbehaviour.station;
 
 public enum StationPhase{
     /**

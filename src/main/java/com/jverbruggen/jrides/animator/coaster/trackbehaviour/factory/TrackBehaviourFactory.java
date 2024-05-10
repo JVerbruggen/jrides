@@ -4,7 +4,7 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.FreeMovementTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.LaunchTrackBehaviour;
-import com.jverbruggen.jrides.animator.coaster.trackbehaviour.StationTrackBehaviour;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.station.StationTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive.*;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
