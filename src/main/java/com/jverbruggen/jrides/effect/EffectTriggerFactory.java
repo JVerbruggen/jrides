@@ -110,7 +110,6 @@ public class EffectTriggerFactory {
             if(effectTrigger == null) continue;
             if(previous != null) setNextFunction.accept(previous, effectTrigger);
             effectTriggers.add(effectTrigger);
-            Bukkit.broadcastMessage(clazz.getName() + ": " + effectName);
 
             previous = effectTrigger;
         }
