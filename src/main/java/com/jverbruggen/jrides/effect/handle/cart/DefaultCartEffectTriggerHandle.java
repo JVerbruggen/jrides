@@ -10,7 +10,7 @@ public class DefaultCartEffectTriggerHandle extends BaseCartEffectTriggerHandle 
     }
 
     @Override
-    public void execute(CoasterCart cart) {
-        getCartEffectTrigger().execute(cart);
+    public boolean executeForCart(CoasterCart cart) {
+        return getCartEffectTrigger().execute(cart);
     }
 }

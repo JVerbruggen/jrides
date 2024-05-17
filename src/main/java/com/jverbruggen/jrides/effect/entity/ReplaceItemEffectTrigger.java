@@ -29,13 +29,9 @@ public class ReplaceItemEffectTrigger extends BaseTrainEffectTrigger implements 
     }
 
     @Override
-    public void execute(Train train) {
+    public boolean execute(Train train) {
         this.delayedEntityTask.start();
-    }
-
-    @Override
-    public void executeReversed(Train train) {
-        execute(train);
+        return true;
     }
 
     @Override

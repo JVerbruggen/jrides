@@ -77,4 +77,5 @@ public interface Train extends Vehicle {
     boolean statusModeEnabled(Player player);
 
     void despawn();
+    void reset();
 }

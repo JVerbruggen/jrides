@@ -52,6 +52,7 @@ public interface CoasterCart extends SeatHost {
     Train getParentTrain();
     boolean shouldFaceForwards();
     void setInvertedFrameAddition(boolean inverted);
+    void updateCustomOrientationOffset(Vector3 orientationOffset);
 
     void setNextEffect(TrainEffectTriggerHandle nextEffect);
     void playEffects();

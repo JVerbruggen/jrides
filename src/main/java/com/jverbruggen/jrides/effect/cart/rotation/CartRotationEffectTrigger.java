@@ -16,13 +16,14 @@ public class CartRotationEffectTrigger extends BaseCartEffectTrigger {
     }
 
     @Override
-    public void execute(CoasterCart cart) {
-
+    public boolean execute(CoasterCart cart) {
+        cart.updateCustomOrientationOffset(rotation);
+        return true;
     }
 
     @Override
-    public void executeReversed(CoasterCart cart) {
-
+    public boolean executeReversed(CoasterCart cart) {
+        return execute(cart);
     }
 
     @Override

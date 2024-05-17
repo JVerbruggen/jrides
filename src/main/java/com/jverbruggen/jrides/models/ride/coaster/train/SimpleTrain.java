@@ -1,6 +1,5 @@
 package com.jverbruggen.jrides.models.ride.coaster.train;
 
-import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
@@ -11,18 +10,17 @@ import com.jverbruggen.jrides.models.properties.TrackEnd;
 import com.jverbruggen.jrides.models.properties.TrainEnd;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.section.Section;
-import org.bukkit.SoundCategory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleTrain extends AbstractVehicle implements Train {
-    private List<CoasterCart> carts;
-    private Frame middleOfTrainFrame;
-    private Frame headOfTrainFrame;
-    private Frame tailOfTrainFrame;
-    private List<Section> currentSections;
-    private List<Section> reservedSections;
+    private final List<CoasterCart> carts;
+    private final Frame middleOfTrainFrame;
+    private final Frame headOfTrainFrame;
+    private final Frame tailOfTrainFrame;
+    private final List<Section> currentSections;
+    private final List<Section> reservedSections;
     private Vector3 headLocation;
     private Vector3 middleLocation;
     private Vector3 tailLocation;
@@ -31,8 +29,8 @@ public class SimpleTrain extends AbstractVehicle implements Train {
     private TrainHandle trainHandle;
 
     private String statusMessage;
-    private List<Player> statusMessageListeners;
-    private List<MessageReceiver> positionMessageListeners;
+    private final List<Player> statusMessageListeners;
+    private final List<MessageReceiver> positionMessageListeners;
     private boolean drivingTowardsPositiveDirection;
     private boolean forwards;
 
@@ -359,6 +357,11 @@ public class SimpleTrain extends AbstractVehicle implements Train {
     @Override
     public void despawn() {
         carts.forEach(CoasterCart::despawn);
+    }
+
+    @Override
+    public void reset() {
+        getHandle().resetEffects();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.config.trigger;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.config.trigger.cart.CartRestraintTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.entity.MultiEntityMovementConfig;
 import com.jverbruggen.jrides.config.trigger.external.CommandAsPlayerTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.external.CommandForPlayerTriggerConfig;
@@ -10,6 +11,7 @@ import com.jverbruggen.jrides.config.trigger.external.animation.AnimatedJavaTrig
 import com.jverbruggen.jrides.config.trigger.music.MusicTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.structure.StructureConfig;
 import com.jverbruggen.jrides.config.trigger.train.EjectTriggerConfig;
+import com.jverbruggen.jrides.config.trigger.train.ResetTriggerConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
@@ -34,6 +36,8 @@ public class TriggerConfigFactory {
         }
 
         triggerConfig = switch (type) {
+            case RESET ->
+                    ResetTriggerConfig.fromConfigurationSection(configurationSection);
             case MUSIC ->
                     MusicTriggerConfig.fromConfigurationSection(configurationSection);
             case COMMAND ->
@@ -52,8 +56,10 @@ public class TriggerConfigFactory {
                     StructureConfig.fromConfigurationSection(configurationSection);
             case EXTERNAL_EVENT ->
                     ExternalTriggerConfig.fromConfigurationSection(configurationSection);
-            default ->
-                    throw new RuntimeException("Trigger type " + type + " is not supported");
+            case CART_ROTATE ->
+                    throw new RuntimeException("Not supported yet cart rotate");
+            case CART_RESTRAINT ->
+                    CartRestraintTriggerConfig.fromConfigurationSection(configurationSection);
         };
 
         triggerConfigList.put(mapKey, triggerConfig);

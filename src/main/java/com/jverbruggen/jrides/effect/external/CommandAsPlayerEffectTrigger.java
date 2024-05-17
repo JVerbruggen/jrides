@@ -17,14 +17,15 @@ public class CommandAsPlayerEffectTrigger extends BaseTrainEffectTrigger {
     }
 
     @Override
-    public void execute(Train train) {
+    public boolean execute(Train train) {
         for(Player player : train.getPassengers()){
             player.getBukkitPlayer().performCommand(command);
         }
+        return true;
     }
 
     @Override
-    public void executeReversed(Train train) {
-        execute(train);
+    public boolean executeReversed(Train train) {
+        return execute(train);
     }
 }

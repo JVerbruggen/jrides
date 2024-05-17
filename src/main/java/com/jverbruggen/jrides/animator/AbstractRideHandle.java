@@ -11,6 +11,7 @@ import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.menu.Menu;
+import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.count.RideCounterRecord;
 import org.bukkit.Sound;
@@ -28,15 +29,17 @@ public abstract class AbstractRideHandle implements RideHandle{
     private Menu rideControlMenu;
     private RideController rideController;
     private final SoundsConfig sounds;
+    private final PlayerLocation customEjectLocation;
 
     private List<RideCounterRecord> topRideCounters;
     private RideCounterMapConfigs rideCounterMapConfigs;
 
-    public AbstractRideHandle(World world, Ride ride, RideState rideState, boolean loaded, SoundsConfig sounds, RideCounterMapConfigs rideCounterMapConfigs) {
+    public AbstractRideHandle(World world, Ride ride, RideState rideState, boolean loaded, SoundsConfig sounds, PlayerLocation customEjectLocation, RideCounterMapConfigs rideCounterMapConfigs) {
         this.world = world;
         this.ride = ride;
         this.rideState = rideState;
         this.loaded = loaded;
+        this.customEjectLocation = customEjectLocation;
         this.rideController = null;
         this.topRideCounters = new ArrayList<>();
 
@@ -56,6 +59,11 @@ public abstract class AbstractRideHandle implements RideHandle{
     @Override
     public RideState getState() {
         return rideState;
+    }
+
+    @Override
+    public PlayerLocation getCustomEjectLocation() {
+        return customEjectLocation;
     }
 
     @Override

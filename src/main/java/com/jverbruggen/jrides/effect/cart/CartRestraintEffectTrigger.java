@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.effect.cart;
 
 import com.jverbruggen.jrides.models.ride.coaster.train.CoasterCart;
+import org.bukkit.Bukkit;
 
 public class CartRestraintEffectTrigger extends BaseCartEffectTrigger {
     public final boolean locked;
@@ -15,12 +16,13 @@ public class CartRestraintEffectTrigger extends BaseCartEffectTrigger {
     }
 
     @Override
-    public void execute(CoasterCart cart) {
+    public boolean execute(CoasterCart cart) {
         cart.setRestraint(locked);
+        return true;
     }
 
     @Override
-    public void executeReversed(CoasterCart cart) {
-
+    public boolean executeReversed(CoasterCart cart) {
+        return execute(cart);
     }
 }

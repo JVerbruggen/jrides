@@ -54,13 +54,14 @@ public class EntityContinuousMovementEffectTrigger extends BaseTrainEffectTrigge
     }
 
     @Override
-    public void execute(Train train) {
+    public boolean execute(Train train) {
         start();
+        return true;
     }
 
     @Override
-    public void executeReversed(Train train) {
-        execute(train);
+    public boolean executeReversed(Train train) {
+        return execute(train);
     }
 
     protected void start(){

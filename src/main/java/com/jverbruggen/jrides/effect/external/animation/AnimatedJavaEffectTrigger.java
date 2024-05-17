@@ -22,7 +22,7 @@ public class AnimatedJavaEffectTrigger extends BaseTrainEffectTrigger {
     }
 
     @Override
-    public void execute(Train train) {
+    public boolean execute(Train train) {
         if(!executor.isSpawned()){
             executor.spawnRig();
         }
@@ -30,10 +30,12 @@ public class AnimatedJavaEffectTrigger extends BaseTrainEffectTrigger {
 
         if(despawnAfterTicks != -1)
             Sync.runAfter(executor::removeRig, despawnAfterTicks);
+
+        return true;
     }
 
     @Override
-    public void executeReversed(Train train) {
-        execute(train);
+    public boolean executeReversed(Train train) {
+        return execute(train);
     }
 }

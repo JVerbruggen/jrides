@@ -7,7 +7,6 @@ import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
-import org.bukkit.Bukkit;
 
 import java.util.List;
 
@@ -96,14 +95,14 @@ public class StationHandle {
 
     public void runEntryEffectTriggers(Train train){
         if(entryBlockingEffectTriggers == null) return;
-        entryBlockingEffectTriggers.forEach(t -> t.execute(train));
+        entryBlockingEffectTriggers.forEach(t -> t.executeForTrain(train));
     }
 
     public void runExitEffectTriggers(Train train){
         if(exitBlockingEffectTriggers != null)
-            exitBlockingEffectTriggers.forEach(t -> t.execute(train));
+            exitBlockingEffectTriggers.forEach(t -> t.executeForTrain(train));
         if(exitEffectTriggers != null)
-            exitEffectTriggers.forEach(t -> t.execute(train));
+            exitEffectTriggers.forEach(t -> t.executeForTrain(train));
     }
 
     public boolean entryEffectTriggersDone(){

@@ -44,6 +44,7 @@ public class SimpleCoasterCart implements CoasterCart {
         this.frame = frame;
         this.parentTrain = null;
         this.currentOrientation = new Quaternion(0,0,0,0);
+        this.orientationOffset = null;
 
         this.nextEffect = null;
         this.hasEffects = false;
@@ -102,7 +103,8 @@ public class SimpleCoasterCart implements CoasterCart {
         return trackRotationOffset;
     }
 
-    private void updateOrientationOffset(Vector3 orientationOffset){
+    @Override
+    public void updateCustomOrientationOffset(Vector3 orientationOffset){
         this.orientationOffset = orientationOffset;
         updateOrientation(calculateOrientationWithOffset(currentOrientation));
     }

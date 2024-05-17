@@ -94,7 +94,7 @@ public class LaunchTrackBehaviour extends BaseTrackBehaviour {
 
     private void playLaunchEffects(Train train){
         if(launchEffectTriggers == null) return;
-        launchEffectTriggers.forEach(e -> e.execute(train));
+        launchEffectTriggers.forEach(e -> e.executeForTrain(train));
     }
 
     private void reset(){

@@ -8,13 +8,13 @@ import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.SoundsConfig;
 import com.jverbruggen.jrides.config.coaster.objects.TrackConfig;
-import com.jverbruggen.jrides.config.ride.RideCounterMapConfigs;
 import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.controller.RideControllerFactory;
 import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
+import com.jverbruggen.jrides.effect.handle.cart.CartEffectTriggerHandle;
 import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.exception.CoasterLoadException;
 import com.jverbruggen.jrides.exception.NoTrackSpecifiedException;
@@ -98,6 +98,7 @@ public class CoasterLoader {
 
         ItemStack displayItem = ItemStackFactory.getCoasterStackFromConfig(coasterConfig.getDisplayItem());
 
+        PlayerLocation customEjectLocation = coasterConfig.getCustomEjectLocation();
         PlayerLocation warpLocation = coasterConfig.getWarpLocation();
         boolean canExitDuringRide = coasterConfig.canExitDuringRide();
         Ride ride = new SimpleCoaster(rideIdentifier, displayName, displayDescription, displayItem, warpLocation, canExitDuringRide);
@@ -110,7 +111,7 @@ public class CoasterLoader {
 
         SoundsConfig sounds = coasterConfig.getSoundsConfig();
 
-        CoasterHandle coasterHandle = new CoasterHandle(ride, world, sounds, rideOverviewMapId, !rideState.isInactive(),
+        CoasterHandle coasterHandle = new CoasterHandle(ride, world, sounds, customEjectLocation, rideOverviewMapId, !rideState.isInactive(),
                 coasterConfig.getDragConstant(), coasterConfig.getGravityConstant(), coasterConfig.getRideCounterMapConfigs());
 
         coasterConfig.getInteractionEntities().spawnEntities(coasterHandle);
@@ -134,7 +135,9 @@ public class CoasterLoader {
             coasterHandle.setTrack(track);
 
             EffectTriggerCollection<TrainEffectTriggerHandle> effectTriggerCollection = effectTriggerFactory.getTrainEffectTriggers(rideIdentifier, track);
-            coasterHandle.setEffectTriggerCollection(effectTriggerCollection);
+            coasterHandle.setTrainEffectTriggerCollection(effectTriggerCollection);
+            EffectTriggerCollection<CartEffectTriggerHandle> cartEffectTriggerCollection = effectTriggerFactory.getCartEffectTriggers(rideIdentifier, track);
+            coasterHandle.setCartEffectTriggerCollection(cartEffectTriggerCollection);
 
             SectionProvider sectionProvider = new SectionProvider();
             int trainCount = coasterConfig.getVehicles().getTrains();

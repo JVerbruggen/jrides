@@ -13,13 +13,13 @@ public class AllCartsTrainEffectTrigger extends BaseTrainEffectTrigger implement
     }
 
     @Override
-    public void execute(Train train) {
-        train.getCarts().forEach(cartEffectTrigger::execute);
+    public boolean execute(Train train) {
+        return train.getCarts().stream().allMatch(cartEffectTrigger::execute);
     }
 
     @Override
-    public void executeReversed(Train train) {
-        train.getCarts().forEach(cartEffectTrigger::executeReversed);
+    public boolean executeReversed(Train train) {
+        return train.getCarts().stream().allMatch(cartEffectTrigger::executeReversed);
     }
 
     @Override

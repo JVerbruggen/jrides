@@ -10,6 +10,8 @@ import com.jverbruggen.jrides.models.properties.frame.factory.FrameFactory;
 import com.jverbruggen.jrides.models.ride.RideType;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import net.minecraft.util.Tuple;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.*;
@@ -27,8 +29,9 @@ public class EffectTriggerFactory {
         this.frameFactory = ServiceProvider.getSingleton(FrameFactory.class);
     }
 
-    private <T extends EffectTriggerHandle> T getEffectTrigger(String rideIdentifier, String effectName, boolean reversed, Frame frame, TriggerConfig triggerConfig){
-        if(triggerConfig == null) return null;
+    private <T extends EffectTriggerHandle> T getEffectTrigger(Class<T> clazz, String rideIdentifier, String effectName, boolean reversed, Frame frame, TriggerConfig triggerConfig){
+        if(triggerConfig == null)
+            throw new RuntimeException("Trigger config was null for effect '" + effectName + "' in ride '" + rideIdentifier + "'");
 
         EffectTrigger effectTrigger;
         String mapKey = rideIdentifier + ":" + effectName;
@@ -40,15 +43,20 @@ public class EffectTriggerFactory {
             effectTrigger = effectTriggerMap.get(mapKey);
         }
 
-        return (T) effectTrigger.createHandle(frame, reversed);
+        EffectTriggerHandle effectTriggerHandle = effectTrigger.createHandle(frame, reversed);
+
+        if(!clazz.isInstance(effectTriggerHandle))
+            return null;
+
+        return clazz.cast(effectTriggerHandle);
     }
 
     public TrainEffectTriggerHandle getTrainEffectTrigger(String rideIdentifier, String effectName, boolean reversed, Frame frame, TriggerConfig triggerConfig){
-        return getEffectTrigger(rideIdentifier, effectName, reversed, frame, triggerConfig);
+        return getEffectTrigger(TrainEffectTriggerHandle.class, rideIdentifier, effectName, reversed, frame, triggerConfig);
     }
 
     public CartEffectTriggerHandle getCartEffectTrigger(String rideIdentifier, String effectName, boolean reversed, Frame frame, TriggerConfig triggerConfig){
-        return getEffectTrigger(rideIdentifier, effectName, reversed, frame, triggerConfig);
+        return getEffectTrigger(CartEffectTriggerHandle.class, rideIdentifier, effectName, reversed, frame, triggerConfig);
     }
 
     public List<TrainEffectTriggerHandle> getFramelessEffectTriggers(RideType rideType, String rideIdentifier, List<String> effectNames){
@@ -64,49 +72,57 @@ public class EffectTriggerFactory {
                     }
                     return getTrainEffectTrigger(rideIdentifier, effectName, reversed, null, configManager.getTriggerConfig(rideType, rideIdentifier, effectName));
                 })
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
-    private <T extends EffectTriggerHandle> EffectTriggerCollection<T> getEffectTriggerCollectionGeneric(String rideIdentifier, Track track, BiConsumer<T, T> setNextFunction){
+    private <T extends EffectTriggerHandle> EffectTriggerCollection<T> getEffectTriggerCollectionGeneric(Class<T> clazz, String rideIdentifier, Track track, BiConsumer<T, T> setNextFunction){
         ConfigurationSection allEffectsConfigurationSection = configManager.getAllEffectsConfigSection(rideIdentifier, "default");
         if(allEffectsConfigurationSection == null)
             return null;
 
+        boolean goneRound = false;
         int lastFrameIndex = Integer.MIN_VALUE;
-        Map<Frame, String> effects = new HashMap<>();
+        List<Tuple<Frame, String>> effects = new ArrayList<>();
         Set<String> effectIdentifiers = allEffectsConfigurationSection.getKeys(false);
         for(String effectIdentifier : effectIdentifiers){
             ConfigurationSection effectConfigurationSection = allEffectsConfigurationSection.getConfigurationSection(effectIdentifier);
             int frameIndex = effectConfigurationSection.getInt("frame");
-            if(lastFrameIndex > frameIndex) throw new RuntimeException("Every effect trigger frame needs to be after the frame of the effect before");
+            if(lastFrameIndex > frameIndex){
+                if(goneRound)
+                    throw new RuntimeException("Every effect trigger frame needs to be after the frame of the effect before (except for once going round)");
 
-            effects.put(frameFactory.getStaticFrame(frameIndex, track), effectIdentifier);
+                goneRound = true;
+            }
+
+            effects.add(new Tuple<>(frameFactory.getStaticFrame(frameIndex, track), effectIdentifier));
 
             lastFrameIndex = frameIndex;
         }
 
         T previous = null;
-        List<T> effectTriggers = new ArrayList<>();
-        for(Map.Entry<Frame, String> effect : effects.entrySet()){
-            Frame frame = effect.getKey();
-            String effectName = effect.getValue();
+        LinkedList<T> effectTriggers = new LinkedList<>();
+        for(Tuple<Frame, String> effect : effects){
+            Frame frame = effect.getA();
+            String effectName = effect.getB();
 
-            T effectTrigger = getEffectTrigger(rideIdentifier, effectName, false, frame, configManager.getTriggerConfig(RideType.COASTER, rideIdentifier, effectName));
-            if(effectTrigger == null) return null;
+            T effectTrigger = getEffectTrigger(clazz, rideIdentifier, effectName, false, frame, configManager.getTriggerConfig(RideType.COASTER, rideIdentifier, effectName));
+            if(effectTrigger == null) continue;
             if(previous != null) setNextFunction.accept(previous, effectTrigger);
             effectTriggers.add(effectTrigger);
+            Bukkit.broadcastMessage(clazz.getName() + ": " + effectName);
 
             previous = effectTrigger;
         }
 
-        return new EffectTriggerCollection<T>(effectTriggers);
+        return new EffectTriggerCollection<>(effectTriggers);
     }
 
     public EffectTriggerCollection<TrainEffectTriggerHandle> getTrainEffectTriggers(String rideIdentifier, Track track){
-        return getEffectTriggerCollectionGeneric(rideIdentifier, track, TrainEffectTriggerHandle::setNext);
+        return getEffectTriggerCollectionGeneric(TrainEffectTriggerHandle.class, rideIdentifier, track, TrainEffectTriggerHandle::setNext);
     }
 
     public EffectTriggerCollection<CartEffectTriggerHandle> getCartEffectTriggers(String rideIdentifier, Track track){
-        return getEffectTriggerCollectionGeneric(rideIdentifier, track, CartEffectTriggerHandle::setNext);
+        return getEffectTriggerCollectionGeneric(CartEffectTriggerHandle.class, rideIdentifier, track, CartEffectTriggerHandle::setNext);
     }
 }

@@ -21,13 +21,14 @@ public class ExternalEffectTrigger extends BaseTrainEffectTrigger {
     }
 
     @Override
-    public void execute(Train train) {
+    public boolean execute(Train train) {
         PluginManager pluginManager = ServiceProvider.getSingleton(PluginManager.class);
         pluginManager.callEvent(new ExternalTriggerEvent(train.getName(), data));
+        return true;
     }
 
     @Override
-    public void executeReversed(Train train) {
-        execute(train);
+    public boolean executeReversed(Train train) {
+        return execute(train);
     }
 }

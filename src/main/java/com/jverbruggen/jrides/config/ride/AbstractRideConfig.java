@@ -16,19 +16,21 @@ public abstract class AbstractRideConfig extends BaseConfig {
     private final List<String> displayDescription;
     private final ItemStackConfig displayItem;
     private final PlayerLocation warpLocation;
+    private final PlayerLocation customEjectLocation;
     private final GatesConfig gates;
     private final SoundsConfig soundsConfig;
     private final boolean canExitDuringRide;
     private final InteractionEntitiesConfig interactionEntities;
     private final RideCounterMapConfigs rideCounterMapConfigs;
 
-    public AbstractRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemStackConfig displayItem, PlayerLocation warpLocation, GatesConfig gates, SoundsConfig soundsConfig, boolean canExitDuringRide, InteractionEntitiesConfig interactionEntities, RideCounterMapConfigs rideCounterMapConfigs) {
+    public AbstractRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemStackConfig displayItem, PlayerLocation warpLocation, PlayerLocation customEjectLocation, GatesConfig gates, SoundsConfig soundsConfig, boolean canExitDuringRide, InteractionEntitiesConfig interactionEntities, RideCounterMapConfigs rideCounterMapConfigs) {
         this.manifestVersion = manifestVersion;
         this.identifier = identifier;
         this.displayName = displayName;
         this.displayDescription = displayDescription;
         this.displayItem = displayItem;
         this.warpLocation = warpLocation;
+        this.customEjectLocation = customEjectLocation;
         this.gates = gates;
         this.soundsConfig = soundsConfig;
         this.canExitDuringRide = canExitDuringRide;
@@ -58,6 +60,10 @@ public abstract class AbstractRideConfig extends BaseConfig {
 
     public PlayerLocation getWarpLocation() {
         return warpLocation;
+    }
+
+    public PlayerLocation getCustomEjectLocation() {
+        return customEjectLocation;
     }
 
     public SoundsConfig getSoundsConfig() {

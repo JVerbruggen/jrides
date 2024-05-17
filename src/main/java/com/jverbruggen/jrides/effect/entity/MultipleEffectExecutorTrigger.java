@@ -14,13 +14,13 @@ public class MultipleEffectExecutorTrigger extends BaseTrainEffectTrigger {
     }
 
     @Override
-    public void execute(Train train) {
-        triggers.forEach(a -> a.execute(train));
+    public boolean execute(Train train) {
+        return triggers.stream().allMatch(a -> a.execute(train));
     }
 
     @Override
-    public void executeReversed(Train train) {
-        triggers.forEach(a -> a.executeReversed(train));
+    public boolean executeReversed(Train train) {
+        return triggers.stream().allMatch(a -> a.executeReversed(train));
     }
 
     @Override

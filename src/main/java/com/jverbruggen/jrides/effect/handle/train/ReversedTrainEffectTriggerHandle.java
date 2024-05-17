@@ -10,7 +10,7 @@ public class ReversedTrainEffectTriggerHandle extends BaseTrainEffectTriggerHand
     }
 
     @Override
-    public void execute(Train train) {
-        getTrainEffectTrigger().executeReversed(train);
+    public boolean executeForTrain(Train train) {
+        return getTrainEffectTrigger().executeReversed(train);
     }
 }
