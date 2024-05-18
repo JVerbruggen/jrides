@@ -7,7 +7,6 @@ import com.jverbruggen.jrides.animator.coaster.trackbehaviour.BaseTrackBehaviour
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.FreeMovementTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.TrainMovement;
-import com.jverbruggen.jrides.animator.coaster.trackbehaviour.station.StationPhase;
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.trigger.SimpleDispatchTrigger;
@@ -78,7 +77,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour {
         this.blockSectionOccupiedDispatchLock = blockSectionOccupiedDispatchLock;
         this.restraintsLock = restraintsLock;
 
-        trainExitedAtEnd(null);
+        trainExitedAtEnd(null, null);
     }
 
     @Override
@@ -227,12 +226,12 @@ public class StationTrackBehaviour extends BaseTrackBehaviour {
     }
 
     @Override
-    public void trainExitedAtStart(@Nullable Train train) {
+    public void trainExitedAtStart(@Nullable Train train, @Nullable Section section) {
         trainExited();
     }
 
     @Override
-    public void trainExitedAtEnd(@Nullable Train train){
+    public void trainExitedAtEnd(@Nullable Train train, @Nullable Section section){
         trainExited();
     }
 

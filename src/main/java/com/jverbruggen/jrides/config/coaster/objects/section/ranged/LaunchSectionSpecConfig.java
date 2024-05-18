@@ -5,24 +5,30 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class LaunchSectionSpecConfig extends BaseConfig {
+    private final boolean canSpawn;
     private final double driveSpeed;
     private final double acceleration;
     private final double deceleration;
     private final double engage;
     private final int waitTicks;
+    private final boolean forwardsLaunch;
 
     private final double launchAcceleration;
-    private final double launchMaxSpeed;
+    private final double launchSpeed;
+    private final double launchSpeedBackward;
     private final LaunchEffectsConfig launchEffectsConfig;
 
-    public LaunchSectionSpecConfig(double driveSpeed, double acceleration, double deceleration, double engage, int waitTicks, double launchAcceleration, double launchMaxSpeed, LaunchEffectsConfig launchEffectsConfig) {
+    public LaunchSectionSpecConfig(boolean canSpawn, double driveSpeed, double acceleration, double deceleration, double engage, int waitTicks, boolean forwardsLaunch, double launchAcceleration, double launchSpeed, double launchSpeedBackward, LaunchEffectsConfig launchEffectsConfig) {
+        this.canSpawn = canSpawn;
         this.driveSpeed = driveSpeed;
         this.acceleration = acceleration;
         this.deceleration = deceleration;
         this.engage = engage;
         this.waitTicks = waitTicks;
+        this.forwardsLaunch = forwardsLaunch;
         this.launchAcceleration = launchAcceleration;
-        this.launchMaxSpeed = launchMaxSpeed;
+        this.launchSpeed = launchSpeed;
+        this.launchSpeedBackward = launchSpeedBackward;
         this.launchEffectsConfig = launchEffectsConfig;
     }
 
@@ -46,12 +52,24 @@ public class LaunchSectionSpecConfig extends BaseConfig {
         return waitTicks;
     }
 
+    public boolean isForwardsLaunch() {
+        return forwardsLaunch;
+    }
+
     public double getLaunchAcceleration() {
         return launchAcceleration;
     }
 
-    public double getLaunchMaxSpeed() {
-        return launchMaxSpeed;
+    public double getLaunchSpeed() {
+        return launchSpeed;
+    }
+
+    public double getLaunchSpeedBackward() {
+        return launchSpeedBackward;
+    }
+
+    public boolean canSpawn() {
+        return canSpawn;
     }
 
     @NonNull
@@ -60,15 +78,23 @@ public class LaunchSectionSpecConfig extends BaseConfig {
     }
 
     public static LaunchSectionSpecConfig fromConfigurationSection(ConfigurationSection configurationSection) {
+        boolean canSpawn = getBoolean(configurationSection, "canSpawn", false);
         double engage = getDouble(configurationSection, "engage", 0.0);
         double driveSpeed = getDouble(configurationSection, "driveSpeed", 1.0);
         double acceleration = getDouble(configurationSection, "acceleration", 0.1);
         double deceleration = getDouble(configurationSection, "deceleration", acceleration);
         int waitTicks = getInt(configurationSection, "waitIntervalTicks", -1);
         double launchAcceleration = getDouble(configurationSection, "launchAcceleration", 0.1);
-        double launchMaxSpeed = getDouble(configurationSection, "launchSpeed", 5.0);
+        double launchSpeed = getDouble(configurationSection, "launchSpeed", 5.0);
+        double launchSpeedBackward = getDouble(configurationSection, "launchSpeedBackward", launchSpeed);
         LaunchEffectsConfig launchEffectsConfig = LaunchEffectsConfig.fromConfigurationSection(configurationSection.getConfigurationSection("effects"));
+        boolean forwardsLaunch = getBoolean(configurationSection, "forwardsLaunch", true);
 
-        return new LaunchSectionSpecConfig(driveSpeed, acceleration, deceleration, engage, waitTicks, launchAcceleration, launchMaxSpeed, launchEffectsConfig);
+        if(launchSpeed <= 0)
+            throw new RuntimeException("launchSpeed should be bigger than 0");
+        if(launchSpeedBackward <= 0)
+            throw new RuntimeException("launchSpeedBackward should be bigger than 0");
+
+        return new LaunchSectionSpecConfig(canSpawn, driveSpeed, acceleration, deceleration, engage, waitTicks, forwardsLaunch, launchAcceleration, launchSpeed, launchSpeedBackward, launchEffectsConfig);
     }
 }

@@ -32,12 +32,12 @@ public class FreeMovementTrackBehaviour extends BaseTrackBehaviour {
     }
 
     @Override
-    public void trainExitedAtStart(@Nullable Train train) {
+    public void trainExitedAtStart(@Nullable Train train, @Nullable Section section) {
 
     }
 
     @Override
-    public void trainExitedAtEnd(@Nullable Train train) {
+    public void trainExitedAtEnd(@Nullable Train train, @Nullable Section section) {
 
     }
 

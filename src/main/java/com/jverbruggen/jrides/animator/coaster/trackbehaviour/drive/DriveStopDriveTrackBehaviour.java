@@ -41,7 +41,7 @@ public class DriveStopDriveTrackBehaviour extends BaseTrackBehaviour {
         this.acceleration = acceleration;
         this.driveSpeedIn = driveSpeedIn;
         this.driveSpeedOut = driveSpeedOut;
-        trainExitedAtEnd(null);
+        trainExitedAtEnd(null, null);
     }
 
     @Override
@@ -93,12 +93,12 @@ public class DriveStopDriveTrackBehaviour extends BaseTrackBehaviour {
     }
 
     @Override
-    public void trainExitedAtStart(@Nullable Train train) {
+    public void trainExitedAtStart(@Nullable Train train, @Nullable Section section) {
         trainExited();
     }
 
     @Override
-    public void trainExitedAtEnd(@Nullable Train train) {
+    public void trainExitedAtEnd(@Nullable Train train, @Nullable Section section) {
         trainExited();
     }
 

@@ -42,7 +42,7 @@ public interface Section extends Comparable<Section> {
     boolean isReserved();
     boolean isReservedBy(Train train);
 
-    void addOccupation(@NonNull  Train train);
+    boolean addOccupation(@NonNull  Train train);
     void removeOccupation(@NonNull  Train train);
     boolean canTrainSpawnOn();
     boolean hasPassed(Frame staticFrame, Frame movingFrame);

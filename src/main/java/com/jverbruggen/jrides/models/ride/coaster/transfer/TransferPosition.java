@@ -5,22 +5,26 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
 public class TransferPosition {
-    private Vector3 location;
-    private Quaternion orientation;
-    private int moveTicks;
+    private final Vector3 location;
+    private final Quaternion orientation;
+    private final int moveTicks;
 
-    private String sectionAtStartReference;
-    private String sectionAtEndReference;
+    private final String sectionAtStartReference;
+    private final String sectionAtEndReference;
+    private final boolean sectionAtStartForwards;
+    private final boolean sectionAtEndForwards;
 
     private Section sectionAtStart;
     private Section sectionAtEnd;
 
-    public TransferPosition(Vector3 location, Quaternion orientation, int moveTicks, String sectionAtStartReference, String sectionAtEndReference) {
+    public TransferPosition(Vector3 location, Quaternion orientation, int moveTicks, String sectionAtStartReference, String sectionAtEndReference, boolean sectionAtStartForwards, boolean sectionAtEndForwards) {
         this.location = location;
         this.orientation = orientation;
         this.moveTicks = moveTicks;
         this.sectionAtStartReference = sectionAtStartReference;
         this.sectionAtEndReference = sectionAtEndReference;
+        this.sectionAtStartForwards = sectionAtStartForwards;
+        this.sectionAtEndForwards = sectionAtEndForwards;
         this.sectionAtStart = null;
         this.sectionAtEnd = null;
     }
@@ -59,6 +63,14 @@ public class TransferPosition {
 
     public void setSectionAtEnd(Section sectionAtEnd) {
         this.sectionAtEnd = sectionAtEnd;
+    }
+
+    public boolean isSectionAtEndForwards() {
+        return sectionAtEndForwards;
+    }
+
+    public boolean isSectionAtStartForwards() {
+        return sectionAtStartForwards;
     }
 
     @Override

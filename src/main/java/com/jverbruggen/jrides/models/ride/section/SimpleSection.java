@@ -1,12 +1,14 @@
 package com.jverbruggen.jrides.models.ride.section;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.annotation.Nullable;
 import java.util.List;

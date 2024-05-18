@@ -76,11 +76,14 @@ public class TrainHandle {
         Frame trainMiddleOfTrainFrame = train.getMiddleOfTrainFrame();
         Frame trainTailOfTrainFrame = train.getTailOfTrainFrame();
 
+        boolean headAppliesBehaviour = speedBPS.isGoingForwards();
+        boolean tailAppliesBehaviour = !headAppliesBehaviour;
+
         sectionProvider.addFramesWithSectionLogic(this, trainHeadOfTrainFrame, result.getNewHeadOfTrainFrame().getValue(),
-                true, TrainEnd.HEAD, "HEAD", true);
+                true, TrainEnd.HEAD, "HEAD", headAppliesBehaviour);
         sectionProvider.addFramesWithSectionLogic(this, trainMiddleOfTrainFrame, result.getNewMiddleOfTrainFrame().getValue());
         sectionProvider.addFramesWithSectionLogic(this, trainTailOfTrainFrame, result.getNewTailOfTrainFrame().getValue(),
-                true, TrainEnd.TAIL, "TAIL", false);
+                true, TrainEnd.TAIL, "TAIL", tailAppliesBehaviour);
 
         JRidesPlugin.getLogger().info(LogType.SECTIONS_DETAIL, trainHeadOfTrainFrame + " -= "
                 + trainMiddleOfTrainFrame + " =- " + trainTailOfTrainFrame);
@@ -91,7 +94,9 @@ public class TrainHandle {
         Vector3 tailLocation = track.getLocationFor(trainTailOfTrainFrame);
         train.setCurrentLocation(headLocation, middleLocation, tailLocation);
 
-        sendPositionUpdatesToListeners(trainHeadOfTrainFrame);
+        sendPositionUpdatesToListeners("HEAD", trainHeadOfTrainFrame);
+        sendPositionUpdatesToListeners("MIDD", trainMiddleOfTrainFrame);
+        sendPositionUpdatesToListeners("TAIL", trainTailOfTrainFrame);
         effectHandler.playTrainEffects(trainHeadOfTrainFrame);
         if(effectHandler.hasCartEffects()){
             for(CoasterCart cart : train.getCarts()){
@@ -101,8 +106,8 @@ public class TrainHandle {
         playWindSounds();
     }
 
-    private void sendPositionUpdatesToListeners(Frame currentFrame) {
-        train.sendPositionMessage(currentFrame.toString());
+    private void sendPositionUpdatesToListeners(String identifier, Frame currentFrame) {
+        train.sendPositionMessage(identifier + ": " + currentFrame.toString());
     }
 
 

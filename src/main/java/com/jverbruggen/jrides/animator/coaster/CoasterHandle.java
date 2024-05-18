@@ -18,11 +18,14 @@ import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+import com.jverbruggen.jrides.models.ride.section.Unlockable;
 import org.bukkit.World;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CoasterHandle extends AbstractRideHandle {
@@ -31,6 +34,7 @@ public class CoasterHandle extends AbstractRideHandle {
     private List<CoasterStationHandle> stationHandles;
     private List<TrainHandle> trains;
     private final List<Transfer> transfers;
+    private final Map<String, Unlockable> unlockables;
     private EffectTriggerCollection<TrainEffectTriggerHandle> trainEffectTriggerCollection;
     private EffectTriggerCollection<CartEffectTriggerHandle> cartEffectTriggerCollection;
 
@@ -47,6 +51,7 @@ public class CoasterHandle extends AbstractRideHandle {
         this.trains = new ArrayList<>();
         this.stationHandles = new ArrayList<>();
         this.transfers = new ArrayList<>();
+        this.unlockables = new HashMap<>();
         this.visualisationTool = null;
         this.track = null;
         this.trainEffectTriggerCollection = null;
@@ -191,6 +196,14 @@ public class CoasterHandle extends AbstractRideHandle {
 
     public List<Transfer> getTransfers() {
         return transfers;
+    }
+
+    public void addUnlockable(String identifier, Unlockable unlockable){
+        unlockables.put(identifier, unlockable);
+    }
+
+    public Unlockable getUnlockable(String identifier){
+        return unlockables.get(identifier);
     }
 
     public Track getTrack(){

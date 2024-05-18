@@ -12,30 +12,34 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.SectionSafetyProvider;
 import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
-import org.bukkit.Bukkit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
 public class ProximityDriveTrackBehaviour extends BaseTrackBehaviour implements SectionSafetyProvider {
+    private final boolean canSpawn;
     private final double deceleration;
     private final double acceleration;
     private final double driveSpeed;
     private final double minTrainDistance;
     private final Frame stopFrame;
     private final HashMap<Train, ProximityDrivePhase> trainPhases;
+    private final List<Train> reservations;
 
-    public ProximityDriveTrackBehaviour(CartMovementFactory cartMovementFactory, double driveSpeed, double deceleration, double acceleration, double minTrainDistance, Frame stopFrame) {
+    public ProximityDriveTrackBehaviour(CartMovementFactory cartMovementFactory, boolean canSpawn, double driveSpeed, double deceleration, double acceleration, double minTrainDistance, Frame stopFrame) {
         super(cartMovementFactory);
+        this.canSpawn = canSpawn;
         this.deceleration = deceleration;
         this.acceleration = acceleration;
         this.driveSpeed = driveSpeed;
         this.minTrainDistance = minTrainDistance;
         this.stopFrame = stopFrame;
         this.trainPhases = new LinkedHashMap<>();
+        this.reservations = new ArrayList<>();
     }
 
     @Override
@@ -105,18 +109,19 @@ public class ProximityDriveTrackBehaviour extends BaseTrackBehaviour implements 
     }
 
     @Override
-    public void trainExitedAtStart(@Nullable Train train) {
+    public void trainExitedAtStart(@Nullable Train train, @Nullable Section section) {
         trainExited(train);
     }
 
     @Override
-    public void trainExitedAtEnd(@Nullable Train train){
+    public void trainExitedAtEnd(@Nullable Train train, @Nullable Section section){
         trainExited(train);
     }
 
     private void trainExited(@Nullable Train train){
         if(train == null) return;
         trainPhases.remove(train);
+        reservations.remove(train);
     }
 
     @Override
@@ -131,12 +136,12 @@ public class ProximityDriveTrackBehaviour extends BaseTrackBehaviour implements 
 
     @Override
     public boolean canSpawnOn() {
-        return false;
+        return canSpawn;
     }
 
     @Override
     public Frame getSpawnFrame() {
-        return null;
+        return stopFrame;
     }
 
     @Override
@@ -158,17 +163,20 @@ public class ProximityDriveTrackBehaviour extends BaseTrackBehaviour implements 
 
     @Override
     public boolean canHandleOccupation(@Nonnull Train train) {
-        return true;
+        if(reservations.contains(train)) return true;
+        if(trainPhases.containsKey(train)) return true;
+
+        return !ProximityUtils.isTooCloseToOtherTrains(train, trainPhases.keySet().stream().toList(), minTrainDistance);
     }
 
     @Override
     public void handleNewReservation(@Nonnull Train train) {
-
+        reservations.add(train);
     }
 
     @Override
     public void handleClearReservation(@Nonnull Train train) {
-
+        reservations.remove(train);
     }
 
     @Override
@@ -193,7 +201,7 @@ public class ProximityDriveTrackBehaviour extends BaseTrackBehaviour implements 
 
     @Override
     public boolean isOccupied() {
-        return true;
+        return !trainPhases.isEmpty();
     }
 
     @Override

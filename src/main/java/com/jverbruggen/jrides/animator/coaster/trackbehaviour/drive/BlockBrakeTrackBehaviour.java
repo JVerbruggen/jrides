@@ -36,7 +36,7 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour {
         this.minWaitTicks = minWaitTicks;
         this.minWaitTicksState = 0;
 
-        trainExitedAtEnd(null);
+        trainExitedAtEnd(null, null);
     }
 
     @Override
@@ -109,12 +109,12 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour {
     }
 
     @Override
-    public void trainExitedAtStart(@Nullable Train train) {
+    public void trainExitedAtStart(@Nullable Train train, @Nullable Section section) {
 
     }
 
     @Override
-    public void trainExitedAtEnd(@Nullable Train train){
+    public void trainExitedAtEnd(@Nullable Train train, @Nullable Section section){
         this.phase = BlockBrakePhase.IDLE;
     }
 

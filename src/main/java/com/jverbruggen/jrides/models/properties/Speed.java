@@ -1,6 +1,11 @@
 package com.jverbruggen.jrides.models.properties;
 
+import org.bukkit.Bukkit;
+
 public class Speed {
+    private static int FRACTIONAL_SPEED_COUNTER = 0;
+    private static final int FRAME_INCREMENT_FACTOR = 3;
+
     private double speedPerTick;
     private boolean inverted;
 
@@ -56,11 +61,26 @@ public class Speed {
         this.speedPerTick *= speed;
     }
 
+    private int getFractionalFrameIncrement(double frameIncrement){ // 0.9
+        int enlargedIncrement = (int) (FRACTIONAL_SPEED_COUNTER * frameIncrement * 100d); // 90
+
+        if(enlargedIncrement % 100 > (frameIncrement * 100d))
+            return 0;
+        else
+            return 1;
+    }
+
     public int getFrameIncrement(){
-        final int frameIncrementFactor = 3;
         final double speedPerTick = getSpeedPerTick();
 
-        return (int) (speedPerTick * frameIncrementFactor);
+        double frameIncrement = speedPerTick * FRAME_INCREMENT_FACTOR;
+        if(0.2 < frameIncrement && frameIncrement < 1){
+            frameIncrement = getFractionalFrameIncrement(frameIncrement);
+        }else if(-1 < frameIncrement && frameIncrement < -0.2){
+            frameIncrement = -getFractionalFrameIncrement(frameIncrement);
+        }
+
+        return (int) frameIncrement;
     }
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")
@@ -77,7 +97,7 @@ public class Speed {
     }
 
     public void setInverted(boolean inverted) {
-//        Bukkit.broadcastMessage("Set inverted " + inverted);
+        Bukkit.broadcastMessage("Set SPD inverted " + inverted);
         this.inverted = inverted;
     }
 
@@ -85,8 +105,18 @@ public class Speed {
         return inverted;
     }
 
+    public boolean isGoingForwards(){
+        return isPositive() && !isInverted();
+    }
+
     @Override
     public String toString() {
         return speedPerTick + "b/t";
+    }
+
+    public static void incrementFractionalSpeedCounter(){
+        FRACTIONAL_SPEED_COUNTER++;
+        if(FRACTIONAL_SPEED_COUNTER >= 1000)
+            FRACTIONAL_SPEED_COUNTER = 0;
     }
 }
