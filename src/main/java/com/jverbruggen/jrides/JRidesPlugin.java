@@ -46,7 +46,7 @@ public class JRidesPlugin {
         languageFile = ServiceProvider.getSingleton(LanguageFile.class);
         broadcastMessageReceiver = new BroadcastMessageReceiver();
 
-        logger.enableLogType(LogType.SECTIONS);
+//        logger.enableLogType(LogType.SECTIONS);
     }
 
     public static PacketSender getPacketSender() {

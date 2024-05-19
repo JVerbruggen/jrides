@@ -84,5 +84,8 @@ public interface Section extends Comparable<Section> {
      */
     boolean isForwards();
 
+    boolean nextConnectsToStart();
+    boolean previousConnectsToStart();
+
     String getName();
 }

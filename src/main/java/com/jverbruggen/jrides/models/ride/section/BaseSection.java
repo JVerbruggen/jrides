@@ -394,4 +394,14 @@ public abstract class BaseSection implements Section{
     public void setConflictSections(List<Section> sections) {
 
     }
+
+    @Override
+    public boolean nextConnectsToStart() {
+        return true;
+    }
+
+    @Override
+    public boolean previousConnectsToStart() {
+        return false;
+    }
 }

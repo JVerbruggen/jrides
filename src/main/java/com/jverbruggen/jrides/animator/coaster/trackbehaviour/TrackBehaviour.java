@@ -48,4 +48,8 @@ public interface TrackBehaviour {
     Section acceptAsNext(Train train, boolean canProcessPassed);
 
     boolean canHandleBlockSectionSafety();
+
+    boolean canHandleConnections();
+    boolean previousConnectsToStart();
+    boolean nextConnectsToStart();
 }

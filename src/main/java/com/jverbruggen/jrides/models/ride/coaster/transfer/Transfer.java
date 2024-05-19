@@ -284,6 +284,9 @@ public class Transfer implements Unlockable {
 
     public void trainExitedTransfer(){
         setTrain(null);
+    }
+
+    public void resetPosition(){
         setTargetPosition(0, false);
     }
 
@@ -296,19 +299,35 @@ public class Transfer implements Unlockable {
     }
 
     public boolean canSafelyInteractWith(TrainHandle train){
-//        if(train == null) return false;
         if(hasTrain()){
             return getTrain() == train;
         }
-        return !isMoving();
+        if(isMoving())
+            return false;
+        if(train == null)
+            return true;
+
+        List<Section> currentTrainSections = train.getTrain().getCurrentSections();
+        TransferPosition currentTransferPosition = getCurrentTransferPosition();
+
+        Section currentSectionAtStart = currentTransferPosition.getSectionAtStart();
+        Section currentSectionAtEnd = currentTransferPosition.getSectionAtEnd();
+
+        if(currentSectionAtStart != null && currentTrainSections.contains(currentSectionAtStart))
+            return true;
+        else if(currentSectionAtEnd != null && currentTrainSections.contains(currentSectionAtEnd))
+            return true;
+        else
+            return false;
     }
 
     @Override
     public void unlock(Train authority) {
-        if(this.train != authority.getHandle()){
+        if(this.train != null && this.train != authority.getHandle()){
             throw new RuntimeException("Train " + authority.getName() + " tried to unlock transfer while it wasn't the occupier");
         }
         trainExitedTransfer();
+        resetPosition();
     }
 }
 

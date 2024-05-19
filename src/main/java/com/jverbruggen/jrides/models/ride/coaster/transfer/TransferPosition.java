@@ -13,11 +13,13 @@ public class TransferPosition {
     private final String sectionAtEndReference;
     private final boolean sectionAtStartForwards;
     private final boolean sectionAtEndForwards;
+    private final boolean sectionAtStartConnectsToStart;
+    private final boolean sectionAtEndConnectsToStart;
 
     private Section sectionAtStart;
     private Section sectionAtEnd;
 
-    public TransferPosition(Vector3 location, Quaternion orientation, int moveTicks, String sectionAtStartReference, String sectionAtEndReference, boolean sectionAtStartForwards, boolean sectionAtEndForwards) {
+    public TransferPosition(Vector3 location, Quaternion orientation, int moveTicks, String sectionAtStartReference, String sectionAtEndReference, boolean sectionAtStartForwards, boolean sectionAtEndForwards, boolean sectionAtStartConnectsToStart, boolean sectionAtEndConnectsToStart) {
         this.location = location;
         this.orientation = orientation;
         this.moveTicks = moveTicks;
@@ -25,6 +27,9 @@ public class TransferPosition {
         this.sectionAtEndReference = sectionAtEndReference;
         this.sectionAtStartForwards = sectionAtStartForwards;
         this.sectionAtEndForwards = sectionAtEndForwards;
+        this.sectionAtStartConnectsToStart = sectionAtStartConnectsToStart;
+        this.sectionAtEndConnectsToStart = sectionAtEndConnectsToStart;
+
         this.sectionAtStart = null;
         this.sectionAtEnd = null;
     }
@@ -71,6 +76,14 @@ public class TransferPosition {
 
     public boolean isSectionAtStartForwards() {
         return sectionAtStartForwards;
+    }
+
+    public boolean isSectionAtStartConnectsToStart() {
+        return sectionAtStartConnectsToStart;
+    }
+
+    public boolean isSectionAtEndConnectsToStart() {
+        return sectionAtEndConnectsToStart;
     }
 
     @Override

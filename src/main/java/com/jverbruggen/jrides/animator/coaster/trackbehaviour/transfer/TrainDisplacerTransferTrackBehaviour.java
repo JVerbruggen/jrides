@@ -16,13 +16,13 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.TransferPosition;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
 import org.bukkit.Bukkit;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
     private final double deceleration;
@@ -87,7 +87,6 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
                 case WAITING:
                     Section currentSection = train.getHeadSection();
                     Section goToSection = getGoToSection(train);
-//                    Section goToSection = currentSection.next(train);
                     if(goToSection != null && goToSection.getBlockSectionSafety(train).safe()){
                         transfer.unlockTrain();
                         transfer.releaseRequest();
@@ -95,7 +94,6 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
                         goIntoSwitch = true;
 
                         boolean positiveTowardsSectionDirection = currentSection.positiveDirectionToGoTo(goToSection, train);
-                        boolean currentlyFacingForwards = train.isFacingForwards();
                         TransferPosition currentTransferPosition = transfer.getCurrentTransferPosition();
 
                         boolean isSectionForwardsType;
@@ -104,14 +102,9 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
                         else
                             isSectionForwardsType = currentTransferPosition.isSectionAtStartForwards();
 
-                        boolean trainWillBeForwards = currentlyFacingForwards == isSectionForwardsType;
+                        boolean trainWillBeForwards = isSectionForwardsType;
 
-                        boolean driveDirectionForwards = positiveTowardsSectionDirection == currentlyFacingForwards;
-
-//                        train.setFacingForwards(currentlyFacingForwards == positiveTowardsSectionDirection);
                         train.setFacingForwards(trainWillBeForwards);
-//                        train.setDrivingDirection(positiveTowardsSectionDirection);
-//                        train.setDrivingDirection(trainWillBeForwards);
                         train.setDrivingDirection(true);
                         goToSection.setEntireBlockReservation(train);
                     }
@@ -143,13 +136,18 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
     @Override
     public void trainExitedAtEnd(@Nullable Train train, @Nullable Section section){
         phase = TransferPhase.IDLE;
+        transfer.trainExitedTransfer();
 
-        if(section == null || section.getBlockSectionSafety(null).safe()){
-            Bukkit.broadcastMessage("Safe enough");
-            transfer.trainExitedTransfer();
-        }else{
-            Bukkit.broadcastMessage("Not safe for next one yet");
+        if(section != null){
+            BlockSectionSafetyResult safetyResult = section.getBlockSectionSafety(null);
+            if(!safetyResult.safe()){
+                JRidesPlugin.getLogger().info(LogType.SECTIONS, "Transfer Exit: Not safe for next one yet: " + safetyResult);
+                return;
+            }
         }
+
+        JRidesPlugin.getLogger().info(LogType.SECTIONS, "Transfer Exit: Safety OK");
+        transfer.resetPosition();
     }
 
     @Override
@@ -254,11 +252,10 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
     public Section getSectionNext(Train train, boolean process) {
         Section logicalNext = getSectionAtEnd(train, process);
         if(logicalNext != null) {
-            Bukkit.broadcastMessage("Logical next: " + logicalNext.getName());
+            JRidesPlugin.getLogger().info(LogType.SECTIONS, "Logical next: " + logicalNext.getName());
             return logicalNext;
         } else{
-            Bukkit.broadcastMessage("Logical next: null");
-//            return getSectionAtStart(train, process);
+            JRidesPlugin.getLogger().info(LogType.SECTIONS, "Logical next: null");
             return null;
         }
     }
@@ -267,11 +264,10 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
     public Section getSectionPrevious(Train train, boolean process) {
         Section logicalNext = getSectionAtStart(train, process);
         if(logicalNext != null) {
-            Bukkit.broadcastMessage("Logical prev: " + logicalNext.getName());
+            JRidesPlugin.getLogger().info(LogType.SECTIONS, "Logical prev: " + logicalNext.getName());
             return logicalNext;
         }else{
-            Bukkit.broadcastMessage("Logical prev: null");
-//            return getSectionAtEnd(train, process);
+            JRidesPlugin.getLogger().info(LogType.SECTIONS, "Logical prev: null");
             return null;
         }
     }
@@ -279,6 +275,21 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
     @Override
     public boolean accepts(Train train) {
         return canTransferSafelyInteractWith(train);
+    }
+
+    @Override
+    public boolean canHandleConnections() {
+        return true;
+    }
+
+    @Override
+    public boolean nextConnectsToStart() {
+        return transfer.getCurrentTransferPosition().isSectionAtEndConnectsToStart();
+    }
+
+    @Override
+    public boolean previousConnectsToStart() {
+        return transfer.getCurrentTransferPosition().isSectionAtStartConnectsToStart();
     }
 }
 

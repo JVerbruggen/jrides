@@ -263,12 +263,14 @@ public class TrackBehaviourFactory {
                 String sectionAtEndReference = transferSectionPositionSpecConfig.getSectionAtEnd();
                 boolean sectionAtStartForwards = transferSectionPositionSpecConfig.isSectionAtStartForwards();
                 boolean sectionAtEndForwards = transferSectionPositionSpecConfig.isSectionAtEndForwards();
+                boolean sectionAtStartConnectsToStart = transferSectionPositionSpecConfig.isSectionAtStartConnectsToStart();
+                boolean sectionAtEndConnectsToStart = transferSectionPositionSpecConfig.isSectionAtEndConnectsToStart();
                 Vector3 position = Vector3.add(origin, transferSectionPositionSpecConfig.getPosition());
                 Vector3 rotation = transferSectionPositionSpecConfig.getRotation();
                 int moveTicks = transferSectionPositionSpecConfig.getMoveTicks();
 
                 Quaternion orientation = Quaternion.fromAnglesVector(rotation);
-                transferPositions.add(new TransferPosition(position, orientation, moveTicks, sectionAtStartReference, sectionAtEndReference, sectionAtStartForwards, sectionAtEndForwards));
+                transferPositions.add(new TransferPosition(position, orientation, moveTicks, sectionAtStartReference, sectionAtEndReference, sectionAtStartForwards, sectionAtEndForwards, sectionAtStartConnectsToStart, sectionAtEndConnectsToStart));
             }
 
             TransferPosition originTransferPosition = transferPositions.get(0);

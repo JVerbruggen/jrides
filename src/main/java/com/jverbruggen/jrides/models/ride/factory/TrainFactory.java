@@ -66,6 +66,8 @@ public class TrainFactory {
         List<CoasterCart> carts = new ArrayList<>();
         for(int i = 0; i < amountOfCarts; i++){
             int cartOffsetFrames = i*cartDistance;
+            if(amountOfCarts == 1)
+                cartOffsetFrames += cartDistance/2;
 
             Frame cartFrame = headOfTrainFrame.clone().add(-cartOffsetFrames);
 

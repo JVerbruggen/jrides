@@ -193,4 +193,20 @@ public class SimpleSection extends BaseSection {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public boolean previousConnectsToStart() {
+        if(trackBehaviour.canHandleConnections()){
+            return trackBehaviour.previousConnectsToStart();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean nextConnectsToStart() {
+        if(trackBehaviour.canHandleConnections()){
+            return trackBehaviour.nextConnectsToStart();
+        }
+        return true;
+    }
 }

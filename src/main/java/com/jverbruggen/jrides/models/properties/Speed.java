@@ -97,7 +97,7 @@ public class Speed {
     }
 
     public void setInverted(boolean inverted) {
-        Bukkit.broadcastMessage("Set SPD inverted " + inverted);
+//        Bukkit.broadcastMessage("Set SPD inverted " + inverted);
         this.inverted = inverted;
     }
 

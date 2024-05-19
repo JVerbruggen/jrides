@@ -110,4 +110,5 @@ public class RangedSectionReference extends SectionReference {
     public boolean isForwards() {
         return forwards;
     }
+
 }

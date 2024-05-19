@@ -49,9 +49,9 @@ public class SectionProvider {
     private void clearSectionOccupation(Train train, Section section){
         section.removeOccupation(train);
         train.removeCurrentSection(section);
-        section.getTrackBehaviour().trainExitedAtEnd(train, section);
 
         if(section.canBlock()) section.clearEntireBlockReservation(train);
+        section.getTrackBehaviour().trainExitedAtEnd(train, section);
     }
 
     private void checkFlushRemainingSections(Train train, Section toSection){
@@ -186,7 +186,7 @@ public class SectionProvider {
             int overshotFrameAmount = getOvershotFrameAmount(train, fromSection, fromFrame, toFrame);
             int newFrameValue;
             Frame nextAttachedFrame;
-            if(subsequentNextSection.isForwards()){
+            if(fromSection.nextConnectsToStart()){
                 nextAttachedFrame = subsequentNextSection.getStartFrame();
                 newFrameValue = nextAttachedFrame.getValue() + overshotFrameAmount;
             }else{
@@ -212,12 +212,12 @@ public class SectionProvider {
             int overshotFrameAmount = getOvershotFrameAmount(train, fromSection, fromFrame, toFrame);
             int newFrameValue;
             Frame previousAttachedFrame;
-            if(subsequentPreviousSection.isForwards()){
-                previousAttachedFrame = subsequentPreviousSection.getEndFrame();
-                newFrameValue = previousAttachedFrame.getValue() + overshotFrameAmount;
-            }else{
+            if(fromSection.previousConnectsToStart()){
                 previousAttachedFrame = subsequentPreviousSection.getStartFrame();
                 newFrameValue = previousAttachedFrame.getValue() - overshotFrameAmount;
+            }else{
+                previousAttachedFrame = subsequentPreviousSection.getEndFrame();
+                newFrameValue = previousAttachedFrame.getValue() + overshotFrameAmount;
             }
 
             JRidesPlugin.getLogger().info(LogType.SECTIONS,
@@ -237,15 +237,17 @@ public class SectionProvider {
         if(isDrivingForwards) {
             if(toFrame.isInvertedFrameAddition()){
                 JRidesPlugin.getLogger().info(LogType.SECTIONS, "overshot F I");
-                return currentSection.getEndFrame().getValue() - toFrame.getValue();
+//                return currentSection.getEndFrame().getValue() - toFrame.getValue();
+                return toFrame.getValue() - currentSection.getStartFrame().getValue();
             }else{
-                JRidesPlugin.getLogger().info(LogType.SECTIONS, "overshot F NI");
+                JRidesPlugin.getLogger().info(LogType.SECTIONS, "overshot F NI (untested)");
                 return toFrame.getValue() - currentSection.getEndFrame().getValue();
             }
         }else{
             if(toFrame.isInvertedFrameAddition()){
-                JRidesPlugin.getLogger().info(LogType.SECTIONS, "overshot B I");
-                return currentSection.getStartFrame().getValue() - toFrame.getValue();
+                JRidesPlugin.getLogger().info(LogType.SECTIONS, "overshot B I (untested)");
+//                return currentSection.getStartFrame().getValue() - toFrame.getValue();
+                return toFrame.getValue() - currentSection.getEndFrame().getValue();
             }else{
                 JRidesPlugin.getLogger().info(LogType.SECTIONS, "overshot B NI");
                 return toFrame.getValue() - currentSection.getStartFrame().getValue();
