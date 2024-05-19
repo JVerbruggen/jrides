@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
 
 import javax.annotation.Nullable;
 
@@ -80,9 +81,10 @@ public class BlockBrakeTrackBehaviour extends BaseTrackBehaviour {
                     newSpeed.minus(deceleration, 0);
                     break;
                 case WAITING:
+                    BlockSectionSafetyResult safetyResult = getNextSectionSafety(train);
                     train.setStatusMessage("Waiting \n" + train.getHeadSection() + "\n"
-                        + train.getHeadSection().next(train));
-                    if(getNextSectionSafety(train).safe() && isMinWaitTimerFinished()){
+                        + train.getHeadSection().next(train) + " safety: " + safetyResult);
+                    if(safetyResult.safe() && isMinWaitTimerFinished()){
                         train.getNextSection().setEntireBlockReservation(train);
                         resetMinWaitTimer();
                         phase = BlockBrakePhase.DRIVING;

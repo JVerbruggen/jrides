@@ -20,6 +20,7 @@ public class RangedSectionConfig extends SectionConfig {
     private final int upperRange;
     private final boolean jumpAtStart;
     private final boolean jumpAtEnd;
+    private final boolean forwards;
     private final String trackSource;
     private final String nextSection;
     private final String arrivalUnlocksSection;
@@ -36,7 +37,7 @@ public class RangedSectionConfig extends SectionConfig {
     private final TransferSectionSpecConfig transferSectionSpec;
     private final LaunchSectionSpecConfig launchSectionSpecConfig;
 
-    public RangedSectionConfig(String identifier, int lowerRange, int upperRange, boolean jumpAtStart, boolean jumpAtEnd, String trackSource, String type,
+    public RangedSectionConfig(String identifier, int lowerRange, int upperRange, boolean jumpAtStart, boolean jumpAtEnd, boolean forwards, String trackSource, String type,
                                String nextSection, String arrivalUnlocksSection, List<String> conflictSections,
                                BlockSectionSpecConfig blockSectionSpec, CoasterStationConfig stationSectionSpec, BrakeSectionSpecConfig brakeSectionSpec,
                                TrimBrakeSectionSpecConfig trimBrakeSectionSpecConfig, DriveSectionSpecConfig driveSectionSpec, ProximityDriveSectionSpecConfig proximityDriveSectionSpecConfig, StorageSectionSpecConfig storageSectionSpec, TransferSectionSpecConfig transferSectionSpec,
@@ -46,6 +47,7 @@ public class RangedSectionConfig extends SectionConfig {
         this.upperRange = upperRange;
         this.jumpAtStart = jumpAtStart;
         this.jumpAtEnd = jumpAtEnd;
+        this.forwards = forwards;
         this.trackSource = trackSource;
         this.nextSection = nextSection;
         this.arrivalUnlocksSection = arrivalUnlocksSection;
@@ -139,6 +141,10 @@ public class RangedSectionConfig extends SectionConfig {
         return jumpAtEnd;
     }
 
+    public boolean isForwards() {
+        return forwards;
+    }
+
     public static boolean accepts(String type){
         return switch (type) {
             case "track", "drive", "proximityDrive", "driveAndRelease", "driveStopDrive", "brake", "trim", "station", "blocksection", "transfer", "launch" -> true;
@@ -162,6 +168,7 @@ public class RangedSectionConfig extends SectionConfig {
 
         boolean jumpAtStart = getBoolean(configurationSection, "jumpAtStart", false);
         boolean jumpAtEnd = getBoolean(configurationSection, "jumpAtEnd", false);
+        boolean forwards = getBoolean(configurationSection, "forwards", true);
 
         BlockSectionSpecConfig blockSectionSpec = null;
         if(configurationSection.contains("blockSection"))
@@ -207,7 +214,7 @@ public class RangedSectionConfig extends SectionConfig {
         if(configurationSection.contains("launchSection"))
             launchSectionSpec = LaunchSectionSpecConfig.fromConfigurationSection(configurationSection.getConfigurationSection("launchSection"));
 
-        return new RangedSectionConfig(sectionIdentifier, lowerRange, upperRange, jumpAtStart, jumpAtEnd, trackSource, type, nextSection, arrivalUnlocks, conflictSections,
+        return new RangedSectionConfig(sectionIdentifier, lowerRange, upperRange, jumpAtStart, jumpAtEnd, forwards, trackSource, type, nextSection, arrivalUnlocks, conflictSections,
                 blockSectionSpec, stationSectionSpec, brakeSectionSpec, trimBrakeSectionSpecConfig, driveSectionSpec, proximityDriveSectionSpecConfig, storageSectionSpec, transferSectionSpec, launchSectionSpec,
                 driveAndReleaseSectionSpec, driveStopDriveSectionSpecConfig);
     }
@@ -222,6 +229,7 @@ public class RangedSectionConfig extends SectionConfig {
 
         boolean jumpAtStart = isJumpAtStart();
         boolean jumpAtEnd = isJumpAtEnd();
+        boolean forwards = isForwards();
 
         TrackDescription trackDescription = trackDescriptions.stream()
                 .filter(d -> d.getIdentifier().equalsIgnoreCase(getParentTrackIdentifier()))
@@ -234,7 +242,7 @@ public class RangedSectionConfig extends SectionConfig {
         if(trackBehaviour == null) return null;
 
         return new RangedSectionReference(sectionIdentifier, startFrame, endFrame, trackBehaviour, nextSectionIdentifier, conflictSections, parentTrackIdentifier,
-                arrivalUnlocks, jumpAtStart, jumpAtEnd);
+                arrivalUnlocks, jumpAtStart, jumpAtEnd, forwards);
     }
 }
 

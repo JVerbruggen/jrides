@@ -253,11 +253,13 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
     @Override
     public Section getSectionNext(Train train, boolean process) {
         Section logicalNext = getSectionAtEnd(train, process);
-        if(logicalNext != null)
+        if(logicalNext != null) {
+            Bukkit.broadcastMessage("Logical next: " + logicalNext.getName());
             return logicalNext;
-        else{
-            return null;
+        } else{
+            Bukkit.broadcastMessage("Logical next: null");
 //            return getSectionAtStart(train, process);
+            return null;
         }
     }
 
@@ -265,10 +267,10 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
     public Section getSectionPrevious(Train train, boolean process) {
         Section logicalNext = getSectionAtStart(train, process);
         if(logicalNext != null) {
-            Bukkit.broadcastMessage("Logical next: " + logicalNext.getName());
+            Bukkit.broadcastMessage("Logical prev: " + logicalNext.getName());
             return logicalNext;
         }else{
-            Bukkit.broadcastMessage("Logical next: null");
+            Bukkit.broadcastMessage("Logical prev: null");
 //            return getSectionAtEnd(train, process);
             return null;
         }

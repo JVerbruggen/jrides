@@ -77,5 +77,12 @@ public interface Section extends Comparable<Section> {
     boolean spansOver(Train train);
     boolean positiveDirectionToGoTo(Section section, Train forTrain);
 
+    /**
+     * Is section forwards
+     * i.e. do trains traverse backwards or forwards through it?
+     * @return true if forwards
+     */
+    boolean isForwards();
+
     String getName();
 }

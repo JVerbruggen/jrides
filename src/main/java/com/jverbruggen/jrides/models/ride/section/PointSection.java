@@ -120,6 +120,11 @@ public class PointSection extends BaseSection {
     }
 
     @Override
+    public boolean isForwards() {
+        return true;
+    }
+
+    @Override
     public void setParentTrack(Track track) {
         super.setParentTrack(track);
         point.setTrack(track);

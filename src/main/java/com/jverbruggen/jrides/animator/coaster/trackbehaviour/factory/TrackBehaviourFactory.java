@@ -126,7 +126,7 @@ public class TrackBehaviourFactory {
                 stationName, shortStationName, triggerContext, coasterHandle,
                 gates, minimumWaitTimeDispatchLock);
 
-        return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, true, triggerContext,
+        return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, coasterStationConfig.canSpawn(), triggerContext,
                 stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock, restraintLock, driveSpeed,
                 coasterStationConfig.isForwardsDispatch(), coasterStationConfig.getPassThroughCount());
     }
@@ -187,8 +187,7 @@ public class TrackBehaviourFactory {
 
             Frame lowerRange = new SimpleFrame(rangedSectionConfig.getLowerRange());
             Frame upperRange = new SimpleFrame(rangedSectionConfig.getUpperRange());
-//            Frame stopFrame = Frame.getDistanceFromUpperFrame(lowerRange, upperRange, minTrainDistance);
-            Frame stopFrame = upperRange;
+            Frame stopFrame = Frame.getDistanceFromUpperFrame(lowerRange, upperRange, 10);
 
             return new ProximityDriveTrackBehaviour(cartMovementFactory, canSpawn, driveSpeed, deceleration, acceleration, minTrainDistance, stopFrame);
         }else if(type.equalsIgnoreCase("driveAndRelease")){

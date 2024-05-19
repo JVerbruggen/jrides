@@ -46,6 +46,27 @@ public class SectionProvider {
         toFrame.setInvertedFrameAddition(!train.isFacingForwards());
     }
 
+    private void clearSectionOccupation(Train train, Section section){
+        section.removeOccupation(train);
+        train.removeCurrentSection(section);
+        section.getTrackBehaviour().trainExitedAtEnd(train, section);
+
+        if(section.canBlock()) section.clearEntireBlockReservation(train);
+    }
+
+    private void checkFlushRemainingSections(Train train, Section toSection){
+        List<Section> currentSections = List.copyOf(train.getCurrentSections());
+        if(currentSections.size() > 1){
+            for(Section currentSection : currentSections){
+                if(currentSection == toSection) continue;
+                if(!currentSection.spansOver(train)){
+                    clearSectionOccupation(train, currentSection);
+                    JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Cleared remaining section " + currentSection.getName());
+                }
+            }
+        }
+    }
+
     public void sectionOccupationLogic(TrainHandle trainHandle, Section fromSection, Section toSection, TrainEnd onTrainEnd, boolean applyNewBehaviour){
         final Train train = trainHandle.getTrain();
 
@@ -55,11 +76,9 @@ public class SectionProvider {
             if(applyNewBehaviour) trainHandle.setTrackBehaviour(toSection.getTrackBehaviour());
             if(!fromSection.spansOver(train)){
                 JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Not spans over");
-                fromSection.removeOccupation(train);
-                train.removeCurrentSection(fromSection);
-                fromSection.getTrackBehaviour().trainExitedAtEnd(train, fromSection);
+                clearSectionOccupation(train, fromSection);
 
-                if(fromSection.canBlock()) fromSection.clearEntireBlockReservation(train);
+                checkFlushRemainingSections(train, toSection);
             }else{
                 JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Yes spans over");
             }
@@ -164,13 +183,21 @@ public class SectionProvider {
             return subsequentNextSection;
         } else if((fromSection.isInSection(fromFrame) && train.getDirection() == TrackEnd.END)
                 || fromSection.shouldJumpAtEnd()){
-            Frame nextStartFrame = subsequentNextSection.getStartFrame();
             int overshotFrameAmount = getOvershotFrameAmount(train, fromSection, fromFrame, toFrame);
-            int newFrameValue = nextStartFrame.getValue() + overshotFrameAmount;
+            int newFrameValue;
+            Frame nextAttachedFrame;
+            if(subsequentNextSection.isForwards()){
+                nextAttachedFrame = subsequentNextSection.getStartFrame();
+                newFrameValue = nextAttachedFrame.getValue() + overshotFrameAmount;
+            }else{
+                nextAttachedFrame = subsequentNextSection.getEndFrame();
+                newFrameValue = nextAttachedFrame.getValue() - overshotFrameAmount;
+            }
+
             JRidesPlugin.getLogger().info(LogType.SECTIONS,
                     "isnext! jumping - to: " + toFrame.getValue() + " over: " + overshotFrameAmount + ", new: " + newFrameValue);
 
-            toFrame.updateTo(new SimpleFrame(newFrameValue, nextStartFrame.getTrack(), nextStartFrame.getSection()));
+            toFrame.updateTo(new SimpleFrame(newFrameValue, nextAttachedFrame.getTrack(), nextAttachedFrame.getSection()));
             return subsequentNextSection;
         }
         return null;
@@ -182,13 +209,21 @@ public class SectionProvider {
             return subsequentPreviousSection;
         } else if((fromSection.isInSection(fromFrame) && train.getDirection() == TrackEnd.START)
                 || fromSection.shouldJumpAtStart()){
-            Frame previousEndFrame = subsequentPreviousSection.getEndFrame();
             int overshotFrameAmount = getOvershotFrameAmount(train, fromSection, fromFrame, toFrame);
-            int newFrameValue = previousEndFrame.getValue() + overshotFrameAmount;
+            int newFrameValue;
+            Frame previousAttachedFrame;
+            if(subsequentPreviousSection.isForwards()){
+                previousAttachedFrame = subsequentPreviousSection.getEndFrame();
+                newFrameValue = previousAttachedFrame.getValue() + overshotFrameAmount;
+            }else{
+                previousAttachedFrame = subsequentPreviousSection.getStartFrame();
+                newFrameValue = previousAttachedFrame.getValue() - overshotFrameAmount;
+            }
+
             JRidesPlugin.getLogger().info(LogType.SECTIONS,
                     "isprev! jumping - to: " + toFrame.getValue() + " over: " + overshotFrameAmount + ", new: " + newFrameValue);
 
-            toFrame.updateTo(new SimpleFrame(newFrameValue, previousEndFrame.getTrack(), previousEndFrame.getSection()));
+            toFrame.updateTo(new SimpleFrame(newFrameValue, previousAttachedFrame.getTrack(), previousAttachedFrame.getSection()));
             return subsequentPreviousSection;
         }
         JRidesPlugin.getLogger().info(LogType.SECTIONS, "isprev none!");

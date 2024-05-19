@@ -79,6 +79,7 @@ public class TrainHandle {
         boolean headAppliesBehaviour = speedBPS.isGoingForwards();
         boolean tailAppliesBehaviour = !headAppliesBehaviour;
 
+        // Both Head and Tail update section occupations: if going forwards: head locks next and tail unlocks previous
         sectionProvider.addFramesWithSectionLogic(this, trainHeadOfTrainFrame, result.getNewHeadOfTrainFrame().getValue(),
                 true, TrainEnd.HEAD, "HEAD", headAppliesBehaviour);
         sectionProvider.addFramesWithSectionLogic(this, trainMiddleOfTrainFrame, result.getNewMiddleOfTrainFrame().getValue());
@@ -97,6 +98,8 @@ public class TrainHandle {
         sendPositionUpdatesToListeners("HEAD", trainHeadOfTrainFrame);
         sendPositionUpdatesToListeners("MIDD", trainMiddleOfTrainFrame);
         sendPositionUpdatesToListeners("TAIL", trainTailOfTrainFrame);
+        train.sendPositionMessage("SPEED: " + speedBPS);
+
         effectHandler.playTrainEffects(trainHeadOfTrainFrame);
         if(effectHandler.hasCartEffects()){
             for(CoasterCart cart : train.getCarts()){

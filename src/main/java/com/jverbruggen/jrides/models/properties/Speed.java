@@ -111,7 +111,8 @@ public class Speed {
 
     @Override
     public String toString() {
-        return speedPerTick + "b/t";
+        String invertedFlag = inverted ? " [I]" : "";
+        return speedPerTick + "b/t" + invertedFlag;
     }
 
     public static void incrementFractionalSpeedCounter(){

@@ -18,11 +18,12 @@ public class RangedSectionReference extends SectionReference {
     private final TrackBehaviour trackBehaviour;
     private final boolean jumpAtStart;
     private final boolean jumpAtEnd;
+    private final boolean forwards;
 
     private final List<String> conflictSectionsStrings;
 
     public RangedSectionReference(String sectionIdentifier, Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour, String nextSectionIdentifier,
-                                  List<String> conflictSections, String parentTrackIdentifier, String arrivalUnlocks, boolean jumpAtStart, boolean jumpAtEnd) {
+                                  List<String> conflictSections, String parentTrackIdentifier, String arrivalUnlocks, boolean jumpAtStart, boolean jumpAtEnd, boolean forwards) {
         this.sectionIdentifier = sectionIdentifier;
         this.startFrame = startFrame;
         this.endFrame = endFrame;
@@ -32,6 +33,7 @@ public class RangedSectionReference extends SectionReference {
         this.arrivalUnlocks = arrivalUnlocks;
         this.jumpAtStart = jumpAtStart;
         this.jumpAtEnd = jumpAtEnd;
+        this.forwards = forwards;
         this.previousSectionIdentifier = null;
         this.parentTrackIdentifier = parentTrackIdentifier;
     }
@@ -84,8 +86,9 @@ public class RangedSectionReference extends SectionReference {
         TrackBehaviour trackBehaviour = getTrackBehaviour();
         boolean jumpAtStart = isJumpAtStart();
         boolean jumpAtEnd = isJumpAtEnd();
+        boolean forwards = isForwards();
 
-        SimpleSection section = new SimpleSection(startFrame, endFrame, trackBehaviour, jumpAtStart, jumpAtEnd);
+        SimpleSection section = new SimpleSection(startFrame, endFrame, trackBehaviour, jumpAtStart, jumpAtEnd, forwards);
         section.setName(getSectionIdentifier());
         section.setArrivalUnlocks(arrivalUnlocks);
         return section;
@@ -104,4 +107,7 @@ public class RangedSectionReference extends SectionReference {
         return jumpAtStart;
     }
 
+    public boolean isForwards() {
+        return forwards;
+    }
 }
