@@ -140,4 +140,19 @@ public abstract class BaseTrackBehaviour implements TrackBehaviour {
     public boolean canHandleBlockSectionSafety() {
         return false;
     }
+
+    @Override
+    public boolean canHandleConnections() {
+        return false;
+    }
+
+    @Override
+    public boolean nextConnectsToStart() {
+        return true;
+    }
+
+    @Override
+    public boolean previousConnectsToStart() {
+        return false;
+    }
 }

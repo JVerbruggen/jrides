@@ -4,11 +4,15 @@ import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.config.coaster.objects.ControllerConfig;
 import com.jverbruggen.jrides.config.coaster.objects.controller.DualControllerSpecConfig;
+import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.exception.CoasterLoadException;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 
 public class RideControllerFactory {
     public RideController createCoasterController(CoasterHandle coasterHandle, ControllerConfig controllerConfig) throws CoasterLoadException {
+        if(!coasterHandle.hasStation())
+            return createVoidCoasterController(coasterHandle);
+
         if(controllerConfig == null || controllerConfig.getType().equalsIgnoreCase(ControllerConfig.CONTROLLER_DEFAULT))
             return createDefaultCoasterController(coasterHandle);
 
@@ -41,6 +45,11 @@ public class RideControllerFactory {
         }
 
         return new SimpleRideController(coasterHandle, stationHandle.getTriggerContext());
+    }
+
+    private RideController createVoidCoasterController(CoasterHandle coasterHandle){
+        return SimpleRideController.createVoid(coasterHandle);
+
     }
 
     public RideController createFlatRideController(FlatRideHandle flatRideHandle){

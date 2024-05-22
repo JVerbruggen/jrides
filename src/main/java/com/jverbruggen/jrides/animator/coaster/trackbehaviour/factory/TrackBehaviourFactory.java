@@ -4,7 +4,7 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.FreeMovementTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.LaunchTrackBehaviour;
-import com.jverbruggen.jrides.animator.coaster.trackbehaviour.StationTrackBehaviour;
+import com.jverbruggen.jrides.animator.coaster.trackbehaviour.station.StationTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive.*;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
@@ -82,11 +82,11 @@ public class TrackBehaviourFactory {
         return new BlockBrakeTrackBehaviour(cartMovementFactory, blockBrakeEngageFrame, canSpawn, driveSpeed, deceleration, acceleration, minWaitTicks);
     }
 
-    public TrackBehaviour getLaunchBehaviour(CoasterHandle coasterHandle, Frame engageFrame, double driveSpeed, double acceleration, double deceleration, int waitTicks, double launchAcceleration, double launchMaxSpeed, List<String> launchEffectStrings){
+    public TrackBehaviour getLaunchBehaviour(CoasterHandle coasterHandle, Frame engageFrame, boolean canSpawn, double driveSpeed, double acceleration, double deceleration, boolean isForwardsLaunch, int waitTicks, double launchAcceleration, double launchSpeed, double launchSpeedBackward, List<String> launchEffectStrings){
         String rideIdentifier = coasterHandle.getRide().getIdentifier();
         List<TrainEffectTriggerHandle> launchEffectTriggers = effectTriggerFactory.getFramelessEffectTriggers(RideType.COASTER, rideIdentifier, launchEffectStrings);
 
-        return new LaunchTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, acceleration, waitTicks, engageFrame, launchAcceleration, launchMaxSpeed, launchEffectTriggers);
+        return new LaunchTrackBehaviour(cartMovementFactory, canSpawn, driveSpeed, deceleration, acceleration, isForwardsLaunch, waitTicks, engageFrame, launchAcceleration, launchSpeed, launchSpeedBackward, launchEffectTriggers);
     }
 
     public TrackBehaviour getStationBehaviour(Frame blockBrakeEngageFrame, CoasterHandle coasterHandle, RangedSectionConfig rangedSectionConfig, GateOwnerConfigSpec gateSpec){
@@ -126,7 +126,7 @@ public class TrackBehaviourFactory {
                 stationName, shortStationName, triggerContext, coasterHandle,
                 gates, minimumWaitTimeDispatchLock);
 
-        return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, true, triggerContext,
+        return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, coasterStationConfig.canSpawn(), triggerContext,
                 stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock, restraintLock, driveSpeed,
                 coasterStationConfig.isForwardsDispatch(), coasterStationConfig.getPassThroughCount());
     }
@@ -165,19 +165,21 @@ public class TrackBehaviourFactory {
             BrakeSectionSpecConfig brakeSectionSpecConfig = rangedSectionConfig.getBrakeSectionSpec();
             double driveSpeed = brakeSectionSpecConfig.getDriveSpeed();
             double deceleration = brakeSectionSpecConfig.getDeceleration();
-            return new BrakeAndDriveTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, deceleration);
+            return new BrakeAndDriveTrackBehaviour(cartMovementFactory, false, driveSpeed, deceleration, deceleration);
         }else if(type.equalsIgnoreCase("trim")){
             TrimBrakeSectionSpecConfig trimBrakeSectionSpecConfig = rangedSectionConfig.getTrimBrakeSectionSpecConfig();
             double dragConstantWithTrim = trimBrakeSectionSpecConfig.getTrimResistanceConstant() * coasterConfig.getDragConstant();
             return new TrimBrakeTrackBehaviour(cartMovementFactory, coasterConfig.getGravityConstant(), dragConstantWithTrim);
         }else if(type.equalsIgnoreCase("drive")){
             DriveSectionSpecConfig driveSectionSpecConfig = rangedSectionConfig.getDriveSectionSpec();
+            boolean ignoreDirection = driveSectionSpecConfig.isIgnoreDirection();
             double driveSpeed = driveSectionSpecConfig.getDriveSpeed();
             double acceleration = driveSectionSpecConfig.getAcceleration();
             double deceleration = driveSectionSpecConfig.getDeceleration();
-            return new BrakeAndDriveTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, acceleration);
+            return new BrakeAndDriveTrackBehaviour(cartMovementFactory, ignoreDirection, driveSpeed, deceleration, acceleration);
         }else if(type.equalsIgnoreCase("proximityDrive")){
             ProximityDriveSectionSpecConfig driveSectionSpecConfig = rangedSectionConfig.getProximityDriveSectionSpec();
+            boolean canSpawn = driveSectionSpecConfig.canSpawn();
             double driveSpeed = driveSectionSpecConfig.getDriveSpeed();
             double acceleration = driveSectionSpecConfig.getAcceleration();
             double deceleration = driveSectionSpecConfig.getDeceleration();
@@ -185,9 +187,9 @@ public class TrackBehaviourFactory {
 
             Frame lowerRange = new SimpleFrame(rangedSectionConfig.getLowerRange());
             Frame upperRange = new SimpleFrame(rangedSectionConfig.getUpperRange());
-            Frame stopFrame = Frame.getDistanceFromUpperFrame(lowerRange, upperRange, minTrainDistance);
+            Frame stopFrame = Frame.getDistanceFromUpperFrame(lowerRange, upperRange, 10);
 
-            return new ProximityDriveTrackBehaviour(cartMovementFactory, driveSpeed, deceleration, acceleration, minTrainDistance, stopFrame);
+            return new ProximityDriveTrackBehaviour(cartMovementFactory, canSpawn, driveSpeed, deceleration, acceleration, minTrainDistance, stopFrame);
         }else if(type.equalsIgnoreCase("driveAndRelease")){
             DriveAndReleaseSectionSpecConfig driveAndReleaseSectionSpecConfig = rangedSectionConfig.getDriveAndReleaseSectionSpecConfig();
             double driveSpeed = driveAndReleaseSectionSpecConfig.getDriveSpeed();
@@ -228,15 +230,18 @@ public class TrackBehaviourFactory {
             Frame upperRange = new SimpleFrame(rangedSectionConfig.getUpperRange());
             Frame engageFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
 
+            boolean canSpawn = launchSectionSpecConfig.canSpawn();
             double driveSpeed = launchSectionSpecConfig.getDriveSpeed();
             double acceleration = launchSectionSpecConfig.getAcceleration();
             double deceleration = launchSectionSpecConfig.getDeceleration();
+            boolean isForwardsLaunch = launchSectionSpecConfig.isForwardsLaunch();
             int waitTicks = launchSectionSpecConfig.getWaitTicks();
             double launchAcceleration = launchSectionSpecConfig.getLaunchAcceleration();
-            double launchMaxSpeed = launchSectionSpecConfig.getLaunchMaxSpeed();
+            double launchSpeed = launchSectionSpecConfig.getLaunchSpeed();
+            double launchSpeedBackward = launchSectionSpecConfig.getLaunchSpeedBackward();
             List<String> launchEffectsString = launchSectionSpecConfig.getLaunchEffectsConfig().getLaunchEffects();
 
-            return getLaunchBehaviour(coasterHandle, engageFrame, driveSpeed, acceleration, deceleration, waitTicks, launchAcceleration, launchMaxSpeed, launchEffectsString);
+            return getLaunchBehaviour(coasterHandle, engageFrame, canSpawn, driveSpeed, acceleration, deceleration, isForwardsLaunch, waitTicks, launchAcceleration, launchSpeed, launchSpeedBackward, launchEffectsString);
         }else if(type.equalsIgnoreCase("transfer")){
             TransferSectionSpecConfig transferSectionSpecConfig = rangedSectionConfig.getTransferSectionSpec();
 
@@ -247,17 +252,25 @@ public class TrackBehaviourFactory {
             Frame engageFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
             Vector3 modelOffsetPosition = transferSectionSpecConfig.getModelOffsetPosition();
             Vector3 modelOffsetRotation = transferSectionSpecConfig.getModelOffsetRotation();
+            double enterDriveSpeed = transferSectionSpecConfig.getEnterDriveSpeed();
+            double exitDriveSpeed = transferSectionSpecConfig.getExitDriveSpeed();
+            double acceleration = transferSectionSpecConfig.getAcceleration();
+            double deceleration = transferSectionSpecConfig.getDeceleration();
 
             List<TransferPosition> transferPositions = new ArrayList<>();
             for(TransferSectionPositionSpecConfig transferSectionPositionSpecConfig : transferSectionSpecConfig.getPositions()){
                 String sectionAtStartReference = transferSectionPositionSpecConfig.getSectionAtStart();
                 String sectionAtEndReference = transferSectionPositionSpecConfig.getSectionAtEnd();
+                boolean sectionAtStartForwards = transferSectionPositionSpecConfig.isSectionAtStartForwards();
+                boolean sectionAtEndForwards = transferSectionPositionSpecConfig.isSectionAtEndForwards();
+                boolean sectionAtStartConnectsToStart = transferSectionPositionSpecConfig.isSectionAtStartConnectsToStart();
+                boolean sectionAtEndConnectsToStart = transferSectionPositionSpecConfig.isSectionAtEndConnectsToStart();
                 Vector3 position = Vector3.add(origin, transferSectionPositionSpecConfig.getPosition());
                 Vector3 rotation = transferSectionPositionSpecConfig.getRotation();
                 int moveTicks = transferSectionPositionSpecConfig.getMoveTicks();
 
                 Quaternion orientation = Quaternion.fromAnglesVector(rotation);
-                transferPositions.add(new TransferPosition(position, orientation, moveTicks, sectionAtStartReference, sectionAtEndReference));
+                transferPositions.add(new TransferPosition(position, orientation, moveTicks, sectionAtStartReference, sectionAtEndReference, sectionAtStartForwards, sectionAtEndForwards, sectionAtStartConnectsToStart, sectionAtEndConnectsToStart));
             }
 
             TransferPosition originTransferPosition = transferPositions.get(0);
@@ -272,8 +285,9 @@ public class TrackBehaviourFactory {
 
             Transfer transfer = new Transfer(transferPositions, virtualEntity, origin, modelOffsetPosition, modelOffsetRotation);
             coasterHandle.addTransfer(transfer);
+            coasterHandle.addUnlockable(identifier, transfer);
 
-            return new TrainDisplacerTransferTrackBehaviour(cartMovementFactory, 1.0, 0.1, 0.1, engageFrame, transfer);
+            return new TrainDisplacerTransferTrackBehaviour(cartMovementFactory, enterDriveSpeed, deceleration, acceleration, exitDriveSpeed, engageFrame, transfer);
         }
 
         JRidesPlugin.getLogger().severe("Unknown section type " + type);

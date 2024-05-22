@@ -59,19 +59,21 @@ public class EntityFromToMovementEffectTrigger extends BaseTrainEffectTrigger im
     }
 
     @Override
-    public void execute(Train train) {
-        if(delayedEntityTask.isBusy()) return;
+    public boolean execute(Train train) {
+        if(delayedEntityTask.isBusy()) return true;
 
         targetLocation = locationTo;
         delayedEntityTask.start();
+        return true;
     }
 
     @Override
-    public void executeReversed(Train train) {
-        if(delayedEntityTask.isBusy()) return;
+    public boolean executeReversed(Train train) {
+        if(delayedEntityTask.isBusy()) return true;
 
         targetLocation = locationFrom;
         delayedEntityTask.start();
+        return true;
     }
 
     @Override

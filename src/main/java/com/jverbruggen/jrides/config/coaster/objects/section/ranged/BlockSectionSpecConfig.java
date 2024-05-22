@@ -48,8 +48,8 @@ public class BlockSectionSpecConfig extends BaseConfig {
         double engage = getDouble(configurationSection, "engage", 0.01);
         double driveSpeed = getDouble(configurationSection, "driveSpeed", 1.0);
         boolean canSpawn = getBoolean(configurationSection, "canSpawn", false);
-        double deceleration = getDouble(configurationSection, "deceleration", 0.1);
         double acceleration = getDouble(configurationSection, "acceleration", 0.1);
+        double deceleration = getDouble(configurationSection, "deceleration", acceleration);
         int minWaitTicks = getInt(configurationSection, "minWaitTicks", 0);
 
         return new BlockSectionSpecConfig(engage, driveSpeed, canSpawn, acceleration, deceleration, minWaitTicks);

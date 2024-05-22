@@ -9,6 +9,7 @@ import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
+import com.jverbruggen.jrides.effect.handle.cart.CartEffectTriggerHandle;
 import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
@@ -17,11 +18,14 @@ import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
+import com.jverbruggen.jrides.models.ride.section.Unlockable;
 import org.bukkit.World;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CoasterHandle extends AbstractRideHandle {
@@ -30,24 +34,27 @@ public class CoasterHandle extends AbstractRideHandle {
     private List<CoasterStationHandle> stationHandles;
     private List<TrainHandle> trains;
     private final List<Transfer> transfers;
-    private EffectTriggerCollection<TrainEffectTriggerHandle> effectTriggerCollection;
+    private final Map<String, Unlockable> unlockables;
+    private EffectTriggerCollection<TrainEffectTriggerHandle> trainEffectTriggerCollection;
+    private EffectTriggerCollection<CartEffectTriggerHandle> cartEffectTriggerCollection;
 
     private final double dragConstant;
     private final double gravityConstant;
     private int rideOverviewMapId;
     private final RideCounterMapConfigs rideCounterMapConfigs;
 
-    public CoasterHandle(Ride ride, World world, SoundsConfig sounds, int rideOverviewMapId, boolean loaded, double dragConstant, double gravityConstant, RideCounterMapConfigs rideCounterMapConfigs) {
-        super(world, ride, null, loaded, sounds, rideCounterMapConfigs);
+    public CoasterHandle(Ride ride, World world, SoundsConfig sounds, PlayerLocation customEjectLocation, int rideOverviewMapId, boolean loaded, double dragConstant, double gravityConstant, RideCounterMapConfigs rideCounterMapConfigs) {
+        super(world, ride, null, loaded, sounds, customEjectLocation, rideCounterMapConfigs);
         this.dragConstant = dragConstant;
         this.gravityConstant = gravityConstant;
 
         this.trains = new ArrayList<>();
         this.stationHandles = new ArrayList<>();
         this.transfers = new ArrayList<>();
+        this.unlockables = new HashMap<>();
         this.visualisationTool = null;
         this.track = null;
-        this.effectTriggerCollection = null;
+        this.trainEffectTriggerCollection = null;
         this.rideOverviewMapId = rideOverviewMapId;
         this.rideCounterMapConfigs = rideCounterMapConfigs;
     }
@@ -106,6 +113,9 @@ public class CoasterHandle extends AbstractRideHandle {
 
     @Override
     public PlayerLocation getEjectLocation() {
+        PlayerLocation customEjectLocation = getCustomEjectLocation();
+        if(customEjectLocation != null) return customEjectLocation;
+
         return stationHandles.stream()
                 .filter(s -> s.getEjectLocation() != null)
                 .map(StationHandle::getEjectLocation)
@@ -145,6 +155,10 @@ public class CoasterHandle extends AbstractRideHandle {
         return getCoasterStationHandles().get(index);
     }
 
+    public boolean hasStation(){
+        return getStationHandles().size() > 0;
+    }
+
     public void tick(){
         if(!isLoaded()) return;
 
@@ -160,12 +174,20 @@ public class CoasterHandle extends AbstractRideHandle {
         }
     }
 
-    public EffectTriggerCollection<TrainEffectTriggerHandle> getEffectTriggerCollection() {
-        return effectTriggerCollection;
+    public EffectTriggerCollection<TrainEffectTriggerHandle> getTrainEffectTriggerCollection() {
+        return trainEffectTriggerCollection;
     }
 
-    public void setEffectTriggerCollection(EffectTriggerCollection<TrainEffectTriggerHandle> effectTriggerCollection) {
-        this.effectTriggerCollection = effectTriggerCollection;
+    public void setTrainEffectTriggerCollection(EffectTriggerCollection<TrainEffectTriggerHandle> trainEffectTriggerCollection) {
+        this.trainEffectTriggerCollection = trainEffectTriggerCollection;
+    }
+
+    public EffectTriggerCollection<CartEffectTriggerHandle> getCartEffectTriggerCollection() {
+        return cartEffectTriggerCollection;
+    }
+
+    public void setCartEffectTriggerCollection(EffectTriggerCollection<CartEffectTriggerHandle> cartEffectTriggerCollection) {
+        this.cartEffectTriggerCollection = cartEffectTriggerCollection;
     }
 
     public void addTransfer(Transfer transfer){
@@ -174,6 +196,14 @@ public class CoasterHandle extends AbstractRideHandle {
 
     public List<Transfer> getTransfers() {
         return transfers;
+    }
+
+    public void addUnlockable(String identifier, Unlockable unlockable){
+        unlockables.put(identifier, unlockable);
+    }
+
+    public Unlockable getUnlockable(String identifier){
+        return unlockables.get(identifier);
     }
 
     public Track getTrack(){

@@ -23,8 +23,11 @@ public class FlatRideConfig extends AbstractRideConfig {
     private final StructureConfig structureConfig;
     private final TimingConfig timingConfig;
 
-    public FlatRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemStackConfig displayItem, PlayerLocation warpLocation, GatesConfig gates, InteractionEntitiesConfig interactionEntities, boolean canExitDuringRide, StationConfig stationConfig, SoundsConfig soundsConfig, StructureConfig structureConfig, TimingConfig timingConfig, RideCounterMapConfigs rideCounterMapConfigs) {
-        super(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, soundsConfig, canExitDuringRide, interactionEntities, rideCounterMapConfigs);
+    public FlatRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemStackConfig displayItem,
+                          PlayerLocation warpLocation, PlayerLocation customEjectLocation, GatesConfig gates, InteractionEntitiesConfig interactionEntities,
+                          boolean canExitDuringRide, StationConfig stationConfig, SoundsConfig soundsConfig, StructureConfig structureConfig,
+                          TimingConfig timingConfig, RideCounterMapConfigs rideCounterMapConfigs, boolean debugMode) {
+        super(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, customEjectLocation, gates, soundsConfig, canExitDuringRide, interactionEntities, rideCounterMapConfigs, debugMode);
         this.stationConfig = stationConfig;
         this.structureConfig = structureConfig;
         this.timingConfig = timingConfig;
@@ -55,6 +58,7 @@ public class FlatRideConfig extends AbstractRideConfig {
 
         ItemStackConfig displayItem = ItemStackConfig.fromConfigurationSection(configurationSection.getConfigurationSection("displayItem"));
         PlayerLocation warpLocation = PlayerLocation.fromDoubleList(configurationSection.getDoubleList("warpLocation"));
+        PlayerLocation customEjectLocation = PlayerLocation.fromDoubleList(getDoubleList(configurationSection, "customEjectLocation", null));
         GatesConfig gates = GatesConfig.fromConfigurationSection(configurationSection.getConfigurationSection("gates"));
         SoundsConfig sounds = SoundsConfig.fromConfigurationSection(configurationSection.getConfigurationSection("sounds"));
         boolean canExitDuringRide = getBoolean(configurationSection, "canExitDuringRide", false);
@@ -63,7 +67,10 @@ public class FlatRideConfig extends AbstractRideConfig {
         StructureConfig structureConfig = StructureConfig.fromConfigurationSection(Objects.requireNonNull(getConfigurationSection(configurationSection, "structure"), "Structure for flatride not present"));
         TimingConfig timingConfig = TimingConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "timing"));
         RideCounterMapConfigs rideCounterMapConfigs = RideCounterMapConfigs.fromConfigurationSection(identifier, getConfigurationSection(configurationSection, "rideCounterMaps"));
+        boolean debugMode = getBoolean(configurationSection, "debugMode", false);
 
-        return new FlatRideConfig(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, gates, interactionEntities, canExitDuringRide, stationConfig, sounds, structureConfig, timingConfig, rideCounterMapConfigs);
+        return new FlatRideConfig(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation,
+                customEjectLocation, gates, interactionEntities, canExitDuringRide, stationConfig, sounds, structureConfig,
+                timingConfig, rideCounterMapConfigs, debugMode);
     }
 }

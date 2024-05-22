@@ -6,9 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class EffectTriggerCollection<T extends EffectTriggerHandle> {
-    private final List<T> effectTriggers;
+    private final LinkedList<T> effectTriggers;
 
-    public EffectTriggerCollection(List<T> effectTriggers) {
+    public EffectTriggerCollection(LinkedList<T> effectTriggers) {
         this.effectTriggers = effectTriggers;
     }
 
@@ -21,6 +21,6 @@ public class EffectTriggerCollection<T extends EffectTriggerHandle> {
     }
 
     public LinkedList<T> getLinkedList(){
-        return new LinkedList<>(effectTriggers);
+        return effectTriggers;
     }
 }

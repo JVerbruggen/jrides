@@ -36,7 +36,9 @@ public class RideControlMenuFactory {
     public Menu getRideControlMenu(RideController rideController, ControllerConfig controllerConfig){
         String type = controllerConfig != null ? controllerConfig.getType() : null;
 
-        if(type == null || type.equalsIgnoreCase(ControllerConfig.CONTROLLER_DEFAULT)){
+        if(!rideController.supportsMenu()) {
+            return null;
+        }else if(type == null || type.equalsIgnoreCase(ControllerConfig.CONTROLLER_DEFAULT)){
             return getSimpleControlMenu(rideController);
         }else if(type.equalsIgnoreCase(ControllerConfig.CONTROLLER_ALTERNATE)){
             return getAlternateControlMenu((DualRideController) rideController);

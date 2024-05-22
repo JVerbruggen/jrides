@@ -17,8 +17,8 @@ import java.util.Map;
 
 public interface TrackBehaviour {
     TrainMovement move(Speed currentSpeed, TrainHandle trainHandle, Section section);
-    void trainExitedAtStart(@Nullable Train train);
-    void trainExitedAtEnd(@Nullable Train train);
+    void trainExitedAtStart(@Nullable Train train, @Nullable Section section);
+    void trainExitedAtEnd(@Nullable Train train, @Nullable Section section);
     void trainPassed(Train train);
 
     String getName();
@@ -48,4 +48,8 @@ public interface TrackBehaviour {
     Section acceptAsNext(Train train, boolean canProcessPassed);
 
     boolean canHandleBlockSectionSafety();
+
+    boolean canHandleConnections();
+    boolean previousConnectsToStart();
+    boolean nextConnectsToStart();
 }

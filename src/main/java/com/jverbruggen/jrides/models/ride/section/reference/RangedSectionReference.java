@@ -12,24 +12,28 @@ public class RangedSectionReference extends SectionReference {
     private final String nextSectionIdentifier;
     private String previousSectionIdentifier;
     private final String parentTrackIdentifier;
+    private final String arrivalUnlocks;
     private final Frame startFrame;
     private final Frame endFrame;
     private final TrackBehaviour trackBehaviour;
     private final boolean jumpAtStart;
     private final boolean jumpAtEnd;
+    private final boolean forwards;
 
     private final List<String> conflictSectionsStrings;
 
     public RangedSectionReference(String sectionIdentifier, Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour, String nextSectionIdentifier,
-                                  List<String> conflictSections, String parentTrackIdentifier, boolean jumpAtStart, boolean jumpAtEnd) {
+                                  List<String> conflictSections, String parentTrackIdentifier, String arrivalUnlocks, boolean jumpAtStart, boolean jumpAtEnd, boolean forwards) {
         this.sectionIdentifier = sectionIdentifier;
         this.startFrame = startFrame;
         this.endFrame = endFrame;
         this.trackBehaviour = trackBehaviour;
         this.nextSectionIdentifier = nextSectionIdentifier;
         this.conflictSectionsStrings = conflictSections;
+        this.arrivalUnlocks = arrivalUnlocks;
         this.jumpAtStart = jumpAtStart;
         this.jumpAtEnd = jumpAtEnd;
+        this.forwards = forwards;
         this.previousSectionIdentifier = null;
         this.parentTrackIdentifier = parentTrackIdentifier;
     }
@@ -47,6 +51,10 @@ public class RangedSectionReference extends SectionReference {
     @Override
     public String getSectionIdentifier() {
         return sectionIdentifier;
+    }
+
+    public String getArrivalUnlocks() {
+        return arrivalUnlocks;
     }
 
     public Frame getStartFrame() {
@@ -78,9 +86,11 @@ public class RangedSectionReference extends SectionReference {
         TrackBehaviour trackBehaviour = getTrackBehaviour();
         boolean jumpAtStart = isJumpAtStart();
         boolean jumpAtEnd = isJumpAtEnd();
+        boolean forwards = isForwards();
 
-        SimpleSection section = new SimpleSection(startFrame, endFrame, trackBehaviour, jumpAtStart, jumpAtEnd);
+        SimpleSection section = new SimpleSection(startFrame, endFrame, trackBehaviour, jumpAtStart, jumpAtEnd, forwards);
         section.setName(getSectionIdentifier());
+        section.setArrivalUnlocks(arrivalUnlocks);
         return section;
     }
 
@@ -95,6 +105,10 @@ public class RangedSectionReference extends SectionReference {
 
     public boolean isJumpAtStart() {
         return jumpAtStart;
+    }
+
+    public boolean isForwards() {
+        return forwards;
     }
 
 }

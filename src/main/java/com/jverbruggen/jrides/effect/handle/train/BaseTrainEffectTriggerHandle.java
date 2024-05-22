@@ -2,6 +2,8 @@ package com.jverbruggen.jrides.effect.handle.train;
 
 import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
+import com.jverbruggen.jrides.models.ride.coaster.train.CoasterCart;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 
 public abstract class BaseTrainEffectTriggerHandle implements TrainEffectTriggerHandle {
@@ -45,5 +47,10 @@ public abstract class BaseTrainEffectTriggerHandle implements TrainEffectTrigger
     @Override
     public String toString() {
         return "<handle to " + trainEffectTrigger + ">";
+    }
+
+    @Override
+    public void execute(Train train, CoasterCart cart) {
+        executeForTrain(train);
     }
 }

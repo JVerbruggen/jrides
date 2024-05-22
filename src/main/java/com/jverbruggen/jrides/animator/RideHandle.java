@@ -20,6 +20,7 @@ public interface RideHandle {
     Ride getRide();
     RideController getRideController();
     Menu getRideControlMenu();
+    PlayerLocation getCustomEjectLocation();
 
     void setRideController(RideController rideController, Menu rideControlMenu);
     DispatchTrigger getDispatchTrigger();

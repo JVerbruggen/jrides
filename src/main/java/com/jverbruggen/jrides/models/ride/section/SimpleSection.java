@@ -16,15 +16,17 @@ public class SimpleSection extends BaseSection {
     private final Frame endFrame;
     private final boolean jumpAtStart;
     private final boolean jumpAtEnd;
+    private final boolean forwards;
     private String name;
     private List<Section> conflictSections;
 
-    public SimpleSection(Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour, boolean jumpAtStart, boolean jumpAtEnd) {
+    public SimpleSection(Frame startFrame, Frame endFrame, TrackBehaviour trackBehaviour, boolean jumpAtStart, boolean jumpAtEnd, boolean forwards) {
         super(trackBehaviour);
         this.startFrame = startFrame.clone();
         this.endFrame = endFrame.clone();
         this.jumpAtStart = jumpAtStart;
         this.jumpAtEnd = jumpAtEnd;
+        this.forwards = forwards;
         this.name = null;
         this.conflictSections = null;
     }
@@ -154,13 +156,19 @@ public class SimpleSection extends BaseSection {
         JRidesPlugin.getLogger().info(LogType.SECTIONS,
                 "From " + this + " Spans over " + headOfTrainFrame.getValue() + " - " + tailOfTrainFrame.getValue());
 
-        Frame lowerFrame = train.isPositiveDrivingDirection() ? tailOfTrainFrame : headOfTrainFrame;
-        Frame upperFrame = train.isPositiveDrivingDirection() ? headOfTrainFrame : tailOfTrainFrame;
+
+        Frame lowerFrame = train.isFacingForwards() ? tailOfTrainFrame : headOfTrainFrame;
+        Frame upperFrame = train.isFacingForwards() ? headOfTrainFrame : tailOfTrainFrame;
 
         return isInSection(headOfTrainFrame)
                 || isInSection(tailOfTrainFrame)
                 || Frame.isBetweenFrames(lowerFrame, upperFrame, endFrame)
                 || Frame.isBetweenFrames(lowerFrame, upperFrame, startFrame);
+    }
+
+    @Override
+    public boolean isForwards() {
+        return forwards;
     }
 
     @Override
@@ -184,5 +192,21 @@ public class SimpleSection extends BaseSection {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean previousConnectsToStart() {
+        if(trackBehaviour.canHandleConnections()){
+            return trackBehaviour.previousConnectsToStart();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean nextConnectsToStart() {
+        if(trackBehaviour.canHandleConnections()){
+            return trackBehaviour.nextConnectsToStart();
+        }
+        return true;
     }
 }

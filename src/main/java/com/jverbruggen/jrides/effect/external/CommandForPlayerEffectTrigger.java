@@ -18,15 +18,12 @@ public class CommandForPlayerEffectTrigger extends BaseTrainEffectTrigger {
     }
 
     @Override
-    public void execute(Train train) {
+    public boolean execute(Train train) {
         for(Player player : train.getPassengers()){
             String replacedCommand = command.replaceAll("%PLAYER%", player.getName());
             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), replacedCommand);
         }
-    }
 
-    @Override
-    public void executeReversed(Train train) {
-        execute(train);
+        return true;
     }
 }

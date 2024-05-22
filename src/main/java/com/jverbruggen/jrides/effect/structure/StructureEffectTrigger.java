@@ -49,15 +49,16 @@ public class StructureEffectTrigger extends BaseTrainEffectTrigger {
     }
 
     @Override
-    public void execute(Train train) {
-        if(delayedEntityTask.isBusy()) return;
+    public boolean execute(Train train) {
+        if(delayedEntityTask.isBusy()) return true;
 
         delayedEntityTask.start();
+        return true;
     }
 
     @Override
-    public void executeReversed(Train train) {
-        execute(train);
+    public boolean executeReversed(Train train) {
+        return execute(train);
     }
 
     public static StructureEffectTrigger createStructureEffectTrigger(int delayTicks, Vector3 position, String structureIdentifier){

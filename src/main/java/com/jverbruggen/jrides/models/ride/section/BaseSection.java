@@ -1,6 +1,7 @@
 package com.jverbruggen.jrides.models.ride.section;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.math.Quaternion;
@@ -25,7 +26,8 @@ public abstract class BaseSection implements Section{
     private Train occupiedBy;
     private Section previousSection;
     private Section nextSection;
-    private List<Section> additionalPreviousSections;
+    private String arrivalUnlocks;
+    private final List<Section> additionalPreviousSections;
 
     public BaseSection(TrackBehaviour trackBehaviour) {
         this.trackBehaviour = trackBehaviour;
@@ -33,8 +35,13 @@ public abstract class BaseSection implements Section{
         this.occupiedBy = null;
         this.previousSection = null;
         this.nextSection = null;
+        this.arrivalUnlocks = null;
         this.parentTrack = null;
         this.additionalPreviousSections = new ArrayList<>();
+    }
+
+    public void setArrivalUnlocks(String arrivalUnlocks) {
+        this.arrivalUnlocks = arrivalUnlocks;
     }
 
     @Nullable
@@ -210,10 +217,11 @@ public abstract class BaseSection implements Section{
     }
 
     @Override
-    public void addOccupation(@NonNull Train train) {
+    public boolean addOccupation(@NonNull Train train) {
         if(trackBehaviour.canHandleBlockSectionSafety()) {
             ((SectionSafetyProvider)trackBehaviour).handleNewOccupation(train);
-            return;
+            handleUnlocks(train);
+            return true;
         }
 
         if( occupiedBy != null && occupiedBy != train) throw new RuntimeException("Two trains cannot be in same section! "
@@ -223,8 +231,22 @@ public abstract class BaseSection implements Section{
             throw new RuntimeException("Train should reserve section before trying to occupy it!");
 
         occupiedBy = train;
+        handleUnlocks(train);
 
         JRidesPlugin.getLogger().info(LogType.SECTIONS,"Section " + this.toString() + " occupied by " + train);
+        return true;
+    }
+
+    private void handleUnlocks(@NonNull Train train){
+        if(arrivalUnlocks == null) return;
+
+        CoasterHandle coasterHandle = train.getHandle().getCoasterHandle();
+        Unlockable unlockable = coasterHandle.getUnlockable(arrivalUnlocks);
+        if(unlockable == null)
+            throw new RuntimeException("Trying to unlock " + arrivalUnlocks + " but it is unknown");
+
+        unlockable.unlock(train);
+        JRidesPlugin.getLogger().info(LogType.SECTIONS,"Unlock-able " + arrivalUnlocks + " unlocked by " + train);
     }
 
     @Override
@@ -371,5 +393,15 @@ public abstract class BaseSection implements Section{
     @Override
     public void setConflictSections(List<Section> sections) {
 
+    }
+
+    @Override
+    public boolean nextConnectsToStart() {
+        return true;
+    }
+
+    @Override
+    public boolean previousConnectsToStart() {
+        return false;
     }
 }

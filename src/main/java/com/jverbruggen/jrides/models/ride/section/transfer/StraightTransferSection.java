@@ -82,4 +82,9 @@ public class StraightTransferSection extends BaseSection {
     public boolean spansOver(Train train) {
         return false;
     }
+
+    @Override
+    public boolean isForwards() {
+        return true;
+    }
 }

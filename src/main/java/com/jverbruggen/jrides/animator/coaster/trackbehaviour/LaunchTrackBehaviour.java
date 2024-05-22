@@ -14,27 +14,34 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class LaunchTrackBehaviour extends BaseTrackBehaviour {
+    private final boolean canSpawn;
     private final double deceleration;
     private final double acceleration;
     private final double driveSpeed;
+    private final boolean forwardsLaunch;
+
     private final int waitTicks;
     private final Frame engageFrame;
     private final double launchAcceleration;
-    private final double launchMaxSpeed;
+    private final double launchSpeed;
+    private final double launchSpeedBackward;
     private final List<TrainEffectTriggerHandle> launchEffectTriggers;
 
     private int waitTicksState;
     private LaunchPhase phase;
 
-    public LaunchTrackBehaviour(CartMovementFactory cartMovementFactory, double driveSpeed, double deceleration, double acceleration, int waitTicks, Frame engageFrame, double launchAcceleration, double launchMaxSpeed, List<TrainEffectTriggerHandle> launchEffectTriggers) {
+    public LaunchTrackBehaviour(CartMovementFactory cartMovementFactory, boolean canSpawn, double driveSpeed, double deceleration, double acceleration, boolean forwardsLaunch, int waitTicks, Frame engageFrame, double launchAcceleration, double launchSpeed, double launchSpeedBackward, List<TrainEffectTriggerHandle> launchEffectTriggers) {
         super(cartMovementFactory);
+        this.canSpawn = canSpawn;
         this.deceleration = deceleration;
         this.acceleration = acceleration;
         this.driveSpeed = driveSpeed;
+        this.forwardsLaunch = forwardsLaunch;
         this.waitTicks = waitTicks;
         this.engageFrame = engageFrame;
-        this.launchMaxSpeed = launchMaxSpeed;
+        this.launchSpeed = launchSpeed;
         this.launchAcceleration = launchAcceleration;
+        this.launchSpeedBackward = launchSpeedBackward;
         this.launchEffectTriggers = launchEffectTriggers;
 
         this.phase = LaunchPhase.IDLE;
@@ -51,19 +58,19 @@ public class LaunchTrackBehaviour extends BaseTrackBehaviour {
             goIntoSwitch = false;
             switch (this.phase) {
                 case IDLE:
+                    if(waitTicks < 0 && getNextSectionSafety(train).safe()){
+                        train.getNextSection().setEntireBlockReservation(train);
+                        this.phase = LaunchPhase.LAUNCHING;
+                    }else{
+                        this.phase = LaunchPhase.DRIVING;
+                    }
+
                     goIntoSwitch = true;
-                    this.phase = LaunchPhase.DRIVING;
                     break;
                 case DRIVING:
                     if (train.getHeadSection().hasPassed(engageFrame, train.getHeadOfTrainFrame())) {
-                        if(waitTicks < 0 && getNextSectionSafety(train).safe()){
-                            this.phase = LaunchPhase.LAUNCHING;
-                            train.getNextSection().setEntireBlockReservation(train);
-                            goIntoSwitch = true;
-                        }else{
-                            this.phase = LaunchPhase.STOPPING;
-                            goIntoSwitch = true;
-                        }
+                        this.phase = LaunchPhase.STOPPING;
+                        goIntoSwitch = true;
                     }else{
                         newSpeed.approach(acceleration, deceleration, driveSpeed);
                     }
@@ -76,15 +83,22 @@ public class LaunchTrackBehaviour extends BaseTrackBehaviour {
                     newSpeed.minus(deceleration, 0);
                     break;
                 case WAITING:
-                    if(doneWaiting() && getNextSectionSafety(train).safe()){
-                        phase = LaunchPhase.LAUNCHING;
+                    if(getNextSectionSafety(train).safe() && doneWaiting()){
+                        phase = LaunchPhase.LAUNCHING_FROM_STANDSTILL;
                         train.getNextSection().setEntireBlockReservation(train);
                         goIntoSwitch = true;
                         playLaunchEffects(train);
                     }
                     break;
+                case LAUNCHING_FROM_STANDSTILL:
+                    if(forwardsLaunch){
+                        newSpeed.approach(launchAcceleration, launchAcceleration, launchSpeed);
+                    }else{
+                        newSpeed.approach(launchAcceleration, launchAcceleration, -launchSpeedBackward);
+                    }
+                    break;
                 case LAUNCHING:
-                    newSpeed.approach(launchAcceleration, launchAcceleration, launchMaxSpeed);
+                    newSpeed.approach(launchAcceleration, launchAcceleration, launchSpeed);
                     break;
             }
         }
@@ -94,7 +108,7 @@ public class LaunchTrackBehaviour extends BaseTrackBehaviour {
 
     private void playLaunchEffects(Train train){
         if(launchEffectTriggers == null) return;
-        launchEffectTriggers.forEach(e -> e.execute(train));
+        launchEffectTriggers.forEach(e -> e.executeForTrain(train));
     }
 
     private void reset(){
@@ -110,12 +124,12 @@ public class LaunchTrackBehaviour extends BaseTrackBehaviour {
     }
 
     @Override
-    public void trainExitedAtStart(@Nullable Train train) {
+    public void trainExitedAtStart(@Nullable Train train, @Nullable Section section) {
         reset();
     }
 
     @Override
-    public void trainExitedAtEnd(@Nullable Train train){
+    public void trainExitedAtEnd(@Nullable Train train, @Nullable Section section){
         reset();
     }
 
@@ -131,17 +145,17 @@ public class LaunchTrackBehaviour extends BaseTrackBehaviour {
 
     @Override
     public boolean canSpawnOn() {
-        return false;
+        return canSpawn;
     }
 
     @Override
     public Frame getSpawnFrame() {
-        return null;
+        return engageFrame;
     }
 
     @Override
     protected void setParentTrackOnFrames(Track parentTrack) {
-
+        engageFrame.setTrack(parentTrack);
     }
 }
 
@@ -150,5 +164,6 @@ enum LaunchPhase{
     DRIVING,
     STOPPING,
     WAITING,
+    LAUNCHING_FROM_STANDSTILL,
     LAUNCHING
 }

@@ -4,6 +4,7 @@ import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
 import com.jverbruggen.jrides.effect.handle.train.DefaultTrainEffectTriggerHandle;
 import com.jverbruggen.jrides.effect.handle.train.ReversedTrainEffectTriggerHandle;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
 public abstract class BaseTrainEffectTrigger implements TrainEffectTrigger {
     @Override
@@ -13,5 +14,10 @@ public abstract class BaseTrainEffectTrigger implements TrainEffectTrigger {
         } else {
             return new DefaultTrainEffectTriggerHandle(frame, this);
         }
+    }
+
+    @Override
+    public boolean executeReversed(Train train) {
+        return execute(train);
     }
 }

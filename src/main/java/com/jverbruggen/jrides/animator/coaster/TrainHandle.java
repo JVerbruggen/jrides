@@ -5,9 +5,6 @@ import com.jverbruggen.jrides.animator.coaster.trackbehaviour.TrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovement;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.TrainMovement;
-import com.jverbruggen.jrides.effect.EffectTriggerCollection;
-import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
-import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -25,16 +22,15 @@ import java.util.Map;
 import java.util.Set;
 
 public class TrainHandle {
-    private Train train;
-    private Track track;
-    private Speed speedBPS;
+    private final Train train;
+    private final Track track;
+    private final Speed speedBPS;
     private TrackBehaviour trackBehaviour;
     private final SectionProvider sectionProvider;
     private final CartMovementFactory cartMovementFactory;
     private CoasterHandle coasterHandle;
 
-    private boolean hasEffects;
-    private TrainEffectTriggerHandle nextEffect;
+    private final EffectHandler effectHandler;
 
     private final int windSoundInterval;
     private int windSoundState;
@@ -47,23 +43,12 @@ public class TrainHandle {
         this.trackBehaviour = train.getHeadSection().getTrackBehaviour();
         this.speedBPS = new Speed(0);
         this.coasterHandle = null;
-
-        this.nextEffect = null;
-        this.hasEffects = false;
+        this.effectHandler = EffectHandler.createForTrain(train);
 
         this.train.setHandle(this);
 
         this.windSoundInterval = 4;
         this.windSoundState = 0;
-    }
-
-    public void resetEffects(){
-        if(!hasEffects) return;
-
-        nextEffect = (TrainEffectTriggerHandle) EffectTriggerHandle.FindNearestNextEffect(
-                coasterHandle.getEffectTriggerCollection().getLinkedList(),
-                h -> h instanceof TrainEffectTriggerHandle,
-                train.getHeadOfTrainFrame());
     }
 
     public void tick(){
@@ -91,11 +76,15 @@ public class TrainHandle {
         Frame trainMiddleOfTrainFrame = train.getMiddleOfTrainFrame();
         Frame trainTailOfTrainFrame = train.getTailOfTrainFrame();
 
+        boolean headAppliesBehaviour = speedBPS.isGoingForwards();
+        boolean tailAppliesBehaviour = !headAppliesBehaviour;
+
+        // Both Head and Tail update section occupations: if going forwards: head locks next and tail unlocks previous
         sectionProvider.addFramesWithSectionLogic(this, trainHeadOfTrainFrame, result.getNewHeadOfTrainFrame().getValue(),
-                true, TrainEnd.HEAD, "HEAD", true);
+                true, TrainEnd.HEAD, "HEAD", headAppliesBehaviour);
         sectionProvider.addFramesWithSectionLogic(this, trainMiddleOfTrainFrame, result.getNewMiddleOfTrainFrame().getValue());
         sectionProvider.addFramesWithSectionLogic(this, trainTailOfTrainFrame, result.getNewTailOfTrainFrame().getValue(),
-                true, TrainEnd.TAIL, "TAIL", false);
+                true, TrainEnd.TAIL, "TAIL", tailAppliesBehaviour);
 
         JRidesPlugin.getLogger().info(LogType.SECTIONS_DETAIL, trainHeadOfTrainFrame + " -= "
                 + trainMiddleOfTrainFrame + " =- " + trainTailOfTrainFrame);
@@ -106,26 +95,24 @@ public class TrainHandle {
         Vector3 tailLocation = track.getLocationFor(trainTailOfTrainFrame);
         train.setCurrentLocation(headLocation, middleLocation, tailLocation);
 
-        sendPositionUpdatesToListeners(trainHeadOfTrainFrame);
-        playEffects(trainHeadOfTrainFrame);
+        sendPositionUpdatesToListeners("HEAD", trainHeadOfTrainFrame);
+        sendPositionUpdatesToListeners("MIDD", trainMiddleOfTrainFrame);
+        sendPositionUpdatesToListeners("TAIL", trainTailOfTrainFrame);
+        train.sendPositionMessage("SPEED: " + speedBPS);
+
+        effectHandler.playTrainEffects(trainHeadOfTrainFrame);
+        if(effectHandler.hasCartEffects()){
+            for(CoasterCart cart : train.getCarts()){
+                effectHandler.playCartEffects(cart);
+            }
+        }
         playWindSounds();
     }
 
-    private void sendPositionUpdatesToListeners(Frame currentFrame) {
-        train.sendPositionMessage(currentFrame.toString());
+    private void sendPositionUpdatesToListeners(String identifier, Frame currentFrame) {
+        train.sendPositionMessage(identifier + ": " + currentFrame.toString());
     }
 
-    private void playEffects(Frame currentFrame){
-        while(nextEffect != null){
-            if(!shouldPlay(nextEffect, currentFrame)) break;
-            nextEffect.execute(train);
-            nextEffect = nextEffect.next();
-        }
-    }
-
-    private boolean shouldPlay(TrainEffectTriggerHandle trainEffectTriggerHandle, Frame currentFrame){
-        return trainEffectTriggerHandle.shouldPlay(currentFrame);
-    }
 
     private void playWindSounds(){
         String sound = coasterHandle.getSounds().getOnrideWind();
@@ -150,11 +137,7 @@ public class TrainHandle {
     public void setCoasterHandle(CoasterHandle coasterHandle) {
         this.coasterHandle = coasterHandle;
 
-        EffectTriggerCollection<TrainEffectTriggerHandle> effectTriggerCollection = coasterHandle.getEffectTriggerCollection();
-        if(effectTriggerCollection != null && effectTriggerCollection.size() > 0){
-            hasEffects = true;
-            resetEffects();
-        }
+        this.effectHandler.setCoasterHandle(coasterHandle);
     }
 
     public CoasterHandle getCoasterHandle() {
@@ -167,5 +150,9 @@ public class TrainHandle {
 
     public void setTrackBehaviour(TrackBehaviour trackBehaviour) {
         this.trackBehaviour = trackBehaviour;
+    }
+
+    public void resetEffects() {
+        effectHandler.resetEffects();
     }
 }

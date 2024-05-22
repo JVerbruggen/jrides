@@ -17,12 +17,8 @@ public class CommandEffectTrigger extends BaseTrainEffectTrigger {
     }
 
     @Override
-    public void execute(Train train) {
+    public boolean execute(Train train) {
         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
-    }
-
-    @Override
-    public void executeReversed(Train train) {
-        execute(train);
+        return true;
     }
 }

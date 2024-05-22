@@ -29,14 +29,12 @@ import java.util.List;
 public class TrainFactory {
     private final ViewportManager viewportManager;
     private final SeatFactory seatFactory;
-    private final boolean debugMode;
     private final SectionProvider sectionProvider;
 
     public TrainFactory() {
         this.viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
         this.seatFactory = ServiceProvider.getSingleton(SeatFactory.class);
         this.sectionProvider = ServiceProvider.getSingleton(SectionProvider.class);
-        this.debugMode = false; // TODO: add to a config
     }
 
     public Train createEquallyDistributedTrain(CoasterHandle coasterHandle, Track track, CoasterConfig coasterConfig, String trainIdentifier){
@@ -68,6 +66,8 @@ public class TrainFactory {
         List<CoasterCart> carts = new ArrayList<>();
         for(int i = 0; i < amountOfCarts; i++){
             int cartOffsetFrames = i*cartDistance;
+            if(amountOfCarts == 1)
+                cartOffsetFrames += cartDistance/2;
 
             Frame cartFrame = headOfTrainFrame.clone().add(-cartOffsetFrames);
 
@@ -118,6 +118,10 @@ public class TrainFactory {
         Vector3 headLocation = track.getLocationFor(headOfTrainFrame);
         Vector3 middleLocation = track.getLocationFor(middleOfTrainFrame);
         Vector3 tailLocation = track.getLocationFor(tailOfTrainFrame);
+
+        boolean debugMode = coasterConfig.isDebugMode();
+        if(debugMode)
+            JRidesPlugin.getLogger().warning("Ride " + coasterConfig.getIdentifier() + " is in DEBUG mode! Disable this to make this message disappear.");
 
         Train train = new SimpleTrain(trainIdentifier, carts, headOfTrainFrame, middleOfTrainFrame, tailOfTrainFrame,
                 headLocation, middleLocation, tailLocation, spawnSection, debugMode);

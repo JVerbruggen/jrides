@@ -19,7 +19,7 @@ public class EjectEffectTrigger extends BaseTrainEffectTrigger {
     }
 
     @Override
-    public void execute(Train train) {
+    public boolean execute(Train train) {
         if(asFinished)
             PlayerFinishedRideEvent.sendFinishedRideEvent(train.getPassengers()
                 .stream()
@@ -27,10 +27,11 @@ public class EjectEffectTrigger extends BaseTrainEffectTrigger {
                 .collect(Collectors.toList()), train.getHandle().getCoasterHandle().getRide());
 
         train.ejectPassengers();
+        return true;
     }
 
     @Override
-    public void executeReversed(Train train) {
-        execute(train);
+    public boolean executeReversed(Train train) {
+        return execute(train);
     }
 }

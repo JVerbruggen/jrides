@@ -98,18 +98,20 @@ public class SequenceTrainEffectTrigger extends BaseTrainEffectTrigger {
     }
 
     @Override
-    public void execute(Train train) {
-        if(this.started) return;
+    public boolean execute(Train train) {
+        if(this.started) return true;
 
         this.reversed = false;
         start(train);
+        return true;
     }
 
     @Override
-    public void executeReversed(Train train) {
-        if(this.started) return;
+    public boolean executeReversed(Train train) {
+        if(this.started) return true;
 
         this.reversed = true;
         start(train);
+        return true;
     }
 }

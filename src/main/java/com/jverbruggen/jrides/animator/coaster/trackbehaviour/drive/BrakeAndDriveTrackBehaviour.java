@@ -13,12 +13,14 @@ import com.jverbruggen.jrides.models.ride.section.Section;
 import javax.annotation.Nullable;
 
 public class BrakeAndDriveTrackBehaviour extends BaseTrackBehaviour {
+    private final boolean isIgnoreDirection;
     private final double deceleration;
     private final double acceleration;
     private final double driveSpeed;
 
-    public BrakeAndDriveTrackBehaviour(CartMovementFactory cartMovementFactory, double driveSpeed, double deceleration, double acceleration) {
+    public BrakeAndDriveTrackBehaviour(CartMovementFactory cartMovementFactory, boolean isIgnoreDirection, double driveSpeed, double deceleration, double acceleration) {
         super(cartMovementFactory);
+        this.isIgnoreDirection = isIgnoreDirection;
         this.deceleration = deceleration;
         this.acceleration = acceleration;
         this.driveSpeed = driveSpeed;
@@ -29,18 +31,26 @@ public class BrakeAndDriveTrackBehaviour extends BaseTrackBehaviour {
         Speed newSpeed = currentSpeed.clone();
         Train train = trainHandle.getTrain();
 
-        newSpeed.approach(acceleration, deceleration, driveSpeed);
+        if(isIgnoreDirection){
+            if(newSpeed.isPositive()){
+                newSpeed.approach(acceleration, deceleration, driveSpeed);
+            }else{
+                newSpeed.approach(acceleration, deceleration, -driveSpeed);
+            }
+        }else{
+            newSpeed.approach(acceleration, deceleration, driveSpeed);
+        }
 
         return calculateTrainMovement(train, section, newSpeed);
     }
 
     @Override
-    public void trainExitedAtStart(@Nullable Train train) {
+    public void trainExitedAtStart(@Nullable Train train, @Nullable Section section) {
 
     }
 
     @Override
-    public void trainExitedAtEnd(@Nullable Train train){
+    public void trainExitedAtEnd(@Nullable Train train, @Nullable Section section){
 
     }
 

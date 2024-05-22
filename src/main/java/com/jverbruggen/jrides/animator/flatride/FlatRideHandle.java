@@ -36,8 +36,8 @@ public class FlatRideHandle extends AbstractRideHandle {
 
     private FlatRideState flatRideState;
 
-    public FlatRideHandle(World world, Ride ride, boolean loaded, FlatRideStationHandle stationHandle, SoundsConfig sounds, RideCounterMapConfigs rideCounterMapConfigs) {
-        super(world, ride, null, loaded, sounds, rideCounterMapConfigs);
+    public FlatRideHandle(World world, Ride ride, boolean loaded, FlatRideStationHandle stationHandle, SoundsConfig sounds, PlayerLocation customEjectLocation, RideCounterMapConfigs rideCounterMapConfigs) {
+        super(world, ride, null, loaded, sounds, customEjectLocation, rideCounterMapConfigs);
         this.stationHandle = stationHandle;
         this.timingSequence = null;
         this.dispatchTrigger = stationHandle.getTriggerContext().getDispatchTrigger();

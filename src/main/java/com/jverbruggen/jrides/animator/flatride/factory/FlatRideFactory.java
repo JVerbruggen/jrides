@@ -81,7 +81,7 @@ public class FlatRideFactory {
 
         FlatRide flatRide = new FlatRide(rideIdentifier, displayName, displayDescription, displayItem,
                 warpLocation, canExitDuringRide);
-        FlatRideHandle flatRideHandle = new FlatRideHandle(world, flatRide, true, stationHandle, flatRideConfig.getSoundsConfig(), flatRideConfig.getRideCounterMapConfigs());
+        FlatRideHandle flatRideHandle = new FlatRideHandle(world, flatRide, true, stationHandle, flatRideConfig.getSoundsConfig(), flatRideConfig.getCustomEjectLocation(), flatRideConfig.getRideCounterMapConfigs());
 
         flatRideConfig.getInteractionEntities().spawnEntities(flatRideHandle);
 

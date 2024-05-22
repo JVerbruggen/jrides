@@ -10,7 +10,7 @@ public class DefaultTrainEffectTriggerHandle extends BaseTrainEffectTriggerHandl
     }
 
     @Override
-    public void execute(Train train) {
-        getTrainEffectTrigger().execute(train);
+    public boolean executeForTrain(Train train) {
+        return getTrainEffectTrigger().execute(train);
     }
 }

@@ -6,7 +6,6 @@ import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import org.bukkit.Bukkit;
 
 public class EntityProjectileEffect extends BaseTrainEffectTrigger implements EntityMovementTrigger{
     private final VirtualEntity virtualEntity;
@@ -104,12 +103,8 @@ public class EntityProjectileEffect extends BaseTrainEffectTrigger implements En
     }
 
     @Override
-    public void execute(Train train) {
+    public boolean execute(Train train) {
         start();
-    }
-
-    @Override
-    public void executeReversed(Train train) {
-        execute(train);
+        return true;
     }
 }

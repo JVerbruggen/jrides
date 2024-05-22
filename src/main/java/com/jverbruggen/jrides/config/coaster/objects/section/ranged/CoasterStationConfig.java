@@ -10,7 +10,6 @@ import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.RideType;
-import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,17 +19,23 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class CoasterStationConfig extends StationConfig {
+    private final boolean canSpawn;
     private final double engage;
     private final double driveSpeed;
     private final int passThroughCount;
     private final boolean forwardsDispatch;
 
-    public CoasterStationConfig(double engage, double driveSpeed, int passThroughCount, boolean forwardsDispatch, int minimumWaitIntervalSeconds, int maximumWaitIntervalSeconds, StationEffectsConfig stationEffectsConfig, PlayerLocation ejectLocation) {
+    public CoasterStationConfig(double engage, double driveSpeed, int passThroughCount, boolean forwardsDispatch, int minimumWaitIntervalSeconds, int maximumWaitIntervalSeconds, StationEffectsConfig stationEffectsConfig, PlayerLocation ejectLocation, boolean canSpawn) {
         super(minimumWaitIntervalSeconds, maximumWaitIntervalSeconds, stationEffectsConfig, ejectLocation);
         this.engage = engage;
         this.driveSpeed = driveSpeed;
         this.passThroughCount = passThroughCount;
         this.forwardsDispatch = forwardsDispatch;
+        this.canSpawn = canSpawn;
+    }
+
+    public boolean canSpawn() {
+        return canSpawn;
     }
 
     public double getEngage() {
@@ -50,6 +55,7 @@ public class CoasterStationConfig extends StationConfig {
     }
 
     public static CoasterStationConfig fromConfigurationSection(ConfigurationSection configurationSection) {
+        boolean canSpawn = getBoolean(configurationSection, "canSpawn", true);
         double engage = getDouble(configurationSection, "engage", 0.5);
         double driveSpeed = getDouble(configurationSection, "driveSpeed", 1.0);
         int passThroughCount = getInt(configurationSection, "passThroughCount", 0);
@@ -59,7 +65,7 @@ public class CoasterStationConfig extends StationConfig {
         StationEffectsConfig effects = StationEffectsConfig.fromConfigurationSection(configurationSection.getConfigurationSection("effects"));
         PlayerLocation ejectLocation = PlayerLocation.fromDoubleList(configurationSection.getDoubleList("ejectLocation"));
 
-        return new CoasterStationConfig(engage, driveSpeed, passThroughCount, forwardsDispatch, minimumWaitIntervalSeconds, maximumWaitIntervalSeconds, effects, ejectLocation);
+        return new CoasterStationConfig(engage, driveSpeed, passThroughCount, forwardsDispatch, minimumWaitIntervalSeconds, maximumWaitIntervalSeconds, effects, ejectLocation, canSpawn);
     }
 
     public @Nonnull CoasterStationHandle createStationHandle(String stationName, String shortStationName, TriggerContext triggerContext, CoasterHandle coasterHandle, List<Gate> gates, DispatchLock minimumWaitTimeDispatchLock){

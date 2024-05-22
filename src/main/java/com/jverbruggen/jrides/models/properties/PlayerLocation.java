@@ -55,6 +55,8 @@ public class PlayerLocation implements JRidesPlayerLocation {
     }
 
     public static PlayerLocation fromDoubleList(List<Double> doubleList){
+        if(doubleList == null)
+            return null;
         if(doubleList.size() != 3 && doubleList.size() != 5)
             return null;
 

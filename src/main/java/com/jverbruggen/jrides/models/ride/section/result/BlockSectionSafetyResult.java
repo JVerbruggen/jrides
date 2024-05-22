@@ -13,6 +13,12 @@ public record BlockSectionSafetyResult(boolean safe, @Nullable Train forTrain, @
     @Override
     public String reason() {
         String trainName = forTrain != null ? forTrain.getName() : "null";
-        return "(" + trainName + ") " + reason;
+        String sections = forTrain != null ? String.join(",", forTrain.getCurrentSections().stream().map(Object::toString).toList()) : "null";
+        return "(" + trainName + ") [" + sections + "] " + reason;
+    }
+
+    @Override
+    public String toString() {
+        return reason();
     }
 }

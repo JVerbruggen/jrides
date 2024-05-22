@@ -3,6 +3,7 @@ package com.jverbruggen.jrides;
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimation;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.logging.JRidesLogger;
+import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.entity.BroadcastMessageReceiver;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.packets.PacketSender;

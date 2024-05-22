@@ -30,6 +30,9 @@ public class VehiclesConfig extends BaseConfig {
         int carts = getInt(configurationSection, "carts", 1);
         int cartDistance = getInt(configurationSection, "cartDistance", 20);
 
+        if(cartDistance < 20)
+            throw new RuntimeException("Cart Distances for less than 20 frames are not supported");
+
         return new VehiclesConfig(trains, carts, cartDistance);
     }
 }

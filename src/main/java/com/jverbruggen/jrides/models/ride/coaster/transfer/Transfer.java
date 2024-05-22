@@ -4,14 +4,16 @@ import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.*;
 import com.jverbruggen.jrides.models.ride.coaster.train.CoasterCart;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import com.jverbruggen.jrides.models.ride.section.Unlockable;
 import com.jverbruggen.jrides.models.ride.section.reference.SectionReference;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Transfer {
+public class Transfer implements Unlockable {
     private final Vector3 origin;
 
     private TrainHandle train;
@@ -282,6 +284,9 @@ public class Transfer {
 
     public void trainExitedTransfer(){
         setTrain(null);
+    }
+
+    public void resetPosition(){
         setTargetPosition(0, false);
     }
 
@@ -294,11 +299,35 @@ public class Transfer {
     }
 
     public boolean canSafelyInteractWith(TrainHandle train){
-        if(train == null) return false;
         if(hasTrain()){
             return getTrain() == train;
         }
-        return !isMoving();
+        if(isMoving())
+            return false;
+        if(train == null)
+            return true;
+
+        List<Section> currentTrainSections = train.getTrain().getCurrentSections();
+        TransferPosition currentTransferPosition = getCurrentTransferPosition();
+
+        Section currentSectionAtStart = currentTransferPosition.getSectionAtStart();
+        Section currentSectionAtEnd = currentTransferPosition.getSectionAtEnd();
+
+        if(currentSectionAtStart != null && currentTrainSections.contains(currentSectionAtStart))
+            return true;
+        else if(currentSectionAtEnd != null && currentTrainSections.contains(currentSectionAtEnd))
+            return true;
+        else
+            return false;
+    }
+
+    @Override
+    public void unlock(Train authority) {
+        if(this.train != null && this.train != authority.getHandle()){
+            throw new RuntimeException("Train " + authority.getName() + " tried to unlock transfer while it wasn't the occupier");
+        }
+        trainExitedTransfer();
+        resetPosition();
     }
 }
 

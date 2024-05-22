@@ -16,6 +16,8 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.Transfer;
 import com.jverbruggen.jrides.models.ride.coaster.transfer.TransferPosition;
 import com.jverbruggen.jrides.models.ride.section.Section;
+import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
+import org.bukkit.Bukkit;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -25,17 +27,19 @@ import java.util.List;
 public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
     private final double deceleration;
     private final double acceleration;
-    private final double driveSpeed;
+    private final double enterDriveSpeed;
+    private final double exitDriveSpeed;
     private final Frame stopFrame;
     private final Transfer transfer;
 
     private TransferPhase phase;
 
-    public TrainDisplacerTransferTrackBehaviour(CartMovementFactory cartMovementFactory, double driveSpeed, double deceleration, double acceleration, Frame stopFrame, Transfer transfer) {
+    public TrainDisplacerTransferTrackBehaviour(CartMovementFactory cartMovementFactory, double enterDriveSpeed, double deceleration, double acceleration, double exitDriveSpeed, Frame stopFrame, Transfer transfer) {
         super(cartMovementFactory);
         this.deceleration = deceleration;
         this.acceleration = acceleration;
-        this.driveSpeed = driveSpeed;
+        this.enterDriveSpeed = enterDriveSpeed;
+        this.exitDriveSpeed = exitDriveSpeed;
         this.stopFrame = stopFrame;
         this.transfer = transfer;
         this.phase = TransferPhase.IDLE;
@@ -59,7 +63,7 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
                         phase = TransferPhase.STOPPING;
                         goIntoSwitch = true;
                     }else{
-                        newSpeed.approach(acceleration, deceleration, driveSpeed);
+                        newSpeed.approach(acceleration, deceleration, enterDriveSpeed);
                     }
                     break;
                 case STOPPING:
@@ -82,23 +86,31 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
                     break;
                 case WAITING:
                     Section currentSection = train.getHeadSection();
-                    Section nextSection = currentSection.next(train);
-                    if(nextSection != null && nextSection.getBlockSectionSafety(train).safe()){
+                    Section goToSection = getGoToSection(train);
+                    if(goToSection != null && goToSection.getBlockSectionSafety(train).safe()){
                         transfer.unlockTrain();
                         transfer.releaseRequest();
                         phase = TransferPhase.DRIVING;
                         goIntoSwitch = true;
 
-                        boolean positiveTrainDirection = currentSection.positiveDirectionToGoTo(nextSection, train);
-                        boolean currentlyFacingForwards = train.isFacingForwards();
+                        boolean positiveTowardsSectionDirection = currentSection.positiveDirectionToGoTo(goToSection, train);
+                        TransferPosition currentTransferPosition = transfer.getCurrentTransferPosition();
 
-                        train.setFacingForwards(currentlyFacingForwards == positiveTrainDirection);
-                        train.setDrivingDirection(positiveTrainDirection);
-                        nextSection.setEntireBlockReservation(train);
+                        boolean isSectionForwardsType;
+                        if(positiveTowardsSectionDirection)
+                            isSectionForwardsType = currentTransferPosition.isSectionAtEndForwards();
+                        else
+                            isSectionForwardsType = currentTransferPosition.isSectionAtStartForwards();
+
+                        boolean trainWillBeForwards = isSectionForwardsType;
+
+                        train.setFacingForwards(trainWillBeForwards);
+                        train.setDrivingDirection(true);
+                        goToSection.setEntireBlockReservation(train);
                     }
                     break;
                 case DRIVING:
-                    newSpeed.approach(acceleration, deceleration, driveSpeed);
+                    newSpeed.approach(acceleration, deceleration, exitDriveSpeed);
                     break;
             }
         }
@@ -106,15 +118,36 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
         return calculateTrainMovement(train, section, newSpeed);
     }
 
+    private Section getGoToSection(Train train){
+        Section sectionAtStart = getSectionAtStart(train, false);
+        Section sectionAtEnd = getSectionAtEnd(train, false);
+        if(sectionAtEnd != null)
+            return sectionAtEnd;
+        if(sectionAtStart != null)
+            return sectionAtStart;
+        throw new RuntimeException("No Exit section available on transfer");
+    }
+
     @Override
-    public void trainExitedAtStart(@Nullable Train train) {
+    public void trainExitedAtStart(@Nullable Train train, @Nullable Section section) {
         throw new RuntimeException("Not supported exited train at start train displacer");
     }
 
     @Override
-    public void trainExitedAtEnd(@Nullable Train train){
+    public void trainExitedAtEnd(@Nullable Train train, @Nullable Section section){
         phase = TransferPhase.IDLE;
         transfer.trainExitedTransfer();
+
+        if(section != null){
+            BlockSectionSafetyResult safetyResult = section.getBlockSectionSafety(null);
+            if(!safetyResult.safe()){
+                JRidesPlugin.getLogger().info(LogType.SECTIONS, "Transfer Exit: Not safe for next one yet: " + safetyResult);
+                return;
+            }
+        }
+
+        JRidesPlugin.getLogger().info(LogType.SECTIONS, "Transfer Exit: Safety OK");
+        transfer.resetPosition();
     }
 
     @Override
@@ -168,9 +201,17 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
         return Quaternion.multiply(transferOrientation, originalOrientation);
     }
 
+    private boolean canTransferSafelyInteractWith(Train train){
+        TrainHandle trainHandle = null;
+        if(train != null)
+            trainHandle = train.getHandle();
+
+        return transfer.canSafelyInteractWith(trainHandle);
+    }
+
     @Override
     public Section getSectionAtStart(Train train, boolean process) {
-        if(!transfer.canSafelyInteractWith(train.getHandle())){
+        if(!canTransferSafelyInteractWith(train)){
             JRidesPlugin.getLogger().info(LogType.SECTIONS, "No safe interact at start");
             return null;
         }
@@ -179,7 +220,7 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
 
     @Override
     public Section getSectionAtEnd(Train train, boolean process) {
-        if(!transfer.canSafelyInteractWith(train.getHandle())){
+        if(!canTransferSafelyInteractWith(train)){
             JRidesPlugin.getLogger().info(LogType.SECTIONS, "No safe interact at end");
             return null;
         }
@@ -210,26 +251,45 @@ public class TrainDisplacerTransferTrackBehaviour extends BaseTrackBehaviour {
     @Override
     public Section getSectionNext(Train train, boolean process) {
         Section logicalNext = getSectionAtEnd(train, process);
-        if(logicalNext != null)
+        if(logicalNext != null) {
+            JRidesPlugin.getLogger().info(LogType.SECTIONS, "Logical next: " + logicalNext.getName());
             return logicalNext;
-        else{
-            return getSectionAtStart(train, process);
+        } else{
+            JRidesPlugin.getLogger().info(LogType.SECTIONS, "Logical next: null");
+            return null;
         }
     }
 
     @Override
     public Section getSectionPrevious(Train train, boolean process) {
         Section logicalNext = getSectionAtStart(train, process);
-        if(logicalNext != null)
+        if(logicalNext != null) {
+            JRidesPlugin.getLogger().info(LogType.SECTIONS, "Logical prev: " + logicalNext.getName());
             return logicalNext;
-        else{
-            return getSectionAtEnd(train, process);
+        }else{
+            JRidesPlugin.getLogger().info(LogType.SECTIONS, "Logical prev: null");
+            return null;
         }
     }
 
     @Override
     public boolean accepts(Train train) {
-        return transfer.canSafelyInteractWith(train.getHandle());
+        return canTransferSafelyInteractWith(train);
+    }
+
+    @Override
+    public boolean canHandleConnections() {
+        return true;
+    }
+
+    @Override
+    public boolean nextConnectsToStart() {
+        return transfer.getCurrentTransferPosition().isSectionAtEndConnectsToStart();
+    }
+
+    @Override
+    public boolean previousConnectsToStart() {
+        return transfer.getCurrentTransferPosition().isSectionAtStartConnectsToStart();
     }
 }
 

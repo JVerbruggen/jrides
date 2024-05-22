@@ -6,9 +6,14 @@ import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.ride.coaster.train.CoasterCart;
 
 public interface CartEffectTriggerHandle extends EffectTriggerHandle {
-    Frame getFrame();
     CartEffectTrigger getCartEffectTrigger();
-    void execute(CoasterCart cart);
+
+    /**
+     *
+     * @param cart
+     * @return true if can process more effects
+     */
+    boolean executeForCart(CoasterCart cart);
 
     void setNext(CartEffectTriggerHandle cartEffectTriggerHandle);
     CartEffectTriggerHandle next();

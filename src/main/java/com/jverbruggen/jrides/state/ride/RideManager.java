@@ -13,6 +13,7 @@ import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.event.ride.RideInitializedEvent;
 import com.jverbruggen.jrides.exception.CoasterLoadException;
 import com.jverbruggen.jrides.logging.JRidesLogger;
+import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.coaster.CoasterLoader;
 import org.bukkit.Bukkit;
@@ -136,5 +137,7 @@ public class RideManager {
         for(RideHandle rideHandle : rideHandles){
             rideHandle.tick();
         }
+
+        Speed.incrementFractionalSpeedCounter();
     }
 }

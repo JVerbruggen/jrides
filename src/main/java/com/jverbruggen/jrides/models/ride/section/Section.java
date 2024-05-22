@@ -42,7 +42,7 @@ public interface Section extends Comparable<Section> {
     boolean isReserved();
     boolean isReservedBy(Train train);
 
-    void addOccupation(@NonNull  Train train);
+    boolean addOccupation(@NonNull  Train train);
     void removeOccupation(@NonNull  Train train);
     boolean canTrainSpawnOn();
     boolean hasPassed(Frame staticFrame, Frame movingFrame);
@@ -76,6 +76,16 @@ public interface Section extends Comparable<Section> {
     void setPrevious(Section section);
     boolean spansOver(Train train);
     boolean positiveDirectionToGoTo(Section section, Train forTrain);
+
+    /**
+     * Is section forwards
+     * i.e. do trains traverse backwards or forwards through it?
+     * @return true if forwards
+     */
+    boolean isForwards();
+
+    boolean nextConnectsToStart();
+    boolean previousConnectsToStart();
 
     String getName();
 }
