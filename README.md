@@ -34,7 +34,8 @@ With built-in support for the [smooth-coasters client](https://www.curseforge.co
 
 ## ✨ And so much more!
 * Custom **Flat rides** - i.e. TeaCups, Caroussels, Ferris Wheels, anything that rotates!
-* Flat ride passenger control
+* Animated Flat Rides using **Blender**!
+* Flat Ride passenger controls (move your own cart)
 * Navigation menu
 * Ride counters
 * Double stations
@@ -46,19 +47,19 @@ With built-in support for the [smooth-coasters client](https://www.curseforge.co
 
 ## Download
 
-Click one of the versions below to start your download! Thank you and enjoy!
+Download the latest version on GitHub (latest release tag on the right)
 
-| Version | Link |
-|---------|-----|
-| 1.19.2  | tbd |
-| 1.20.1  | tbd |
+![releases-github-help.png](docs/assets/releases-github-help.png)
+*(Example)*
 
 ### Warning - jrides is currently in beta. Please report any issues in GitHub.
 
-<br>
 
 ## Configuration
-Refer to [docs/config.md](./docs/config.md) for configuration.
+
+Want to get started?
+
+Refer to [docs/config.md](./docs/config.md) for all the latest documentation.
 
 
 ---

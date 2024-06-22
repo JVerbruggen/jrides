@@ -7,6 +7,7 @@ Default data folder
 
 ## rides.yml
 * This file contains all active coasters that should be loaded on startup.
+* This is the first file you create to get started.
 * Location: `plugins/jrides/rides.yml` 
 
 Example configuration:
@@ -18,6 +19,9 @@ config:
   wodan:
     identifier: wodan
     type: coaster
+  teacups:
+    identifier: teacups
+    type: flatride
 ```
 
 ## language.yml
@@ -45,3 +49,10 @@ The exact structure of this file can be found in [docs/coaster_yml.md](./coaster
 * Add triggers to coaster tracks, to run effects, commands or animate entities.
 
 For more information, see [docs/triggers.md](./triggers.md)
+
+## flatride.yml
+* Flatride configuration
+* Location: `plugins/jrides/flatrides/<flatride_identifier>/<flatride_identifier>.flatride.yml`
+* * Example: `plugins/jrides/flatrides/teacups/teacups.flatride.yml`
+
+The exact structure of this file can be found in [docs/flatride_yml.md](./flatride_yml.md)
