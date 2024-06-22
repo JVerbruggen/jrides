@@ -1,0 +1,11 @@
+main: com.jverbruggen.jrides.Main
+name: jrides
+version: ${minecraft.version.short}
+authors: [MeneerPinguin]
+api-version: ${minecraft.version.apiversion}
+load: POSTWORLD
+depend: [ProtocolLib]
+permissions:
+
+commands:
+  jrides:

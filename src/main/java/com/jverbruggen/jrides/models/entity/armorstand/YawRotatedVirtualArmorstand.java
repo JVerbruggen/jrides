@@ -1,0 +1,28 @@
+package com.jverbruggen.jrides.models.entity.armorstand;
+
+import com.jverbruggen.jrides.models.math.ArmorStandPose;
+import com.jverbruggen.jrides.models.math.Quaternion;
+import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.packets.PacketSender;
+import com.jverbruggen.jrides.packets.object.VirtualArmorstandConfiguration;
+import com.jverbruggen.jrides.state.viewport.ViewportManager;
+
+import javax.annotation.Nonnull;
+
+public class YawRotatedVirtualArmorstand extends VirtualArmorstand {
+    public YawRotatedVirtualArmorstand(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, Quaternion rotation, double yawRotation, int entityId, @Nonnull VirtualArmorstandConfiguration configuration) {
+        super(packetSender, viewportManager, location, rotation, yawRotation, entityId, configuration);
+    }
+
+    @Override
+    public void setRotation(Quaternion orientation) {
+        if(orientation == null) return;
+
+        Vector3 headPose = ArmorStandPose.getArmorStandPose(orientation);
+        headPose.y = 0;
+
+        setHeadPose(headPose);
+        setYaw(orientation.getPacketYaw());
+        moveEntity(Vector3.zero(), getYaw());
+    }
+}
