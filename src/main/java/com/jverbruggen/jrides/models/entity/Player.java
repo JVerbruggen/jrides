@@ -206,10 +206,7 @@ public class Player implements MessageAgent, JRidesPlayer {
     }
 
     public void teleport(PlayerLocation location, boolean hard) {
-        if(hard)
-            getBukkitPlayer().teleport(location.toBukkitLocation(getBukkitPlayer().getWorld()));
-        else
-            PlayerTeleportByJRidesEvent.sendEvent(this, location, true);
+        PlayerTeleportByJRidesEvent.sendEvent(this, location, hard);
     }
 
     public void teleport(Vector3 location, double yaw){

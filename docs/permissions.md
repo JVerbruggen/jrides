@@ -7,6 +7,7 @@ Permission | Description
 jrides.default.ride_enter | Allow entering a ride
 jrides.default.warp | Allow warping (through menu)
 jrides.command.default.warp | Allow warping (through command)
+jrides.command.default.rides | Allow opening '/jrides rides' menu
 
 ## Operator
 
@@ -28,6 +29,7 @@ jrides.elevated.open_state_change | Allow to open or close a ride
 jrides.command.elevated | Base for elevated commands (for admins)
 jrides.command.elevated.admin_menu | Allow to open ride admin menu
 jrides.command.elevated.ride_overview | Allow for generating a ride overview map
+jrides.command.elevated.ride_counter_map | Allow for generating a ride counter map
 jrides.command.elevated.block_section | Allow for getting block section occupation message (debug)
 jrides.command.elevated.visualize | Allow to visualize a coaster spline (debug)
 
@@ -36,4 +38,5 @@ jrides.command.elevated.visualize | Allow to visualize a coaster spline (debug)
 Permission | Description
 --- | ---
 jrides.elevated.status_inspection | Allow to inspect coaster frames (debug)
+jrides.elevated.dispatch_problems_debug | Allow to see all detailed (debug) problems when dispatching a ride
 
