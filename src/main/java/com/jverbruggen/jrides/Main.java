@@ -18,6 +18,7 @@
 package com.jverbruggen.jrides;
 
 import com.comphenix.protocol.ProtocolManager;
+import com.jverbruggen.jrides.api.PlayerAPI;
 import com.jverbruggen.jrides.command.MainCommandExecutor;
 import com.jverbruggen.jrides.common.MenuSessionManager;
 import com.jverbruggen.jrides.common.startup.StartMessage;
@@ -50,6 +51,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -79,6 +81,8 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new PlayerTeleportToRideListener(), this);
         pluginManager.registerEvents(new RideMenuLoader(), this);
         pluginManager.registerEvents(new PassengerListener(), this);
+
+        Bukkit.getServicesManager().register(PlayerAPI.class, new PlayerAPI(), this, ServicePriority.Highest);
 
         ConfigurationSerialization.registerClass(RideCounterRecord.class);
         ConfigurationSerialization.registerClass(RideCounterRecordCollection.class);

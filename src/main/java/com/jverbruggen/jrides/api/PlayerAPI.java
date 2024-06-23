@@ -22,6 +22,7 @@ import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.player.PlayerManager;
 import com.jverbruggen.jrides.state.ride.menu.RideOverviewMenuFactory;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 
 public class PlayerAPI {
@@ -45,5 +46,9 @@ public class PlayerAPI {
 
         menuSessionManager.addOpenMenu(player, menu, inventory);
         player.getBukkitPlayer().openInventory(inventory);
+    }
+
+    public static PlayerAPI Connect(){
+        return Bukkit.getServicesManager().load(PlayerAPI.class);
     }
 }
