@@ -107,6 +107,10 @@ public class ButtonClickEventListener implements Listener {
     @EventHandler
     public void onClose(InventoryCloseEvent event){
         Player player = playerManager.getPlayer((org.bukkit.entity.Player) event.getPlayer());
-        menuSessionManager.removeOpenMenu(player);
+        Menu menu = menuSessionManager.getOpenMenu(player);
+
+        if(menu.matchesInventory(event.getView())){
+            menuSessionManager.removeOpenMenu(player);
+        }
     }
 }

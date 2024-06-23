@@ -20,6 +20,7 @@ package com.jverbruggen.jrides.models.menu;
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,6 +59,11 @@ public abstract class BaseMenu implements Menu {
         }
 
         return inventory;
+    }
+
+    @Override
+    public boolean matchesInventory(InventoryView inventoryView) {
+        return inventoryView.getTitle().equalsIgnoreCase(inventoryTitle);
     }
 
     @Override

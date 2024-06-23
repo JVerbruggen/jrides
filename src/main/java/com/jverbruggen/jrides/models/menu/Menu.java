@@ -20,6 +20,7 @@ package com.jverbruggen.jrides.models.menu;
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.models.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 
 import java.util.Map;
 import java.util.UUID;
@@ -30,6 +31,7 @@ public interface Menu {
     void removeSession(JRidesPlayer player);
 
     Inventory getInventoryFor(JRidesPlayer player);
+    boolean matchesInventory(InventoryView inventoryView);
     Menu addButton(MenuButton button);
     MenuButton getButton(UUID buttonUUID);
     void sendUpdate();
