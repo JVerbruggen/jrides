@@ -73,6 +73,10 @@ public class GateTrigger implements StationTrigger{
             return Result.isNotOk(languageFile.get(LanguageFileField.ERROR_OPERATING_NO_PERMISSION));
         }
 
+        if(!stationHandle.canOperate(messageAgent)){
+            return Result.isNotOk(languageFile.get(LanguageFileField.ERROR_OPERATING_NO_PERMISSION));
+        }
+
         if(stationHandle == null){
             JRidesPlugin.getLogger().severe("No station handle set for gate trigger");
             return Result.isNotOk();

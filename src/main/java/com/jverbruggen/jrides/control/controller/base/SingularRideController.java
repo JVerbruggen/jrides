@@ -24,6 +24,7 @@ import com.jverbruggen.jrides.control.controlmode.ControlMode;
 import com.jverbruggen.jrides.control.controlmode.factory.ControlModeFactory;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
@@ -87,6 +88,12 @@ public abstract class SingularRideController extends BaseRideController implemen
             this.changeMode(this.controlModeFactory.getForWithOperator(this.rideHandle));
             result = this.getControlMode().setOperator(player);
         }
+
+        MinMaxWaitingTimer waitingTimer = this.getControlMode().getWaitingTimer();
+        if(result && waitingTimer.reachedMinimum()) {
+            waitingTimer.reset();
+        }
+
         return result;
     }
 

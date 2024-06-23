@@ -106,4 +106,8 @@ public class FlatRideUniVehicle extends AbstractVehicle {
     public void setFlatRideHandle(FlatRideHandle flatRideHandle) {
         this.flatRideHandle = flatRideHandle;
     }
+
+    public FlatRideHandle getFlatRideHandle() {
+        return flatRideHandle;
+    }
 }

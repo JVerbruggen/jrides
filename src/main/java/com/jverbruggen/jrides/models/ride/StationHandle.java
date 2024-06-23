@@ -19,6 +19,8 @@ package com.jverbruggen.jrides.models.ride;
 
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
+import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
@@ -27,13 +29,13 @@ import com.jverbruggen.jrides.models.ride.gate.Gate;
 
 import java.util.List;
 
-public class StationHandle {
-    private String name;
-    private String shortName;
+public abstract class StationHandle {
+    private final String name;
+    private final String shortName;
     private final List<Gate> entryGates;
     private final PlayerLocation ejectLocation;
     private final MinMaxWaitingTimer waitingTimer;
-    private TriggerContext triggerContext;
+    private final TriggerContext triggerContext;
     private final List<TrainEffectTriggerHandle> entryBlockingEffectTriggers;
     private final List<TrainEffectTriggerHandle> exitBlockingEffectTriggers;
     private final List<TrainEffectTriggerHandle> exitEffectTriggers;
@@ -49,6 +51,7 @@ public class StationHandle {
         this.exitBlockingEffectTriggers = exitBlockingEffectTriggers;
         this.exitEffectTriggers = exitEffectTriggers;
 
+        triggerContext.getDispatchTrigger().setStationHandle(this);
         triggerContext.getRestraintTrigger().setStationHandle(this);
         triggerContext.getGateTrigger().setStationHandle(this);
     }
@@ -131,4 +134,6 @@ public class StationHandle {
         if(exitBlockingEffectTriggers == null) return true;
         return exitBlockingEffectTriggers.stream().allMatch(t -> t.getTrainEffectTrigger().finishedPlaying());
     }
+
+    public abstract boolean canOperate(MessageAgent messageAgent);
 }

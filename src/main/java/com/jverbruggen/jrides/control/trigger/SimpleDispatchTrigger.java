@@ -19,18 +19,24 @@ package com.jverbruggen.jrides.control.trigger;
 
 import com.jverbruggen.jrides.common.Result;
 import com.jverbruggen.jrides.common.permissions.Permissions;
+import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
+import com.jverbruggen.jrides.models.ride.StationHandle;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 
-public class SimpleDispatchTrigger implements DispatchTrigger {
+import java.util.List;
+
+public class SimpleDispatchTrigger implements DispatchTrigger, StationTrigger {
+    private StationHandle stationHandle;
     private boolean active;
     private final DispatchLockCollection dispatchLockCollection;
     private final LanguageFile languageFile;
 
     public SimpleDispatchTrigger(DispatchLockCollection dispatchLockCollection) {
+        this.stationHandle = null;
         this.active = false;
         this.dispatchLockCollection = dispatchLockCollection;
         this.languageFile = ServiceProvider.getSingleton(LanguageFile.class);
@@ -40,7 +46,6 @@ public class SimpleDispatchTrigger implements DispatchTrigger {
     public boolean execute(MessageAgent messageAgent){
         Result canExecuteResult = canExecute(messageAgent);
         if(!canExecuteResult.ok()){
-            languageFile.sendMessage(messageAgent, languageFile.get(LanguageFileField.NOTIFICATION_RIDE_DISPATCH_PROBLEMS));
             canExecuteResult.sendMessageTo(messageAgent);
             return false;
         }
@@ -51,15 +56,20 @@ public class SimpleDispatchTrigger implements DispatchTrigger {
 
     @Override
     public Result canExecute(MessageAgent messageAgent) {
+        if(messageAgent != null && !messageAgent.hasPermission(Permissions.CABIN_OPERATE)){
+            return Result.isNotOk(languageFile.get(LanguageFileField.ERROR_OPERATING_NO_PERMISSION));
+        }
+        if(!stationHandle.canOperate(messageAgent)){
+            return Result.isNotOk(languageFile.get(LanguageFileField.ERROR_OPERATING_NO_PERMISSION));
+        }
         if(!dispatchLockCollection.allUnlocked()){
             if(messageAgent != null){
-                return Result.isNotOk(dispatchLockCollection.getProblems(Integer.MAX_VALUE, messageAgent.hasPermission(Permissions.ELEVATED_DISPATCH_PROBLEMS_DEBUG)));
+                List<String> problemList = dispatchLockCollection.getProblems(Integer.MAX_VALUE, messageAgent.hasPermission(Permissions.ELEVATED_DISPATCH_PROBLEMS_DEBUG));
+                problemList.add(0, languageFile.get(LanguageFileField.NOTIFICATION_RIDE_DISPATCH_PROBLEMS));
+                return Result.isNotOk(problemList);
             }else{
                 return Result.isNotOk();
             }
-        }
-        if(messageAgent != null && !messageAgent.hasPermission(Permissions.CABIN_OPERATE)){
-            return Result.isNotOk(languageFile.get(LanguageFileField.ERROR_OPERATING_NO_PERMISSION));
         }
 
         return Result.isOk();
@@ -77,6 +87,16 @@ public class SimpleDispatchTrigger implements DispatchTrigger {
 
     @Override
     public DispatchLockCollection getDispatchLockCollection() {
+        return dispatchLockCollection;
+    }
+
+    @Override
+    public void setStationHandle(StationHandle stationHandle) {
+        this.stationHandle = stationHandle;
+    }
+
+    @Override
+    public DispatchLock getLock() {
         return dispatchLockCollection;
     }
 }

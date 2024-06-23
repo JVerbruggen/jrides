@@ -21,11 +21,14 @@ import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
 import com.jverbruggen.jrides.models.ride.gate.Gate;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import com.jverbruggen.jrides.state.player.PlayerManager;
 
 import java.util.List;
 
@@ -102,5 +105,14 @@ public class CoasterStationHandle extends StationHandle {
     @Override
     public Vehicle getStationaryVehicle() {
         return getStationaryTrain();
+    }
+
+    @Override
+    public boolean canOperate(MessageAgent messageAgent) {
+        if(messageAgent == null) return true;
+        if(!messageAgent.isPlayer()) return true;
+
+        Player player = messageAgent.getPlayer(ServiceProvider.getSingleton(PlayerManager.class));
+        return player.getOperating() == getCoasterHandle().getRideController();
     }
 }

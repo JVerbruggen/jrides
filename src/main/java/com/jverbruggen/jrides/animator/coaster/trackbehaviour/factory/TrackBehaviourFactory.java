@@ -138,13 +138,15 @@ public class TrackBehaviourFactory {
 
         CoasterStationConfig coasterStationConfig = rangedSectionConfig.getStationSectionSpec();
         double driveSpeed = coasterStationConfig.getDriveSpeed();
+        double acceleration = coasterStationConfig.getAcceleration();
+        double deceleration = coasterStationConfig.getDeceleration();
 
         CoasterStationHandle stationHandle = coasterStationConfig.createStationHandle(
                 stationName, shortStationName, triggerContext, coasterHandle,
                 gates, minimumWaitTimeDispatchLock);
 
         return new StationTrackBehaviour(coasterHandle, cartMovementFactory, blockBrakeEngageFrame, coasterStationConfig.canSpawn(), triggerContext,
-                stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock, restraintLock, driveSpeed,
+                stationHandle, trainInStationDispatchLock, blockSectionOccupiedDispatchLock, restraintLock, driveSpeed, acceleration, deceleration,
                 coasterStationConfig.isForwardsDispatch(), coasterStationConfig.getPassThroughCount());
     }
 

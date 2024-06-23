@@ -163,9 +163,12 @@ public class Player implements MessageAgent, JRidesPlayer {
     }
 
     public boolean setOperating(RideController rideController) {
+        // Check if player is already operating ride
         if(rideController != null && rideController.getOperator() == this && operating == rideController) return true;
 
+        // If already operating something..
         if(operating != null){
+            // stop operating it
             languageFile.sendMessage(this, LanguageFileField.NOTIFICATION_RIDE_CONTROL_INACTIVE,
                     (b) -> b.add(LanguageFileTag.rideDisplayName, operating.getRide().getDisplayName()));
             operating.setOperator(null);
@@ -179,6 +182,7 @@ public class Player implements MessageAgent, JRidesPlayer {
             return false;
         }
 
+        // Try to operate the selected ride
         boolean set = rideController.setOperator(this);
         if(!set){
             languageFile.sendMessage(this, LanguageFileField.ERROR_OPERATING_CABIN_OCCUPIED);
@@ -186,6 +190,7 @@ public class Player implements MessageAgent, JRidesPlayer {
             return false;
         }
 
+        // All is ok, setting operating field for player
         operating = rideController;
 
         languageFile.sendMessage(this, LanguageFileField.NOTIFICATION_RIDE_CONTROL_ACTIVE,

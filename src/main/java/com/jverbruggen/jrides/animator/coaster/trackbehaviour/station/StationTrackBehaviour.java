@@ -38,6 +38,7 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
+import org.bukkit.Bukkit;
 
 import javax.annotation.Nullable;
 import java.util.stream.Collectors;
@@ -69,13 +70,13 @@ public class StationTrackBehaviour extends BaseTrackBehaviour {
 
     public StationTrackBehaviour(CoasterHandle coasterHandle, CartMovementFactory cartMovementFactory, Frame stopFrame, boolean canSpawn, TriggerContext triggerContext,
                                  CoasterStationHandle stationHandle, DispatchLock trainInStationDispatchLock, DispatchLock blockSectionOccupiedDispatchLock,
-                                 DispatchLock restraintsLock, double driveSpeed, boolean forwardsDispatch, int passThroughCount) {
+                                 DispatchLock restraintsLock, double driveSpeed, double acceleration, double deceleration, boolean forwardsDispatch, int passThroughCount) {
         super(cartMovementFactory);
         this.coasterHandle = coasterHandle;
         this.logger = JRidesPlugin.getLogger();
-        this.deceleration = 0.2;
-        this.acceleration = 0.1;
         this.driveSpeed = driveSpeed;
+        this.acceleration = acceleration;
+        this.deceleration = deceleration;
         this.handlingTrain = null;
         this.phase = StationPhase.IDLE;
         this.stopFrame = stopFrame;
@@ -133,7 +134,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour {
                         phase = StationPhase.ARRIVING;
                         goIntoSwitch = true;
                     } else {
-                        newSpeed.approach(acceleration, deceleration, driveSpeed);
+                        newSpeed.approach(deceleration, acceleration, driveSpeed);
                     }
                 }
                 case ARRIVING -> {
