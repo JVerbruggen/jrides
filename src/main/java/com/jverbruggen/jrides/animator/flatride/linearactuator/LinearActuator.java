@@ -95,6 +95,19 @@ public class LinearActuator extends AbstractInterconnectedFlatRideComponent impl
 
     @Override
     public void goTowards(double targetPosition, double fromPosition, double acceleration, FlatRideComponentSpeed componentSpeed) {
-        componentSpeed.accelerate(acceleration);
+        boolean shouldAccelerate;
+        double currentPosition = getInstructionPosition();
+
+        // If from position is lower than target
+        if(fromPosition <= targetPosition){
+            // Then it should accelerate while the current position is lower than the target
+            shouldAccelerate = currentPosition < targetPosition;
+        }else{
+            // Otherwise do the reverse
+            shouldAccelerate = targetPosition < currentPosition;
+        }
+
+        if(shouldAccelerate)
+            componentSpeed.accelerate(acceleration);
     }
 }
