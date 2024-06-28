@@ -126,7 +126,8 @@ public class TrainFactory {
                     virtualEntity,
                     cartOffset,
                     cartRotationOffset,
-                    cartFrame);
+                    cartFrame,
+                    cartTypeSpecConfig.getWheelDistance());
             carts.add(cart);
         }
 

@@ -44,6 +44,7 @@ public class SimpleCoasterCart implements CoasterCart {
     private final Vector3 trackOffset;
     private final Quaternion trackRotationOffset;
     private final Frame frame;
+    private final int wheelDistance;
     private Train parentTrain;
 
     private boolean hasEffects;
@@ -52,13 +53,14 @@ public class SimpleCoasterCart implements CoasterCart {
     private Quaternion currentOrientation;
     private Vector3 orientationOffset;
 
-    public SimpleCoasterCart(String name, List<CoasterSeat> seats, VirtualEntity modelEntity, Vector3 trackOffset, Quaternion trackRotationOffset, Frame frame) {
+    public SimpleCoasterCart(String name, List<CoasterSeat> seats, VirtualEntity modelEntity, Vector3 trackOffset, Quaternion trackRotationOffset, Frame frame, int wheelDistance) {
         this.name = name;
         this.seats = seats;
         this.modelEntity = modelEntity;
         this.trackOffset = trackOffset;
         this.trackRotationOffset = trackRotationOffset;
         this.frame = frame;
+        this.wheelDistance = wheelDistance;
         this.parentTrain = null;
         this.currentOrientation = new Quaternion(0,0,0,0);
         this.orientationOffset = null;
@@ -94,6 +96,11 @@ public class SimpleCoasterCart implements CoasterCart {
     @Override
     public Frame getFrame() {
         return frame;
+    }
+
+    @Override
+    public int getWheelDistance() {
+        return wheelDistance;
     }
 
     @Override
