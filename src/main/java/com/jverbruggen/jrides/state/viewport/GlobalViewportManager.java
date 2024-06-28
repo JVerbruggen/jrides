@@ -111,12 +111,12 @@ public class GlobalViewportManager implements ViewportManager {
     }
 
     @Override
-    public VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType) {
-        return spawnVirtualEntity(location, entityType, 0);
+    public VirtualEntity spawnVirtualBukkitEntity(Vector3 location, EntityType entityType) {
+        return spawnVirtualBukkitEntity(location, entityType, 0);
     }
 
     @Override
-    public VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType, double yawRotation) {
+    public VirtualEntity spawnVirtualBukkitEntity(Vector3 location, EntityType entityType, double yawRotation) {
         int entityId = entityIdFactory.newId();
         VirtualEntity virtualEntity = new VirtualBukkitEntity(packetSender, this, location, entityType, yawRotation, entityId);
 

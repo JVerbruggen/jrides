@@ -26,19 +26,25 @@ import org.bukkit.entity.EntityType;
 public class VirtualBukkitEntity extends BaseVirtualEntity {
     private final EntityType entityType;
 
-    private double yawRotation;
     private final int leashedToEntity;
+    private final double yawRotationOffset;
+    private double currentYawRotation;
+
 
     public VirtualBukkitEntity(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, EntityType entityType, double yawRotation, int entityId) {
         super(packetSender, viewportManager, location, entityId);
         this.entityType = entityType;
-        this.yawRotation = yawRotation;
+        this.yawRotationOffset = yawRotation;
+        this.currentYawRotation = yawRotation;
         this.leashedToEntity = -1;
     }
 
     @Override
     protected void moveEntity(Vector3 delta, double yawRotation) {
-        packetSender.moveVirtualEntity(this.getViewers(), entityId, delta, yawRotation);
+        packetSender.moveVirtualEntity(this.getViewers(),
+                entityId,
+                delta,
+                yawRotation + packetSender.toPacketYaw(this.yawRotationOffset));
     }
 
     @Override
@@ -48,12 +54,12 @@ public class VirtualBukkitEntity extends BaseVirtualEntity {
 
     @Override
     public Quaternion getRotation() {
-        return Quaternion.fromYawPitchRoll(0, yawRotation, 0);
+        return Quaternion.fromYawPitchRoll(0, currentYawRotation, 0);
     }
 
     @Override
     public double getYaw() {
-        return yawRotation;
+        return currentYawRotation;
     }
 
     @Override
@@ -87,6 +93,6 @@ public class VirtualBukkitEntity extends BaseVirtualEntity {
         super.setRotation(orientation);
 
         if(orientation != null)
-            this.yawRotation = orientation.getYaw() - 90;
+            this.currentYawRotation = orientation.getYaw() + yawRotationOffset;
     }
 }

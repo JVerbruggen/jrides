@@ -36,6 +36,7 @@ import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.Relativ
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.*;
 import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
+import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 
@@ -52,6 +53,8 @@ public interface FlatRideComponent {
     Attachment getAttachedTo();
     void setAttachedTo(Attachment attachment);
     void attach(FlatRideComponent child, Quaternion offsetRotation, Vector3 offsetPosition);
+    void forwardSeatRequest(Seat seat);
+    Seat getForwardingSeatRequest();
     Quaternion getRotation();
     Vector3 getPosition();
     Matrix4x4 getPositionMatrix();
@@ -81,13 +84,13 @@ public interface FlatRideComponent {
         return rotors;
     }
 
-    static List<FlatRideComponent> createDistributedSeats(FlatRideHandle rideHandle, String identifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, int seatYawOffset, List<ModelConfig> flatRideModelsConfig, int amount){
+    static List<FlatRideComponent> createDistributedSeats(FlatRideHandle rideHandle, String identifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, int seatYawOffset, boolean forwardSeatRequest, List<ModelConfig> flatRideModelsConfig, int amount){
         return createDistributedComponent(
                 identifier,
                 offsetRotation,
                 amount,
                 (seatQuaternion, seatIdentifier) -> createSeat(
-                        rideHandle, seatIdentifier, identifier, attachedTo, seatQuaternion, offsetPosition, seatYawOffset, flatRideModelsConfig));
+                        rideHandle, seatIdentifier, identifier, attachedTo, seatQuaternion, offsetPosition, seatYawOffset, forwardSeatRequest, flatRideModelsConfig));
     }
 
     static List<FlatRideComponent> createDistributedAttachedRotors(String identifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, FlatRideComponentSpeed flatRideComponentSpeed, RotorActuatorMode rotorActuatorMode, RotorPlayerControlConfig controlConfig, RelativeAttachmentJointConfig jointConfig, String rotorAxisSpec, List<ModelConfig> flatRideModelsConfig, int amount){
@@ -182,7 +185,7 @@ public interface FlatRideComponent {
     }
 
 
-    static SeatComponent createSeat(FlatRideHandle flatRideHandle, String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, int seatYawOffset, List<ModelConfig> flatRideModelsConfig){
+    static SeatComponent createSeat(FlatRideHandle flatRideHandle, String identifier, String groupIdentifier, FlatRideComponent attachedTo, Quaternion offsetRotation, Vector3 offsetPosition, int seatYawOffset, boolean forwardSeatRequest, List<ModelConfig> flatRideModelsConfig){
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
         Vector3 spawnPosition = MatrixMath.rotateTranslate(
@@ -209,6 +212,8 @@ public interface FlatRideComponent {
         flatRideHandle.addSeatComponent(component);
 
         attachedTo.attach(component, offsetRotation, offsetPosition);
+        if(forwardSeatRequest)
+            attachedTo.forwardSeatRequest(seat);
 
         PlayerControl playerControl = attachedTo.getPlayerControl();
         if(playerControl != null){

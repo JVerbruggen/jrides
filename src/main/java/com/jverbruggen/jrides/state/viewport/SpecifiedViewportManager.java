@@ -81,12 +81,12 @@ public class SpecifiedViewportManager implements ViewportManager{
     }
 
     @Override
-    public VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType) {
+    public VirtualEntity spawnVirtualBukkitEntity(Vector3 location, EntityType entityType) {
         return null;
     }
 
     @Override
-    public VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType, double yawRotation) {
+    public VirtualEntity spawnVirtualBukkitEntity(Vector3 location, EntityType entityType, double yawRotation) {
         return null;
     }
 

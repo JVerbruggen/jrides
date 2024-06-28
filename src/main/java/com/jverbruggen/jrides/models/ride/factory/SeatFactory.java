@@ -25,6 +25,7 @@ import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.math.Vector3PlusYaw;
 import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.models.ride.coaster.train.CoasterSeat;
+import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 
@@ -47,7 +48,7 @@ public class SeatFactory {
             Vector3 relativeSeatLocation = calculateSeatLocationOnMatrix(rotationMatrix, seatOffset);
             Vector3 absoluteSeatLocation = Vector3.add(cartLocation, relativeSeatLocation);
 
-            double yawRotation = orientation.getPacketYaw();
+            double yawRotation = orientation.getYaw();
             yawRotation += seatOffset.getYaw();
 
             VirtualEntity seatEntity = viewportManager.spawnSeatEntity(absoluteSeatLocation, yawRotation, null);
@@ -59,12 +60,12 @@ public class SeatFactory {
     }
 
     private static Vector3 calculateSeatLocationOnMatrix(Matrix4x4 alreadyRotatedMatrix, Vector3PlusYaw seatOffset){
-        final Vector3 heightCompensationVector = CoasterSeat.getHeightCompensation();
-        Vector3 compensatedSeatOffset = Vector3.add(seatOffset, heightCompensationVector);
+        final Vector3 viewingAngleOffsetVector = CoasterSeat.getViewingAngleOffsetFromSeat();
+        Vector3 compensatedSeatOffset = Vector3.add(seatOffset, viewingAngleOffsetVector);
         alreadyRotatedMatrix.translate(compensatedSeatOffset);
 
         Vector3 relativeSeatLocation = alreadyRotatedMatrix.toVector3();
-        Vector3 compensatedRelativeSeatLocation = Vector3.subtract(relativeSeatLocation, heightCompensationVector);
+        Vector3 compensatedRelativeSeatLocation = Vector3.subtract(relativeSeatLocation, viewingAngleOffsetVector);
 
         alreadyRotatedMatrix.translate(compensatedSeatOffset.negate());
         return compensatedRelativeSeatLocation;

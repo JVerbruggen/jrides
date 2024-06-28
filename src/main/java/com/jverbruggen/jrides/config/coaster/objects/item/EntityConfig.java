@@ -17,6 +17,7 @@
 
 package com.jverbruggen.jrides.config.coaster.objects.item;
 
+import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -26,11 +27,13 @@ import org.bukkit.entity.EntityType;
 
 import javax.annotation.Nullable;
 
-public class EntityConfig implements ItemConfig{
+public class EntityConfig extends BaseConfig implements ItemConfig{
     private final EntityType entityType;
+    private final double yawRotation;
 
-    public EntityConfig(EntityType entityType) {
+    public EntityConfig(EntityType entityType, double yawRotation) {
         this.entityType = entityType;
+        this.yawRotation = yawRotation;
     }
 
     public EntityType getEntityType() {
@@ -39,13 +42,14 @@ public class EntityConfig implements ItemConfig{
 
     @Override
     public VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition, Quaternion spawnRotation, String customName) {
-        return viewportManager.spawnVirtualEntity(spawnPosition, getEntityType());
+        return viewportManager.spawnVirtualBukkitEntity(spawnPosition, getEntityType(), yawRotation);
     }
 
     public static EntityConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection) {
-        if(configurationSection == null) return new EntityConfig(null);
+        if(configurationSection == null) return new EntityConfig(null, 0);
 
         EntityType entityType = EntityType.valueOf(configurationSection.getString("type"));
-        return new EntityConfig(entityType);
+        double yawRotation = getDouble(configurationSection, "yawRotation", 0);
+        return new EntityConfig(entityType, yawRotation);
     }
 }

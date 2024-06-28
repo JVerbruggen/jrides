@@ -51,7 +51,7 @@ public class CoasterSeat extends AbstractSeat {
         return this.parentCart;
     }
 
-    public static Vector3 getHeightCompensation(){
+    public static Vector3 getViewingAngleOffsetFromSeat(){
         return new Vector3(0, 1.5, 0);
     }
 }

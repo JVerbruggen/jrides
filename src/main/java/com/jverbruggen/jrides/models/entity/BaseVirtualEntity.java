@@ -175,7 +175,7 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     @Override
     public void setRotation(Quaternion orientation) {
         if(orientation == null) return;
-        double packetYaw = orientation.getPacketYaw();
+        double packetYaw = packetSender.toPacketYaw(orientation.getYaw() - 90);
 
         moveEntity(Vector3.zero(), packetYaw);
     }

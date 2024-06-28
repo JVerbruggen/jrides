@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class PacketSender_1_19_2 implements PacketSender {
+    private static final Vector3 ARMORSTAND_MODEL_COMPENSATION_1_19_2 = new Vector3(0, 1.8, 0);
+
     protected final ProtocolManager protocolManager;
     protected final JRidesLogger logger;
     protected final boolean debugMode;
@@ -251,11 +253,21 @@ public class PacketSender_1_19_2 implements PacketSender {
         new PlayerPositionServerPacket(protocolManager, position).send(movedPlayer);
     }
 
+    @Override
+    public Vector3 getArmorstandModelCompensationVector() {
+        return ARMORSTAND_MODEL_COMPENSATION_1_19_2.clone();
+    }
+
     public void sendEntityMetaDataPacket(Player player, int entityId, boolean invisible, String customName){
         sendDebugLog("sendEntityMetaDataPacket (single)");
 
         new EntityMetadataServerPacket(
                 protocolManager, entityId, invisible, customName
         ).send(player);
+    }
+
+    @Override
+    public double toPacketYaw(double normalYaw) {
+        return normalYaw*256/360;
     }
 }

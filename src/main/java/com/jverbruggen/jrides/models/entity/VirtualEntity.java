@@ -40,7 +40,15 @@ public interface VirtualEntity {
     Quaternion getRotation();
 
     double getYaw();
+
+    /**
+     * Set location for virtual entity.
+     * Location should be without any corrections.
+     * @param location Position without any corrections regarding implementation.
+     */
     void setLocation(Vector3 location);
+
+
     void setRotation(Quaternion orientation);
     List<Player> getViewers();
     void addViewer(Player player);

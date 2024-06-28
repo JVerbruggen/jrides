@@ -34,12 +34,14 @@ public class SeatConfig extends BaseConfig implements StructureConfigItem {
     private final AttachmentConfig attachmentConfig;
     private final List<ModelConfig> flatRideModels;
     private final int seatYawOffset;
+    private final boolean forwardSeatRequests;
 
-    public SeatConfig(String identifier, AttachmentConfig attachmentConfig, List<ModelConfig> flatRideModels, int seatYawOffset) {
+    public SeatConfig(String identifier, AttachmentConfig attachmentConfig, List<ModelConfig> flatRideModels, int seatYawOffset, boolean forwardSeatRequests) {
         this.identifier = identifier;
         this.attachmentConfig = attachmentConfig;
         this.flatRideModels = flatRideModels;
         this.seatYawOffset = seatYawOffset;
+        this.forwardSeatRequests = forwardSeatRequests;
     }
 
     @Override
@@ -65,6 +67,10 @@ public class SeatConfig extends BaseConfig implements StructureConfigItem {
         return seatYawOffset;
     }
 
+    public boolean shouldForwardSeatRequest() {
+        return forwardSeatRequests;
+    }
+
     public static StructureConfigItem fromConfigurationSection(ConfigurationSection configurationSection, String identifier) {
         AttachmentConfig attachmentConfig = null;
         if(configurationSection.contains("arm")){
@@ -79,8 +85,8 @@ public class SeatConfig extends BaseConfig implements StructureConfigItem {
         else modelConfigs = new ArrayList<>();
 
         int seatYawOffset = getInt(configurationSection, "seatRotationDegrees", 0);
+        boolean forwardSeatRequests = getBoolean(configurationSection, "forwardSeatRequests", false);
 
-        return new SeatConfig(identifier, attachmentConfig, modelConfigs, seatYawOffset);
+        return new SeatConfig(identifier, attachmentConfig, modelConfigs, seatYawOffset, forwardSeatRequests);
     }
-
 }

@@ -39,7 +39,7 @@ public class YawRotatedVirtualArmorstand extends VirtualArmorstand {
         headPose.y = 0;
 
         setHeadPose(headPose);
-        setYaw(orientation.getPacketYaw());
+        setYaw(packetSender.toPacketYaw(orientation.getYaw() - 90));
         moveEntity(Vector3.zero(), getYaw());
     }
 }

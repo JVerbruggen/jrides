@@ -32,7 +32,7 @@ public abstract class AbstractFlatRideComponent implements FlatRideComponent {
     private final String groupIdentifier;
     private final boolean root;
     private @Nullable Attachment attachedTo;
-    private final List<FlatRideModel> flatRideModels;
+    protected final List<FlatRideModel> flatRideModels;
 
     public AbstractFlatRideComponent(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels) {
         this.identifier = identifier;

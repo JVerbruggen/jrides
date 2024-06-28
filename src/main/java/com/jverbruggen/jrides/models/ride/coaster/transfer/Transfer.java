@@ -178,14 +178,15 @@ public class Transfer implements Unlockable {
     }
 
     private void updateModelPosition(){
-        Vector3 armorstandCompenstationVector = CoasterCart.getArmorstandHeightCompensationVector();
-        Vector3 modelOffsetCompensated = Vector3.subtract(modelOffset, armorstandCompenstationVector);
+//        Vector3 armorstandCompenstationVector = CoasterCart.getArmorstandHeightCompensationVector();
+//        Vector3 modelOffsetCompensated = Vector3.subtract(modelOffset, armorstandCompenstationVector);
 
         Matrix4x4 orientationMatrix = new Matrix4x4();
         orientationMatrix.translate(getCurrentLocation());
-        orientationMatrix.translate(armorstandCompenstationVector);
+//        orientationMatrix.translate(armorstandCompenstationVector);
         orientationMatrix.rotate(getCurrentOrientation());
-        orientationMatrix.translate(modelOffsetCompensated);
+//        orientationMatrix.translate(modelOffsetCompensated);
+        orientationMatrix.translate(modelOffset);
 
         Quaternion modelOrientation = orientationMatrix.getRotation();
 
@@ -197,7 +198,7 @@ public class Transfer implements Unlockable {
     }
 
     private void moveTrain(){
-        Vector3 armorstandCompenstationVector = CoasterCart.getArmorstandHeightCompensationVector();
+//        Vector3 armorstandCompenstationVector = CoasterCart.getArmorstandHeightCompensationVector();
 
         for(CartOffsetFromTransferOrigin cartProgramming : cartPositions){
             Matrix4x4 matrix = new Matrix4x4();
@@ -206,9 +207,10 @@ public class Transfer implements Unlockable {
             Quaternion cartOrientation = cartProgramming.orientation();
             Vector3 cartPosition = cartProgramming.position();
 
-            matrix.translate(armorstandCompenstationVector);
+//            matrix.translate(armorstandCompenstationVector);
             matrix.rotate(getCurrentOrientation());
-            matrix.translate(Vector3.subtract(cartPosition, armorstandCompenstationVector));
+//            matrix.translate(Vector3.subtract(cartPosition, armorstandCompenstationVector));
+            matrix.translate(cartPosition);
 
             Quaternion newCartOrientation = matrix.getRotation().clone();
             newCartOrientation.multiply(cartOrientation);

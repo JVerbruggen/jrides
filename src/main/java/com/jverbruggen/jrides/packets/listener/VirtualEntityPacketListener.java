@@ -194,7 +194,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
                     boolean ejected = seat.ejectPassengerSoft(false);
                     if(ejected){
                         languageFile.sendMessage(player, LanguageFileField.NOTIFICATION_SHIFT_EXIT_CONFIRMED);
-                        player.teleport(Vector3.add(entity.getLocation(), CoasterSeat.getHeightCompensation()), teleportYaw);
+                        player.teleport(entity.getLocation(), teleportYaw);
                     }
                 });
                 return;
@@ -209,7 +209,7 @@ public class VirtualEntityPacketListener extends PacketAdapter implements Listen
 
         Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> {
             seat.setPassenger(null);
-            player.teleport(Vector3.add(entity.getLocation(), CoasterSeat.getHeightCompensation()), teleportYaw);
+            player.teleport(entity.getLocation(), teleportYaw);
         });
     }
 

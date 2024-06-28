@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class VirtualArmorstand extends BaseVirtualEntity {
-    private static final Vector3 HEAD_OFFSET = new Vector3(0, 1.7, 0);
+    private static Vector3 ARMORSTAND_MODEL_COMPENSATION = null;
 
     private final Quaternion currentRotation;
     private double yawRotation;
@@ -47,6 +47,13 @@ public class VirtualArmorstand extends BaseVirtualEntity {
         this.currentRotation = rotation;
         this.yawRotation = yawRotation;
         this.configuration = configuration;
+
+        this.fillArmorstandCompensationVector(packetSender);
+    }
+
+    private void fillArmorstandCompensationVector(PacketSender packetSender){
+        if(ARMORSTAND_MODEL_COMPENSATION == null)
+            ARMORSTAND_MODEL_COMPENSATION = packetSender.getArmorstandModelCompensationVector();
     }
 
     @Override
@@ -99,12 +106,19 @@ public class VirtualArmorstand extends BaseVirtualEntity {
     }
 
     @Override
+    public Vector3 getLocation() {
+        Vector3 actualArmorstandLocation = super.getLocation();
+        return Vector3.add(actualArmorstandLocation, ARMORSTAND_MODEL_COMPENSATION);
+    }
+
+    @Override
     public void setLocation(Vector3 newLocation) {
-        super.setLocation(newLocation);
+        Vector3 actualArmorstandLocation = Vector3.subtract(newLocation, ARMORSTAND_MODEL_COMPENSATION);
+        super.setLocation(actualArmorstandLocation);
 
-        if(newLocation == null) return;
+        if(actualArmorstandLocation == null) return;
 
-        syncPassenger(Vector3.add(newLocation, getHeadOffset()));
+        syncPassenger(newLocation);
     }
 
     @Override
@@ -123,9 +137,5 @@ public class VirtualArmorstand extends BaseVirtualEntity {
     @Override
     protected void teleportEntity(Vector3 newLocation) {
         packetSender.teleportVirtualEntity(this.getViewers(), entityId, newLocation);
-    }
-
-    public static Vector3 getHeadOffset(){
-        return HEAD_OFFSET;
     }
 }

@@ -73,6 +73,7 @@ public class RelativeMultipleAttachmentConfig extends AbstractRelativeMultipleAt
                 new Quaternion(),
                 getOffsetPosition(),
                 seatConfig.getSeatYawOffset(),
+                seatConfig.shouldForwardSeatRequest(),
                 seatConfig.getFlatRideModels(),
                 getAmount());
 

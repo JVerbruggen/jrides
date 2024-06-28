@@ -50,6 +50,16 @@ public class SeatComponent extends AbstractFlatRideComponent implements SeatHost
     }
 
     @Override
+    public void forwardSeatRequest(Seat seat) {
+        throw new RuntimeException("Cannot forward seat request on top of a seat component!");
+    }
+
+    @Override
+    public Seat getForwardingSeatRequest() {
+        return null;
+    }
+
+    @Override
     public Quaternion getRotation() {
         return Quaternion.multiply(super.getRotation(), rotationOffset);
     }

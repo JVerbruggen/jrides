@@ -36,15 +36,15 @@ public interface CoasterCart extends SeatHost {
         Vector3 cartTrackOffsetVector = matrix.toVector3();
         Vector3 totalVector = Vector3.add(trackLocation, cartTrackOffsetVector);
 
-        final Vector3 armorstandHeightCompensationVector = getArmorstandHeightCompensationVector();
-        totalVector = Vector3.add(totalVector, armorstandHeightCompensationVector);
-
+//        final Vector3 armorstandHeightCompensationVector = getArmorstandHeightCompensationVector();
+//        totalVector = Vector3.add(totalVector, armorstandHeightCompensationVector);
+//
         return new VectorQuaternionState(totalVector, matrix.getRotation());
     }
 
-    static Vector3 getArmorstandHeightCompensationVector(){
-        return new Vector3(0, -1.8, 0);
-    }
+//    static Vector3 getArmorstandHeightCompensationVector(){
+//        return new Vector3(0, -1.8, 0);
+//    }
 
     String getName();
     Frame getFrame();

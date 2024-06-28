@@ -285,10 +285,6 @@ public class Quaternion implements Cloneable {
         return getYaw(x, y, z, w);
     }
 
-    public final double getPacketYaw(){
-        return (getYaw() - 90) * 256/360;
-    }
-
     /**
      * Deduces the roll component (z) of {@link #getYawPitchRoll()}
      *

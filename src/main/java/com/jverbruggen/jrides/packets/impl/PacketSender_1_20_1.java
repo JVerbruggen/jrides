@@ -21,10 +21,13 @@ import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.packet.v1_20.ArmorstandRotationServerPacket;
 import com.jverbruggen.jrides.packets.packet.v1_20.EntityMetadataServerPacket;
+import org.bukkit.Bukkit;
 
 import java.util.List;
 
 public class PacketSender_1_20_1 extends PacketSender_1_19_2 {
+    private static final Vector3 ARMORSTAND_MODEL_COMPENSATION_1_20_1 = new Vector3(0, 1.7, 0);
+
     public PacketSender_1_20_1(boolean debugMode) {
         super(debugMode);
     }
@@ -53,6 +56,11 @@ public class PacketSender_1_20_1 extends PacketSender_1_19_2 {
         new EntityMetadataServerPacket(
                 protocolManager, entityId, invisible, customName
         ).send(player);
+    }
+
+    @Override
+    public Vector3 getArmorstandModelCompensationVector() {
+        return ARMORSTAND_MODEL_COMPENSATION_1_20_1;
     }
 
     @Override

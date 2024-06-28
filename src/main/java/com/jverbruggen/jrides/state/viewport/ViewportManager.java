@@ -36,8 +36,8 @@ public interface ViewportManager {
     VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel);
     VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, TrainModelItem headModel, String customName);
     VirtualEntity spawnSeatEntity(Vector3 location, double yawRotation, TrainModelItem model);
-    VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType);
-    VirtualEntity spawnVirtualEntity(Vector3 location, EntityType entityType, double yawRotation);
+    VirtualEntity spawnVirtualBukkitEntity(Vector3 location, EntityType entityType);
+    VirtualEntity spawnVirtualBukkitEntity(Vector3 location, EntityType entityType, double yawRotation);
     VirtualArmorstand spawnVirtualArmorstand(Vector3 location);
     VirtualArmorstand spawnVirtualArmorstand(Vector3 location, double yawRotation);
     VirtualArmorstand spawnVirtualArmorstand(Vector3 location, Quaternion rotation, TrainModelItem headModel, VirtualArmorstandConfiguration configuration);
