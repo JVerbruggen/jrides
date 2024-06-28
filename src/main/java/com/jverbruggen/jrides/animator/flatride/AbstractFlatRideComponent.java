@@ -18,7 +18,7 @@
 package com.jverbruggen.jrides.animator.flatride;
 
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
-import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
+import com.jverbruggen.jrides.animator.flatride.rotor.ModelWithOffset;
 import com.jverbruggen.jrides.models.math.Matrix4x4;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -32,14 +32,14 @@ public abstract class AbstractFlatRideComponent implements FlatRideComponent {
     private final String groupIdentifier;
     private final boolean root;
     private @Nullable Attachment attachedTo;
-    protected final List<FlatRideModel> flatRideModels;
+    protected final List<ModelWithOffset> modelWithOffsets;
 
-    public AbstractFlatRideComponent(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels) {
+    public AbstractFlatRideComponent(String identifier, String groupIdentifier, boolean root, List<ModelWithOffset> modelWithOffsets) {
         this.identifier = identifier;
         this.groupIdentifier = groupIdentifier;
         this.root = root;
         this.attachedTo = null;
-        this.flatRideModels = flatRideModels;
+        this.modelWithOffsets = modelWithOffsets;
     }
 
     @Override
@@ -115,8 +115,8 @@ public abstract class AbstractFlatRideComponent implements FlatRideComponent {
     }
 
     protected void updateFlatRideModels(){
-        for(FlatRideModel flatRideModel : flatRideModels){
-            flatRideModel.updateLocation(getPosition(), getRotation());
+        for(ModelWithOffset modelWithOffset : modelWithOffsets){
+            modelWithOffset.updateLocation(getPosition(), getRotation());
         }
     }
 

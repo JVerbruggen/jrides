@@ -33,18 +33,18 @@ my_section:
 A section where players can enter and exit vehicles.
 
 **Specification**
-- ejectLocation: Location in [x,y,z,yaw,pitch] where player is ejected when vehicle enters station
-- canSpawn: Whether a vehicle can spawn here upon plugin load
-- driveSpeed: Vehicle speed when passing through the section
-- engage: Percentage of how far along the section the vehicle should engage with the behaviour (0.0 to 1.0)
-- minimumWaitIntervalSeconds: How long the vehicle should wait (minimum) before it can be dispatched
-- maximumWaitIntervalSeconds: How long the vehicle can wait (maximum) before it should be dispatched
-- effects: A list of effect triggers that should play upon different events occurring on the section
-- - entryBlocking: Vehicle entering the station, waits with releasing restraints
-- - exitBlocking: Vehicle exiting the station, waits with dispatching
-- - exit: Vehicle exiting station, dispatches immediately
-- passThroughCount: Amount of times the same vehicle should be able to pass through the section (for coasters with multiple rounds)
-- forwardsDispatch: Whether the station should push the vehicle forwards upon dispatch. If false it goes backwards
+- **ejectLocation**: Location in [x,y,z,yaw,pitch] where player is ejected when vehicle enters station
+- **canSpawn**: Whether a vehicle can spawn here upon plugin load
+- **driveSpeed**: Vehicle speed when passing through the section
+- **engage**: Percentage of how far along the section the vehicle should engage with the behaviour (0.0 to 1.0)
+- **minimumWaitIntervalSeconds**: How long the vehicle should wait (minimum) before it can be dispatched
+- **maximumWaitIntervalSeconds**: How long the vehicle can wait (maximum) before it should be dispatched
+- **effects**: A list of effect triggers that should play upon different events occurring on the section
+- - **entryBlocking**: Vehicle entering the station, waits with releasing restraints
+- - **exitBlocking**: Vehicle exiting the station, waits with dispatching
+- - **exit**: Vehicle exiting station, dispatches immediately
+- **passThroughCount**: Amount of times the same vehicle should be able to pass through the section (for coasters with multiple rounds)
+- **forwardsDispatch**: Whether the station should push the vehicle forwards upon dispatch. If false it goes backwards
 
 **Example**
 
@@ -73,10 +73,10 @@ my_section:
 A section driving the vehicle at a fixed speed.
 
 **Specification**
-- driveSpeed: Vehicle speed when passing through the section
-- acceleration: Vehicle acceleration when going too slow
-- deceleration: Vehicle deceleration when going too fast
-- ignoreDirection: Whether the direction of driving is ignored. If true, the drive section drives in the direction the vehicle is already traveling at
+- **driveSpeed**: Vehicle speed when passing through the section
+- **acceleration**: Vehicle acceleration when going too slow
+- **deceleration**: Vehicle deceleration when going too fast
+- **ignoreDirection**: Whether the direction of driving is ignored. If true, the drive section drives in the direction the vehicle is already traveling at
 
 **Example**
 
@@ -97,8 +97,8 @@ my_section:
 A section braking the vehicle towards a fixed speed (`type: drive` can also be used for this).
 
 **Specification**
-- driveSpeed: Vehicle speed when passing through the section
-- deceleration: Vehicle deceleration when going too fast
+- **driveSpeed**: Vehicle speed when passing through the section
+- **deceleration**: Vehicle deceleration when going too fast
 
 **Example**
 
@@ -117,12 +117,12 @@ my_section:
 A section that a vehicle can wait on. The section will release the vehicle when the next section is available for use.
 
 **Specification**
-- canSpawn: Whether a vehicle can spawn here upon plugin load
-- engage: Percentage of how far along the section the vehicle should engage with the behaviour (0.0 to 1.0)
-- driveSpeed: Vehicle speed when passing through the section
-- acceleration: Vehicle acceleration when going too slow
-- deceleration: Vehicle deceleration when going too fast
-- minWaitTicks: Amount of ticks the vehicle waits after the next section has come available
+- **canSpawn**: Whether a vehicle can spawn here upon plugin load
+- **engage**: Percentage of how far along the section the vehicle should engage with the behaviour (0.0 to 1.0)
+- **driveSpeed**: Vehicle speed when passing through the section
+- **acceleration**: Vehicle acceleration when going too slow
+- **deceleration**: Vehicle deceleration when going too fast
+- **minWaitTicks**: Amount of ticks the vehicle waits after the next section has come available
 
 **Example**
 
@@ -145,18 +145,18 @@ my_section:
 A section that launches a vehicle forwards or backwards.
 
 **Specification**
-- canSpawn: Whether a vehicle can spawn here upon plugin load
-- engage: Percentage of how far along the section the vehicle should engage with the behaviour (0.0 to 1.0)
-- driveSpeed: Vehicle speed when passing through the section
-- acceleration: Vehicle acceleration when going too slow
-- deceleration: Vehicle deceleration when going too fast
-- waitIntervalTicks: Amount of ticks the vehicle waits after the next section has come available before launching
-- launchSpeed: Vehicle speed when launching out of the section
-- launchSpeedBackward: Vehicle speed when launching out of the section (if going backward)
-- launchAcceleration: Vehicle acceleration during launch
-- forwardsLaunch: Whether the vehicle should be launched going forwards towards the next section
-- effects: A list of effect triggers that should play upon different events occurring on the section
-- - launch: Vehicle started launching out of the section
+- **canSpawn**: Whether a vehicle can spawn here upon plugin load
+- **engage**: Percentage of how far along the section the vehicle should engage with the behaviour (0.0 to 1.0)
+- **driveSpeed**: Vehicle speed when passing through the section
+- **acceleration**: Vehicle acceleration when going too slow
+- **deceleration**: Vehicle deceleration when going too fast
+- **waitIntervalTicks**: Amount of ticks the vehicle waits after the next section has come available before launching
+- **launchSpeed**: Vehicle speed when launching out of the section
+- **launchSpeedBackward**: Vehicle speed when launching out of the section (if going backward)
+- **launchAcceleration**: Vehicle acceleration during launch
+- **forwardsLaunch**: Whether the vehicle should be launched going forwards towards the next section
+- **effects**: A list of effect triggers that should play upon different events occurring on the section
+- - **launch**: Vehicle started launching out of the section
 
 **Example**
 
@@ -185,11 +185,11 @@ my_section:
 A section that a vehicle drives on, waits, and is released with gravity.
 
 **Specification**
-- engage: Percentage of how far along the section the vehicle should engage with the behaviour (0.0 to 1.0)
-- driveSpeed: Vehicle speed when passing through the section
-- acceleration: Vehicle acceleration when going too slow
-- deceleration: Vehicle deceleration when going too fast
-- waitIntervalTicks: Amount of ticks the vehicle waits before releasing it to gravity
+- **engage**: Percentage of how far along the section the vehicle should engage with the behaviour (0.0 to 1.0)
+- **driveSpeed**: Vehicle speed when passing through the section
+- **acceleration**: Vehicle acceleration when going too slow
+- **deceleration**: Vehicle deceleration when going too fast
+- **waitIntervalTicks**: Amount of ticks the vehicle waits before releasing it to gravity
 
 **Example**
 
@@ -212,11 +212,11 @@ my_section:
 A section that multiple vehicles can occupy, driving closely after each other
 
 **Specification**
-- canSpawn: Whether a vehicle can spawn here upon plugin load
-- driveSpeed: Vehicle speed when passing through the section
-- acceleration: Vehicle acceleration when going too slow
-- deceleration: Vehicle deceleration when going too fast
-- minTrainDistance: Minimum amount of frames (in csv file) that any train should keep from any other train
+- **canSpawn**: Whether a vehicle can spawn here upon plugin load
+- **driveSpeed**: Vehicle speed when passing through the section
+- **acceleration**: Vehicle acceleration when going too slow
+- **deceleration**: Vehicle deceleration when going too fast
+- **minTrainDistance**: Minimum amount of frames (in csv file) that any train should keep from any other train
 
 **Example**
 
@@ -243,24 +243,29 @@ A section that can move a vehicle away from its track, onto another
 - Only 1 train can occupy a transfer at a time
 
 **Specification**
-- engage: Percentage of how far along the section the vehicle should engage with the behaviour (0.0 to 1.0)
-- enterDriveSpeed: Vehicle speed when passing through the section
-- exitDriveSpeed: Vehicle speed when passing through the section
-- acceleration: Vehicle acceleration when going too slow
-- deceleration: Vehicle deceleration when going too fast
-- origin: Origin coordinate in world [x,y,z] the transfer is located at
-- modelOffsetPosition: Offset in [x,y,z] for the transfer model
-- modelOffsetRotation: Offset in [rx,ry,rz] for the transfer model
-- positions: Transfer positions
-- - sectionAtStart: The section that connects to the start of the transfer (start is the lower frame)
-- - sectionAtEnd: The section that connects to the end of the transfer (end is the upper frame)
-- - sectionAtStartForwards: The section that connects to the start of the transfer is one that vehicles are facing forwards on (regardless of travel direction)
-- - sectionAtEndForwards: The section that connects to the end of the transfer is one that vehicles are facing forwards on (regardless of travel direction)
-- - sectionAtStartConnectsToStart: The section that connects to the start of the transfer, connects at its own start
-- - sectionAtEndConnectsToStart: The section that connects to the end of the transfer, connects at its own start
-- - position: Position in [x,y,z] of the transfer position compared to its origin
-- - rotation: Rotation in [rx,ry,rz] of the transfer position compared to its origin
-- - moveTicks: Amount of ticks it takes to move the transfer towards this position
+- **engage**: Percentage of how far along the section the vehicle should engage with the behaviour (0.0 to 1.0)
+- **enterDriveSpeed**: Vehicle speed when passing through the section
+- **exitDriveSpeed**: Vehicle speed when passing through the section
+- **acceleration**: Vehicle acceleration when going too slow
+- **deceleration**: Vehicle deceleration when going too fast
+- **origin**: Origin coordinate in world [x,y,z] the transfer is located at
+- **model**: Configurable models for transfer
+- - **<model_name>**
+- - - **item**
+- - - - **material**: DIRT
+- - - - .. and other item attributes
+- **modelOffsetPosition**: Offset in [x,y,z] for the transfer model
+- **modelOffsetRotation**: Offset in [rx,ry,rz] for the transfer model
+- **positions**: Transfer positions
+- - **sectionAtStart**: The section that connects to the start of the transfer (start is the lower frame)
+- - **sectionAtEnd**: The section that connects to the end of the transfer (end is the upper frame)
+- - **sectionAtStartForwards**: The section that connects to the start of the transfer is one that vehicles are facing forwards on (regardless of travel direction)
+- - **sectionAtEndForwards**: The section that connects to the end of the transfer is one that vehicles are facing forwards on (regardless of travel direction)
+- - **sectionAtStartConnectsToStart**: The section that connects to the start of the transfer, connects at its own start
+- - **sectionAtEndConnectsToStart**: The section that connects to the end of the transfer, connects at its own start
+- - **position**: Position in [x,y,z] of the transfer position compared to its origin
+- - **rotation**: Rotation in [rx,ry,rz] of the transfer position compared to its origin
+- - **moveTicks**: Amount of ticks it takes to move the transfer towards this position
 
 **Examples**
 

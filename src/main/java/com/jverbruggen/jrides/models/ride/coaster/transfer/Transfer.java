@@ -18,6 +18,7 @@
 package com.jverbruggen.jrides.models.ride.coaster.transfer;
 
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
+import com.jverbruggen.jrides.animator.flatride.rotor.ModelWithOffset;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.*;
 import com.jverbruggen.jrides.models.ride.coaster.train.CoasterCart;
@@ -54,11 +55,11 @@ public class Transfer implements Unlockable {
     private Vector3 bakedOffsetLocation;
     private Quaternion bakedOffsetOrientation;
 
-    private final VirtualEntity modelEntity;
-    private final Vector3 modelOffset;
-    private final Vector3 modelOffsetRotation;
+    private final List<ModelWithOffset> modelEntities;
+//    private final Vector3 modelOffset;
+//    private final Vector3 modelOffsetRotation;
 
-    public Transfer(List<TransferPosition> possiblePositions, VirtualEntity modelEntity, Vector3 origin, Vector3 modelOffset, Vector3 modelOffsetRotation) {
+    public Transfer(List<TransferPosition> possiblePositions, List<ModelWithOffset> modelEntities, Vector3 origin) {
         this.origin = origin;
         this.locked = false;
         this.moving = false;
@@ -79,9 +80,9 @@ public class Transfer implements Unlockable {
 
         calculateBakedOffset();
 
-        this.modelEntity = modelEntity;
-        this.modelOffset = modelOffset;
-        this.modelOffsetRotation = modelOffsetRotation;
+        this.modelEntities = modelEntities;
+//        this.modelOffset = modelOffset;
+//        this.modelOffsetRotation = modelOffsetRotation;
 
         updateModelPosition();
     }
@@ -186,15 +187,14 @@ public class Transfer implements Unlockable {
 //        orientationMatrix.translate(armorstandCompenstationVector);
         orientationMatrix.rotate(getCurrentOrientation());
 //        orientationMatrix.translate(modelOffsetCompensated);
-        orientationMatrix.translate(modelOffset);
+//        orientationMatrix.translate(modelOffset);
 
         Quaternion modelOrientation = orientationMatrix.getRotation();
-
         Vector3 modelLocation = orientationMatrix.toVector3();
 
-        modelEntity.setLocation(modelLocation);
-        modelOrientation.rotateYawPitchRoll(modelOffsetRotation);
-        modelEntity.setRotation(modelOrientation);
+//        modelOrientation.rotateYawPitchRoll(modelOffsetRotation);
+        modelEntities.forEach(e -> e.updateLocation(modelLocation, modelOrientation));
+//        modelEntities.forEach(e -> e.setRotation(modelOrientation));
     }
 
     private void moveTrain(){

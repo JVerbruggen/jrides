@@ -19,7 +19,7 @@ package com.jverbruggen.jrides.animator.flatride.seat;
 
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.flatride.AbstractFlatRideComponent;
-import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
+import com.jverbruggen.jrides.animator.flatride.rotor.ModelWithOffset;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
@@ -35,8 +35,8 @@ public class SeatComponent extends AbstractFlatRideComponent implements SeatHost
     private final Quaternion rotationOffset;
     private final Vehicle parentVehicle;
 
-    public SeatComponent(String identifier, String groupIdentifier, boolean root, List<FlatRideModel> flatRideModels, Seat seat, Quaternion rotationOffset, Vehicle parentVehicle) {
-        super(identifier, groupIdentifier, root, flatRideModels);
+    public SeatComponent(String identifier, String groupIdentifier, boolean root, List<ModelWithOffset> modelWithOffsets, Seat seat, Quaternion rotationOffset, Vehicle parentVehicle) {
+        super(identifier, groupIdentifier, root, modelWithOffsets);
         this.seat = seat;
         this.rotationOffset = rotationOffset;
         this.parentVehicle = parentVehicle;

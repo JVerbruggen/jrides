@@ -42,8 +42,8 @@ public class Rotor extends AbstractInterconnectedFlatRideComponent implements Pl
     private double upperOperatingRange;
     private final RotorActuatorMode actuatorMode;
 
-    public Rotor(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, RotorAxis rotorAxis, RotorActuatorMode actuatorMode) {
-        super(identifier, groupIdentifier, root, joint, flatRideModels);
+    public Rotor(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<ModelWithOffset> modelWithOffsets, FlatRideComponentSpeed flatRideComponentSpeed, RotorAxis rotorAxis, RotorActuatorMode actuatorMode) {
+        super(identifier, groupIdentifier, root, joint, modelWithOffsets);
         this.rotorAxis = rotorAxis;
         this.actuatorMode = actuatorMode;
         this.playerControl = null;

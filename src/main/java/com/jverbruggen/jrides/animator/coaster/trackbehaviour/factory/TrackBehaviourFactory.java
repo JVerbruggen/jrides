@@ -27,6 +27,7 @@ import com.jverbruggen.jrides.animator.coaster.trackbehaviour.drive.*;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.transfer.TrainDisplacerTransferTrackBehaviour;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.point.SwitchBehaviour;
+import com.jverbruggen.jrides.animator.flatride.rotor.ModelWithOffset;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.base.PointSectionConfig;
 import com.jverbruggen.jrides.config.coaster.objects.section.base.RangedSectionConfig;
@@ -269,8 +270,6 @@ public class TrackBehaviourFactory {
             Frame lowerRange = new SimpleFrame(rangedSectionConfig.getLowerRange());
             Frame upperRange = new SimpleFrame(rangedSectionConfig.getUpperRange());
             Frame engageFrame = new FrameRange(lowerRange, upperRange, totalFrames).getInBetween(engagePercentage);
-            Vector3 modelOffsetPosition = transferSectionSpecConfig.getModelOffsetPosition();
-            Vector3 modelOffsetRotation = transferSectionSpecConfig.getModelOffsetRotation();
             double enterDriveSpeed = transferSectionSpecConfig.getEnterDriveSpeed();
             double exitDriveSpeed = transferSectionSpecConfig.getExitDriveSpeed();
             double acceleration = transferSectionSpecConfig.getAcceleration();
@@ -294,15 +293,15 @@ public class TrackBehaviourFactory {
 
             TransferPosition originTransferPosition = transferPositions.get(0);
 
-            Quaternion modelOffsetOrientation = originTransferPosition.getOrientation().clone();
-            modelOffsetOrientation.rotateYawPitchRoll(modelOffsetRotation);
+//            Quaternion modelOffsetOrientation = originTransferPosition.getOrientation().clone();
+//            modelOffsetOrientation.rotateYawPitchRoll(modelOffsetRotation);
 
-            VirtualEntity virtualEntity = viewportManager.spawnModelEntity(
-                    Vector3.add(originTransferPosition.getLocation(), modelOffsetPosition),
-                    new TrainModelItem(ItemStackFactory.getCoasterStack(Material.DIAMOND_HOE, 2, true)));
-            virtualEntity.setRotation(modelOffsetOrientation);
+            List<ModelWithOffset> modelEntities = transferSectionSpecConfig.getTransferModelConfigs()
+                    .stream()
+                    .map(c -> c.toModelWithOffset(originTransferPosition.getLocation(), originTransferPosition.getOrientation().clone(), viewportManager))
+                    .toList();
 
-            Transfer transfer = new Transfer(transferPositions, virtualEntity, origin, modelOffsetPosition, modelOffsetRotation);
+            Transfer transfer = new Transfer(transferPositions, modelEntities, origin);
             coasterHandle.addTransfer(transfer);
             coasterHandle.addUnlockable(identifier, transfer);
 

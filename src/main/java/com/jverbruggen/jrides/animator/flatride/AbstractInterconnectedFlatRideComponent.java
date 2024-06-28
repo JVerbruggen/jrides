@@ -19,7 +19,7 @@ package com.jverbruggen.jrides.animator.flatride;
 
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.attachment.RelativeAttachment;
-import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
+import com.jverbruggen.jrides.animator.flatride.rotor.ModelWithOffset;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -33,8 +33,8 @@ public abstract class AbstractInterconnectedFlatRideComponent extends AbstractFl
     private final RelativeAttachmentJointConfig joint;
     private Seat forwardingSeat;
 
-    public AbstractInterconnectedFlatRideComponent(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<FlatRideModel> flatRideModels) {
-        super(identifier, groupIdentifier, root, flatRideModels);
+    public AbstractInterconnectedFlatRideComponent(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<ModelWithOffset> modelWithOffsets) {
+        super(identifier, groupIdentifier, root, modelWithOffsets);
         this.joint = joint;
         this.children = new ArrayList<>();
         this.forwardingSeat = null;
@@ -51,7 +51,7 @@ public abstract class AbstractInterconnectedFlatRideComponent extends AbstractFl
     @Override
     public void forwardSeatRequest(Seat seat) {
         this.forwardingSeat = seat;
-        flatRideModels.forEach(m -> m.getEntity().setHostSeat(seat));
+        modelWithOffsets.forEach(m -> m.getEntity().setHostSeat(seat));
     }
 
     @Override

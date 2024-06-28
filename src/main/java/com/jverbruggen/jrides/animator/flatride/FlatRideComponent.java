@@ -21,7 +21,7 @@ import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.basic.StaticStructureComponent;
 import com.jverbruggen.jrides.animator.flatride.linearactuator.LinearActuator;
 import com.jverbruggen.jrides.animator.flatride.linearactuator.mode.LinearActuatorMode;
-import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
+import com.jverbruggen.jrides.animator.flatride.rotor.ModelWithOffset;
 import com.jverbruggen.jrides.animator.flatride.rotor.Rotor;
 import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxis;
 import com.jverbruggen.jrides.animator.flatride.rotor.axis.RotorAxisFactory;
@@ -135,11 +135,11 @@ public interface FlatRideComponent {
                 offsetPosition,
                 offsetRotation).toVector3();
 
-        List<FlatRideModel> flatRideModels = flatRideModelsConfig.stream()
-                .map(config -> config.toFlatRideModel(spawnPosition, viewportManager))
+        List<ModelWithOffset> modelWithOffsets = flatRideModelsConfig.stream()
+                .map(config -> config.toModelWithOffset(spawnPosition, viewportManager))
                 .collect(Collectors.toList());
 
-        Rotor rotor = new Rotor(identifier, groupIdentifier, false, jointConfig, flatRideModels, flatRideComponentSpeed, rotorAxis, actuatorMode);
+        Rotor rotor = new Rotor(identifier, groupIdentifier, false, jointConfig, modelWithOffsets, flatRideComponentSpeed, rotorAxis, actuatorMode);
         rotor.createPlayerControl(controlConfig);
         attachedTo.attach(rotor, offsetRotation, offsetPosition);
 
@@ -155,11 +155,11 @@ public interface FlatRideComponent {
                 offsetPosition,
                 offsetRotation).toVector3();
 
-        List<FlatRideModel> flatRideModels = flatRideModelsConfig.stream()
-                .map(config -> config.toFlatRideModel(spawnPosition, viewportManager))
+        List<ModelWithOffset> modelWithOffsets = flatRideModelsConfig.stream()
+                .map(config -> config.toModelWithOffset(spawnPosition, viewportManager))
                 .collect(Collectors.toList());
 
-        LinearActuator linearActuator = new LinearActuator(identifier, groupIdentifier, false, null, flatRideModels, flatRideComponentSpeed, actuatorMode);
+        LinearActuator linearActuator = new LinearActuator(identifier, groupIdentifier, false, null, modelWithOffsets, flatRideComponentSpeed, actuatorMode);
         attachedTo.attach(linearActuator, offsetRotation, offsetPosition);
 
         return linearActuator;
@@ -174,11 +174,11 @@ public interface FlatRideComponent {
                 offsetPosition,
                 offsetRotation).toVector3();
 
-        List<FlatRideModel> flatRideModels = flatRideModelsConfig.stream()
-                .map(config -> config.toFlatRideModel(spawnPosition, viewportManager))
+        List<ModelWithOffset> modelWithOffsets = flatRideModelsConfig.stream()
+                .map(config -> config.toModelWithOffset(spawnPosition, viewportManager))
                 .collect(Collectors.toList());
 
-        Limb limb = new Limb(identifier, groupIdentifier, false, null, flatRideModels, initialPose);
+        Limb limb = new Limb(identifier, groupIdentifier, false, null, modelWithOffsets, initialPose);
         attachedTo.attach(limb, offsetRotation, offsetPosition);
 
         return limb;
@@ -197,17 +197,17 @@ public interface FlatRideComponent {
         VirtualEntity seatEntity = viewportManager.spawnSeatEntity(spawnPosition, 0, null);
         FlatRideSeat seat = new FlatRideSeat(flatRideHandle, null, seatEntity, Vector3PlusYaw.zero());
 
-        List<FlatRideModel> flatRideModels = flatRideModelsConfig.stream()
+        List<ModelWithOffset> modelWithOffsets = flatRideModelsConfig.stream()
                 .map(config -> {
-                    FlatRideModel flatRideModel = config.toFlatRideModel(spawnPosition, viewportManager);
-                    flatRideModel.getEntity().setHostSeat(seat);
-                    return flatRideModel;
+                    ModelWithOffset modelWithOffset = config.toModelWithOffset(spawnPosition, viewportManager);
+                    modelWithOffset.getEntity().setHostSeat(seat);
+                    return modelWithOffset;
                 })
                 .collect(Collectors.toList());
 
 
         Quaternion seatRotation = Quaternion.fromYawPitchRoll(0, seatYawOffset, 0);
-        SeatComponent component = new SeatComponent(identifier, groupIdentifier, false, flatRideModels, seat, seatRotation, flatRideHandle.getVehicle());
+        SeatComponent component = new SeatComponent(identifier, groupIdentifier, false, modelWithOffsets, seat, seatRotation, flatRideHandle.getVehicle());
         seat.setParentSeatHost(component);
         flatRideHandle.addSeatComponent(component);
 
@@ -232,11 +232,11 @@ public interface FlatRideComponent {
                 offsetPosition,
                 offsetRotation).toVector3();
 
-        List<FlatRideModel> flatRideModels = flatRideModelsConfig.stream()
-                .map(config -> config.toFlatRideModel(spawnPosition, viewportManager))
+        List<ModelWithOffset> modelWithOffsets = flatRideModelsConfig.stream()
+                .map(config -> config.toModelWithOffset(spawnPosition, viewportManager))
                 .collect(Collectors.toList());
 
-        StaticStructureComponent component = new StaticStructureComponent(identifier, groupIdentifier, false, joint, flatRideModels);
+        StaticStructureComponent component = new StaticStructureComponent(identifier, groupIdentifier, false, joint, modelWithOffsets);
         attachedTo.attach(component, offsetRotation, offsetPosition);
 
         return component;

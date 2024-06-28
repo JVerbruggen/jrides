@@ -23,12 +23,12 @@ import com.jverbruggen.jrides.models.math.MatrixMath;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 
-public class FlatRideModel {
+public class ModelWithOffset {
     private final VirtualEntity entity;
     private final Vector3 offset;
     private final Quaternion rotationOffset;
 
-    public FlatRideModel(VirtualEntity entity, Vector3 offset, Quaternion rotationOffset) {
+    public ModelWithOffset(VirtualEntity entity, Vector3 offset, Quaternion rotationOffset) {
         this.entity = entity;
         this.offset = offset;
         this.rotationOffset = rotationOffset;

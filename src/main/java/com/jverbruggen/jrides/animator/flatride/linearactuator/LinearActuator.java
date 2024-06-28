@@ -22,7 +22,7 @@ import com.jverbruggen.jrides.animator.flatride.FlatRideComponentSpeed;
 import com.jverbruggen.jrides.animator.flatride.attachment.Attachment;
 import com.jverbruggen.jrides.animator.flatride.interfaces.HasPosition;
 import com.jverbruggen.jrides.animator.flatride.linearactuator.mode.LinearActuatorMode;
-import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
+import com.jverbruggen.jrides.animator.flatride.rotor.ModelWithOffset;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
 import com.jverbruggen.jrides.models.math.Vector3;
 
@@ -33,8 +33,8 @@ public class LinearActuator extends AbstractInterconnectedFlatRideComponent impl
     private final Vector3 actuatorState;
     private final LinearActuatorMode actuatorMode;
 
-    public LinearActuator(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<FlatRideModel> flatRideModels, FlatRideComponentSpeed flatRideComponentSpeed, LinearActuatorMode actuatorMode) {
-        super(identifier, groupIdentifier, root, joint, flatRideModels);
+    public LinearActuator(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<ModelWithOffset> modelWithOffsets, FlatRideComponentSpeed flatRideComponentSpeed, LinearActuatorMode actuatorMode) {
+        super(identifier, groupIdentifier, root, joint, modelWithOffsets);
         this.flatRideComponentSpeed = flatRideComponentSpeed;
 
         this.actuatorState = new Vector3(0,0,0);

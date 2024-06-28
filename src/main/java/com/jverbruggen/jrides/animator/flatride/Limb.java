@@ -18,7 +18,7 @@
 package com.jverbruggen.jrides.animator.flatride;
 
 import com.jverbruggen.jrides.animator.flatride.interfaces.Component6DOFPosition;
-import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
+import com.jverbruggen.jrides.animator.flatride.rotor.ModelWithOffset;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -34,8 +34,8 @@ public class Limb extends AbstractInterconnectedFlatRideComponent implements Com
     private Vector3 position;
     private Quaternion rotation;
 
-    public Limb(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<FlatRideModel> flatRideModels, VectorQuaternionState initialPose) {
-        super(identifier, groupIdentifier, root, joint, flatRideModels);
+    public Limb(String identifier, String groupIdentifier, boolean root, RelativeAttachmentJointConfig joint, List<ModelWithOffset> modelWithOffsets, VectorQuaternionState initialPose) {
+        super(identifier, groupIdentifier, root, joint, modelWithOffsets);
         position = initialPose.getVector();
         rotation = initialPose.getQuaternion();
     }

@@ -17,7 +17,7 @@
 
 package com.jverbruggen.jrides.config.coaster.objects.cart;
 
-import com.jverbruggen.jrides.animator.flatride.rotor.FlatRideModel;
+import com.jverbruggen.jrides.animator.flatride.rotor.ModelWithOffset;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
@@ -54,11 +54,15 @@ public class ModelConfig extends BaseConfig {
         return itemConfig;
     }
 
-    public FlatRideModel toFlatRideModel(Vector3 rootPosition, ViewportManager viewportManager){
-        Vector3 spawnPosition = Vector3.add(rootPosition, position);
-        VirtualEntity virtualEntity = itemConfig.spawnEntity(viewportManager, spawnPosition, new Quaternion(), null);
+    public ModelWithOffset toModelWithOffset(Vector3 rootPosition, ViewportManager viewportManager) {
+        return toModelWithOffset(rootPosition, new Quaternion(), viewportManager);
+    }
 
-        return new FlatRideModel(virtualEntity, position.clone(), rotation.clone());
+    public ModelWithOffset toModelWithOffset(Vector3 rootPosition, Quaternion rootOrientation, ViewportManager viewportManager){
+        Vector3 spawnPosition = Vector3.add(rootPosition, position);
+        VirtualEntity virtualEntity = itemConfig.spawnEntity(viewportManager, spawnPosition, rootOrientation, null);
+
+        return new ModelWithOffset(virtualEntity, position.clone(), rotation.clone());
     }
 
     public static ModelConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection) {
@@ -74,6 +78,9 @@ public class ModelConfig extends BaseConfig {
 
     public static List<ModelConfig> multipleFromConfigurationSection(ConfigurationSection configurationSection){
         List<ModelConfig> modelConfigs = new ArrayList<>();
+        if(configurationSection == null)
+            return modelConfigs;
+
         Set<String> keys = configurationSection.getKeys(false);
         for(String key : keys){
             ModelConfig modelConfig = fromConfigurationSection(getConfigurationSection(configurationSection, key));

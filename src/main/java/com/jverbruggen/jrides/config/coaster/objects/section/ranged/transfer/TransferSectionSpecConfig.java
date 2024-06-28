@@ -18,6 +18,8 @@
 package com.jverbruggen.jrides.config.coaster.objects.section.ranged.transfer;
 
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
+import com.jverbruggen.jrides.config.coaster.objects.cart.ModelConfig;
+import com.jverbruggen.jrides.config.coaster.objects.item.ItemConfig;
 import com.jverbruggen.jrides.models.math.Vector3;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -33,10 +35,9 @@ public class TransferSectionSpecConfig extends BaseConfig {
     private final double acceleration;
     private final double deceleration;
     private final Vector3 origin;
-    private final Vector3 modelOffsetPosition;
-    private final Vector3 modelOffsetRotation;
+    private final List<ModelConfig> transferModelConfigs;
 
-    public TransferSectionSpecConfig(List<TransferSectionPositionSpecConfig> positions, double engage, double enterDriveSpeed, double exitDriveSpeed, double acceleration, double deceleration, Vector3 origin, Vector3 modelOffsetPosition, Vector3 modelOffsetRotation) {
+    public TransferSectionSpecConfig(List<TransferSectionPositionSpecConfig> positions, double engage, double enterDriveSpeed, double exitDriveSpeed, double acceleration, double deceleration, Vector3 origin, List<ModelConfig> transferModelConfigs) {
         this.positions = positions;
         this.engage = engage;
         this.enterDriveSpeed = enterDriveSpeed;
@@ -44,8 +45,7 @@ public class TransferSectionSpecConfig extends BaseConfig {
         this.acceleration = acceleration;
         this.deceleration = deceleration;
         this.origin = origin;
-        this.modelOffsetPosition = modelOffsetPosition;
-        this.modelOffsetRotation = modelOffsetRotation;
+        this.transferModelConfigs = transferModelConfigs;
     }
 
     public List<TransferSectionPositionSpecConfig> getPositions() {
@@ -76,12 +76,8 @@ public class TransferSectionSpecConfig extends BaseConfig {
         return origin;
     }
 
-    public Vector3 getModelOffsetPosition() {
-        return modelOffsetPosition;
-    }
-
-    public Vector3 getModelOffsetRotation() {
-        return modelOffsetRotation;
+    public List<ModelConfig> getTransferModelConfigs() {
+        return transferModelConfigs;
     }
 
     public static TransferSectionSpecConfig fromConfigurationSection(ConfigurationSection configurationSection){
@@ -101,9 +97,9 @@ public class TransferSectionSpecConfig extends BaseConfig {
         double acceleration = getDouble(configurationSection, "acceleration", 0.1);
         double deceleration = getDouble(configurationSection, "deceleration", acceleration);
         Vector3 origin = Vector3.fromDoubleList(getDoubleList(configurationSection, "origin"));
-        Vector3 modelOffsetPosition = Vector3.fromDoubleList(getDoubleList(configurationSection, "modelOffsetPosition"));
-        Vector3 modelOffsetRotation = Vector3.fromDoubleList(getDoubleList(configurationSection, "modelOffsetRotation"));
 
-        return new TransferSectionSpecConfig(positions, engage, enterDriveSpeed, exitDriveSpeed, acceleration, deceleration, origin, modelOffsetPosition, modelOffsetRotation);
+        List<ModelConfig> transferModelConfigs = ModelConfig.multipleFromConfigurationSection(configurationSection.getConfigurationSection("model"));
+
+        return new TransferSectionSpecConfig(positions, engage, enterDriveSpeed, exitDriveSpeed, acceleration, deceleration, origin, transferModelConfigs);
     }
 }
