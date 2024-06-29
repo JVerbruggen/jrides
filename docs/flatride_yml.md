@@ -13,9 +13,29 @@ with a built-in folder explorer, for example VS Code. (https://code.visualstudio
 
 If you're unfamiliar with jrides, please get started creating a coaster. Refer to [coaster_yml.md](coaster_yml.md).
 
+## Overview
+[Flatride.yml attributes](#flatrideyml-attributes) - List of all attributes in the flatride.yml file<br/>
+[Bone types](#bone-types) - Types of bones you can structure your flatride with<br/>
+[Actions](#actions) - Actions (animations) that are executed (also for Blender Animations)<br/>
+
 ## How to create flatride.yml
 
-todo
+1. Go to your file explorer and navigate to `<your spigot server root>/plugins/jrides/flatrides`.
+2. Create a folder the same as your ride_identifier *(only characters [A-Za-z0-9_-])*. Navigate into the folder.
+3. Create a file `your_ride_identifier.flatride.yml` (*i.e. teacups.flatride.yml*)
+
+Advanced users: In case you want to run your flat ride with Blender, refer to [Flat Ride Actions](#actions) and [docs/advanced_flatride_yml/blender.md](advanced_flatride_yml/blender.md).
+
+Your folder structure should now look something like this.
+
+```
+plugins/
+├─ jrides/
+│  ├─ rides.yml
+│  ├─ flatrides/
+│  │  ├─ your_ride_identifier/
+│  │  │  ├─ your_ride_identifier.flatride.yml
+```
 
 ## Flatride.yml attributes
 
@@ -177,4 +197,134 @@ models: # (optional)
       material: DIRT
     position: [0, 0, 0]
     rotation: [0, -90, 0]
+```
+
+---
+
+## Actions
+
+Flat rides have timings, which can be configured under the `timing` attribute. In here, you can define phases that run certain actions for configured bones.
+
+There are several attributes available for controlling flat ride bones, including running a Blender animation.
+
+- [speed, accelerate](#speed-accelerate)
+- [allowControl](#allowcontrol)
+- [targetPosition](#targetposition)
+- [animation](#animation) (Blender Animations)
+
+### speed, accelerate
+
+Changes the bone's speed property. Used to accelerate and decelerate your flat ride.
+
+**Example:**
+```yml
+config:
+  # ...
+  timing:
+    # Phase 1 accelerates the flat ride
+    phase_1:
+      durationTicks: 100
+      actions:
+        bone_1:
+          speed: 3
+          accelerate: 0.03
+    # Phase 2 changes nothing, flat ride keeps turning at same speed
+    phase_2:
+      durationTicks: 500
+    # Phase 3 decelerates it back before the flat ride ends
+    phase_3:
+      durationTicks: 100
+      actions:
+        bone_1:
+          speed: 0
+          accelerate: 0.03
+```
+
+### allowControl
+
+Sets the player control flag to allowed or denied. Provides control over when a player is allowed to control a piece of the ride.
+
+Only works with bones that have control options configured.
+
+**Example:**
+```yml
+config:
+  # ...
+  timing:
+    # Phase 1 accelerates the flat ride
+    phase_1:
+      durationTicks: 100
+      actions:
+        bone_1:
+          speed: 3
+          accelerate: 0.03
+    # Phase 2 allows player to control, flat ride keeps turning at same speed
+    phase_2:
+      durationTicks: 500
+      actions:
+        bone_2:
+          allowControl: true
+    # Phase 3 decelerates it back before the flat ride ends, and denies control
+    phase_3:
+      durationTicks: 100
+      actions:
+        bone_1:
+          speed: 0
+          accelerate: 0.03
+        bone_2:
+          allowControl: false
+```
+
+### targetPosition
+
+Moves the actuator to a fixed position while the phase is running.
+
+**Example:**
+```yml
+config:
+  # ...
+  timing:
+    # Phase 1 accelerates the flat ride, extends linear actuator
+    phase_1:
+      durationTicks: 100
+      actions:
+        bone_1:
+          speed: 3
+          accelerate: 0.03
+        linear_actuator_bone: # Extends the linear actuator to position '10'
+          targetPosition: 10
+          speed: 3
+          accelerate: 0.05
+    # Phase 2 changes nothing, flat ride keeps turning at same speed
+    phase_2:
+      durationTicks: 500
+    # Phase 3 decelerates it back before the flat ride ends, and resets linear actuator
+    phase_3:
+      durationTicks: 100
+      actions:
+        bone_1:
+          speed: 0
+          accelerate: 0.03
+        linear_actuator_bone: # Extends the linear actuator to position '0'
+          targetPosition: 0
+          speed: 3
+          accelerate: 0.05
+```
+
+### animation
+
+Plays a blender animation for a bone whilst the phase is running. The animation name (in this case 'main_animation') should be the same as your Blender animation file. (see also [docs/advanced_flatride_yml/blender.md](advanced_flatride_yml/blender.md))
+
+**Example:**
+```yml
+config:
+  # ...
+  timing:
+    my_animation_phase:
+      durationTicks: 1500
+      actions:
+        main_rotor_bone:
+          animation: main_animation
+        teacup_bone:
+          animation: main_animation
 ```

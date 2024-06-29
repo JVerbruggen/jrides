@@ -40,7 +40,7 @@ All of this is defined in the coaster.yml
 
 ## How to create coaster.yml
 To create a coaster.yml file:
-1. Go to your file explorer and navigate to `<your spigot server root>/plugins/jrides`.
+1. Go to your file explorer and navigate to `<your spigot server root>/plugins/jrides/coasters`.
 2. Create a folder the same as your ride_identifier *(only characters [A-Za-z0-9_-])*. Navigate into the folder.
 3. Create a file `your_ride_identifier.coaster.yml` (*i.e. taron.coaster.yml*)
 
@@ -48,7 +48,7 @@ In addition, you may want to add your track now.
 
 1. In the same folder, create a new folder named `track`. Navigate into the folder.
 2. Dump your NoLimits 2 csv export file in here and rename it to `your_ride_identifier.default.csv`
- (*i.e. taron.default.csv*)
+ (*i.e. taron.default.csv*) <br/>*To validate if your CSV will work correctly in jrides, use the `nolimits_csv_validator.py` tool. (see [docs/tools/nolimits_csv_validator.md](tools/nolimits_csv_validator.md))*
 
 Your folder structure should now look something like this.
 
