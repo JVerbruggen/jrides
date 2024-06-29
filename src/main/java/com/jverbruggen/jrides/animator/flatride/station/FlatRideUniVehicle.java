@@ -78,7 +78,7 @@ public class FlatRideUniVehicle extends AbstractVehicle {
     @Override
     public void ejectPassengers() {
         PlayerLocation ejectLocation = flatRideHandle.getEjectLocation();
-        for(Passenger passenger : getPassengers()){
+        for(Passenger passenger : new ArrayList<>(getPassengers())){ // This copy is necessary since it removes passengers during the loop
             if(ejectLocation == null) ejectLocation = PlayerLocation.fromVector3(passenger.getSeat().getEntity().getLocation());
             passenger.getPlayer().teleport(ejectLocation, true);
         }

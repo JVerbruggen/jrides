@@ -83,7 +83,8 @@ public abstract class AbstractSeat implements Seat {
             onPassengerExit(passenger);
         }
 
-        Passenger newPassenger = new Passenger(player, this);
+        Passenger newPassenger = Passenger.From(player, this);
+
         this.passenger = newPassenger;
         virtualArmorstand.setPassenger(player);
         if(player != null){

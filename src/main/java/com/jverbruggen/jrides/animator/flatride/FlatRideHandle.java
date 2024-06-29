@@ -137,7 +137,7 @@ public class FlatRideHandle extends AbstractRideHandle {
     private void onRideFinish(){
         PlayerFinishedRideEvent.sendFinishedRideEvent(getPassengers()
                 .stream()
-                .map(p -> (JRidesPlayer)p)
+                .map(p -> (JRidesPlayer)p.getPlayer())
                 .collect(Collectors.toList()), getRide());
         RideFinishedEvent.send(getRide(), getPassengers().stream().map(Passenger::getPlayer).toList());
 

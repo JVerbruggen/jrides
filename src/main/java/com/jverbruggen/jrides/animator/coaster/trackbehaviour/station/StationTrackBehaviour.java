@@ -158,7 +158,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour {
                         if (stationHandle.isExit()) {
                             PlayerFinishedRideEvent.sendFinishedRideEvent(train.getPassengers()
                                     .stream()
-                                    .map(p -> (JRidesPlayer) p)
+                                    .map(p -> (JRidesPlayer) p.getPlayer())
                                     .collect(Collectors.toList()), coasterHandle.getRide());
                             RideFinishedEvent.send(coasterHandle.getRide(), train.getPassengers().stream().map(Passenger::getPlayer).toList());
                         }

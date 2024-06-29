@@ -35,4 +35,11 @@ public class Passenger {
     public Seat getSeat() {
         return seat;
     }
+
+    public static Passenger From(Player player, Seat seat){
+        if(player == null)
+            return null;
+
+        return new Passenger(player, seat);
+    }
 }

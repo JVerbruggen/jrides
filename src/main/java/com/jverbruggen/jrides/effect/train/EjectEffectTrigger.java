@@ -40,7 +40,7 @@ public class EjectEffectTrigger extends BaseTrainEffectTrigger {
         if(asFinished)
             PlayerFinishedRideEvent.sendFinishedRideEvent(train.getPassengers()
                 .stream()
-                .map(p -> (JRidesPlayer)p)
+                .map(p -> (JRidesPlayer)p.getPlayer())
                 .collect(Collectors.toList()), train.getHandle().getCoasterHandle().getRide());
 
         train.ejectPassengers();
