@@ -23,6 +23,7 @@ import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovemen
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.TrainMovement;
 import com.jverbruggen.jrides.logging.LogType;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
@@ -137,7 +138,8 @@ public class TrainHandle {
         if(windSoundState < windSoundInterval)
             windSoundState++;
         else{
-            for(Player player : train.getPassengers()){
+            for(Passenger passenger : train.getPassengers()){
+                Player player = passenger.getPlayer();
                 float pitch = (float)Math.abs(speedBPS.getSpeedPerTick() / 10) + 0.4f;
                 float volume = Math.abs((pitch - 0.3f) / 5) - 0.05f;
                 player.getBukkitPlayer().playSound(player.getBukkitPlayer().getLocation(),

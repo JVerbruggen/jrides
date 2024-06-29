@@ -40,6 +40,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public class ConfigManager {
+    private static final String RIDES_YML_FILE_NAME = "rides.yml";
+
     private final JavaPlugin plugin;
 
     public ConfigManager(JavaPlugin plugin) {
@@ -211,12 +213,22 @@ public class ConfigManager {
         return FlatRideConfig.fromConfigurationSection(yamlConfiguration.getConfigurationSection("config"));
     }
 
+    private void createRidesYml(){
+        File dataFolder = JRidesPlugin.getBukkitPlugin().getDataFolder();
+        File ridesYmlFile = new File(dataFolder, RIDES_YML_FILE_NAME);
+        try {
+            ridesYmlFile.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public RidesConfig getRideConfig(){
-        String fileName = "rides.yml";
-        YamlConfiguration yamlConfiguration = getYamlConfiguration(fileName);
+        YamlConfiguration yamlConfiguration = getYamlConfiguration(RIDES_YML_FILE_NAME);
         if(yamlConfiguration == null) {
-            JRidesPlugin.getLogger().severe("rides.yml config not found");
-            return null;
+            JRidesPlugin.getLogger().warning("rides.yml config not found, creating one..");
+            createRidesYml();
+            yamlConfiguration = getYamlConfiguration(RIDES_YML_FILE_NAME);
         }
 
         return RidesConfig.fromConfigurationSection(yamlConfiguration.getConfigurationSection("config"));

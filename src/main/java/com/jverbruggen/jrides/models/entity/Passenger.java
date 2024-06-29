@@ -15,34 +15,24 @@
  * inflicted by the software.                                                                               *
  ************************************************************************************************************/
 
-package com.jverbruggen.jrides.effect.external;
+package com.jverbruggen.jrides.models.entity;
 
-import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
-import com.jverbruggen.jrides.models.entity.Passenger;
-import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.models.ride.seat.Seat;
 
-public class CommandAsPlayerEffectTrigger extends BaseTrainEffectTrigger {
-    private final String command;
+public class Passenger {
+    private final Player player;
+    private final Seat seat;
 
-    public CommandAsPlayerEffectTrigger(String command) {
-        this.command = command;
+    public Passenger(Player player, Seat seat) {
+        this.player = player;
+        this.seat = seat;
     }
 
-    @Override
-    public boolean finishedPlaying() {
-        return true;
+    public Player getPlayer() {
+        return player;
     }
 
-    @Override
-    public boolean execute(Train train) {
-        for(Passenger passenger : train.getPassengers()){
-            passenger.getPlayer().getBukkitPlayer().performCommand(command);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean executeReversed(Train train) {
-        return execute(train);
+    public Seat getSeat() {
+        return seat;
     }
 }

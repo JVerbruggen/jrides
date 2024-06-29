@@ -20,7 +20,7 @@ package com.jverbruggen.jrides.effect.train.music;
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
 import com.jverbruggen.jrides.event.ride.OnrideMusicTriggerEvent;
-import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.plugin.PluginManager;
@@ -42,7 +42,7 @@ public class ExternalMusicEffectTrigger extends BaseTrainEffectTrigger implement
 
     @Override
     public boolean execute(Train train) {
-        List<Player> passengers;
+        List<Passenger> passengers;
         if(train != null){
             passengers = train.getPassengers();
         }else{
@@ -51,7 +51,7 @@ public class ExternalMusicEffectTrigger extends BaseTrainEffectTrigger implement
 
         pluginManager.callEvent(new OnrideMusicTriggerEvent(passengers
                 .stream()
-                .map(p -> (JRidesPlayer)p)
+                .map(p -> (JRidesPlayer)p.getPlayer())
                 .collect(Collectors.toList()), resource, descriptor));
 
         return true;

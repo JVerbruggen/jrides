@@ -28,7 +28,7 @@ import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.effect.EffectTriggerCollection;
 import com.jverbruggen.jrides.effect.handle.cart.CartEffectTriggerHandle;
 import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
-import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
 import com.jverbruggen.jrides.models.ride.Ride;
@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 public class CoasterHandle extends AbstractRideHandle {
     private Track track;
     private ParticleTrackVisualisationTool visualisationTool;
-    private List<CoasterStationHandle> stationHandles;
+    private final List<CoasterStationHandle> stationHandles;
     private List<TrainHandle> trains;
     private final List<Transfer> transfers;
     private final Map<String, Unlockable> unlockables;
@@ -228,7 +228,7 @@ public class CoasterHandle extends AbstractRideHandle {
     }
 
     @Override
-    public List<Player> getPassengers() {
+    public List<Passenger> getPassengers() {
         return getTrains().stream()
                 .flatMap(trainHandle -> trainHandle.getTrain().getPassengers().stream())
                 .toList();

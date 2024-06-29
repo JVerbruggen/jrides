@@ -17,15 +17,15 @@
 
 package com.jverbruggen.jrides.models.ride.coaster.train;
 
-import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.math.Vector3;
 
 import java.util.List;
 
 public interface Vehicle {
-    List<Player> getPassengers();
-    void onPlayerEnter(Player player);
-    void onPlayerExit(Player player);
+    List<Passenger> getPassengers();
+    void onPlayerEnter(Passenger passenger);
+    void onPlayerExit(Passenger passenger);
 
     boolean isStationary();
 

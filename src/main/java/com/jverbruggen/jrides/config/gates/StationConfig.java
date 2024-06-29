@@ -66,7 +66,7 @@ public class StationConfig extends BaseConfig {
         int minimumWaitIntervalSeconds = getInt(configurationSection, "minimumWaitIntervalSeconds", 15);
         int maximumWaitIntervalSeconds = getInt(configurationSection, "maximumWaitIntervalSeconds", 45);
         StationEffectsConfig effects = StationEffectsConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "effects"));
-        PlayerLocation ejectLocation = PlayerLocation.fromDoubleList(getDoubleList(configurationSection, "ejectLocation"));
+        PlayerLocation ejectLocation = PlayerLocation.fromDoubleList(getDoubleList(configurationSection, "ejectLocation", null));
 
         return new StationConfig(minimumWaitIntervalSeconds, maximumWaitIntervalSeconds, effects, ejectLocation);
     }

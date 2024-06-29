@@ -33,6 +33,7 @@ import com.jverbruggen.jrides.control.uiinterface.menu.RideControlMenuFactory;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.controller.ButtonUpdateController;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.factory.RideControlButtonFactory;
 import com.jverbruggen.jrides.effect.EffectTriggerFactory;
+import com.jverbruggen.jrides.generate.TemplateGenerator;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.models.entity.EntityIdFactory;
@@ -109,6 +110,7 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(CoasterLoader.class, new CoasterLoader(dataFolder));
         ServiceProvider.register(FlatRideFactory.class, new FlatRideFactory());
         ServiceProvider.register(RideManager.class, new RideManager());
+        ServiceProvider.register(TemplateGenerator.class, new TemplateGenerator());
         ServiceProvider.register(SectionVisualFactory.class, new SectionVisualFactory());
         ServiceProvider.register(TrainVisualFactory.class, new TrainVisualFactory());
         ServiceProvider.register(RideOverviewMapFactory.class, new RideOverviewMapFactory());

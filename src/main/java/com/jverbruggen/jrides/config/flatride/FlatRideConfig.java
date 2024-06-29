@@ -81,7 +81,7 @@ public class FlatRideConfig extends AbstractRideConfig {
         boolean canExitDuringRide = getBoolean(configurationSection, "canExitDuringRide", false);
         InteractionEntitiesConfig interactionEntities = InteractionEntitiesConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "interactionEntities"));
         StationConfig stationConfig = StationConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "station"));
-        StructureConfig structureConfig = StructureConfig.fromConfigurationSection(Objects.requireNonNull(getConfigurationSection(configurationSection, "structure"), "Structure for flatride not present"));
+        StructureConfig structureConfig = StructureConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "structure"));
         TimingConfig timingConfig = TimingConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "timing"));
         RideCounterMapConfigs rideCounterMapConfigs = RideCounterMapConfigs.fromConfigurationSection(identifier, getConfigurationSection(configurationSection, "rideCounterMaps"));
         boolean debugMode = getBoolean(configurationSection, "debugMode", false);

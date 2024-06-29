@@ -22,6 +22,7 @@ import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovemen
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.effect.handle.train.TrainEffectTriggerHandle;
 import com.jverbruggen.jrides.event.player.PlayerSitDownEvent;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
@@ -86,7 +87,7 @@ public class SimpleCoasterCart implements CoasterCart {
     }
 
     @Override
-    public List<Player> getPassengers() {
+    public List<Passenger> getPassengers() {
         return seats.stream()
                 .filter(Seat::hasPassenger)
                 .map(Seat::getPassenger)
@@ -186,8 +187,9 @@ public class SimpleCoasterCart implements CoasterCart {
     }
 
     @Override
-    public void onPlayerEnter(Player player) {
-        getParentTrain().onPlayerEnter(player);
+    public void onPlayerEnter(Passenger passenger) {
+        getParentTrain().onPlayerEnter(passenger);
+        Player player = passenger.getPlayer();
         PlayerSitDownEvent.send(player, getParentTrain().getHandle().getCoasterHandle().getRide());
 
         // Potentially rider wants to inspect frames
@@ -202,9 +204,9 @@ public class SimpleCoasterCart implements CoasterCart {
     }
 
     @Override
-    public void onPlayerExit(Player player) {
-        getParentTrain().onPlayerExit(player);
-        getParentTrain().removePositionMessageListener(player);
+    public void onPlayerExit(Passenger passenger) {
+        getParentTrain().onPlayerExit(passenger);
+        getParentTrain().removePositionMessageListener(passenger.getPlayer());
     }
 
     @Override
@@ -220,14 +222,14 @@ public class SimpleCoasterCart implements CoasterCart {
     @Override
     public void ejectPassengers() {
         seats.forEach(s -> {
-            Player passenger = s.getPassenger();
+            Passenger passenger = s.getPassenger();
             if(passenger != null){
                 s.setPassenger(null);
                 PlayerLocation ejectLocation = (parentTrain.isStationary())
                         ? parentTrain.getStationaryAt().getEjectLocation()
                         : getParentTrain().getHandle().getCoasterHandle().getEjectLocation();
                 if(ejectLocation != null)
-                    passenger.teleport(ejectLocation, true);
+                    passenger.getPlayer().teleport(ejectLocation, true);
             }
         });
     }

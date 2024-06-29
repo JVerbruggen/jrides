@@ -18,7 +18,7 @@
 package com.jverbruggen.jrides.models.ride.coaster.train;
 
 import com.jverbruggen.jrides.JRidesPlugin;
-import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import org.bukkit.SoundCategory;
 
 import java.util.ArrayList;
@@ -26,9 +26,9 @@ import java.util.List;
 
 public abstract class AbstractVehicle implements Vehicle {
     private final String name;
-    private List<Player> passengers;
+    private final List<Passenger> passengers;
     private boolean crashed;
-    private boolean debugMode;
+    private final boolean debugMode;
 
     public AbstractVehicle(String name, boolean debugMode) {
         this.name = name;
@@ -53,26 +53,26 @@ public abstract class AbstractVehicle implements Vehicle {
     }
 
     @Override
-    public List<Player> getPassengers() {
+    public List<Passenger> getPassengers() {
         return passengers;
     }
 
-    public void removePassenger(Player player){
+    public void removePassenger(Passenger player){
         passengers.remove(player);
     }
 
-    public void addPassenger(Player player){
+    public void addPassenger(Passenger player){
         passengers.add(player);
     }
 
     @Override
-    public void onPlayerEnter(Player player) {
-        addPassenger(player);
+    public void onPlayerEnter(Passenger passenger) {
+        addPassenger(passenger);
     }
 
     @Override
-    public void onPlayerExit(Player player) {
-        removePassenger(player);
+    public void onPlayerExit(Passenger passenger) {
+        removePassenger(passenger);
     }
 
     public boolean isDebugMode() {

@@ -43,7 +43,7 @@ For all available language overrides, see [docs/language.md](./language.md)
 * Location: `plugins/jrides/coasters/<coaster_identifier>/<coaster_identifier>.coaster.yml`
 * * Example: `plugins/jrides/coasters/silverstar/silverstar.coaster.yml`
 
-The exact structure of this file can be found in [docs/coaster_yml.md](./coaster_yml.md)
+The exact structure of this file, and how to create it, can be found in [docs/coaster_yml.md](./coaster_yml.md)
 
 ## trigger.yml
 * Add triggers to coaster tracks, to run effects, commands or animate entities.
@@ -55,4 +55,4 @@ For more information, see [docs/triggers.md](./triggers.md)
 * Location: `plugins/jrides/flatrides/<flatride_identifier>/<flatride_identifier>.flatride.yml`
 * * Example: `plugins/jrides/flatrides/teacups/teacups.flatride.yml`
 
-The exact structure of this file can be found in [docs/flatride_yml.md](./flatride_yml.md)
+The exact structure of this file, and how to create it, can be found in [docs/flatride_yml.md](./flatride_yml.md)

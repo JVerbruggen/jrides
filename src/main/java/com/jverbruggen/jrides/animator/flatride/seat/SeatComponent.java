@@ -20,7 +20,7 @@ package com.jverbruggen.jrides.animator.flatride.seat;
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.flatride.AbstractFlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.rotor.ModelWithOffset;
-import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.coaster.train.Vehicle;
@@ -70,7 +70,7 @@ public class SeatComponent extends AbstractFlatRideComponent implements SeatHost
     }
 
     @Override
-    public List<Player> getPassengers() {
+    public List<Passenger> getPassengers() {
         return List.of(seat.getPassenger());
     }
 
@@ -106,12 +106,12 @@ public class SeatComponent extends AbstractFlatRideComponent implements SeatHost
     }
 
     @Override
-    public void onPlayerEnter(Player player) {
-        parentVehicle.onPlayerEnter(player);
+    public void onPlayerEnter(Passenger passenger) {
+        parentVehicle.onPlayerEnter(passenger);
     }
 
     @Override
-    public void onPlayerExit(Player player) {
-        parentVehicle.onPlayerExit(player);
+    public void onPlayerExit(Passenger passenger) {
+        parentVehicle.onPlayerExit(passenger);
     }
 }

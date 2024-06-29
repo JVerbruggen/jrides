@@ -31,6 +31,7 @@ import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
 import com.jverbruggen.jrides.event.ride.RideFinishedEvent;
 import com.jverbruggen.jrides.logging.JRidesLogger;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
 import com.jverbruggen.jrides.models.properties.Speed;
 import com.jverbruggen.jrides.models.ride.CoasterStationHandle;
@@ -38,7 +39,6 @@ import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import com.jverbruggen.jrides.models.ride.section.Section;
 import com.jverbruggen.jrides.models.ride.section.result.BlockSectionSafetyResult;
-import org.bukkit.Bukkit;
 
 import javax.annotation.Nullable;
 import java.util.stream.Collectors;
@@ -160,7 +160,7 @@ public class StationTrackBehaviour extends BaseTrackBehaviour {
                                     .stream()
                                     .map(p -> (JRidesPlayer) p)
                                     .collect(Collectors.toList()), coasterHandle.getRide());
-                            RideFinishedEvent.send(coasterHandle.getRide(), train.getPassengers());
+                            RideFinishedEvent.send(coasterHandle.getRide(), train.getPassengers().stream().map(Passenger::getPlayer).toList());
                         }
 
                         coasterHandle.getRideController().onVehicleArrive(train, stationHandle);

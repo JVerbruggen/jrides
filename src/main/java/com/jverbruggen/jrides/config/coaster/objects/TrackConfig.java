@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class TrackConfig {
+public class TrackConfig extends BaseConfig {
     private final List<Float> position;
     private final List<SectionConfig> sections;
     private final List<String> parts;
@@ -64,8 +64,8 @@ public class TrackConfig {
     public static TrackConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection) {
         if(configurationSection == null) return new TrackConfig();
 
-        List<Float> position = configurationSection.getFloatList("position");
-        List<String> parts = configurationSection.getStringList("parts");
+        List<Float> position = getFloatList(configurationSection, "position", List.of(0f, 65f, 0f));
+        List<String> parts = getStringList(configurationSection, "parts", List.of("default"));
 
         List<SectionConfig> sections = new ArrayList<>();
         ConfigurationSection configurationSectionSections = configurationSection.getConfigurationSection("sections");

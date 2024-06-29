@@ -122,9 +122,11 @@ public class CoasterLoader {
 
         // Initialize Handle
         int rideOverviewMapId = coasterConfig.getRideOverviewMapId();
-        if(!rideOverviewMapIds.contains(rideOverviewMapId))
-            rideOverviewMapIds.add(rideOverviewMapId);
-        else throw new CoasterLoadException("When loading " + rideIdentifier + ": RideOverviewMap id=" + rideOverviewMapId + " was already taken by another coaster.");
+        if(rideOverviewMapId >= 0){
+            if(!rideOverviewMapIds.contains(rideOverviewMapId))
+                rideOverviewMapIds.add(rideOverviewMapId);
+            else throw new CoasterLoadException("When loading " + rideIdentifier + ": RideOverviewMap id=" + rideOverviewMapId + " was already taken by another coaster.");
+        }
 
         SoundsConfig sounds = coasterConfig.getSoundsConfig();
 

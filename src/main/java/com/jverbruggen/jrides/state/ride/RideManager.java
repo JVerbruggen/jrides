@@ -18,9 +18,12 @@
 package com.jverbruggen.jrides.state.ride;
 
 import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.animator.reference.LoadedRideReference;
+import com.jverbruggen.jrides.animator.reference.RideReference;
 import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.animator.flatride.factory.FlatRideFactory;
+import com.jverbruggen.jrides.animator.reference.UnloadedRideReference;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.CoasterConfig;
 import com.jverbruggen.jrides.config.flatride.FlatRideConfig;
@@ -42,7 +45,8 @@ import java.util.List;
 
 public class RideManager {
     private final JRidesLogger logger;
-    private final List<RideHandle> rideHandles;
+    private final List<RideReference> rideReferences;
+    private final List<RideHandle> loadedRideHandles;
     private final ConfigManager configManager;
     private final CoasterLoader coasterLoader;
     private final FlatRideFactory flatRideFactory;
@@ -50,7 +54,8 @@ public class RideManager {
 
     public RideManager() {
         this.logger = ServiceProvider.getSingleton(JRidesLogger.class);
-        this.rideHandles = new ArrayList<>();
+        this.rideReferences = new ArrayList<>();
+        this.loadedRideHandles = new ArrayList<>();
         this.configManager = ServiceProvider.getSingleton(ConfigManager.class);
         this.coasterLoader = ServiceProvider.getSingleton(CoasterLoader.class);
         this.flatRideFactory = ServiceProvider.getSingleton(FlatRideFactory.class);
@@ -58,7 +63,12 @@ public class RideManager {
     }
 
     public void addRideHandle(RideHandle rideHandle){
-        rideHandles.add(rideHandle);
+        rideReferences.add(new LoadedRideReference(rideHandle));
+        loadedRideHandles.add(rideHandle);
+    }
+
+    public void addUnloadedReference(String identifier){
+        rideReferences.add(new UnloadedRideReference(identifier));
     }
 
     public List<String> getRideIdentifiers() {
@@ -66,15 +76,18 @@ public class RideManager {
     }
 
     public List<RideHandle> getRideHandles() {
-        return rideHandles;
+        return loadedRideHandles;
+    }
+
+    public @Nullable RideReference getRideReference(String identifier){
+        return rideReferences.stream().filter(ref -> ref.getIdentifier().equalsIgnoreCase(identifier)).findFirst().orElse(null);
     }
 
     public @Nullable RideHandle getRideHandle(String identifier){
-        return this.rideHandles
-                .stream()
-                .filter(ch -> ch.getRide().getIdentifier().equalsIgnoreCase(identifier))
-                .findFirst()
-                .orElse(null);
+        RideReference rideReference = getRideReference(identifier);
+        if(rideReference == null || !rideReference.isLoaded()) return null;
+
+        return rideReference.getLoadedHandle();
     }
 
     public void initAllRides(World world){
@@ -151,7 +164,7 @@ public class RideManager {
     }
 
     private void tick(){
-        for(RideHandle rideHandle : rideHandles){
+        for(RideHandle rideHandle : loadedRideHandles){
             rideHandle.tick();
         }
 

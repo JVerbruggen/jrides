@@ -21,6 +21,7 @@ import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.control.ControlAction;
 import com.jverbruggen.jrides.control.DispatchLockCollection;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.properties.DebounceCall;
 import com.jverbruggen.jrides.models.properties.MinMaxWaitingTimer;
@@ -53,7 +54,9 @@ public class AutomaticMode extends BaseControlMode implements ControlMode{
         if(stationaryVehicle == null) return;
 
         int visualTime = waitingTimer.getVisualDispatchTime(waitingTimer.timeUntilPreferredWaitingTime());
-        waitingTimer.sendTimeWaitingNotification(stationaryVehicle.getPassengers(), visualTime);
+        waitingTimer.sendTimeWaitingNotification(
+                stationaryVehicle.getPassengers().stream().map(Passenger::getPlayer).toList(),
+                visualTime);
 
         if(!waitingTimer.reachedFunction()) return;
         triggerContext.getGateTrigger().setGatesState(true);

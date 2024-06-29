@@ -22,6 +22,7 @@ import com.jverbruggen.jrides.config.ride.RideState;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.control.trigger.DispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.menu.Menu;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
@@ -48,7 +49,7 @@ public interface RideHandle {
     List<StationHandle> getStationHandles();
 
     List<RideCounterRecord> getTopRideCounters();
-    List<Player> getPassengers();
+    List<Passenger> getPassengers();
 
     void setState(RideState state);
     RideState getState();

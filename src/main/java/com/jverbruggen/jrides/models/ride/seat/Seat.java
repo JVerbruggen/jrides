@@ -18,6 +18,7 @@
 package com.jverbruggen.jrides.models.ride.seat;
 
 import com.jverbruggen.jrides.animator.RideHandle;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
@@ -28,7 +29,7 @@ import com.jverbruggen.jrides.models.ride.flatride.PlayerControl;
 import javax.annotation.Nonnull;
 
 public interface Seat {
-    Player getPassenger();
+    Passenger getPassenger();
     void setPassenger(Player player);
     boolean hasPassenger();
     boolean ejectPassengerSoft(boolean teleport);

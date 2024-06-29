@@ -30,7 +30,7 @@ import com.jverbruggen.jrides.control.trigger.SimpleDispatchTrigger;
 import com.jverbruggen.jrides.control.trigger.TriggerContext;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
 import com.jverbruggen.jrides.event.ride.RideFinishedEvent;
-import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.StationHandle;
@@ -139,7 +139,7 @@ public class FlatRideHandle extends AbstractRideHandle {
                 .stream()
                 .map(p -> (JRidesPlayer)p)
                 .collect(Collectors.toList()), getRide());
-        RideFinishedEvent.send(getRide(), getPassengers());
+        RideFinishedEvent.send(getRide(), getPassengers().stream().map(Passenger::getPlayer).toList());
 
         stationHandle.getTriggerContext().getVehiclePresentLock().setLocked(false);
         stationHandle.getTriggerContext().getRestraintTrigger().getLock().setLocked(true);
@@ -194,7 +194,7 @@ public class FlatRideHandle extends AbstractRideHandle {
     }
 
     @Override
-    public List<Player> getPassengers() {
+    public List<Passenger> getPassengers() {
         return stationHandle.getVehicle().getPassengers();
     }
 

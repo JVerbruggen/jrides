@@ -79,6 +79,10 @@ public class RideOverviewMapFactory extends AbstractMapFactory {
         String rideIdentifier = coasterHandle.getRide().getIdentifier();
         int mapId = coasterHandle.getRideOverviewMapId();
 
+        if(mapId < 0){
+            return;
+        }
+
         MapView mapView;
         try {
             mapView = createMapView(mapId);

@@ -39,6 +39,13 @@ Next, we are going to define the coaster: What tracks should be loaded, what is 
 All of this is defined in the coaster.yml
 
 ## How to create coaster.yml
+
+### a) Semi-automated creation
+It is possible to generate a template file for you to get started quicker, and get a feel for the files that have to be created.
+
+After starting jrides, run `/jrides generate <coaster/flatride> <identifier>` to create a new coaster or flatride.
+
+### b) Manual creation
 To create a coaster.yml file:
 1. Go to your file explorer and navigate to `<your spigot server root>/plugins/jrides/coasters`.
 2. Create a folder the same as your ride_identifier *(only characters [A-Za-z0-9_-])*. Navigate into the folder.

@@ -19,11 +19,12 @@ package com.jverbruggen.jrides.config.ride;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class RidesConfig {
-    private List<RidesConfigObject> rides;
+    private final List<RidesConfigObject> rides;
 
     public RidesConfig(List<RidesConfigObject> rides) {
         this.rides = rides;
@@ -34,10 +35,13 @@ public class RidesConfig {
     }
 
     public static RidesConfig fromConfigurationSection(ConfigurationSection configurationSection){
-        List<RidesConfigObject> rides = configurationSection.getKeys(false)
-                .stream()
-                .map(i -> RidesConfigObject.fromConfigurationSection(configurationSection.getConfigurationSection(i)))
-                .collect(Collectors.toList());
+        List<RidesConfigObject> rides = new ArrayList<>();
+        if(configurationSection != null){
+            rides = configurationSection.getKeys(false)
+                    .stream()
+                    .map(i -> RidesConfigObject.fromConfigurationSection(configurationSection.getConfigurationSection(i)))
+                    .collect(Collectors.toList());
+        }
 
         return new RidesConfig(rides);
     }

@@ -22,6 +22,7 @@ import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.event.player.PlayerStandUpEvent;
 import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.SeatedOnContext;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
@@ -36,7 +37,7 @@ import javax.annotation.Nonnull;
 
 public abstract class AbstractSeat implements Seat {
     private final RideHandle parentRideHandle;
-    private Player passenger;
+    private Passenger passenger;
     private final VirtualEntity virtualEntity;
     private final Vector3PlusYaw offset;
     private boolean restraintLocked;
@@ -62,7 +63,7 @@ public abstract class AbstractSeat implements Seat {
     }
 
     @Override
-    public Player getPassenger() {
+    public Passenger getPassenger() {
         return passenger;
     }
 
@@ -74,15 +75,16 @@ public abstract class AbstractSeat implements Seat {
     @Override
     public void setPassenger(Player player) {
         VirtualEntity virtualArmorstand = getEntity();
-        Player passenger = getPassenger();
+        Passenger passenger = getPassenger();
 
         if(passenger != null){ // Overtaking seat or player = null
-            if(passenger == player) return;
+            if(passenger.getPlayer() == player) return;
 
             onPassengerExit(passenger);
         }
 
-        this.passenger = player;
+        Passenger newPassenger = new Passenger(player, this);
+        this.passenger = newPassenger;
         virtualArmorstand.setPassenger(player);
         if(player != null){
             if(!player.hasPermission(Permissions.RIDE_ENTER)){
@@ -90,26 +92,28 @@ public abstract class AbstractSeat implements Seat {
                 return;
             }
 
-            onPassengerEnter(player);
+            onPassengerEnter(newPassenger);
         }
     }
 
     @Override
     public boolean ejectPassengerSoft(boolean teleport) {
         if(!hasPassenger()) return false;
-        Player passenger = getPassenger();
+        Passenger passenger = getPassenger();
+        Player player = passenger.getPlayer();
 
-        if(SoftEjector.hasTimer(passenger)){
-            SoftEjector.removeTimer(passenger);
+        if(SoftEjector.hasTimer(player)){
+            SoftEjector.removeTimer(player);
             setPassenger(null);
             if(teleport){
                 PlayerLocation ejectLocation = getParentSeatHost().getEjectLocation();
-                passenger.teleport(ejectLocation, true);
+                if(ejectLocation == null) ejectLocation = PlayerLocation.fromVector3(getEntity().getLocation());
+                player.teleport(ejectLocation, true);
             }
             return true;
         }else{
-            SoftEjector.addTimer(passenger);
-            JRidesPlugin.getLanguageFile().sendMessage(passenger, LanguageFileField.NOTIFICATION_SHIFT_EXIT_CONFIRMATION);
+            SoftEjector.addTimer(player);
+            JRidesPlugin.getLanguageFile().sendMessage(player, LanguageFileField.NOTIFICATION_SHIFT_EXIT_CONFIRMATION);
             return false;
         }
     }
@@ -127,7 +131,7 @@ public abstract class AbstractSeat implements Seat {
         if(hasPassenger()){
             Quaternion smoothAnimationRotation = orientation.clone();
             smoothAnimationRotation.rotateY(90);
-            passenger.setSmoothAnimationRotation(smoothAnimationRotation);
+            passenger.getPlayer().setSmoothAnimationRotation(smoothAnimationRotation);
         }
     }
 
@@ -167,20 +171,22 @@ public abstract class AbstractSeat implements Seat {
         // Do nothing
     }
 
-    protected void onPassengerExit(Player passenger){
-        SeatedOnContext seatedOnContext = passenger.getSeatedOnContext();
+    protected void onPassengerExit(Passenger passenger){
+        Player player = passenger.getPlayer();
+        SeatedOnContext seatedOnContext = player.getSeatedOnContext();
         if(seatedOnContext != null)
-            seatedOnContext.restore(passenger);
+            seatedOnContext.restore(player);
 
         virtualEntity.setPassenger(null);
-        PlayerStandUpEvent.send(passenger, getParentSeatHost().getRideHandle().getRide());
+        PlayerStandUpEvent.send(player, getParentSeatHost().getRideHandle().getRide());
 
         seatHost.onPlayerExit(passenger);
     }
 
-    protected void onPassengerEnter(Player passenger){
-        SeatedOnContext seatedOnContext = SeatedOnContext.create(this, passenger);
-        seatedOnContext.setup(passenger);
+    protected void onPassengerEnter(Passenger passenger){
+        Player player = passenger.getPlayer();
+        SeatedOnContext seatedOnContext = SeatedOnContext.create(this, player);
+        seatedOnContext.setup(player);
 
         seatHost.onPlayerEnter(passenger);
     }

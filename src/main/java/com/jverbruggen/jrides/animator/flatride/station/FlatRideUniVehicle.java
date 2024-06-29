@@ -20,7 +20,7 @@ package com.jverbruggen.jrides.animator.flatride.station;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.control.DispatchLock;
-import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.coaster.train.AbstractVehicle;
@@ -78,8 +78,9 @@ public class FlatRideUniVehicle extends AbstractVehicle {
     @Override
     public void ejectPassengers() {
         PlayerLocation ejectLocation = flatRideHandle.getEjectLocation();
-        for(Player passenger : new ArrayList<>(getPassengers())){
-            passenger.teleport(ejectLocation, true);
+        for(Passenger passenger : getPassengers()){
+            if(ejectLocation == null) ejectLocation = PlayerLocation.fromVector3(passenger.getSeat().getEntity().getLocation());
+            passenger.getPlayer().teleport(ejectLocation, true);
         }
     }
 

@@ -32,6 +32,7 @@ public class MainCommandExecutor extends BaseCommandExecutor {
         registerSubCommand(new RideOverviewMapCommandExecutor());
         registerSubCommand(new RideCounterMapCommandExecutor());
         registerSubCommand(new RidesCommandExecutor());
+        registerSubCommand(new GenerateCommandExecutor());
     }
 
     @Override

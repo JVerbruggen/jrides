@@ -15,34 +15,29 @@
  * inflicted by the software.                                                                               *
  ************************************************************************************************************/
 
-package com.jverbruggen.jrides.effect.external;
+package com.jverbruggen.jrides.animator.reference;
 
-import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
-import com.jverbruggen.jrides.models.entity.Passenger;
-import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+import com.jverbruggen.jrides.animator.RideHandle;
 
-public class CommandAsPlayerEffectTrigger extends BaseTrainEffectTrigger {
-    private final String command;
+public class UnloadedRideReference implements RideReference {
+    private final String identifier;
 
-    public CommandAsPlayerEffectTrigger(String command) {
-        this.command = command;
+    public UnloadedRideReference(String identifier) {
+        this.identifier = identifier;
     }
 
     @Override
-    public boolean finishedPlaying() {
-        return true;
+    public String getIdentifier() {
+        return identifier;
     }
 
     @Override
-    public boolean execute(Train train) {
-        for(Passenger passenger : train.getPassengers()){
-            passenger.getPlayer().getBukkitPlayer().performCommand(command);
-        }
-        return true;
+    public boolean isLoaded() {
+        return false;
     }
 
     @Override
-    public boolean executeReversed(Train train) {
-        return execute(train);
+    public RideHandle getLoadedHandle() {
+        throw new RuntimeException("Cannot get loaded handle for unloaded ride '" + identifier + "'");
     }
 }

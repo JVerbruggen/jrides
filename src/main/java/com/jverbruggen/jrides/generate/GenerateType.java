@@ -15,34 +15,30 @@
  * inflicted by the software.                                                                               *
  ************************************************************************************************************/
 
-package com.jverbruggen.jrides.effect.external;
+package com.jverbruggen.jrides.generate;
 
-import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
-import com.jverbruggen.jrides.models.entity.Passenger;
-import com.jverbruggen.jrides.models.ride.coaster.train.Train;
+public enum GenerateType {
+    COASTER,
+    FLAT_RIDE;
 
-public class CommandAsPlayerEffectTrigger extends BaseTrainEffectTrigger {
-    private final String command;
-
-    public CommandAsPlayerEffectTrigger(String command) {
-        this.command = command;
-    }
-
-    @Override
-    public boolean finishedPlaying() {
-        return true;
-    }
-
-    @Override
-    public boolean execute(Train train) {
-        for(Passenger passenger : train.getPassengers()){
-            passenger.getPlayer().getBukkitPlayer().performCommand(command);
+    public static GenerateType fromString(String generateTypeString){
+        if(generateTypeString.equalsIgnoreCase("coaster")){
+            return COASTER;
+        }else if(generateTypeString.equalsIgnoreCase("flatride")){
+            return FLAT_RIDE;
         }
-        return true;
+        return null;
     }
 
-    @Override
-    public boolean executeReversed(Train train) {
-        return execute(train);
+    public static String toString(GenerateType generateType){
+        switch (generateType){
+            case FLAT_RIDE -> {
+                return "flatride";
+            }
+            case COASTER -> {
+                return "coaster";
+            }
+        }
+        return null;
     }
 }

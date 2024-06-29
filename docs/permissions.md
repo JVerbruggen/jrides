@@ -32,6 +32,7 @@ jrides.command.elevated.ride_overview | Allow for generating a ride overview map
 jrides.command.elevated.ride_counter_map | Allow for generating a ride counter map
 jrides.command.elevated.block_section | Allow for getting block section occupation message (debug)
 jrides.command.elevated.visualize | Allow to visualize a coaster spline (debug)
+jrides.command.elevated.generate | Allow to generate new coaster or flatride config templates
 
 ## Debug
 

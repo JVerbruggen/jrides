@@ -20,6 +20,7 @@ package com.jverbruggen.jrides.models.ride.coaster.train;
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.common.permissions.Permissions;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.properties.frame.Frame;
@@ -261,8 +262,9 @@ public class SimpleTrain extends AbstractVehicle implements Train {
     }
 
     @Override
-    public void onPlayerEnter(Player player) {
-        addPassenger(player);
+    public void onPlayerEnter(Passenger passenger) {
+        addPassenger(passenger);
+        Player player = passenger.getPlayer();
         if(statusModeEnabled(player)){
             addStatusMessageListener(player);
         }
@@ -273,9 +275,9 @@ public class SimpleTrain extends AbstractVehicle implements Train {
     }
 
     @Override
-    public void onPlayerExit(Player player) {
-        removePassenger(player);
-        removeStatusMessageListener(player);
+    public void onPlayerExit(Passenger passenger) {
+        removePassenger(passenger);
+        removeStatusMessageListener(passenger.getPlayer());
     }
 
 

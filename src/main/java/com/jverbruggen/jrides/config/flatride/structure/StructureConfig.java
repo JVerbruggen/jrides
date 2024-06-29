@@ -43,23 +43,26 @@ public class StructureConfig extends BaseConfig {
     public static StructureConfig fromConfigurationSection(ConfigurationSection configurationSection) {
         List<StructureConfigItem> items = new ArrayList<>();
 
-        Set<String> keys = configurationSection.getKeys(false);
-        for(String key : keys){
-            ConfigurationSection itemConfigurationSection = getConfigurationSection(configurationSection, key);
-            if(itemConfigurationSection == null) throw new RuntimeException("No contents in structure item " + key);
+        if(configurationSection != null) {
+            Set<String> keys = configurationSection.getKeys(false);
+            for (String key : keys) {
+                ConfigurationSection itemConfigurationSection = getConfigurationSection(configurationSection, key);
+                if (itemConfigurationSection == null)
+                    throw new RuntimeException("No contents in structure item " + key);
 
-            String type = getString(itemConfigurationSection, "type");
+                String type = getString(itemConfigurationSection, "type");
 
-            StructureConfigItem structureConfigItem = switch (type) {
-                case "static" -> StaticStructureConfig.fromConfigurationSection(itemConfigurationSection, key);
-                case "limb" -> LimbConfig.fromConfigurationSection(itemConfigurationSection, key);
-                case "rotor" -> RotorConfig.fromConfigurationSection(itemConfigurationSection, key);
-                case "seat" -> SeatConfig.fromConfigurationSection(itemConfigurationSection, key);
-                case "linear_actuator" -> LinearActuatorConfig.fromConfigurationSection(itemConfigurationSection, key);
-                default -> throw new RuntimeException("Unknown structure type '" + type + "'");
-            };
+                StructureConfigItem structureConfigItem = switch (type) {
+                    case "static" -> StaticStructureConfig.fromConfigurationSection(itemConfigurationSection, key);
+                    case "limb" -> LimbConfig.fromConfigurationSection(itemConfigurationSection, key);
+                    case "rotor" -> RotorConfig.fromConfigurationSection(itemConfigurationSection, key);
+                    case "seat" -> SeatConfig.fromConfigurationSection(itemConfigurationSection, key);
+                    case "linear_actuator" -> LinearActuatorConfig.fromConfigurationSection(itemConfigurationSection, key);
+                    default -> throw new RuntimeException("Unknown structure type '" + type + "'");
+                };
 
-            items.add(structureConfigItem);
+                items.add(structureConfigItem);
+            }
         }
 
         return new StructureConfig(items);

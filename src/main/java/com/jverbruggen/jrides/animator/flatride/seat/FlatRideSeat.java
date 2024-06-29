@@ -18,6 +18,7 @@
 package com.jverbruggen.jrides.animator.flatride.seat;
 
 import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Vector3;
@@ -55,18 +56,18 @@ public class FlatRideSeat extends AbstractSeat {
     }
 
     @Override
-    protected void onPassengerEnter(Player passenger) {
+    protected void onPassengerEnter(Passenger passenger) {
         super.onPassengerEnter(passenger);
 
         if(playerControl != null)
-            playerControl.addControlling(passenger);
+            playerControl.addControlling(passenger.getPlayer());
     }
 
     @Override
-    protected void onPassengerExit(Player passenger) {
+    protected void onPassengerExit(Passenger passenger) {
         super.onPassengerExit(passenger);
 
         if(playerControl != null)
-            playerControl.removeControlling(passenger);
+            playerControl.removeControlling(passenger.getPlayer());
     }
 }

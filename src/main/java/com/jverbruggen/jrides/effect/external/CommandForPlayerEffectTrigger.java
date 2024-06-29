@@ -18,7 +18,7 @@
 package com.jverbruggen.jrides.effect.external;
 
 import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
-import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.Passenger;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import org.bukkit.Bukkit;
 
@@ -36,8 +36,8 @@ public class CommandForPlayerEffectTrigger extends BaseTrainEffectTrigger {
 
     @Override
     public boolean execute(Train train) {
-        for(Player player : train.getPassengers()){
-            String replacedCommand = command.replaceAll("%PLAYER%", player.getName());
+        for(Passenger passenger : train.getPassengers()){
+            String replacedCommand = command.replaceAll("%PLAYER%", passenger.getPlayer().getName());
             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), replacedCommand);
         }
 

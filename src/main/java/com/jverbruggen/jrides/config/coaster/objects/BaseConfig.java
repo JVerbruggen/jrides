@@ -170,6 +170,30 @@ public abstract class BaseConfig {
         return getDoubleList(configurationSection, key);
     }
 
+    protected static List<Float> getFloatList(ConfigurationSection configurationSection, String key){
+        assertPresence(configurationSection, key);
+
+        return configurationSection.getList(key)
+                .stream()
+                .map(BaseConfig::toFloat)
+                .collect(Collectors.toList());
+    }
+
+    protected static List<Float> getFloatList(ConfigurationSection configurationSection, String key, List<Float> defaultValue){
+        if(!isPresent(configurationSection, key)) return defaultValue;
+        return getFloatList(configurationSection, key);
+    }
+
+    protected static float toFloat(Object object){
+        if(object instanceof Float){
+            return (float) object;
+        }else if(object instanceof Double){
+            return (float) (double) object;
+        }else if(object instanceof Integer){
+            return ((Integer)object).floatValue();
+        }else throw new RuntimeException("Cannot convert " + object + " to float");
+    }
+
     protected static List<List<Double>> getDoubleListList(ConfigurationSection configurationSection, String key){
         assertPresence(configurationSection, key);
 
