@@ -67,6 +67,8 @@ Refer to [docs/config.md](./docs/config.md) for all the latest documentation.
 ## 🎡 **Visit our live demo!** server.greekcraft.nl
 Try it out for yourself! Join our demo server at [server.greekcraft.nl](https://greekcraft.nl).
 
+Find us on Spigot at [spigotmc.org](https://www.spigotmc.org/resources/jrides.117698/).
+
 <br>
 
 **Trailer video**
