@@ -173,6 +173,19 @@ There's a lot more types of tracks available, including transfers, launches, and
 - **gravityConstant**: Constant that affects gravity-based sections in your coaster
 - **dragConstant**: Constant that affects how much drag is induced on a `track` section
 - **rideOverviewMapId**: Map ID (that is already present in world) that should be used for the ride overview visualization
+- **rideCounterMaps**: List of map identifiers and configurations that should be used for the ride counter visualization
+- - **<map_identifier>**: A map name of your choosing (e.g. "ride_counter_1"). This is used to get the map in game.
+- - - **type**: Ride counter type, currently only "top" is supported.
+- - - **rideNameLine**: The line height of the ride name on the map.
+- - - **typeLine**: The line height of the counter type on the map.
+- - - **typeText**: The text that should be displayed for the counter type (e.g. "Top ridecounters")
+- - - **lines**: A list of line heights that will show the top counter values. The first line is the highest value. (e.g. [48, 73, 98])
+- - - **mapIds**: A list of map IDs (that are already present in the world) that should be used for the counter visualization. Multiple map ids means the lines will continue on the next map available.
+- - - **backgroundImages**: A list of image names that are used as the background for the maps. The image files should be present in an 'assets' directory inside the same directory as your coaster.yml file. Images should be 128x128 pixels.
+- - - **lineFormat**: The format of the line text. The following placeholders are available: `%RANK%` `%NAME%` `%COUNT%`.
+- - - **primaryColor**: The primary text color on the map in RGB format (e.g. [0, 0, 0])
+- - - **secondaryColor**: The secondary text color on the map in RGB format (e.g. [101, 37, 37])
+- - - **tertiaryColor**: The tertiary text color on the map in RGB format (e.g. [255, 255, 255])
 - **canExitDuringRide**: Whether a player can exit the coaster while its operating
 - **sounds**: Several configurable sounds (from ResourcePack)
 - - **onrideWind**: Wind sound that is pitched according to vehicle speed
