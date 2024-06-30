@@ -55,6 +55,7 @@ plugins/
 - - **damage**: Damage property
 - - **unbreakable**: Unbreakable property
 - **warpLocation**: Warp location in [x,y,z,yaw,pitch]
+- **warpEnabled**: Whether players should be able to warp to the ride
 - **rideOverviewMapId**: Map ID (that is already present in world) that should be used for the ride overview visualization
 - **canExitDuringRide**: Whether a player can exit the coaster while its operating
 - **sounds**: Several configurable sounds (from ResourcePack)

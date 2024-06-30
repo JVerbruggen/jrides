@@ -186,6 +186,8 @@ public class SimpleTrain extends AbstractVehicle implements Train {
 
     @Override
     public void addCurrentSection(Section section, TrainEnd trainEnd) {
+        if(currentSections.contains(section)) return;
+
         if(trainEnd.equals(TrainEnd.HEAD)){
             currentSections.add(0, section);
         }

@@ -24,9 +24,11 @@ import com.jverbruggen.jrides.control.uiinterface.menu.button.common.StaticButto
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.menu.ButtonVisual;
 import com.jverbruggen.jrides.models.menu.MenuButton;
 import com.jverbruggen.jrides.models.menu.SimpleMenuButton;
+import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.state.OpenState;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.ChatColor;
@@ -76,7 +78,14 @@ public class RideOverviewMenuButtonFactory {
         return new SimpleMenuButton(
                 new StatefulButtonVisual<>(() -> rideHandle.getState().getOpenState(), options, current),
                 slot,
-                new RunnableButtonAction(p -> p.teleport(rideHandle.getRide().getWarpLocation()))
+                new RunnableButtonAction(p -> {
+                    PlayerLocation warpLocation = rideHandle.getRide().getWarpLocation();
+                    if(warpLocation == null){
+                        languageFile.sendMessage(p, LanguageFileField.ERROR_CANNOT_WARP, (b) -> b.add(LanguageFileTag.rideDisplayName, rideHandle.getRide().getDisplayName()));
+                        return;
+                    }
+                    p.teleport(warpLocation);
+                })
         );
     }
 }

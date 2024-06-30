@@ -63,7 +63,10 @@ public class FlatRideFactory {
         String displayName = flatRideConfig.getDisplayName();
         List<String> displayDescription = flatRideConfig.getDisplayDescription();
         ItemStack displayItem = flatRideConfig.getDisplayItem().createItemStack();
+
         PlayerLocation warpLocation = flatRideConfig.getWarpLocation();
+        if(!flatRideConfig.isWarpEnabled()) warpLocation = null;
+
         boolean canExitDuringRide = flatRideConfig.canExitDuringRide();
         String shortStationName = "station";
 

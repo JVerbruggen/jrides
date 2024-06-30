@@ -19,7 +19,6 @@ package com.jverbruggen.jrides.models.ride.coaster.transfer;
 
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.animator.flatride.rotor.ModelWithOffset;
-import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.*;
 import com.jverbruggen.jrides.models.ride.coaster.train.CoasterCart;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
@@ -37,7 +36,6 @@ public class Transfer implements Unlockable {
     private TrainHandle train;
     private Vector3 currentLocation;
     private Quaternion currentOrientation;
-    private Matrix4x4 currentRotationMatrix;
 
     private boolean requestPending;
     private boolean moving;
@@ -52,12 +50,7 @@ public class Transfer implements Unlockable {
     private int animationTicks;
     private int animationFrameState;
 
-    private Vector3 bakedOffsetLocation;
-    private Quaternion bakedOffsetOrientation;
-
     private final List<ModelWithOffset> modelEntities;
-//    private final Vector3 modelOffset;
-//    private final Vector3 modelOffsetRotation;
 
     public Transfer(List<TransferPosition> possiblePositions, List<ModelWithOffset> modelEntities, Vector3 origin) {
         this.origin = origin;
@@ -70,7 +63,6 @@ public class Transfer implements Unlockable {
         TransferPosition firstTransferposition = possiblePositions.get(0);
         this.currentLocation = firstTransferposition.getLocation();
         this.currentOrientation = firstTransferposition.getOrientation();
-        this.currentRotationMatrix = calculateRotationMatrix(currentLocation, currentOrientation);
 
         this.fromLocation = null;
         this.fromOrientation = null;
@@ -78,11 +70,7 @@ public class Transfer implements Unlockable {
         this.animationTicks = 0;
         this.animationFrameState = 0;
 
-        calculateBakedOffset();
-
         this.modelEntities = modelEntities;
-//        this.modelOffset = modelOffset;
-//        this.modelOffsetRotation = modelOffsetRotation;
 
         updateModelPosition();
     }
@@ -112,7 +100,6 @@ public class Transfer implements Unlockable {
     public void unlockTrain(){
         if(!hasTrain()) throw new RuntimeException("Cannot unlock train on transfer if no train is present");
         this.locked = false;
-        this.calculateBakedOffset();
         this.cartPositions.clear();
     }
 
@@ -147,7 +134,6 @@ public class Transfer implements Unlockable {
 
             animationFrameState = 0;
             moving = false;
-            this.calculateBakedOffset();
             return true;
         }else{
             // -- Calculate new transfer position
@@ -170,7 +156,6 @@ public class Transfer implements Unlockable {
 
         currentLocation = newLocation;
         currentOrientation = newOrientation;
-        currentRotationMatrix = calculateRotationMatrix(newLocation, newOrientation);
         updateModelPosition();
 
         if(hasTrain()){
@@ -179,27 +164,17 @@ public class Transfer implements Unlockable {
     }
 
     private void updateModelPosition(){
-//        Vector3 armorstandCompenstationVector = CoasterCart.getArmorstandHeightCompensationVector();
-//        Vector3 modelOffsetCompensated = Vector3.subtract(modelOffset, armorstandCompenstationVector);
-
         Matrix4x4 orientationMatrix = new Matrix4x4();
         orientationMatrix.translate(getCurrentLocation());
-//        orientationMatrix.translate(armorstandCompenstationVector);
         orientationMatrix.rotate(getCurrentOrientation());
-//        orientationMatrix.translate(modelOffsetCompensated);
-//        orientationMatrix.translate(modelOffset);
 
         Quaternion modelOrientation = orientationMatrix.getRotation();
         Vector3 modelLocation = orientationMatrix.toVector3();
 
-//        modelOrientation.rotateYawPitchRoll(modelOffsetRotation);
         modelEntities.forEach(e -> e.updateLocation(modelLocation, modelOrientation));
-//        modelEntities.forEach(e -> e.setRotation(modelOrientation));
     }
 
     private void moveTrain(){
-//        Vector3 armorstandCompenstationVector = CoasterCart.getArmorstandHeightCompensationVector();
-
         for(CartOffsetFromTransferOrigin cartProgramming : cartPositions){
             Matrix4x4 matrix = new Matrix4x4();
             matrix.translate(getCurrentLocation());
@@ -207,9 +182,7 @@ public class Transfer implements Unlockable {
             Quaternion cartOrientation = cartProgramming.orientation();
             Vector3 cartPosition = cartProgramming.position();
 
-//            matrix.translate(armorstandCompenstationVector);
             matrix.rotate(getCurrentOrientation());
-//            matrix.translate(Vector3.subtract(cartPosition, armorstandCompenstationVector));
             matrix.translate(cartPosition);
 
             Quaternion newCartOrientation = matrix.getRotation().clone();
@@ -265,19 +238,6 @@ public class Transfer implements Unlockable {
         this.requestPending = false;
     }
 
-    private void calculateBakedOffset(){
-        TransferPosition origin = possiblePositions.get(0);
-        bakedOffsetLocation = Vector3.subtract(currentLocation, origin.getLocation());
-        bakedOffsetOrientation = Quaternion.diff(origin.getOrientation(), currentOrientation);
-    }
-
-    private Matrix4x4 calculateRotationMatrix(Vector3 location, Quaternion orientation){
-        Matrix4x4 orientationMatrix = new Matrix4x4();
-        orientationMatrix.translate(location);
-        orientationMatrix.rotate(orientation);
-        return orientationMatrix;
-    }
-
     public TransferPosition getCurrentTransferPosition(){
         return targetPosition;
     }
@@ -321,10 +281,12 @@ public class Transfer implements Unlockable {
         if(hasTrain()){
             return getTrain() == train;
         }
-        if(isMoving())
+        if(isMoving()){
             return false;
-        if(train == null)
+        }
+        if(train == null){
             return true;
+        }
 
         List<Section> currentTrainSections = train.getTrain().getCurrentSections();
         TransferPosition currentTransferPosition = getCurrentTransferPosition();
@@ -332,12 +294,13 @@ public class Transfer implements Unlockable {
         Section currentSectionAtStart = currentTransferPosition.getSectionAtStart();
         Section currentSectionAtEnd = currentTransferPosition.getSectionAtEnd();
 
-        if(currentSectionAtStart != null && currentTrainSections.contains(currentSectionAtStart))
+        if(currentSectionAtStart != null && currentTrainSections.contains(currentSectionAtStart)){
             return true;
-        else if(currentSectionAtEnd != null && currentTrainSections.contains(currentSectionAtEnd))
+        }else if(currentSectionAtEnd != null && currentTrainSections.contains(currentSectionAtEnd)){
             return true;
-        else
+        }else{
             return false;
+        }
     }
 
     @Override

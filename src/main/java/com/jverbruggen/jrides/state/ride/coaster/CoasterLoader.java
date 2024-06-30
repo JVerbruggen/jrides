@@ -117,6 +117,8 @@ public class CoasterLoader {
 
         PlayerLocation customEjectLocation = coasterConfig.getCustomEjectLocation();
         PlayerLocation warpLocation = coasterConfig.getWarpLocation();
+        if(!coasterConfig.isWarpEnabled()) warpLocation = null;
+
         boolean canExitDuringRide = coasterConfig.canExitDuringRide();
         Ride ride = new SimpleCoaster(rideIdentifier, displayName, displayDescription, displayItem, warpLocation, canExitDuringRide);
 

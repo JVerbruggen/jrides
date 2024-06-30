@@ -90,7 +90,10 @@ public class SectionProvider {
         // If the section it is entering is occupied by some train
         if(toSection.isOccupiedBy(train)){
             JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Occupied");
-            if(applyNewBehaviour) trainHandle.setTrackBehaviour(toSection.getTrackBehaviour());
+            if(applyNewBehaviour){
+                JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Applying (occupied)");
+                trainHandle.setTrackBehaviour(toSection.getTrackBehaviour());
+            }
             if(!fromSection.spansOver(train)){
                 JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Not spans over");
                 clearSectionOccupation(train, fromSection);
@@ -106,6 +109,7 @@ public class SectionProvider {
             // else if that train is self
         }else{
             // else if the section is free, occupy it
+            JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Free");
             if(!toSection.isReservedBy(train)){
                 if(!toSection.getBlockSectionSafety(train).safe())
                     throw new RuntimeException("Logic error: Section " + toSection.getName() + " was not reserved in section occupation logic!");
@@ -115,6 +119,7 @@ public class SectionProvider {
             toSection.addOccupation(train);
             train.addCurrentSection(toSection, onTrainEnd);
             if(applyNewBehaviour){
+                JRidesPlugin.getLogger().info(LogType.SECTIONS, "sectionLogic - Applying (free)");
                 trainHandle.setTrackBehaviour(toSection.getTrackBehaviour());
 
                 train.setDrivingDirection(true); // Default to true

@@ -169,6 +169,7 @@ There's a lot more types of tracks available, including transfers, launches, and
 - - **damage**: Damage property
 - - **unbreakable**: Unbreakable property
 - **warpLocation**: Warp location in [x,y,z,yaw,pitch]
+- **warpEnabled**: Whether players should be able to warp to the ride
 - **gravityConstant**: Constant that affects gravity-based sections in your coaster
 - **dragConstant**: Constant that affects how much drag is induced on a `track` section
 - **rideOverviewMapId**: Map ID (that is already present in world) that should be used for the ride overview visualization

@@ -235,6 +235,8 @@ public abstract class BaseSection implements Section{
 
     @Override
     public boolean addOccupation(@NonNull Train train) {
+        if(occupiedBy == train) return true;
+
         if(trackBehaviour.canHandleBlockSectionSafety()) {
             ((SectionSafetyProvider)trackBehaviour).handleNewOccupation(train);
             handleUnlocks(train);
@@ -242,7 +244,7 @@ public abstract class BaseSection implements Section{
         }
 
         if( occupiedBy != null && occupiedBy != train) throw new RuntimeException("Two trains cannot be in same section! "
-                + train.toString() + " trying to enter section with " + occupiedBy.toString());
+                + train + " trying to enter section with " + occupiedBy.toString());
 
         if(reservedBy == null || reservedBy != train)
             throw new RuntimeException("Train should reserve section before trying to occupy it!");

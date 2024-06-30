@@ -52,6 +52,7 @@ ERROR_OPERATING_CABIN_OCCUPIED | "You can not take this operating cabin since it
 ERROR_OPERATING_NO_PERMISSION | "You are not allowed to operate this ride"
 ERROR_RIDE_CONTROL_MENU_NOT_FOUND | "Ride control menu was not found"
 ERROR_RIDE_OVERVIEW_MAP_NOT_FOUND | "Could not retrieve map for ride %RIDE_IDENTIFIER%, was the map id configured?"
+ERROR_CANNOT_WARP | "Could not warp to ride %RIDE_DISPLAY_NAME%"
 MENU_RIDE_OVERVIEW_TITLE | "Ride overview menu"
 MENU_RIDE_OVERVIEW_STATUS_OPEN | "This ride is currently opened"
 MENU_RIDE_OVERVIEW_STATUS_CLOSED | "This ride is currently closed"

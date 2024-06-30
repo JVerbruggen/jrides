@@ -33,6 +33,7 @@ public abstract class AbstractRideConfig extends BaseConfig {
     private final List<String> displayDescription;
     private final ItemStackConfig displayItem;
     private final PlayerLocation warpLocation;
+    private final boolean warpEnabled;
     private final PlayerLocation customEjectLocation;
     private final GatesConfig gates;
     private final SoundsConfig soundsConfig;
@@ -41,13 +42,14 @@ public abstract class AbstractRideConfig extends BaseConfig {
     private final RideCounterMapConfigs rideCounterMapConfigs;
     private final boolean debugMode;
 
-    public AbstractRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemStackConfig displayItem, PlayerLocation warpLocation, PlayerLocation customEjectLocation, GatesConfig gates, SoundsConfig soundsConfig, boolean canExitDuringRide, InteractionEntitiesConfig interactionEntities, RideCounterMapConfigs rideCounterMapConfigs, boolean debugMode) {
+    public AbstractRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemStackConfig displayItem, PlayerLocation warpLocation, boolean warpEnabled, PlayerLocation customEjectLocation, GatesConfig gates, SoundsConfig soundsConfig, boolean canExitDuringRide, InteractionEntitiesConfig interactionEntities, RideCounterMapConfigs rideCounterMapConfigs, boolean debugMode) {
         this.manifestVersion = manifestVersion;
         this.identifier = identifier;
         this.displayName = displayName;
         this.displayDescription = displayDescription;
         this.displayItem = displayItem;
         this.warpLocation = warpLocation;
+        this.warpEnabled = warpEnabled;
         this.customEjectLocation = customEjectLocation;
         this.gates = gates;
         this.soundsConfig = soundsConfig;
@@ -79,6 +81,10 @@ public abstract class AbstractRideConfig extends BaseConfig {
 
     public PlayerLocation getWarpLocation() {
         return warpLocation;
+    }
+
+    public boolean isWarpEnabled() {
+        return warpEnabled;
     }
 
     public PlayerLocation getCustomEjectLocation() {

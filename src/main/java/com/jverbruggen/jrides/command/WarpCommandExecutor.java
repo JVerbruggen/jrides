@@ -26,6 +26,7 @@ import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.agent.MessageAgent;
+import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideManager;
 import org.bukkit.command.Command;
@@ -71,9 +72,15 @@ public class WarpCommandExecutor extends BaseCommandExecutor {
             languageFile.sendMessage(messageAgent, "Ride '" + identifier + "' not found", FeedbackType.CONFLICT);
             return true;
         }
-        PlayerTeleportByJRidesEvent.sendEvent(player, rideHandle.getRide().getWarpLocation(), false);
+        PlayerLocation warpLocation = rideHandle.getRide().getWarpLocation();
+        if(warpLocation == null){
+            languageFile.sendMessage(messageAgent, LanguageFileField.ERROR_CANNOT_WARP, (b) -> b.add(LanguageFileTag.rideDisplayName, rideHandle.getRide().getDisplayName()));
+            return true;
+        }
 
-        player.teleport(rideHandle.getRide().getWarpLocation());
+        PlayerTeleportByJRidesEvent.sendEvent(player, warpLocation, false);
+
+        player.teleport(warpLocation);
         languageFile.sendMessage(player, LanguageFileField.NOTIFICATION_WARPED, b -> b.add(LanguageFileTag.rideDisplayName, rideHandle.getRide().getDisplayName()));
         return true;
     }
