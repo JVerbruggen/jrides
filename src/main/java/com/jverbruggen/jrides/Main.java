@@ -57,11 +57,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
-        World world = Bukkit.getWorld("Lobby");
-        JRidesPlugin.setWorld(world);
+        ServiceProviderConfigurator.configureStage1(this);
 
         JRidesPlugin.setBukkitPluginHost(this);
-        ServiceProviderConfigurator.configure(this);
+        JRidesPlugin.configureWorld();
+
+        ServiceProviderConfigurator.configureStage2(this);
         JRidesPlugin.initOtherStatics();
 
         PlayerManager playerManager = ServiceProvider.getSingleton(PlayerManager.class);
@@ -94,11 +95,11 @@ public class Main extends JavaPlugin {
         getServer().getPluginCommand("jrides").setExecutor(commandExecutor);
 
         RideManager rideManager = ServiceProvider.getSingleton(RideManager.class);
-        rideManager.initAllRides(world);
+        rideManager.initAllRides();
 
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
 
-        for(org.bukkit.entity.Player bukkitPlayer : world.getPlayers()){
+        for(org.bukkit.entity.Player bukkitPlayer : JRidesPlugin.getWorld().getPlayers()){
             Player player = playerManager.getPlayer(bukkitPlayer);
             getLogger().info("Initialising jrides for player " + bukkitPlayer.getName());
             viewportManager.updateVisuals(player);

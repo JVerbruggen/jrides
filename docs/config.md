@@ -56,3 +56,8 @@ For more information, see [docs/triggers.md](./triggers.md)
 * * Example: `plugins/jrides/flatrides/teacups/teacups.flatride.yml`
 
 The exact structure of this file, and how to create it, can be found in [docs/flatride_yml.md](./flatride_yml.md)
+
+## global_config.yml
+* Global configuration settings
+
+The exact structure of this file can be found in [docs/global_config.md](global_config.md)

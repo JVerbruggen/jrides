@@ -90,7 +90,8 @@ public class RideManager {
         return rideReference.getLoadedHandle();
     }
 
-    public void initAllRides(World world){
+    public void initAllRides(){
+        World world = JRidesPlugin.getWorld();
         RidesConfig ridesConfig = configManager.getRideConfig();
         if(ridesConfig == null) return;
 

@@ -71,9 +71,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ServiceProviderConfigurator {
-    public static void configure(JavaPlugin plugin){
-        File dataFolder = plugin.getDataFolder();
-
+    public static void configureStage1(JavaPlugin plugin){
         Logger logger = plugin.getLogger();
         logger.setLevel(Level.CONFIG);
         ServiceProvider.register(Logger.class, logger);
@@ -82,6 +80,10 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(PluginManager.class, Bukkit.getPluginManager());
         ServiceProvider.register(ConfigManager.class, new ConfigManager(plugin));
         ServiceProvider.register(LanguageFile.class, new LanguageFile());
+    }
+
+    public static void configureStage2(JavaPlugin plugin){
+        File dataFolder = plugin.getDataFolder();
 
         ServiceProvider.register(MenuSessionManager.class, new MenuSessionManager());
         ServiceProvider.register(MessageAgentManager.class, new MessageAgentManager());

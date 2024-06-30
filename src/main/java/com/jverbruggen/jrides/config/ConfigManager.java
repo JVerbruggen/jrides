@@ -40,12 +40,15 @@ import java.util.Optional;
 import java.util.Set;
 
 public class ConfigManager {
+    private static final String GLOBAL_CONFIG_YML_FILE_NAME = "global_config.yml";
     private static final String RIDES_YML_FILE_NAME = "rides.yml";
 
     private final JavaPlugin plugin;
+    private GlobalConfig loadedGlobalConfig;
 
     public ConfigManager(JavaPlugin plugin) {
         this.plugin = plugin;
+        loadedGlobalConfig = null;
     }
 
     private File getFile(String fileName){
@@ -213,11 +216,11 @@ public class ConfigManager {
         return FlatRideConfig.fromConfigurationSection(yamlConfiguration.getConfigurationSection("config"));
     }
 
-    private void createRidesYml(){
+    private void createYmlFile(String fileName){
         File dataFolder = JRidesPlugin.getBukkitPlugin().getDataFolder();
-        File ridesYmlFile = new File(dataFolder, RIDES_YML_FILE_NAME);
+        File ymlFile = new File(dataFolder, fileName);
         try {
-            ridesYmlFile.createNewFile();
+            ymlFile.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -226,8 +229,8 @@ public class ConfigManager {
     public RidesConfig getRideConfig(){
         YamlConfiguration yamlConfiguration = getYamlConfiguration(RIDES_YML_FILE_NAME);
         if(yamlConfiguration == null) {
-            JRidesPlugin.getLogger().warning("rides.yml config not found, creating one..");
-            createRidesYml();
+            JRidesPlugin.getLogger().warning(RIDES_YML_FILE_NAME + " config not found, creating one..");
+            createYmlFile(RIDES_YML_FILE_NAME);
             yamlConfiguration = getYamlConfiguration(RIDES_YML_FILE_NAME);
         }
 
@@ -258,6 +261,23 @@ public class ConfigManager {
 
         assert t != null;
         return Optional.of(t);
+    }
+
+    public GlobalConfig getGlobalConfig(){
+        if(loadedGlobalConfig != null) return loadedGlobalConfig;
+
+        YamlConfiguration yamlConfiguration = getYamlConfiguration(GLOBAL_CONFIG_YML_FILE_NAME);
+        if(yamlConfiguration == null){
+            JRidesPlugin.getLogger().warning(GLOBAL_CONFIG_YML_FILE_NAME + " config not found, creating one..");
+            createYmlFile(GLOBAL_CONFIG_YML_FILE_NAME);
+
+            yamlConfiguration = getYamlConfiguration(GLOBAL_CONFIG_YML_FILE_NAME);
+            GlobalConfig.fillDefaults(yamlConfiguration);
+            saveConfig(yamlConfiguration, GLOBAL_CONFIG_YML_FILE_NAME);
+        }
+
+        loadedGlobalConfig = GlobalConfig.fromConfigurationSection(yamlConfiguration.getConfigurationSection("config"));
+        return loadedGlobalConfig;
     }
 
     public Map<String, String> getLanguageFile() {

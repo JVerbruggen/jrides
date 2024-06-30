@@ -18,6 +18,8 @@
 package com.jverbruggen.jrides;
 
 import com.jverbruggen.jrides.animator.smoothanimation.SmoothAnimation;
+import com.jverbruggen.jrides.config.ConfigManager;
+import com.jverbruggen.jrides.config.GlobalConfig;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.logging.JRidesLogger;
 import com.jverbruggen.jrides.logging.LogType;
@@ -54,12 +56,12 @@ public class JRidesPlugin {
 
     public static void setBukkitPluginHost(JavaPlugin plugin){
         JRidesPlugin.plugin = plugin;
+        logger = ServiceProvider.getSingleton(JRidesLogger.class);
     }
 
     public static void initOtherStatics(){
         packetSender = ServiceProvider.getSingleton(PacketSender.class);
         smoothAnimation = ServiceProvider.getSingleton(SmoothAnimation.class);
-        logger = ServiceProvider.getSingleton(JRidesLogger.class);
         languageFile = ServiceProvider.getSingleton(LanguageFile.class);
         broadcastMessageReceiver = new BroadcastMessageReceiver();
 
@@ -85,8 +87,10 @@ public class JRidesPlugin {
         return languageFile;
     }
 
-    public static void setWorld(World world) {
-        JRidesPlugin.world = world;
+    public static void configureWorld() {
+        ConfigManager configManager = ServiceProvider.getSingleton(ConfigManager.class);
+        GlobalConfig globalConfig = configManager.getGlobalConfig();
+        JRidesPlugin.world = Bukkit.getWorld(globalConfig.getWorldName());
     }
 
     public static World getWorld() {
