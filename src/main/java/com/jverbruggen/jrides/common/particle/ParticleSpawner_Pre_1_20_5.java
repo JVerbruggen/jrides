@@ -15,32 +15,31 @@
  * inflicted by the software.                                                                               *
  ************************************************************************************************************/
 
-package com.jverbruggen.jrides.animator.coaster.tool;
+package com.jverbruggen.jrides.common.particle;
 
-import com.jverbruggen.jrides.common.particle.Particle;
-import com.jverbruggen.jrides.common.particle.ParticleSpawner;
+import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.models.entity.Player;
-import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import com.jverbruggen.jrides.models.math.Vector3;
 
-public class ParticleTrainVisualisationTool extends ParticleVisualisationTool {
-    private final ParticleSpawner particleSpawner;
-    private final Train train;
+public class ParticleSpawner_Pre_1_20_5 implements ParticleSpawner{
 
-    public ParticleTrainVisualisationTool(Train train){
-        super(5);
-        this.particleSpawner = ServiceProvider.getSingleton(ParticleSpawner.class);
-        this.train = train;
+    protected org.bukkit.Particle getBukkitParticle(Particle particle){
+        String particleName = switch (particle){
+            case TRACK_PARTICLE -> "VILLAGER_HAPPY";
+            case SECTION_DIVIDER_PARTICLE -> "CRIT_MAGIC";
+            case TRAIN_HEAD_PARTICLE -> "DRIP_WATER";
+            case TRAIN_TAIL_PARTICLE -> "DRIP_LAVA";
+            case CART_PARTICLE -> "VILLAGER_HAPPY";
+            case CART_WHEEL_DISTANCE_PARTICLE -> "HEART";
+        };
+        return org.bukkit.Particle.valueOf(particleName);
     }
 
     @Override
-    public void tick(){
-        for(Player viewer : getViewers()){
-            spawnVisualisationParticles(viewer);
-        }
-    }
-
-    public void spawnVisualisationParticles(Player player){
-        particleSpawner.spawnParticle(player, Particle.TRAIN_HEAD_PARTICLE, train.getCurrentHeadLocation(), 1, 0.01, 0.01, 0.01);
+    public void spawnParticle(Player player, Particle particle, Vector3 location, int amount, double v0, double v1, double v2) {
+        player.getBukkitPlayer().spawnParticle(
+                getBukkitParticle(particle),
+                location.toBukkitLocation(JRidesPlugin.getWorld()),
+                amount, v0, v1, v2, 0);
     }
 }
