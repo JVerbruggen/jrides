@@ -18,6 +18,7 @@
 package com.jverbruggen.jrides.config.ride;
 
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
+import com.jverbruggen.jrides.models.ride.RideType;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Map;
@@ -38,13 +39,13 @@ public class RideCounterMapConfigs extends BaseConfig {
         return rideCounterMapConfigs;
     }
 
-    public static RideCounterMapConfigs fromConfigurationSection(String rideIdentifier, ConfigurationSection configurationSection) {
+    public static RideCounterMapConfigs fromConfigurationSection(RideType rideType, String rideIdentifier, ConfigurationSection configurationSection) {
         if(configurationSection == null) return new RideCounterMapConfigs();
 
         Map<String, RideCounterMapConfig> rideCounterMapConfigs = configurationSection.getKeys(false).stream().collect(
                 Collectors.toMap(
                         key -> key,
-                        key -> RideCounterMapConfig.fromConfigurationSection(rideIdentifier, configurationSection.getConfigurationSection(key))
+                        key -> RideCounterMapConfig.fromConfigurationSection(rideType, rideIdentifier, configurationSection.getConfigurationSection(key))
                 )
         );
 

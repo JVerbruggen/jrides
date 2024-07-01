@@ -23,6 +23,7 @@ import com.jverbruggen.jrides.config.gates.GatesConfig;
 import com.jverbruggen.jrides.config.ride.AbstractRideConfig;
 import com.jverbruggen.jrides.config.ride.RideCounterMapConfigs;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
+import com.jverbruggen.jrides.models.ride.RideType;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -109,7 +110,7 @@ public class CoasterConfig extends AbstractRideConfig {
         ControllerConfig controllerConfig = ControllerConfig.fromConfigurationSection(configurationSection.getConfigurationSection("controller"));
         int rideOverviewMapId = getInt(configurationSection, "rideOverviewMapId", -1);
         boolean canExitDuringRide = getBoolean(configurationSection, "canExitDuringRide", false);
-        RideCounterMapConfigs rideCounterMapConfigs = RideCounterMapConfigs.fromConfigurationSection(identifier, configurationSection.getConfigurationSection("rideCounterMaps"));
+        RideCounterMapConfigs rideCounterMapConfigs = RideCounterMapConfigs.fromConfigurationSection(RideType.COASTER, identifier, configurationSection.getConfigurationSection("rideCounterMaps"));
         boolean debugMode = getBoolean(configurationSection, "debugMode", false);
 
         return new CoasterConfig(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, warpEnabled, customEjectLocation, track, interactionEntities, vehicles,
