@@ -17,6 +17,7 @@
 
 package com.jverbruggen.jrides.config.coaster.objects.item;
 
+import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.VirtualEntity;
@@ -29,21 +30,24 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
 
-public class ItemStackConfig implements ItemConfig {
+public class ItemStackConfig extends BaseConfig implements ItemConfig {
     private final Material material;
     private final int damage;
     private final boolean unbreakable;
+    private final int customModelData;
 
-    public ItemStackConfig(Material material, int damage, boolean unbreakable) {
+    public ItemStackConfig(Material material, int damage, boolean unbreakable, int customModelData) {
         this.material = material;
         this.damage = damage;
         this.unbreakable = unbreakable;
+        this.customModelData = customModelData;
     }
 
     public ItemStackConfig() {
         this.material = Material.STONE;
         this.damage = 0;
         this.unbreakable = false;
+        this.customModelData = -1;
     }
 
     public Material getMaterial() {
@@ -58,6 +62,10 @@ public class ItemStackConfig implements ItemConfig {
         return unbreakable;
     }
 
+    public int getCustomModelData() {
+        return customModelData;
+    }
+
     public ItemStack createItemStack(){
         return ItemStackFactory.getCoasterStackFromConfig(this);
     }
@@ -70,9 +78,10 @@ public class ItemStackConfig implements ItemConfig {
     public static ItemStackConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection) {
         if(configurationSection == null) return new ItemStackConfig();
 
-        Material material = Material.valueOf(configurationSection.getString("material"));
-        int damage = configurationSection.getInt("damage", 0);
-        boolean unbreakable = configurationSection.getBoolean("unbreakable", false);
-        return new ItemStackConfig(material, damage, unbreakable);
+        Material material = Material.valueOf(getString(configurationSection, "material", "STONE"));
+        int damage = getInt(configurationSection, "damage", 0);
+        boolean unbreakable = getBoolean(configurationSection, "unbreakable", false);
+        int customModelData = getInt(configurationSection, "customModelData", -1);
+        return new ItemStackConfig(material, damage, unbreakable, customModelData);
     }
 }

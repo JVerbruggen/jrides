@@ -22,31 +22,33 @@ import com.jverbruggen.jrides.models.entity.Player;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 public class ItemStackFactory {
     public static ItemStack getCoasterStack(Material material, Integer damageValue, boolean unbreakable) {
-        return getStack(material, damageValue, unbreakable, ChatColor.GOLD + "jrides model", null);
+        return new ItemStackBuilder(material)
+                .setDisplayName(ChatColor.GOLD + "jrides model")
+                .setDamage(damageValue)
+                .setUnbreakable(unbreakable)
+                .build();
     }
 
-    public static ItemStack getStack(Material material, Integer damageValue, boolean unbreakable, String displayName, @Nullable List<String> lore) {
-        ItemStack stack = new ItemStack(material, 1);
-        ItemMeta meta = stack.getItemMeta();
-        ((Damageable)meta).setDamage(damageValue);
-        meta.setDisplayName(displayName);
-        meta.setUnbreakable(unbreakable);
-        if(lore != null) meta.setLore(lore);
-        stack.setItemMeta(meta);
-        return stack;
+    public static ItemStack getCoasterStack(Material material, int customModelData){
+        return new ItemStackBuilder(material)
+                .setDisplayName(ChatColor.GOLD + "jrides model")
+                .setCustomModelData(customModelData)
+                .build();
     }
 
     public static ItemStack getCoasterStackFromConfig(ItemStackConfig itemStackConfig){
+        int customModelData = itemStackConfig.getCustomModelData();
+        if(customModelData != -1){
+            return getCoasterStack(itemStackConfig.getMaterial(), customModelData);
+        }
+
         return getCoasterStack(itemStackConfig.getMaterial(), itemStackConfig.getDamage(), itemStackConfig.isUnbreakable());
     }
 

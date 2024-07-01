@@ -168,6 +168,7 @@ There's a lot more types of tracks available, including transfers, launches, and
 - - **material**: Icon material
 - - **damage**: Damage property
 - - **unbreakable**: Unbreakable property
+- - **customModelData**: Custom Model Data property
 - **warpLocation**: Warp location in [x,y,z,yaw,pitch]
 - **warpEnabled**: Whether players should be able to warp to the ride
 - **gravityConstant**: Constant that affects gravity-based sections in your coaster
