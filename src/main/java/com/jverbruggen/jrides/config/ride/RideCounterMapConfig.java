@@ -21,6 +21,7 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
 import com.jverbruggen.jrides.models.map.ridecounter.RideCounterMapType;
+import com.jverbruggen.jrides.models.ride.RideType;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import dev.cerus.maps.api.graphics.ColorCache;
 import org.bukkit.configuration.ConfigurationSection;
@@ -120,7 +121,7 @@ public class RideCounterMapConfig extends BaseConfig {
         return ColorCache.rgbToMap(colorList.get(0), colorList.get(1), colorList.get(2));
     }
 
-    public static RideCounterMapConfig fromConfigurationSection(String rideIdentifier, ConfigurationSection configurationSection) {
+    public static RideCounterMapConfig fromConfigurationSection(RideType rideType, String rideIdentifier, ConfigurationSection configurationSection) {
         if(configurationSection == null) return new RideCounterMapConfig();
 
         ConfigManager configManager = ServiceProvider.getSingleton(ConfigManager.class);
@@ -151,7 +152,12 @@ public class RideCounterMapConfig extends BaseConfig {
         List<BufferedImage> backgroundImages = new ArrayList<>();
 
         for(String backgroundImage : getStringList(configurationSection, "backgroundImages", new ArrayList<>())) {
-            String imagePath = JRidesPlugin.getBukkitPlugin().getDataFolder() + "/" + configManager.getCoasterFolder(rideIdentifier) + "/assets/" + backgroundImage;
+            String imagePath = null;
+            if(rideType == RideType.COASTER) {
+                imagePath = JRidesPlugin.getBukkitPlugin().getDataFolder() + "/" + configManager.getCoasterFolder(rideIdentifier) + "/assets/" + backgroundImage;
+            } else {
+                imagePath = JRidesPlugin.getBukkitPlugin().getDataFolder() + "/" + configManager.getFlatrideFolder(rideIdentifier) + "/assets/" + backgroundImage;
+            }
             File file = new File(imagePath);
             if(!file.exists()) {
                 JRidesPlugin.getLogger().warning("Background image for " + rideIdentifier + " at " + imagePath + " does not exist, using default background");

@@ -27,6 +27,7 @@ import com.jverbruggen.jrides.config.gates.StationConfig;
 import com.jverbruggen.jrides.config.ride.AbstractRideConfig;
 import com.jverbruggen.jrides.config.ride.RideCounterMapConfigs;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
+import com.jverbruggen.jrides.models.ride.RideType;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -83,7 +84,7 @@ public class FlatRideConfig extends AbstractRideConfig {
         StationConfig stationConfig = StationConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "station"));
         StructureConfig structureConfig = StructureConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "structure"));
         TimingConfig timingConfig = TimingConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "timing"));
-        RideCounterMapConfigs rideCounterMapConfigs = RideCounterMapConfigs.fromConfigurationSection(identifier, getConfigurationSection(configurationSection, "rideCounterMaps"));
+        RideCounterMapConfigs rideCounterMapConfigs = RideCounterMapConfigs.fromConfigurationSection(RideType.FLATRIDE, identifier, getConfigurationSection(configurationSection, "rideCounterMaps"));
         boolean debugMode = getBoolean(configurationSection, "debugMode", false);
 
         return new FlatRideConfig(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, warpEnabled,
