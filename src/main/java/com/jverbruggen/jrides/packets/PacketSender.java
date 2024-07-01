@@ -20,9 +20,11 @@ package com.jverbruggen.jrides.packets;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.object.VirtualArmorstandConfiguration;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemDisplay;
 
 import java.util.List;
 
@@ -50,6 +52,10 @@ public interface PacketSender {
     void teleportVirtualEntity(List<Player> players, int entityId, Vector3 blockLocation);
     void sendMountVirtualEntityPacket(List<Player> players, Player mounted, int entityId);
     void sendClientPositionPacket(Player movedPlayer, Vector3 position);
+    void sendApplyItemDisplayModelPacket(Player player, int entityId, ItemDisplay.ItemDisplayTransform itemDisplayTransform, TrainModelItem model);
+    void sendApplyItemDisplayModelPacket(List<Player> players, int entityId, ItemDisplay.ItemDisplayTransform itemDisplayTransform, TrainModelItem model);
+    void sendItemDisplayMetaDataPacket(Player player, int entityId, int PositionRotationInterpolationDuration);
+    void sendItemDisplayRotationPacket(List<Player> players, int entityId, Quaternion orientation, int positionRotationInterpolationDuration);
     Vector3 getArmorstandModelCompensationVector();
     double toPacketYaw(double normalYaw);
 }

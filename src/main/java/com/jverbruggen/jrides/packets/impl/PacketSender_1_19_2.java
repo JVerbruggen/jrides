@@ -25,12 +25,14 @@ import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandRotations;
 import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandModels;
+import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.object.VirtualArmorstandConfiguration;
 import com.jverbruggen.jrides.packets.packet.v1_19.*;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemDisplay;
 
 import java.util.List;
 import java.util.UUID;
@@ -251,6 +253,34 @@ public class PacketSender_1_19_2 implements PacketSender {
         sendDebugLog("sendClientPositionPacket (single)");
 
         new PlayerPositionServerPacket(protocolManager, position).send(movedPlayer);
+    }
+
+    @Override
+    public void sendApplyItemDisplayModelPacket(Player player, int entityId, ItemDisplay.ItemDisplayTransform itemDisplayTransform, TrainModelItem model) {
+        sendDebugLog("sendApplyItemDisplayModelPacket (single)");
+
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public void sendApplyItemDisplayModelPacket(List<Player> players, int entityId, ItemDisplay.ItemDisplayTransform itemDisplayTransform, TrainModelItem model) {
+        sendDebugLog("sendApplyItemDisplayModelPacket (multiple)");
+
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public void sendItemDisplayMetaDataPacket(Player player, int entityId, int PositionRotationInterpolationDuration) {
+        sendDebugLog("sendItemDisplayMetaDataPacket (single)");
+
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public void sendItemDisplayRotationPacket(List<Player> players, int entityId, Quaternion orientation, int positionRotationInterpolationDuration) {
+        sendDebugLog("sendItemDisplayMetaDataPacket (multiple)");
+
+        throw new RuntimeException("Not implemented");
     }
 
     @Override

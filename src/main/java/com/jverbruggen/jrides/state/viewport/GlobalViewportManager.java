@@ -21,6 +21,7 @@ import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.models.entity.*;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.entity.armorstand.YawRotatedVirtualArmorstand;
+import com.jverbruggen.jrides.models.entity.display.VirtualDisplayEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.render.GlobalViewport;
@@ -102,12 +103,18 @@ public class GlobalViewportManager implements ViewportManager {
 
     @Override
     public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel) {
-        return spawnVirtualArmorstand(location, new Quaternion(), headModel, VirtualArmorstandConfiguration.createDefault());
+        if(packetSender.getIdentifier().equals("1.19.2")) {
+            return spawnVirtualArmorstand(location, new Quaternion(), headModel, VirtualArmorstandConfiguration.createDefault());
+        }
+        return spawnVirtualDisplayEntity(location, new Quaternion(), headModel, VirtualArmorstandConfiguration.createDefault());
     }
 
     @Override
     public VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, TrainModelItem headModel, String customName) {
-        return spawnVirtualArmorstand(location, rotation, headModel, VirtualArmorstandConfiguration.createWithName(customName));
+        if(packetSender.getIdentifier().equals("1.19.2")) {
+            return spawnVirtualArmorstand(location, rotation, headModel, VirtualArmorstandConfiguration.createWithName(customName));
+        }
+        return spawnVirtualDisplayEntity(location, rotation, headModel, VirtualArmorstandConfiguration.createWithName(customName));
     }
 
     @Override
@@ -168,6 +175,19 @@ public class GlobalViewportManager implements ViewportManager {
 
         updateForEntity(virtualArmorstand);
         return virtualArmorstand;
+    }
+
+    public VirtualDisplayEntity spawnVirtualDisplayEntity(Vector3 location, Quaternion rotation, TrainModelItem model, VirtualArmorstandConfiguration configuration) {
+        int entityId = entityIdFactory.newId();
+        VirtualDisplayEntity virtualDisplayEntity = new VirtualDisplayEntity(packetSender, this, location, rotation, entityId, configuration);
+        if(model != null) {
+            virtualDisplayEntity.setModel(model);
+        }
+
+        addEntity(virtualDisplayEntity);
+
+        updateForEntity(virtualDisplayEntity);
+        return virtualDisplayEntity;
     }
 
     @Override
