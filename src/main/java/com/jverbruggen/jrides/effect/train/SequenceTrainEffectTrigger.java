@@ -23,6 +23,7 @@ import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 import java.util.List;
 
 public class SequenceTrainEffectTrigger extends BaseTrainEffectTrigger {
+    private final String identifier;
     private final List<EntityMovementTrigger> triggerSequence;
 
     private Train cachedTrain;
@@ -33,7 +34,8 @@ public class SequenceTrainEffectTrigger extends BaseTrainEffectTrigger {
     private boolean running;
     private int triggerPointer;
 
-    public SequenceTrainEffectTrigger(List<EntityMovementTrigger> triggerSequence){
+    public SequenceTrainEffectTrigger(String identifier, List<EntityMovementTrigger> triggerSequence){
+        this.identifier = identifier;
         this.triggerSequence = triggerSequence;
         this.cachedTrain = null;
         this.reversed = false;
@@ -42,6 +44,8 @@ public class SequenceTrainEffectTrigger extends BaseTrainEffectTrigger {
         this.shouldRunNext = false;
         this.running = false;
         this.triggerPointer = 0;
+
+        addOnFinishListeners();
     }
 
     @Override
@@ -56,6 +60,12 @@ public class SequenceTrainEffectTrigger extends BaseTrainEffectTrigger {
 
     private void onItemFinish(){
         runNext();
+    }
+
+    private void addOnFinishListeners(){
+        for(EntityMovementTrigger entityMovementTrigger : triggerSequence){
+            entityMovementTrigger.onFinish(this::onItemFinish);
+        }
     }
 
     private void runNext(){
@@ -78,7 +88,6 @@ public class SequenceTrainEffectTrigger extends BaseTrainEffectTrigger {
             }
 
             EntityMovementTrigger trigger = triggerSequence.get(triggerPointer);
-            trigger.onFinish(this::onItemFinish);
 
             if(reversed){
                 trigger.executeReversed(cachedTrain);

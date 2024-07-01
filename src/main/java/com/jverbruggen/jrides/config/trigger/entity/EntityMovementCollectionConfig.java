@@ -36,8 +36,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EntityMovementCollectionConfig extends BaseConfig {
-    @SuppressWarnings("unused")
-    private final String identifier; //TODO: integrate
+    private final String identifier;
     private final ItemConfig itemConfig;
     private final Vector3 spawnLocation;
     private final Vector3 spawnRotation;
@@ -124,6 +123,6 @@ public class EntityMovementCollectionConfig extends BaseConfig {
                 .map(c -> c.createTrigger(virtualEntity))
                 .collect(Collectors.toList());
 
-        return new SequenceTrainEffectTrigger(triggerSequence);
+        return new SequenceTrainEffectTrigger(identifier, triggerSequence);
     }
 }
