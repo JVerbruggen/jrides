@@ -9,13 +9,15 @@
 ## Usage
 The NoLimits (2) CSV Validator tool can be found in the tools folder in the root directory of this repository. 
 
-`python3 tools/nolimits_csv_validator_script.py <csv_file>`
+`python3 tools/nolimits_csv_validator.py <csv_file>`
 
 - csv_file should be the path towards the CSV file that was created with NoLimits 2.
 
 ## Result
-The tool will output a number with the average distance between points on your track. jrides expects this number to be 0.050. 
+The tool will output a number with the average distance between points on your track (P-number). jrides expects this number to be 0.050. 
 
 The tool will output NOK/OK according to how close it is to this expected number.
 
 If NOK, adjust your NoLimits CSV export settings as required.
+
+If you cannot adjust the settings, alternatively, you can run the jrides CSV interpolator script, found at `tools/nolimits_csv_fixer.py` (see [nolimits_csv_fixer.md](nolimits_csv_fixer.md)).
