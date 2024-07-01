@@ -129,7 +129,7 @@ public class RideCounterMapConfig extends BaseConfig {
         RideCounterMapType rideCounterMapType = RideCounterMapType.valueOf(getString(configurationSection, "type", "top").toUpperCase());
         List<Integer> lines = getIntegerList(configurationSection, "lines", new ArrayList<>());
         List<Integer> mapIds = getIntegerList(configurationSection, "mapIds", new ArrayList<>());
-        String lineFormat = getString(configurationSection, "lineFormat", "%RANK%. %NAME%: %COUNT%");
+        String lineFormat = getString(configurationSection, "lineFormat", "#%RANK% (%COUNT%x)\n%NAME%");
         Integer rideNameLine = getInt(configurationSection, "rideNameLine", -1);
         Integer typeLine = getInt(configurationSection, "typeLine", -1);
 
