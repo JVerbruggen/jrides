@@ -15,32 +15,13 @@
  * inflicted by the software.                                                                               *
  ************************************************************************************************************/
 
-package com.jverbruggen.jrides.animator.coaster.tool;
+package com.jverbruggen.jrides.common.particle;
 
-import com.jverbruggen.jrides.common.particle.Particle;
-import com.jverbruggen.jrides.common.particle.ParticleSpawner;
-import com.jverbruggen.jrides.models.entity.Player;
-import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-
-public class ParticleTrainVisualisationTool extends ParticleVisualisationTool {
-    private final ParticleSpawner particleSpawner;
-    private final Train train;
-
-    public ParticleTrainVisualisationTool(Train train){
-        super(5);
-        this.particleSpawner = ServiceProvider.getSingleton(ParticleSpawner.class);
-        this.train = train;
-    }
-
-    @Override
-    public void tick(){
-        for(Player viewer : getViewers()){
-            spawnVisualisationParticles(viewer);
-        }
-    }
-
-    public void spawnVisualisationParticles(Player player){
-        particleSpawner.spawnParticle(player, Particle.TRAIN_HEAD_PARTICLE, train.getCurrentHeadLocation(), 1, 0.01, 0.01, 0.01);
-    }
+public enum Particle {
+    TRACK_PARTICLE,
+    SECTION_DIVIDER_PARTICLE,
+    TRAIN_HEAD_PARTICLE,
+    TRAIN_TAIL_PARTICLE,
+    CART_PARTICLE,
+    CART_WHEEL_DISTANCE_PARTICLE
 }

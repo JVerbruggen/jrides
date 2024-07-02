@@ -15,32 +15,30 @@
  * inflicted by the software.                                                                               *
  ************************************************************************************************************/
 
-package com.jverbruggen.jrides.animator.coaster.tool;
+package com.jverbruggen.jrides.common;
 
-import com.jverbruggen.jrides.common.particle.Particle;
-import com.jverbruggen.jrides.common.particle.ParticleSpawner;
-import com.jverbruggen.jrides.models.entity.Player;
-import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+public class Tuple<A, B> {
+    private A a;
+    private B b;
 
-public class ParticleTrainVisualisationTool extends ParticleVisualisationTool {
-    private final ParticleSpawner particleSpawner;
-    private final Train train;
-
-    public ParticleTrainVisualisationTool(Train train){
-        super(5);
-        this.particleSpawner = ServiceProvider.getSingleton(ParticleSpawner.class);
-        this.train = train;
+    public Tuple(A var0, B var1) {
+        this.a = var0;
+        this.b = var1;
     }
 
-    @Override
-    public void tick(){
-        for(Player viewer : getViewers()){
-            spawnVisualisationParticles(viewer);
-        }
+    public A getA() {
+        return this.a;
     }
 
-    public void spawnVisualisationParticles(Player player){
-        particleSpawner.spawnParticle(player, Particle.TRAIN_HEAD_PARTICLE, train.getCurrentHeadLocation(), 1, 0.01, 0.01, 0.01);
+    public void setA(A var0) {
+        this.a = var0;
+    }
+
+    public B getB() {
+        return this.b;
+    }
+
+    public void setB(B var0) {
+        this.b = var0;
     }
 }

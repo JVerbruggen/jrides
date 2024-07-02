@@ -25,6 +25,8 @@ import com.jverbruggen.jrides.animator.smoothanimation.SmoothCoastersSmoothAnima
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.factory.TrackBehaviourFactory;
 import com.jverbruggen.jrides.animator.coaster.trackbehaviour.result.CartMovementFactory;
 import com.jverbruggen.jrides.common.MenuSessionManager;
+import com.jverbruggen.jrides.common.particle.ParticleSpawner;
+import com.jverbruggen.jrides.common.particle.ParticleSpawnerFactory;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.trigger.TriggerConfigFactory;
 import com.jverbruggen.jrides.control.controller.RideControllerFactory;
@@ -86,6 +88,7 @@ public class ServiceProviderConfigurator {
         File dataFolder = plugin.getDataFolder();
 
         ServiceProvider.register(MenuSessionManager.class, new MenuSessionManager());
+        ServiceProvider.register(ParticleSpawner.class, ParticleSpawnerFactory.getParticleSpawner());
         ServiceProvider.register(MessageAgentManager.class, new MessageAgentManager());
         ServiceProvider.register(RideCounterManager.class, new RideCounterManager());
         ServiceProvider.register(ControlModeFactory.class, new ControlModeFactory());

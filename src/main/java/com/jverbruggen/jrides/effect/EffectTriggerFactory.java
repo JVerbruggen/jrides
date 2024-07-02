@@ -17,6 +17,7 @@
 
 package com.jverbruggen.jrides.effect;
 
+import com.jverbruggen.jrides.common.Tuple;
 import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.trigger.TriggerConfig;
 import com.jverbruggen.jrides.effect.handle.EffectTriggerHandle;
@@ -27,8 +28,6 @@ import com.jverbruggen.jrides.models.properties.frame.factory.FrameFactory;
 import com.jverbruggen.jrides.models.ride.RideType;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
-import net.minecraft.util.Tuple;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.*;

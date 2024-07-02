@@ -15,32 +15,29 @@
  * inflicted by the software.                                                                               *
  ************************************************************************************************************/
 
-package com.jverbruggen.jrides.animator.coaster.tool;
+package com.jverbruggen.jrides.common.particle;
 
-import com.jverbruggen.jrides.common.particle.Particle;
-import com.jverbruggen.jrides.common.particle.ParticleSpawner;
-import com.jverbruggen.jrides.models.entity.Player;
-import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import org.bukkit.Bukkit;
 
-public class ParticleTrainVisualisationTool extends ParticleVisualisationTool {
-    private final ParticleSpawner particleSpawner;
-    private final Train train;
+public class ParticleSpawnerFactory {
+    public static ParticleSpawner getParticleSpawner(){
+        String currentVersion = Bukkit.getVersion();
+        ParticleSpawner particleSpawner = null;
 
-    public ParticleTrainVisualisationTool(Train train){
-        super(5);
-        this.particleSpawner = ServiceProvider.getSingleton(ParticleSpawner.class);
-        this.train = train;
-    }
-
-    @Override
-    public void tick(){
-        for(Player viewer : getViewers()){
-            spawnVisualisationParticles(viewer);
+        if(currentVersion.contains("1.19.2")
+                || currentVersion.contains("1.20.1")
+                || currentVersion.contains("1.20.2")
+                || currentVersion.contains("1.20.3")
+                || currentVersion.contains("1.20.4")){
+            particleSpawner = new ParticleSpawner_Pre_1_20_5();
+        }else if(currentVersion.contains("1.20.5")
+                || currentVersion.contains("1.20.6")){
+            particleSpawner = new ParticleSpawner_1_20_5();
         }
-    }
 
-    public void spawnVisualisationParticles(Player player){
-        particleSpawner.spawnParticle(player, Particle.TRAIN_HEAD_PARTICLE, train.getCurrentHeadLocation(), 1, 0.01, 0.01, 0.01);
+        if(particleSpawner == null)
+            throw new RuntimeException("No particle spawner implemented for bukkit version '" + currentVersion + "'");
+
+        return particleSpawner;
     }
 }
