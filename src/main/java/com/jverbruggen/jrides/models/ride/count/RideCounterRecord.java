@@ -69,6 +69,10 @@ public class RideCounterRecord implements ConfigurationSerializable {
         rideCount++;
     }
 
+    public void set(int count){
+        rideCount = count;
+    }
+
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> config = new HashMap<>();

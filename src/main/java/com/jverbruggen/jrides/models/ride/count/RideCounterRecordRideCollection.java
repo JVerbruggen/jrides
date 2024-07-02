@@ -27,8 +27,6 @@ import java.util.*;
 
 /**
  * Ride-bound ride counter record collection.
- * Used for saving 'top x records' bound to a ride.
- * Only a few records apply for being present on this board.
  */
 public class RideCounterRecordRideCollection implements ConfigurationSerializable {
     private final List<RideCounterRecord> records;
@@ -48,13 +46,18 @@ public class RideCounterRecordRideCollection implements ConfigurationSerializabl
         return this.records.stream().filter(r -> r.sameIdentityAs(record)).findFirst().orElse(null);
     }
 
+    public RideCounterRecord findOrCreate(JRidesPlayer player){
+        Optional<RideCounterRecord> record = this.records.stream().filter(r -> r.getPlayerUUID().equals(player.getUniqueId())).findFirst();
+        if(record.isPresent()) return record.get();
+
+        RideCounterRecord newRecord = new RideCounterRecord(rideHandle.getRide(), player.getName(), player.getUniqueId(), 0);
+        this.records.add(newRecord);
+        return newRecord;
+    }
+
     public boolean existsOn(JRidesPlayer player){
         Optional<RideCounterRecord> record = this.records.stream().filter(r -> r.getPlayerUUID().equals(player.getUniqueId())).findFirst();
         return record.isPresent();
-    }
-
-    public boolean existsOn(RideCounterRecord record){
-        return this.records.stream().anyMatch(r -> r.sameIdentityAs(record));
     }
 
     public List<RideCounterRecord> getRecords() {

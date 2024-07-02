@@ -19,8 +19,8 @@ package com.jverbruggen.jrides.models.ride.count;
 
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.api.JRidesRide;
-import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
 import com.jverbruggen.jrides.event.player.PlayerQuitEvent;
+import com.jverbruggen.jrides.event.ride.RideFinishedEvent;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideCounterManager;
 import org.bukkit.event.EventHandler;
@@ -34,17 +34,23 @@ public class RideCounterListener implements Listener {
     }
 
     @EventHandler
-    public void onFinishRide(PlayerFinishedRideEvent event){
-        JRidesPlayer player = event.getPlayer();
+    public void onRideFinish(RideFinishedEvent event) {
         JRidesRide ride = event.getRide();
+        RideCounterRecordRideCollection rideBoundCollection = rideCounterManager.getCollectionRideBound(ride.getIdentifier());
 
-        RideCounterRecordCollection collection = rideCounterManager.getCollection(player.getIdentifier());
-        RideCounterRecord record = collection.findOrCreate(ride.getIdentifier(), player);
+        for (JRidesPlayer player : event.getPlayers()) {
+            RideCounterRecordCollection collection = rideCounterManager.getCollection(player.getIdentifier());
+            RideCounterRecord record = collection.findOrCreate(ride.getIdentifier(), player);
+            record.addOne();
 
-        record.addOne();
+            RideCounterRecord rideBoundRecord = rideBoundCollection.findOrCreate(player);
+            rideBoundRecord.set(record.getRideCount());
 
-        rideCounterManager.sendRideCounterUpdateMessage(player, record);
-        rideCounterManager.saveToFile(player.getIdentifier(), collection);
+            rideCounterManager.sendRideCounterUpdateMessage(player, record);
+            rideCounterManager.saveToFile(player.getIdentifier(), collection);
+        }
+
+        rideCounterManager.saveToRideFile(ride.getIdentifier(), rideBoundCollection);
     }
 
     @EventHandler

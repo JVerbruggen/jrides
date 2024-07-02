@@ -95,6 +95,7 @@ public class LanguageFile {
         setLanguageDefault(LanguageFileField.ERROR_OPERATING_NO_PERMISSION, "You are not allowed to operate this ride");
         setLanguageDefault(LanguageFileField.ERROR_RIDE_CONTROL_MENU_NOT_FOUND, "Ride control menu was not found");
         setLanguageDefault(LanguageFileField.ERROR_RIDE_OVERVIEW_MAP_NOT_FOUND, "Could not retrieve map for ride %" + LanguageFileTag.rideIdentifier + "%, was the map id configured?");
+        setLanguageDefault(LanguageFileField.ERROR_RIDE_COUNTER_MAP_NOT_FOUND, "Could not retrieve ride counter map for ride %" + LanguageFileTag.rideIdentifier + "%, was the map id configured?");
         setLanguageDefault(LanguageFileField.ERROR_CANNOT_WARP, "Could not warp to ride %" + LanguageFileTag.rideDisplayName + "%");
 
         setLanguageDefault(LanguageFileField.MENU_RIDE_OVERVIEW_TITLE, "Ride overview menu");
