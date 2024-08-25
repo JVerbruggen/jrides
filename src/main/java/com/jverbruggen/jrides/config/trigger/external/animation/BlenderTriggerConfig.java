@@ -17,43 +17,61 @@
 
 package com.jverbruggen.jrides.config.trigger.external.animation;
 
-import com.jverbruggen.jrides.animator.animatedjava.AnimatedJavaExecutor;
+import com.jverbruggen.jrides.animator.blender.BlenderAnimationExecutor;
+import com.jverbruggen.jrides.config.coaster.objects.item.ItemStackConfig;
 import com.jverbruggen.jrides.config.trigger.BaseTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.TriggerType;
 import com.jverbruggen.jrides.effect.EffectTrigger;
-import com.jverbruggen.jrides.effect.external.animation.AnimatedJavaEffectTrigger;
+import com.jverbruggen.jrides.effect.external.animation.BlenderEffectTrigger;
+import com.jverbruggen.jrides.models.entity.TrainModelItem;
+import com.jverbruggen.jrides.models.entity.VirtualEntity;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import com.jverbruggen.jrides.state.ride.flatride.AnimationHandle;
+import com.jverbruggen.jrides.state.ride.flatride.AnimationLoader;
+import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class AnimatedJavaTriggerConfig extends BaseTriggerConfig {
+public class BlenderTriggerConfig extends BaseTriggerConfig {
     private final Vector3 location;
-    private final String rigName;
     private final String animationName;
-    private final String rootEntitySelectorTag;
+    private final String reuseEntity;
     private final int despawnAfterTicks;
+    private final boolean preloadAnim;
+    private final ItemStackConfig headModelConfig;
 
-    public AnimatedJavaTriggerConfig(Vector3 location, String rigName, String animationName, String rootEntitySelectorTag, int despawnAfterTicks) {
+    public BlenderTriggerConfig(Vector3 location, String animationName, String reuseEntity, int despawnAfterTicks, boolean preloadAnim, ItemStackConfig headModelConfig) {
         super(TriggerType.ANIMATED_JAVA);
         this.location = location;
-        this.rigName = rigName;
         this.animationName = animationName;
-        this.rootEntitySelectorTag = rootEntitySelectorTag;
+        this.reuseEntity = reuseEntity;
         this.despawnAfterTicks = despawnAfterTicks;
+        this.preloadAnim = preloadAnim;
+        this.headModelConfig = headModelConfig;
     }
 
-    public static AnimatedJavaTriggerConfig fromConfigurationSection(ConfigurationSection configurationSection){
+    public static BlenderTriggerConfig fromConfigurationSection(ConfigurationSection configurationSection){
         Vector3 location = Vector3.fromDoubleList(getDoubleList(configurationSection, "location"));
-        String rigName = getString(configurationSection, "rigName");
         String animationName = getString(configurationSection, "animationName");
-        String rootEntitySelectorTag = getString(configurationSection, "rootEntitySelectorTag");
+        String reuseEntity = getString(configurationSection, "reuseEntity", null);
+        boolean preloadAnim = getBoolean(configurationSection, "preloadAnim", false);
         int despawnAfterTicks = getInt(configurationSection, "despawnOnFinish", -1);
+        ItemStackConfig headModelConfig = ItemStackConfig.fromConfigurationSection(configurationSection.getConfigurationSection("item"));
 
-        return new AnimatedJavaTriggerConfig(location, rigName, animationName, rootEntitySelectorTag, despawnAfterTicks);
+        return new BlenderTriggerConfig(location, animationName, reuseEntity, despawnAfterTicks, preloadAnim, headModelConfig);
     }
 
     @Override
     public EffectTrigger createTrigger(String rideIdentifier) {
-        AnimatedJavaExecutor executor = new AnimatedJavaExecutor(rootEntitySelectorTag, rigName, location);
-        return new AnimatedJavaEffectTrigger(executor, animationName, despawnAfterTicks);
+        TrainModelItem headModel = new TrainModelItem(headModelConfig.createItemStack());
+
+        VirtualEntity targetEntity = ServiceProvider.getSingleton(ViewportManager.class).findOrSpawnModelEntity(reuseEntity, location, headModel);
+        AnimationHandle animationHandle = ServiceProvider.getSingleton(AnimationLoader.class).loadCoasterEffectAnimation(animationName, rideIdentifier);
+        BlenderAnimationExecutor blenderAnimationExecutor = new BlenderAnimationExecutor(location, animationHandle, targetEntity, animationName);
+
+        if(preloadAnim)
+            blenderAnimationExecutor.playAnimationFrame();
+
+        return new BlenderEffectTrigger(blenderAnimationExecutor, targetEntity, despawnAfterTicks);
     }
 }

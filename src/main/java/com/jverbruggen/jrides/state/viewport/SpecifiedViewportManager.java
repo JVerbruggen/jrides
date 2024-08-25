@@ -66,6 +66,11 @@ public class SpecifiedViewportManager implements ViewportManager{
     }
 
     @Override
+    public VirtualEntity findOrSpawnModelEntity(String identifier, Vector3 location, TrainModelItem headModel) {
+        return null;
+    }
+
+    @Override
     public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem trainModelItem) {
         return null;
     }

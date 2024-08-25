@@ -21,12 +21,14 @@ import com.jverbruggen.jrides.animator.RideHandle;
 import com.jverbruggen.jrides.event.action.RideAction;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.models.ride.CanSpawn;
+import com.jverbruggen.jrides.models.ride.Has6DOFPosition;
 import com.jverbruggen.jrides.models.ride.seat.Seat;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface VirtualEntity {
+public interface VirtualEntity extends Has6DOFPosition, CanSpawn {
     String getUniqueIdentifier();
     UUID getUUID();
     int getEntityId();

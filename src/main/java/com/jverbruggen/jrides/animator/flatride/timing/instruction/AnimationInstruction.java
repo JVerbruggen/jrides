@@ -17,46 +17,44 @@
 
 package com.jverbruggen.jrides.animator.flatride.timing.instruction;
 
+import com.jverbruggen.jrides.animator.blender.BlenderAnimationExecutor;
 import com.jverbruggen.jrides.animator.flatride.BlenderExportPositionRecord;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
-import com.jverbruggen.jrides.animator.flatride.interfaces.Component6DOFPosition;
-import com.jverbruggen.jrides.state.ride.flatride.Animation;
-import com.jverbruggen.jrides.state.ride.flatride.AnimationHandle;
+import com.jverbruggen.jrides.models.ride.Has6DOFPosition;
 
 public class AnimationInstruction implements Instruction {
-    private final AnimationHandle animationHandle;
-    private int frameIndexState;
+    private final BlenderAnimationExecutor blenderAnimationExecutor;
 
-    public AnimationInstruction(AnimationHandle animationHandle) {
-        this.animationHandle = animationHandle;
-        this.frameIndexState = 0;
+    public AnimationInstruction(BlenderAnimationExecutor blenderAnimationExecutor) {
+        this.blenderAnimationExecutor = blenderAnimationExecutor;
     }
 
     @Override
     public void applyTo(FlatRideComponent component) {
-        Animation animation = animationHandle.getAnimation(component.getIdentifier());
-        if(animation.getFrames().size() <= frameIndexState) return;
+        BlenderExportPositionRecord position = blenderAnimationExecutor
+                .withAnimationTarget(component.getIdentifier())
+                .getPositionRecordOrNull();
 
-        BlenderExportPositionRecord position = animation.getFrames().get(frameIndexState);
+        if(position == null) return;
 
-        ((Component6DOFPosition)component).setPositionRotation(
+        ((Has6DOFPosition)component).setPositionRotation(
                 position.toMinecraftVector(),
                 position.toMinecraftQuaternion());
     }
 
     @Override
     public boolean canHandle(FlatRideComponent component) {
-        return component instanceof Component6DOFPosition;
+        return component instanceof Has6DOFPosition;
     }
 
     @Override
     public void tick() {
-        frameIndexState++;
+        blenderAnimationExecutor.nextFrame();
     }
 
     @Override
     public void reset() {
-        frameIndexState = 0;
+        blenderAnimationExecutor.reset();
     }
 
     @Override

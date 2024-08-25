@@ -34,7 +34,7 @@ public class ResetTriggerConfig extends BaseTriggerConfig {
     }
 
     @Override
-    public EffectTrigger createTrigger() {
+    public EffectTrigger createTrigger(String rideIdentifier) {
         return new ResetEffectTrigger();
     }
 }

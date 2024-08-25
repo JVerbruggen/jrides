@@ -15,49 +15,51 @@
  * inflicted by the software.                                                                               *
  ************************************************************************************************************/
 
-package com.jverbruggen.jrides.config.trigger.music;
+package com.jverbruggen.jrides.effect.external.animation;
 
-import com.jverbruggen.jrides.config.trigger.BaseTriggerConfig;
-import com.jverbruggen.jrides.config.trigger.TriggerType;
-import com.jverbruggen.jrides.effect.train.TrainEffectTrigger;
-import com.jverbruggen.jrides.effect.train.music.ExternalMusicEffectTrigger;
-import org.bukkit.configuration.ConfigurationSection;
+import com.jverbruggen.jrides.animator.blender.BlenderAnimationExecutor;
+import com.jverbruggen.jrides.common.Sync;
+import com.jverbruggen.jrides.effect.train.BaseTrainEffectTrigger;
+import com.jverbruggen.jrides.models.ride.CanSpawn;
+import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
-public class MusicTriggerConfig extends BaseTriggerConfig {
-    private final MusicTriggerConfigHandler handler;
-    private final String resource;
-    private final String descriptor;
+public class BlenderEffectTrigger extends BaseTrainEffectTrigger {
+    private final BlenderAnimationExecutor executor;
+    private final CanSpawn spawnTarget;
+    private final int despawnAfterTicks;
 
-    public MusicTriggerConfig(MusicTriggerConfigHandler handler, String resource, String descriptor) {
-        super(TriggerType.MUSIC);
-        this.handler = handler;
-        this.resource = resource;
-        this.descriptor = descriptor;
+    public BlenderEffectTrigger(BlenderAnimationExecutor executor, CanSpawn spawnTarget, int despawnAfterTicks) {
+        this.executor = executor;
+        this.spawnTarget = spawnTarget;
+        this.despawnAfterTicks = despawnAfterTicks;
     }
 
-    @SuppressWarnings("unused")
-    public MusicTriggerConfigHandler getHandler() {
-        return handler;
-    }
-
-    public String getDescriptor() {
-        return descriptor;
-    }
-
-    public String getResource() {
-        return resource;
-    }
-
-    public static MusicTriggerConfig fromConfigurationSection(ConfigurationSection configurationSection){
-        MusicTriggerConfigHandler handler = MusicTriggerConfigHandler.fromString(getString(configurationSection, "handler"));
-        String resource = getString(configurationSection, "resource");
-        String descriptor = getString(configurationSection, "descriptor", "default");
-
-        return new MusicTriggerConfig(handler, resource, descriptor);
+    public BlenderEffectTrigger(BlenderAnimationExecutor executor) {
+        this.executor = executor;
+        this.spawnTarget = null;
+        this.despawnAfterTicks = -1;
     }
 
     @Override
-    public TrainEffectTrigger createTrigger(String rideIdentifier) {
-        return new ExternalMusicEffectTrigger(getResource(), getDescriptor());
+    public boolean finishedPlaying() {
+        return true;
+    }
+
+    @Override
+    public boolean execute(Train train) {
+        if(spawnTarget != null && !spawnTarget.isSpawned()){
+            spawnTarget.spawn();
+        }
+        executor.playAnimationFull();
+
+        if(spawnTarget != null && despawnAfterTicks > -1)
+            Sync.runAfter(spawnTarget::despawn, despawnAfterTicks);
+
+        return true;
+    }
+
+    @Override
+    public boolean executeReversed(Train train) {
+        return execute(train);
     }
 }

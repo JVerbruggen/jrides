@@ -52,7 +52,7 @@ public class EffectTriggerFactory {
         EffectTrigger effectTrigger;
         String mapKey = rideIdentifier + ":" + effectName;
         if(!effectTriggerMap.containsKey(mapKey)){
-            effectTrigger = triggerConfig.createTrigger();
+            effectTrigger = triggerConfig.createTrigger(rideIdentifier);
 
             effectTriggerMap.put(mapKey, effectTrigger);
         }else{

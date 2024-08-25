@@ -71,7 +71,7 @@ public class MultiEntityMovementConfig extends BaseTriggerConfig {
     }
 
     @Override
-    public TrainEffectTrigger createTrigger() {
+    public TrainEffectTrigger createTrigger(String rideIdentifier) {
         ViewportManager viewportManager = ServiceProvider.getSingleton(ViewportManager.class);
         List<TrainEffectTrigger> entityMovementTriggers = createTriggers(viewportManager);
 

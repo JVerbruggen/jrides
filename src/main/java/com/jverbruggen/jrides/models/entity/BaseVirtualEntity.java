@@ -24,6 +24,7 @@ import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.seat.Seat;
 import com.jverbruggen.jrides.packets.PacketSender;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.Bukkit;
 
@@ -180,6 +181,12 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
         moveEntity(Vector3.zero(), packetYaw);
     }
 
+    @Override
+    public void setPositionRotation(Vector3 position, Quaternion rotation) {
+        setLocation(position);
+        setRotation(rotation);
+    }
+
     protected abstract void moveEntity(Vector3 delta, double yawRotation);
 
     protected abstract void teleportEntity(Vector3 newLocation);
@@ -214,7 +221,13 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
     }
 
     @Override
+    public void spawnFor(Player player) {
+        spawned = true;
+    }
+
+    @Override
     public void spawnForAll(List<Player> players, boolean hard) {
+        spawned = true;
         for(Player player : players){
             if(isViewer(player) && !hard) continue;
             spawnFor(player);
@@ -226,6 +239,16 @@ public abstract class BaseVirtualEntity implements VirtualEntity {
             if(!isViewer(player)) continue;
             despawnFor(player, unview);
         }
+    }
+
+    @Override
+    public void spawn() {
+        viewportManager.updateForEntity(this);
+    }
+
+    @Override
+    public boolean isSpawned() {
+        return spawned;
     }
 
     @Override

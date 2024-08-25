@@ -17,6 +17,7 @@
 
 package com.jverbruggen.jrides.state.ride.flatride;
 
+import com.jverbruggen.jrides.animator.coaster.CoasterHandle;
 import com.jverbruggen.jrides.animator.flatride.BlenderExportPositionRecord;
 import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.config.ConfigManager;
@@ -38,20 +39,16 @@ public class AnimationLoader {
     private final File dataFolder;
     private final ConfigManager configManager;
     private final HashMap<String, AnimationHandle> cachedFlatRideAnimationHandles;
+    private final HashMap<String, AnimationHandle> cachedCoasterEffectAnimationHandles;
 
     public AnimationLoader(File dataFolder) {
         this.dataFolder = dataFolder;
         this.configManager = ServiceProvider.getSingleton(ConfigManager.class);
-        this.cachedFlatRideAnimationHandles = new LinkedHashMap<>();
+        this.cachedFlatRideAnimationHandles = new HashMap<>();
+        this.cachedCoasterEffectAnimationHandles = new HashMap<>();
     }
 
-    public AnimationHandle loadFlatRideAnimation(String animationHandleIdentifier, FlatRideHandle flatRideHandle){
-        if(cachedFlatRideAnimationHandles.containsKey(animationHandleIdentifier))
-            return cachedFlatRideAnimationHandles.get(animationHandleIdentifier);
-
-        Ride ride = flatRideHandle.getRide();
-        String rideIdentifier = ride.getIdentifier();
-        String configFileName = configManager.getFlatrideFolder(rideIdentifier) + "/animations/" + rideIdentifier + "." + animationHandleIdentifier + ".csv";
+    private AnimationHandle loadAnimation(String configFileName){
         File configFile = new File(dataFolder, configFileName);
         Path pathToConfigFile = configFile.toPath();
         List<BlenderExportPositionRecord> positions = new ArrayList<>();
@@ -72,8 +69,31 @@ public class AnimationLoader {
             ioe.printStackTrace();
         }
 
-        AnimationHandle animationHandle = AnimationHandle.createAnimationHandle(positions);
+        return AnimationHandle.createAnimationHandle(positions);
+    }
+
+    public AnimationHandle loadFlatRideAnimation(String animationHandleIdentifier, FlatRideHandle flatRideHandle){
+        if(cachedFlatRideAnimationHandles.containsKey(animationHandleIdentifier))
+            return cachedFlatRideAnimationHandles.get(animationHandleIdentifier);
+
+        Ride ride = flatRideHandle.getRide();
+        String rideIdentifier = ride.getIdentifier();
+        String configFileName = configManager.getFlatrideFolder(rideIdentifier) + "/animations/" + rideIdentifier + "." + animationHandleIdentifier + ".csv";
+
+        AnimationHandle animationHandle = loadAnimation(configFileName);
         cachedFlatRideAnimationHandles.put(animationHandleIdentifier, animationHandle);
+
+        return animationHandle;
+    }
+
+    public AnimationHandle loadCoasterEffectAnimation(String animationHandleIdentifier, String rideIdentifier){
+        if(cachedCoasterEffectAnimationHandles.containsKey(animationHandleIdentifier))
+            return cachedCoasterEffectAnimationHandles.get(animationHandleIdentifier);
+
+        String configFileName = configManager.getCoasterFolder(rideIdentifier) + "/animations/" + rideIdentifier + "." + animationHandleIdentifier + ".csv";
+
+        AnimationHandle animationHandle = loadAnimation(configFileName);
+        cachedCoasterEffectAnimationHandles.put(animationHandleIdentifier, animationHandle);
 
         return animationHandle;
     }

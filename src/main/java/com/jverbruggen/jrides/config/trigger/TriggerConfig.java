@@ -21,5 +21,5 @@ import com.jverbruggen.jrides.effect.EffectTrigger;
 
 public interface TriggerConfig {
     TriggerType getType();
-    EffectTrigger createTrigger();
+    EffectTrigger createTrigger(String rideIdentifier);
 }

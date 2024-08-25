@@ -38,7 +38,7 @@ public class CommandTriggerConfig extends BaseTriggerConfig {
     }
 
     @Override
-    public EffectTrigger createTrigger() {
+    public EffectTrigger createTrigger(String rideIdentifier) {
         return new CommandEffectTrigger(command);
     }
 }

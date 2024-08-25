@@ -69,6 +69,8 @@ public class VirtualFallingBlock extends BaseVirtualEntity {
 
     @Override
     public void spawnFor(Player player) {
+        super.spawnFor(player);
+
         addViewer(player);
 
         if(!rendered)

@@ -36,6 +36,7 @@ public class GlobalViewportManager implements ViewportManager {
     private final PacketSender packetSender;
     private final EntityIdFactory entityIdFactory;
     private final HashMap<Integer, VirtualEntity> entities;
+    private final HashMap<String, VirtualEntity> reusableEntities;
 
     private final int renderDistance;
     private final int renderChunkSize;
@@ -46,6 +47,7 @@ public class GlobalViewportManager implements ViewportManager {
         this.packetSender = packetSender;
         this.entityIdFactory = entityIdFactory;
         this.entities = new HashMap<>();
+        this.reusableEntities = new HashMap<>();
 
         this.renderDistance = renderDistance;
         this.renderChunkSize = renderChunkSize;
@@ -98,6 +100,19 @@ public class GlobalViewportManager implements ViewportManager {
     @Override
     public void updateForEntity(VirtualEntity virtualEntity) {
         globalViewport.updateEntityViewers(virtualEntity);
+    }
+
+    @Override
+    public VirtualEntity findOrSpawnModelEntity(String identifier, Vector3 location, TrainModelItem headModel) {
+        if(identifier == null) return spawnModelEntity(location, headModel);
+
+        if(reusableEntities.containsKey(identifier)){
+            return reusableEntities.get(identifier);
+        }
+
+        VirtualEntity virtualEntity = spawnModelEntity(location, headModel);
+        reusableEntities.put(identifier, virtualEntity);
+        return virtualEntity;
     }
 
     @Override
