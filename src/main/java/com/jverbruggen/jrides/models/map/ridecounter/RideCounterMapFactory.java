@@ -196,7 +196,7 @@ public class RideCounterMapFactory extends AbstractMapFactory {
         String rideIdentifier = rideHandle.getRide().getIdentifier();
         VirtualMap map = getMap(String.format("%s %s", rideIdentifier, rideCounterMapIdentifier));
         if(map == null){
-            languageFile.sendMessage(player, LanguageFileField.ERROR_RIDE_OVERVIEW_MAP_NOT_FOUND,
+            languageFile.sendMessage(player, LanguageFileField.ERROR_RIDE_COUNTER_MAP_NOT_FOUND,
                     builder -> builder.add(LanguageFileTag.rideIdentifier, rideIdentifier));
             return;
         }
