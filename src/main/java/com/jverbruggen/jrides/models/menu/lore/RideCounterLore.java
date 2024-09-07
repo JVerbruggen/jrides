@@ -15,10 +15,35 @@
  * inflicted by the software.                                                                               *
  ************************************************************************************************************/
 
-package com.jverbruggen.jrides.packets.listener;
+package com.jverbruggen.jrides.models.menu.lore;
 
-import com.comphenix.protocol.events.PacketListener;
+import com.jverbruggen.jrides.JRidesPlugin;
+import com.jverbruggen.jrides.animator.RideHandle;
+import com.jverbruggen.jrides.api.JRidesPlayer;
+import com.jverbruggen.jrides.language.LanguageFileField;
+import com.jverbruggen.jrides.language.LanguageFileTag;
+import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.ride.Ride;
+import com.jverbruggen.jrides.models.ride.count.RideCounterRecord;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
+import com.jverbruggen.jrides.state.player.PlayerManager;
 
-public interface VirtualEntityPacketListener extends PacketListener {
-    String getIdentifier();
+public class RideCounterLore implements Lore{
+    private final RideHandle rideHandle;
+
+    public RideCounterLore(RideHandle rideHandle) {
+        this.rideHandle = rideHandle;
+    }
+
+    @Override
+    public String resolveLore(JRidesPlayer player) {
+        Ride ride = rideHandle.getRide();
+        Player actualPlayer = ServiceProvider.getSingleton(PlayerManager.class).getPlayer(player.getBukkitPlayer());
+
+        RideCounterRecord rideCounterRecord = actualPlayer.getRideCounters().findOrCreate(ride.getIdentifier(), player);
+        return JRidesPlugin.getLanguageFile()
+                .get(LanguageFileField.MENU_RIDE_COUNTER_INDICATOR,
+                        b -> b.add(LanguageFileTag.rideDisplayName, ride.getDisplayName())
+                                .add(LanguageFileTag.rideCount, "" + rideCounterRecord.getRideCount()));
+    }
 }

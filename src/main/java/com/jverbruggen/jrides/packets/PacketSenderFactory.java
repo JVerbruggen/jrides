@@ -21,6 +21,9 @@ import com.jverbruggen.jrides.JRidesPlugin;
 import com.jverbruggen.jrides.packets.impl.PacketSender_1_19_2;
 import com.jverbruggen.jrides.packets.impl.PacketSender_1_20_1;
 import com.jverbruggen.jrides.packets.impl.PacketSender_1_20_4;
+import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener;
+import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener_1_19_2;
+import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener_1_20_4;
 import org.bukkit.Bukkit;
 
 public class PacketSenderFactory {
@@ -43,5 +46,26 @@ public class PacketSenderFactory {
         JRidesPlugin.getLogger().info("Using packet sender for '" + packetSender.getIdentifier() + "' (bukkit version '" + currentVersion + "')");
 
         return packetSender;
+    }
+
+    public static VirtualEntityPacketListener getPacketListener(){
+        String currentVersion = Bukkit.getVersion();
+        boolean debugMode = false;
+        VirtualEntityPacketListener packetListener = null;
+
+        if(currentVersion.contains("1.19.2")){
+            packetListener = new VirtualEntityPacketListener_1_19_2();
+        }else if(currentVersion.contains("1.20.4")){
+            packetListener = new VirtualEntityPacketListener_1_20_4();
+        }else if(currentVersion.contains("1.20")){
+            packetListener = new VirtualEntityPacketListener_1_20_4();
+        }
+
+        if(packetListener == null)
+            throw new RuntimeException("No packet listener implemented for bukkit version '" + currentVersion + "'");
+
+        JRidesPlugin.getLogger().info("Using packet listener for '" + packetListener.getIdentifier() + "' (bukkit version '" + currentVersion + "')");
+
+        return packetListener;
     }
 }

@@ -17,10 +17,12 @@
 
 package com.jverbruggen.jrides.control.uiinterface.menu.button.common;
 
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.control.controller.RideController;
 import com.jverbruggen.jrides.items.ItemStackFactory;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.menu.ButtonVisual;
+import com.jverbruggen.jrides.models.menu.lore.LoreSet;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -80,7 +82,7 @@ public class CabinOccupationVisual implements ButtonVisual {
     }
 
     @Override
-    public ItemStack toItemStack() {
+    public ItemStack toItemStack(JRidesPlayer player) {
         if(!isBeingOperated()){
             return ItemStackFactory.getRideControlButtonStack(getButtonMaterial(), getValue());
         }
@@ -99,7 +101,7 @@ public class CabinOccupationVisual implements ButtonVisual {
     }
 
     @Override
-    public List<String> getLore() {
+    public List<String> getLore(JRidesPlayer player) {
         return List.of();
     }
 
@@ -111,5 +113,25 @@ public class CabinOccupationVisual implements ButtonVisual {
     @Override
     public boolean needsFullItemStackReload() {
         return true;
+    }
+
+    @Override
+    public void changeDisplayName(String displayName) {
+
+    }
+
+    @Override
+    public void changeMaterial(Material material) {
+
+    }
+
+    @Override
+    public void changeTitleColor(ChatColor color) {
+
+    }
+
+    @Override
+    public void changeLore(LoreSet loreSet) {
+
     }
 }

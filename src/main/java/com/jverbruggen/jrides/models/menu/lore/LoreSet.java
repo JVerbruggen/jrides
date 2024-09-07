@@ -15,10 +15,45 @@
  * inflicted by the software.                                                                               *
  ************************************************************************************************************/
 
-package com.jverbruggen.jrides.packets.listener;
+package com.jverbruggen.jrides.models.menu.lore;
 
-import com.comphenix.protocol.events.PacketListener;
+import com.jverbruggen.jrides.api.JRidesPlayer;
 
-public interface VirtualEntityPacketListener extends PacketListener {
-    String getIdentifier();
+import java.util.ArrayList;
+import java.util.List;
+
+public class LoreSet {
+    private final List<Lore> lores;
+
+    public LoreSet(List<Lore> lores) {
+        this.lores = lores;
+    }
+
+    public LoreSet(){
+        this.lores = new ArrayList<>();
+    }
+
+    public void add(Lore lore){
+        lores.add(lore);
+    }
+
+    public LoreSet clone(){
+        return new LoreSet(new ArrayList<>(lores));
+    }
+
+    public static LoreSet fromStringList(List<String> stringList){
+        return new LoreSet(new ArrayList<>(stringList.stream().map(s -> (Lore) new TextLore(s)).toList()));
+    }
+
+    public static LoreSet empty(){
+        return new LoreSet();
+    }
+
+    public List<String> resolve(JRidesPlayer player){
+        return new ArrayList<>(lores.stream().map(l -> l.resolveLore(player)).toList());
+    }
+
+    public int size(){
+        return lores.size();
+    }
 }

@@ -15,10 +15,30 @@
  * inflicted by the software.                                                                               *
  ************************************************************************************************************/
 
-package com.jverbruggen.jrides.packets.listener;
+package com.jverbruggen.jrides.config.global;
 
-import com.comphenix.protocol.events.PacketListener;
+import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 
-public interface VirtualEntityPacketListener extends PacketListener {
-    String getIdentifier();
+public class RidesMenuConfig extends BaseConfig {
+    private final boolean showCounters;
+
+    public RidesMenuConfig(boolean showCounters) {
+        this.showCounters = showCounters;
+    }
+
+    public boolean shouldShowCounters() {
+        return showCounters;
+    }
+
+    public static void fillDefaults(YamlConfiguration yamlConfiguration){
+        yamlConfiguration.set("config.ridesMenu.showCounters", true);
+    }
+
+    public static RidesMenuConfig fromConfigurationSection(ConfigurationSection configurationSection){
+        boolean showCounters = getBoolean(configurationSection, "showCounters", true);
+
+        return new RidesMenuConfig(showCounters);
+    }
 }

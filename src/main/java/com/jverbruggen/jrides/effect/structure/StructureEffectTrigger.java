@@ -41,11 +41,31 @@ public class StructureEffectTrigger extends BaseTrainEffectTrigger {
 
         this.location = position.toBukkitLocation(world);
         this.worldName = world.getName();
-        this.delayedEntityTask = new DelayedEntityTask(this::runTask, delayTicks, 0);
+        this.delayedEntityTask = createTask(delayTicks);
+    }
+
+    private boolean isStructureLibAvailable(){
+        String bukkitVersion = JRidesPlugin.getBukkitPlugin().getServer().getBukkitVersion();
+        return bukkitVersion.contains("1.19")
+                || bukkitVersion.contains("1.20.1")
+                || bukkitVersion.contains("1.20.2")
+                || bukkitVersion.contains("1.20.3")
+                || bukkitVersion.contains("1.20.4");
+    }
+
+    private DelayedEntityTask createTask(int delayTicks){
+        if(isStructureLibAvailable()){
+            return new DelayedEntityTask(this::runTask, delayTicks, 0);
+        }else{
+            JRidesPlugin.getLogger().severe("StructureBlock Lib is ONLY available in 1.19 and 1.20.1-1.20.4");
+            return null;
+        }
     }
 
     private void runTask(){
-        loadStructure();
+        if(isStructureLibAvailable()){
+            loadStructure();
+        }
     }
 
     private void loadStructure(){
@@ -62,11 +82,14 @@ public class StructureEffectTrigger extends BaseTrainEffectTrigger {
 
     @Override
     public boolean finishedPlaying() {
+        if(delayedEntityTask == null) return true;
+
         return delayedEntityTask.isFinished();
     }
 
     @Override
     public boolean execute(Train train) {
+        if(delayedEntityTask == null) return true;
         if(delayedEntityTask.isBusy()) return true;
 
         delayedEntityTask.start();

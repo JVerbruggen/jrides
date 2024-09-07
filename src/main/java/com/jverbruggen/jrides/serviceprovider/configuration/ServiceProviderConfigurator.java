@@ -53,6 +53,7 @@ import com.jverbruggen.jrides.nms.NMSHandlerFactory;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.PacketSenderFactory;
 import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketListener;
+import com.jverbruggen.jrides.packets.listener.VirtualEntityPacketUtils;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideCounterManager;
 import com.jverbruggen.jrides.state.ride.coaster.CoasterLoader;
@@ -124,6 +125,7 @@ public class ServiceProviderConfigurator {
         ServiceProvider.register(RideOverviewMenuFactory.class, new RideOverviewMenuFactory());
         ServiceProvider.register(AnimationLoader.class, new AnimationLoader(dataFolder));
 
-        ServiceProvider.register(VirtualEntityPacketListener.class, new VirtualEntityPacketListener());
+        ServiceProvider.register(VirtualEntityPacketUtils.class, new VirtualEntityPacketUtils());
+        ServiceProvider.register(VirtualEntityPacketListener.class, PacketSenderFactory.getPacketListener());
     }
 }

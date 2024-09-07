@@ -18,6 +18,8 @@
 package com.jverbruggen.jrides.state.ride.menu;
 
 import com.jverbruggen.jrides.animator.RideHandle;
+import com.jverbruggen.jrides.config.ConfigManager;
+import com.jverbruggen.jrides.config.GlobalConfig;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.action.RunnableButtonAction;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.common.StatefulButtonVisual;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.common.StaticButtonVisual;
@@ -28,6 +30,9 @@ import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.menu.ButtonVisual;
 import com.jverbruggen.jrides.models.menu.MenuButton;
 import com.jverbruggen.jrides.models.menu.SimpleMenuButton;
+import com.jverbruggen.jrides.models.menu.lore.LoreSet;
+import com.jverbruggen.jrides.models.menu.lore.RideCounterLore;
+import com.jverbruggen.jrides.models.menu.lore.TextLore;
 import com.jverbruggen.jrides.models.properties.PlayerLocation;
 import com.jverbruggen.jrides.models.ride.state.OpenState;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
@@ -49,17 +54,24 @@ public class RideOverviewMenuButtonFactory {
         ItemStack displayItem = rideHandle.getRide().getDisplayItem();
         if(displayItem == null) displayItem = new ItemStack(Material.STONE, 1);
 
-        List<String> lore = rideHandle.getRide().getDisplayDescription();
-        List<String> openLore = new ArrayList<>(lore);
-        List<String> closedLore = new ArrayList<>(lore);
-        List<String> maintenanceLore = new ArrayList<>(lore);
+        ConfigManager configManager = ServiceProvider.getSingleton(ConfigManager.class);
+        GlobalConfig globalConfig = configManager.getGlobalConfig();
 
-        openLore.add("");
-        openLore.add(ChatColor.GREEN + languageFile.get(LanguageFileField.MENU_RIDE_OVERVIEW_STATUS_OPEN));
-        closedLore.add("");
-        closedLore.add(ChatColor.RED + languageFile.get(LanguageFileField.MENU_RIDE_OVERVIEW_STATUS_CLOSED));
-        maintenanceLore.add("");
-        maintenanceLore.add(ChatColor.DARK_GRAY + languageFile.get(LanguageFileField.MENU_RIDE_OVERVIEW_STATUS_MAINTENANCE));
+        LoreSet baseLoreSet = LoreSet.fromStringList(rideHandle.getRide().getDisplayDescription());
+        if(globalConfig.getRidesMenuConfig().shouldShowCounters()){
+            baseLoreSet.add(new RideCounterLore(rideHandle));
+        }
+
+        LoreSet openLore = baseLoreSet.clone();
+        LoreSet closedLore = baseLoreSet.clone();
+        LoreSet maintenanceLore = baseLoreSet.clone();
+
+        openLore.add(TextLore.from(""));
+        openLore.add(TextLore.from(ChatColor.GREEN + languageFile.get(LanguageFileField.MENU_RIDE_OVERVIEW_STATUS_OPEN)));
+        closedLore.add(TextLore.from(""));
+        closedLore.add(TextLore.from(ChatColor.RED + languageFile.get(LanguageFileField.MENU_RIDE_OVERVIEW_STATUS_CLOSED)));
+        maintenanceLore.add(TextLore.from(""));
+        maintenanceLore.add(TextLore.from(ChatColor.RED + languageFile.get(LanguageFileField.MENU_RIDE_OVERVIEW_STATUS_CLOSED)));
 
         ButtonVisual openVisual = new StaticButtonVisual(displayItem, ChatColor.GOLD, rideHandle.getRide().getDisplayName(), openLore);
         ButtonVisual closedVisual = new StaticButtonVisual(displayItem, ChatColor.RED, rideHandle.getRide().getDisplayName(), closedLore);

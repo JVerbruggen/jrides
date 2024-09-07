@@ -17,22 +17,22 @@
 
 package com.jverbruggen.jrides.control.uiinterface.menu.button;
 
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.control.DispatchLock;
 import com.jverbruggen.jrides.models.menu.*;
 import com.jverbruggen.jrides.models.menu.ButtonVisual;
 import com.jverbruggen.jrides.control.uiinterface.menu.button.controller.ButtonUpdateController;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.menu.lore.LoreSet;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
 import java.util.UUID;
 
 public class LockResembledControlButton extends BaseRideControlButton implements MenuButton {
-    private MenuButton parentButton;
+    private final MenuButton parentButton;
     private boolean buttonOkState;
     private final ButtonVisual buttonBlockedVisual;
     private final ButtonVisual buttonOkVisual;
@@ -63,6 +63,11 @@ public class LockResembledControlButton extends BaseRideControlButton implements
         parentButton.sendUpdate();
     }
 
+    @Override
+    public void forceUpdate() {
+        parentButton.forceUpdate();
+    }
+
     public void changeDisplayName(String displayName){
         parentButton.changeDisplayName(displayName);
     }
@@ -75,12 +80,12 @@ public class LockResembledControlButton extends BaseRideControlButton implements
         parentButton.changeTitleColor(color);
     }
 
-    public void changeLore(List<String> lore){
-        parentButton.changeLore(lore);
+    public void changeLore(LoreSet loreSet){
+        parentButton.changeLore(loreSet);
     }
 
-    public ItemStack getItemStack(){
-        return parentButton.getItemStack();
+    public ItemStack getItemStack(JRidesPlayer player){
+        return parentButton.getItemStack(player);
     }
 
     public void setItemStack(ItemStack itemStack) {
@@ -115,6 +120,8 @@ public class LockResembledControlButton extends BaseRideControlButton implements
     private void updateState(){
         buttonOkState = isLockOk();
         setButtonVisual(getActiveVisual());
+        updateVisual();
+        forceUpdate();
         sendUpdate();
     }
 
@@ -126,8 +133,17 @@ public class LockResembledControlButton extends BaseRideControlButton implements
     }
 
     @Override
+    public void setActiveVisual(ButtonVisual buttonVisual) {
+
+    }
+
+    @Override
     public void updateVisual() {
-        setButtonVisual(getActiveVisual());
-        sendUpdate();
+        ButtonVisual buttonVisual = getActiveVisual();
+        buttonVisual.clearUpdate();
+
+        parentButton.setActiveVisual(buttonVisual);
+//        forceUpdate();
+//        sendUpdate();
     }
 }

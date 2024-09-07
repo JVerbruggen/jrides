@@ -55,7 +55,7 @@ public abstract class BaseMenu implements Menu {
         Inventory inventory = Bukkit.createInventory(player.getBukkitPlayer(), 9*inventoryRows, inventoryTitle);
 
         for(MenuButton button : buttons.values()){
-            inventory.setItem(button.getSlot(), button.getItemStack());
+            inventory.setItem(button.getSlot(), button.getItemStack(player));
         }
 
         return inventory;

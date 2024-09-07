@@ -17,7 +17,10 @@
 
 package com.jverbruggen.jrides.control.uiinterface.menu.button.common;
 
+import com.jverbruggen.jrides.api.JRidesPlayer;
+import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.menu.ButtonVisual;
+import com.jverbruggen.jrides.models.menu.lore.LoreSet;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -72,8 +75,8 @@ public class StatefulButtonVisual<T> implements ButtonVisual {
     }
 
     @Override
-    public ItemStack toItemStack() {
-        return current.toItemStack();
+    public ItemStack toItemStack(JRidesPlayer player) {
+        return current.toItemStack(player);
     }
 
     @Override
@@ -89,8 +92,8 @@ public class StatefulButtonVisual<T> implements ButtonVisual {
     }
 
     @Override
-    public List<String> getLore() {
-        return current.getLore();
+    public List<String> getLore(JRidesPlayer player) {
+        return current.getLore(player);
     }
 
     @Override
@@ -102,5 +105,25 @@ public class StatefulButtonVisual<T> implements ButtonVisual {
     @Override
     public boolean needsFullItemStackReload() {
         return current.needsFullItemStackReload();
+    }
+
+    @Override
+    public void changeDisplayName(String displayName) {
+
+    }
+
+    @Override
+    public void changeMaterial(Material material) {
+
+    }
+
+    @Override
+    public void changeTitleColor(ChatColor color) {
+
+    }
+
+    @Override
+    public void changeLore(LoreSet loreSet) {
+
     }
 }

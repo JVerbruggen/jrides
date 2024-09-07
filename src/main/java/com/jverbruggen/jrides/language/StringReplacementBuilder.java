@@ -17,6 +17,8 @@
 
 package com.jverbruggen.jrides.language;
 
+import org.bukkit.ChatColor;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +51,7 @@ public class StringReplacementBuilder {
         }
 
         if(output == null) throw new RuntimeException("Unexpected output = null when applying input on StringReplacementBuilder");
-        return output;
+
+        return ChatColor.translateAlternateColorCodes('&', output);
     }
 }

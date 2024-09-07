@@ -15,10 +15,23 @@
  * inflicted by the software.                                                                               *
  ************************************************************************************************************/
 
-package com.jverbruggen.jrides.packets.listener;
+package com.jverbruggen.jrides.models.menu.lore;
 
-import com.comphenix.protocol.events.PacketListener;
+import com.jverbruggen.jrides.api.JRidesPlayer;
 
-public interface VirtualEntityPacketListener extends PacketListener {
-    String getIdentifier();
+public class TextLore implements Lore{
+    private final String text;
+
+    public TextLore(String text) {
+        this.text = text;
+    }
+
+    @Override
+    public String resolveLore(JRidesPlayer player) {
+        return text;
+    }
+
+    public static TextLore from(String text){
+        return new TextLore(text);
+    }
 }
