@@ -53,8 +53,7 @@ public class SeatedOnContext {
         org.bukkit.entity.Player bukkitPlayer = player.getBukkitPlayer();
 
         Sync.runSynced(() -> {
-            bukkitPlayer.setFlying(true);
-            bukkitPlayer.setAllowFlight(true);
+            player.setFly(true);
 
             player.setSeatedOnContext(this);
             state = SeatedOnState.SETUP;
@@ -64,11 +63,8 @@ public class SeatedOnContext {
     public void restore(Player player){
         if(state != SeatedOnState.SETUP) throw new RuntimeException("Already restored context");
 
-        org.bukkit.entity.Player bukkitPlayer = player.getBukkitPlayer();
-
         Sync.runSynced(() -> {
-            bukkitPlayer.setFlying(wasFlying);
-            bukkitPlayer.setAllowFlight(wasAllowedFlying);
+            player.setFly(wasFlying, wasAllowedFlying);
 
             player.clearSmoothAnimationRotation();
 

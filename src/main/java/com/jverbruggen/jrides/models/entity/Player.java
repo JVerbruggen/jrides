@@ -256,5 +256,14 @@ public class Player implements MessageAgent, JRidesPlayer {
         if(sound == null) return;
         bukkitPlayer.playSound(bukkitPlayer.getLocation(), sound, 1, 1);
     }
+
+    public void setFly(boolean enabled){
+        setFly(enabled, enabled);
+    }
+
+    public void setFly(boolean enabled, boolean allowFlight){
+        bukkitPlayer.setAllowFlight(allowFlight);
+        bukkitPlayer.setFlying(enabled);
+    }
 }
 
