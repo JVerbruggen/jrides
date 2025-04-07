@@ -33,9 +33,9 @@ public interface ViewportManager {
     void updateVisuals(Player player);
     void updateVisuals(Player player, Vector3 playerLocation);
     void updateForEntity(VirtualEntity virtualEntity);
-    VirtualEntity findOrSpawnModelEntity(String identifier, Vector3 location, TrainModelItem headModel);
-    VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel);
-    VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, TrainModelItem headModel, String customName);
+    VirtualEntity findOrSpawnModelEntity(String identifier, Vector3 location, TrainModelItem headModel, boolean useDisplayEntities);
+    VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel, boolean useDisplayEntities);
+    VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, Vector3 scale, TrainModelItem headModel, String customName, boolean useDisplayEntities);
     VirtualEntity spawnSeatEntity(Vector3 location, double yawRotation, TrainModelItem model);
     VirtualEntity spawnVirtualBukkitEntity(Vector3 location, EntityType entityType);
     VirtualEntity spawnVirtualBukkitEntity(Vector3 location, EntityType entityType, double yawRotation);

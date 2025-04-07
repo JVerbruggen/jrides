@@ -17,6 +17,16 @@
 
 package com.jverbruggen.jrides.packets.impl;
 
+import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.entity.TrainModelItem;
+import com.jverbruggen.jrides.models.math.Quaternion;
+import com.jverbruggen.jrides.models.math.Vector3;
+import com.jverbruggen.jrides.packets.packet.v1_20.ItemDisplayMetaDataPacket;
+import com.jverbruggen.jrides.packets.packet.v1_20.ItemDisplayModelServerPacket;
+import org.bukkit.entity.ItemDisplay;
+
+import java.util.List;
+
 public class PacketSender_1_20_4 extends PacketSender_1_20_1 {
     public PacketSender_1_20_4(boolean debugMode) {
         super(debugMode);
@@ -25,5 +35,41 @@ public class PacketSender_1_20_4 extends PacketSender_1_20_1 {
     @Override
     public String getIdentifier() {
         return "1.20.4";
+    }
+
+    @Override
+    public void sendApplyItemDisplayModelPacket(Player player, int entityId, ItemDisplay.ItemDisplayTransform itemDisplayTransform, TrainModelItem model, Vector3 scale) {
+        sendDebugLog("sendApplyItemDisplayModelPacket (single) 1.20.4");
+
+        new ItemDisplayModelServerPacket(
+                protocolManager, entityId, itemDisplayTransform, model, scale
+        ).send(player);
+    }
+
+    @Override
+    public void sendApplyItemDisplayModelPacket(List<Player> players, int entityId, ItemDisplay.ItemDisplayTransform itemDisplayTransform, TrainModelItem model, Vector3 scale) {
+        sendDebugLog("sendApplyItemDisplayModelPacket (single) 1.20.4");
+
+        new ItemDisplayModelServerPacket(
+                protocolManager, entityId, itemDisplayTransform, model, scale
+        ).sendAll(players);
+    }
+
+    @Override
+    public void sendItemDisplayMetaDataPacket(Player player, int entityId, int PositionRotationInterpolationDuration) {
+        sendDebugLog("sendItemDisplayMetaDataPacket (single) 1.20.4");
+
+        new ItemDisplayMetaDataPacket(
+                protocolManager, entityId, PositionRotationInterpolationDuration
+        ).send(player);
+    }
+
+    @Override
+    public void sendItemDisplayRotationPacket(List<Player> players, int entityId, Quaternion orientation, int positionRotationInterpolationDuration) {
+        sendDebugLog("sendItemDisplayMetaDataPacket (multiple) 1.20.4");
+
+        new ItemDisplayRotationPacket(
+                protocolManager, entityId, orientation, positionRotationInterpolationDuration
+        ).sendAll(players);
     }
 }

@@ -21,11 +21,13 @@ import com.jverbruggen.jrides.animator.coaster.TrainHandle;
 import com.jverbruggen.jrides.models.entity.*;
 import com.jverbruggen.jrides.models.entity.armorstand.VirtualArmorstand;
 import com.jverbruggen.jrides.models.entity.armorstand.YawRotatedVirtualArmorstand;
+import com.jverbruggen.jrides.models.entity.display.VirtualDisplayEntity;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.render.GlobalViewport;
 import com.jverbruggen.jrides.packets.PacketSender;
 import com.jverbruggen.jrides.packets.object.VirtualArmorstandConfiguration;
+import com.jverbruggen.jrides.packets.object.VirtualDisplayConfiguration;
 import org.bukkit.entity.EntityType;
 
 import java.util.HashMap;
@@ -103,26 +105,32 @@ public class GlobalViewportManager implements ViewportManager {
     }
 
     @Override
-    public VirtualEntity findOrSpawnModelEntity(String identifier, Vector3 location, TrainModelItem headModel) {
-        if(identifier == null) return spawnModelEntity(location, headModel);
+    public VirtualEntity findOrSpawnModelEntity(String identifier, Vector3 location, TrainModelItem headModel, boolean useDisplayEntities) {
+        if(identifier == null) return spawnModelEntity(location, headModel, useDisplayEntities);
 
         if(reusableEntities.containsKey(identifier)){
             return reusableEntities.get(identifier);
         }
 
-        VirtualEntity virtualEntity = spawnModelEntity(location, headModel);
+        VirtualEntity virtualEntity = spawnModelEntity(location, headModel, useDisplayEntities);
         reusableEntities.put(identifier, virtualEntity);
         return virtualEntity;
     }
 
     @Override
-    public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel) {
-        return spawnVirtualArmorstand(location, new Quaternion(), headModel, VirtualArmorstandConfiguration.createDefault());
+    public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel, boolean useDisplayEntities) {
+        if(packetSender.getIdentifier().equals("1.19.2") || !useDisplayEntities) {
+            return spawnVirtualArmorstand(location, new Quaternion(), headModel, VirtualArmorstandConfiguration.createDefault());
+        }
+        return spawnVirtualDisplayEntity(location, new Quaternion(), new Vector3(1, 1, 1), headModel, VirtualDisplayConfiguration.createDefault());
     }
 
     @Override
-    public VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, TrainModelItem headModel, String customName) {
-        return spawnVirtualArmorstand(location, rotation, headModel, VirtualArmorstandConfiguration.createWithName(customName));
+    public VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, Vector3 scale, TrainModelItem headModel, String customName, boolean useDisplayEntities) {
+        if(packetSender.getIdentifier().equals("1.19.2") || !useDisplayEntities) {
+            return spawnVirtualArmorstand(location, rotation, headModel, VirtualArmorstandConfiguration.createWithName(customName));
+        }
+        return spawnVirtualDisplayEntity(location, rotation, scale, headModel, VirtualDisplayConfiguration.createDefault());
     }
 
     @Override
@@ -183,6 +191,19 @@ public class GlobalViewportManager implements ViewportManager {
 
         updateForEntity(virtualArmorstand);
         return virtualArmorstand;
+    }
+
+    public VirtualDisplayEntity spawnVirtualDisplayEntity(Vector3 location, Quaternion rotation, Vector3 scale, TrainModelItem model, VirtualDisplayConfiguration configuration) {
+        int entityId = entityIdFactory.newId();
+        VirtualDisplayEntity virtualDisplayEntity = new VirtualDisplayEntity(packetSender, this, location, rotation, scale, entityId, configuration);
+        if(model != null) {
+            virtualDisplayEntity.setModel(model);
+        }
+
+        addEntity(virtualDisplayEntity);
+
+        updateForEntity(virtualDisplayEntity);
+        return virtualDisplayEntity;
     }
 
     @Override

@@ -66,17 +66,17 @@ public class SpecifiedViewportManager implements ViewportManager{
     }
 
     @Override
-    public VirtualEntity findOrSpawnModelEntity(String identifier, Vector3 location, TrainModelItem headModel) {
+    public VirtualEntity findOrSpawnModelEntity(String identifier, Vector3 location, TrainModelItem headModel, boolean useDisplayEntities) {
         return null;
     }
 
     @Override
-    public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem trainModelItem) {
+    public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem trainModelItem, boolean useDisplayEntities) {
         return null;
     }
 
     @Override
-    public VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, TrainModelItem trainModelItem, String customName) {
+    public VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, Vector3 scale, TrainModelItem trainModelItem, String customName, boolean useDisplayEntities) {
         return null;
     }
 

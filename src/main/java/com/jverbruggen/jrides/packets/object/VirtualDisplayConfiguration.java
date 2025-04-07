@@ -15,41 +15,17 @@
  * inflicted by the software.                                                                               *
  ************************************************************************************************************/
 
-package com.jverbruggen.jrides.config.coaster.objects.item;
+package com.jverbruggen.jrides.packets.object;
 
-import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
-import com.jverbruggen.jrides.models.entity.VirtualEntity;
-import com.jverbruggen.jrides.models.math.Quaternion;
-import com.jverbruggen.jrides.models.math.Vector3;
-import com.jverbruggen.jrides.state.viewport.ViewportManager;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.EntityType;
+import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandModels;
+import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandRotations;
 
-import javax.annotation.Nullable;
+public record VirtualDisplayConfiguration(
+        ArmorstandRotations rotations,
+        ArmorstandModels models
+    ) {
 
-public class EntityConfig extends BaseConfig implements ItemConfig {
-    private final EntityType entityType;
-    private final double yawRotation;
-
-    public EntityConfig(EntityType entityType, double yawRotation) {
-        this.entityType = entityType;
-        this.yawRotation = yawRotation;
-    }
-
-    public EntityType getEntityType() {
-        return entityType;
-    }
-
-    @Override
-    public VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition, Quaternion spawnRotation, Vector3 spawnScale, String customName, boolean useDisplayEntities) {
-        return viewportManager.spawnVirtualBukkitEntity(spawnPosition, getEntityType(), yawRotation);
-    }
-
-    public static EntityConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection) {
-        if(configurationSection == null) return new EntityConfig(null, 0);
-
-        EntityType entityType = EntityType.valueOf(configurationSection.getString("type"));
-        double yawRotation = getDouble(configurationSection, "yawRotation", 0);
-        return new EntityConfig(entityType, yawRotation);
+    public static VirtualDisplayConfiguration createDefault(){
+        return new VirtualDisplayConfiguration(new ArmorstandRotations(), new ArmorstandModels());
     }
 }

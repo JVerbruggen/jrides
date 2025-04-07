@@ -31,6 +31,7 @@ public abstract class AbstractRideConfig extends BaseConfig {
     private final String identifier;
     private final String displayName;
     private final List<String> displayDescription;
+    private final boolean useDisplayEntities;
     private final ItemStackConfig displayItem;
     private final PlayerLocation warpLocation;
     private final boolean warpEnabled;
@@ -42,11 +43,12 @@ public abstract class AbstractRideConfig extends BaseConfig {
     private final RideCounterMapConfigs rideCounterMapConfigs;
     private final boolean debugMode;
 
-    public AbstractRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemStackConfig displayItem, PlayerLocation warpLocation, boolean warpEnabled, PlayerLocation customEjectLocation, GatesConfig gates, SoundsConfig soundsConfig, boolean canExitDuringRide, InteractionEntitiesConfig interactionEntities, RideCounterMapConfigs rideCounterMapConfigs, boolean debugMode) {
+    public AbstractRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, boolean useDisplayEntities, ItemStackConfig displayItem, PlayerLocation warpLocation, boolean warpEnabled, PlayerLocation customEjectLocation, GatesConfig gates, SoundsConfig soundsConfig, boolean canExitDuringRide, InteractionEntitiesConfig interactionEntities, RideCounterMapConfigs rideCounterMapConfigs, boolean debugMode) {
         this.manifestVersion = manifestVersion;
         this.identifier = identifier;
         this.displayName = displayName;
         this.displayDescription = displayDescription;
+        this.useDisplayEntities = useDisplayEntities;
         this.displayItem = displayItem;
         this.warpLocation = warpLocation;
         this.warpEnabled = warpEnabled;
@@ -73,6 +75,10 @@ public abstract class AbstractRideConfig extends BaseConfig {
 
     public List<String> getDisplayDescription() {
         return displayDescription;
+    }
+
+    public boolean isUsingDisplayEntities() {
+        return useDisplayEntities;
     }
 
     public ItemStackConfig getDisplayItem() {

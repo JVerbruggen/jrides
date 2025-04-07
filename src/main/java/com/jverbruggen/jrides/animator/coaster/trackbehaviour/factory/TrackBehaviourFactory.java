@@ -298,7 +298,7 @@ public class TrackBehaviourFactory {
 
             List<ModelWithOffset> modelEntities = transferSectionSpecConfig.getTransferModelConfigs()
                     .stream()
-                    .map(c -> c.toModelWithOffset(originTransferPosition.getLocation(), originTransferPosition.getOrientation().clone(), viewportManager))
+                    .map(c -> c.toModelWithOffset(originTransferPosition.getLocation(), originTransferPosition.getOrientation().clone(), new Vector3(1, 1, 1), viewportManager))
                     .toList();
 
             Transfer transfer = new Transfer(transferPositions, modelEntities, origin);

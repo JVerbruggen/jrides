@@ -105,8 +105,9 @@ public class TrainFactory {
             VectorQuaternionState vectorQuaternionState = CoasterCart.calculateLocation(trackLocation, cartOffset, orientation, cartRotationOffset);
             Vector3 cartLocation = vectorQuaternionState.getVector();
             Quaternion cartOrientation = vectorQuaternionState.getQuaternion();
+            Vector3 cartScale = cartTypeSpecConfig.getModel().getScale();
 
-            VirtualEntity virtualEntity = cartModelItemConfig.spawnEntity(viewportManager, cartLocation, cartOrientation, null);
+            VirtualEntity virtualEntity = cartModelItemConfig.spawnEntity(viewportManager, cartLocation, cartOrientation, cartScale, null, coasterConfig.isUsingDisplayEntities());
             Bukkit.getScheduler().runTask(JRidesPlugin.getBukkitPlugin(), () -> virtualEntity.setRotation(cartOrientation));
 
             List<Vector3PlusYaw> seatOffsets = cartTypeSpecConfig.getSeats().getPositions();
