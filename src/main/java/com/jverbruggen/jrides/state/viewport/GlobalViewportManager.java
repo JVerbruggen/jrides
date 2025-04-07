@@ -105,29 +105,29 @@ public class GlobalViewportManager implements ViewportManager {
     }
 
     @Override
-    public VirtualEntity findOrSpawnModelEntity(String identifier, Vector3 location, TrainModelItem headModel) {
-        if(identifier == null) return spawnModelEntity(location, headModel);
+    public VirtualEntity findOrSpawnModelEntity(String identifier, Vector3 location, TrainModelItem headModel, boolean useDisplayEntities) {
+        if(identifier == null) return spawnModelEntity(location, headModel, useDisplayEntities);
 
         if(reusableEntities.containsKey(identifier)){
             return reusableEntities.get(identifier);
         }
 
-        VirtualEntity virtualEntity = spawnModelEntity(location, headModel);
+        VirtualEntity virtualEntity = spawnModelEntity(location, headModel, useDisplayEntities);
         reusableEntities.put(identifier, virtualEntity);
         return virtualEntity;
     }
 
     @Override
-    public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel) {
-        if(packetSender.getIdentifier().equals("1.19.2")) { // TODO: Base this on configuration
+    public VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel, boolean useDisplayEntities) {
+        if(packetSender.getIdentifier().equals("1.19.2") || !useDisplayEntities) {
             return spawnVirtualArmorstand(location, new Quaternion(), headModel, VirtualArmorstandConfiguration.createDefault());
         }
         return spawnVirtualDisplayEntity(location, new Quaternion(), new Vector3(1, 1, 1), headModel, VirtualDisplayConfiguration.createDefault());
     }
 
     @Override
-    public VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, Vector3 scale, TrainModelItem headModel, String customName) {
-        if(packetSender.getIdentifier().equals("1.19.2")) { // TODO: Base this on configuration
+    public VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, Vector3 scale, TrainModelItem headModel, String customName, boolean useDisplayEntities) {
+        if(packetSender.getIdentifier().equals("1.19.2") || !useDisplayEntities) {
             return spawnVirtualArmorstand(location, rotation, headModel, VirtualArmorstandConfiguration.createWithName(customName));
         }
         return spawnVirtualDisplayEntity(location, rotation, scale, headModel, VirtualDisplayConfiguration.createDefault());

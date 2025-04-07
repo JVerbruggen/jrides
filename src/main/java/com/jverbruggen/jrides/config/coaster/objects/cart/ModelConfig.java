@@ -66,7 +66,7 @@ public class ModelConfig extends BaseConfig {
 
     public ModelWithOffset toModelWithOffset(Vector3 rootPosition, Quaternion rootOrientation, Vector3 rootScale, ViewportManager viewportManager){
         Vector3 spawnPosition = Vector3.add(rootPosition, position);
-        VirtualEntity virtualEntity = itemConfig.spawnEntity(viewportManager, spawnPosition, rootOrientation, rootScale, null);
+        VirtualEntity virtualEntity = itemConfig.spawnEntity(viewportManager, spawnPosition, rootOrientation, rootScale, null, false);
 
         return new ModelWithOffset(virtualEntity, position.clone(), rotation.clone());
     }

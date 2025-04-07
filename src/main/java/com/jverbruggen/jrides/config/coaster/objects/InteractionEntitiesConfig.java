@@ -52,7 +52,7 @@ public class InteractionEntitiesConfig extends BaseConfig {
             Quaternion spawnRotation = modelConfig.getRotation();
             Vector3 spawnScale = modelConfig.getScale();
             String customName = "Controller";
-            VirtualEntity virtualEntity = modelConfig.getItemConfig().spawnEntity(viewportManager, spawnPosition, spawnRotation, spawnScale, customName);
+            VirtualEntity virtualEntity = modelConfig.getItemConfig().spawnEntity(viewportManager, spawnPosition, spawnRotation, spawnScale, customName, false);
 
             virtualEntity.setCustomAction(new OperateRideAction());
             virtualEntity.setBelongsToRide(rideHandle);

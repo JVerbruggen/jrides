@@ -27,7 +27,7 @@ import org.bukkit.entity.EntityType;
 
 import javax.annotation.Nullable;
 
-public class EntityConfig extends BaseConfig implements ItemConfig{
+public class EntityConfig extends BaseConfig implements ItemConfig {
     private final EntityType entityType;
     private final double yawRotation;
 
@@ -41,7 +41,7 @@ public class EntityConfig extends BaseConfig implements ItemConfig{
     }
 
     @Override
-    public VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition, Quaternion spawnRotation, Vector3 spawnScale, String customName) {
+    public VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition, Quaternion spawnRotation, Vector3 spawnScale, String customName, boolean useDisplayEntities) {
         return viewportManager.spawnVirtualBukkitEntity(spawnPosition, getEntityType(), yawRotation);
     }
 

@@ -40,11 +40,12 @@ public class FlatRideConfig extends AbstractRideConfig {
     private final StructureConfig structureConfig;
     private final TimingConfig timingConfig;
 
+    // TODO: Implement the useDisplayEntities
     public FlatRideConfig(String manifestVersion, String identifier, String displayName, List<String> displayDescription, ItemStackConfig displayItem,
                           PlayerLocation warpLocation, boolean warpEnabled, PlayerLocation customEjectLocation, GatesConfig gates, InteractionEntitiesConfig interactionEntities,
                           boolean canExitDuringRide, StationConfig stationConfig, SoundsConfig soundsConfig, StructureConfig structureConfig,
                           TimingConfig timingConfig, RideCounterMapConfigs rideCounterMapConfigs, boolean debugMode) {
-        super(manifestVersion, identifier, displayName, displayDescription, displayItem, warpLocation, warpEnabled, customEjectLocation, gates, soundsConfig, canExitDuringRide, interactionEntities, rideCounterMapConfigs, debugMode);
+        super(manifestVersion, identifier, displayName, displayDescription, false, displayItem, warpLocation, warpEnabled, customEjectLocation, gates, soundsConfig, canExitDuringRide, interactionEntities, rideCounterMapConfigs, debugMode);
         this.stationConfig = stationConfig;
         this.structureConfig = structureConfig;
         this.timingConfig = timingConfig;

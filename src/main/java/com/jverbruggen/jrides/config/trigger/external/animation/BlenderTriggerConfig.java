@@ -65,7 +65,8 @@ public class BlenderTriggerConfig extends BaseTriggerConfig {
     public EffectTrigger createTrigger(String rideIdentifier) {
         TrainModelItem headModel = new TrainModelItem(headModelConfig.createItemStack());
 
-        VirtualEntity targetEntity = ServiceProvider.getSingleton(ViewportManager.class).findOrSpawnModelEntity(reuseEntity, location, headModel);
+        // TODO: Dynamically fetch if the entity is a display entity or not
+        VirtualEntity targetEntity = ServiceProvider.getSingleton(ViewportManager.class).findOrSpawnModelEntity(reuseEntity, location, headModel, false);
         AnimationHandle animationHandle = ServiceProvider.getSingleton(AnimationLoader.class).loadCoasterEffectAnimation(animationName, rideIdentifier);
         BlenderAnimationExecutor blenderAnimationExecutor = new BlenderAnimationExecutor(location, animationHandle, targetEntity, animationName);
 
