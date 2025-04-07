@@ -52,8 +52,8 @@ public interface PacketSender {
     void teleportVirtualEntity(List<Player> players, int entityId, Vector3 blockLocation);
     void sendMountVirtualEntityPacket(List<Player> players, Player mounted, int entityId);
     void sendClientPositionPacket(Player movedPlayer, Vector3 position);
-    void sendApplyItemDisplayModelPacket(Player player, int entityId, ItemDisplay.ItemDisplayTransform itemDisplayTransform, TrainModelItem model);
-    void sendApplyItemDisplayModelPacket(List<Player> players, int entityId, ItemDisplay.ItemDisplayTransform itemDisplayTransform, TrainModelItem model);
+    void sendApplyItemDisplayModelPacket(Player player, int entityId, ItemDisplay.ItemDisplayTransform itemDisplayTransform, TrainModelItem model, Vector3 scale);
+    void sendApplyItemDisplayModelPacket(List<Player> players, int entityId, ItemDisplay.ItemDisplayTransform itemDisplayTransform, TrainModelItem model, Vector3 scale);
     void sendItemDisplayMetaDataPacket(Player player, int entityId, int PositionRotationInterpolationDuration);
     void sendItemDisplayRotationPacket(List<Player> players, int entityId, Quaternion orientation, int positionRotationInterpolationDuration);
     Vector3 getArmorstandModelCompensationVector();

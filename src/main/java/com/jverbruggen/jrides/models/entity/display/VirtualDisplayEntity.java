@@ -6,7 +6,7 @@ import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.math.Quaternion;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.PacketSender;
-import com.jverbruggen.jrides.packets.object.VirtualArmorstandConfiguration;
+import com.jverbruggen.jrides.packets.object.VirtualDisplayConfiguration;
 import com.jverbruggen.jrides.state.viewport.ViewportManager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemDisplay;
@@ -16,9 +16,9 @@ import javax.annotation.Nonnull;
 public class VirtualDisplayEntity extends BaseVirtualEntity {
 
     private final Quaternion currentRotation;
-    private final VirtualArmorstandConfiguration configuration;
+    private final VirtualDisplayConfiguration configuration;
 
-    public VirtualDisplayEntity(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, Quaternion rotation, int entityId, @Nonnull VirtualArmorstandConfiguration configuration) {
+    public VirtualDisplayEntity(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, Quaternion rotation, int entityId, @Nonnull VirtualDisplayConfiguration configuration) {
         super(packetSender, viewportManager, location, entityId);
 
         this.currentRotation = rotation;
@@ -62,7 +62,7 @@ public class VirtualDisplayEntity extends BaseVirtualEntity {
         this.packetSender.sendItemDisplayMetaDataPacket(player, entityId, 3);
 
         if(configuration.models().hasHead()){
-            this.packetSender.sendApplyItemDisplayModelPacket(player, entityId, ItemDisplay.ItemDisplayTransform.HEAD, configuration.models().getHead());
+            this.packetSender.sendApplyItemDisplayModelPacket(player, entityId, ItemDisplay.ItemDisplayTransform.HEAD, configuration.models().getHead(), configuration.scale());
         }
     }
 
@@ -74,7 +74,7 @@ public class VirtualDisplayEntity extends BaseVirtualEntity {
     @Override
     public void setModel(TrainModelItem model) {
         this.configuration.models().setHead(model);
-        this.packetSender.sendApplyItemDisplayModelPacket(viewers, entityId, ItemDisplay.ItemDisplayTransform.HEAD, model);
+        this.packetSender.sendApplyItemDisplayModelPacket(viewers, entityId, ItemDisplay.ItemDisplayTransform.HEAD, model, configuration.scale());
     }
 
     @Override

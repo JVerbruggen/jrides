@@ -20,6 +20,7 @@ package com.jverbruggen.jrides.packets.impl;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.entity.TrainModelItem;
 import com.jverbruggen.jrides.models.math.Quaternion;
+import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.packets.packet.v1_20.ItemDisplayMetaDataPacket;
 import com.jverbruggen.jrides.packets.packet.v1_20.ItemDisplayModelServerPacket;
 import org.bukkit.entity.ItemDisplay;
@@ -37,20 +38,20 @@ public class PacketSender_1_20_4 extends PacketSender_1_20_1 {
     }
 
     @Override
-    public void sendApplyItemDisplayModelPacket(Player player, int entityId, ItemDisplay.ItemDisplayTransform itemDisplayTransform, TrainModelItem model) {
+    public void sendApplyItemDisplayModelPacket(Player player, int entityId, ItemDisplay.ItemDisplayTransform itemDisplayTransform, TrainModelItem model, Vector3 scale) {
         sendDebugLog("sendApplyItemDisplayModelPacket (single) 1.20.4");
 
         new ItemDisplayModelServerPacket(
-                protocolManager, entityId, itemDisplayTransform, model
+                protocolManager, entityId, itemDisplayTransform, model, scale
         ).send(player);
     }
 
     @Override
-    public void sendApplyItemDisplayModelPacket(List<Player> players, int entityId, ItemDisplay.ItemDisplayTransform itemDisplayTransform, TrainModelItem model) {
+    public void sendApplyItemDisplayModelPacket(List<Player> players, int entityId, ItemDisplay.ItemDisplayTransform itemDisplayTransform, TrainModelItem model, Vector3 scale) {
         sendDebugLog("sendApplyItemDisplayModelPacket (single) 1.20.4");
 
         new ItemDisplayModelServerPacket(
-                protocolManager, entityId, itemDisplayTransform, model
+                protocolManager, entityId, itemDisplayTransform, model, scale
         ).sendAll(players);
     }
 
