@@ -32,7 +32,7 @@ public class ItemDisplayMetaDataPacket extends SingularServerPacket implements P
         metaDataPacket.getIntegers().write(0, entityId);
 
         List<WrappedDataValue> values = Lists.newArrayList(
-                new WrappedDataValue(8, WrappedDataWatcher.Registry.get(Integer.class), 0),
+                new WrappedDataValue(9, WrappedDataWatcher.Registry.get(Integer.class), positionRotationInterpolationDuration),
                 new WrappedDataValue(10, WrappedDataWatcher.Registry.get(Integer.class), positionRotationInterpolationDuration)
         );
 
