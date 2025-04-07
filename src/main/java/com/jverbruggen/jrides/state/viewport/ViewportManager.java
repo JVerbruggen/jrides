@@ -35,7 +35,7 @@ public interface ViewportManager {
     void updateForEntity(VirtualEntity virtualEntity);
     VirtualEntity findOrSpawnModelEntity(String identifier, Vector3 location, TrainModelItem headModel);
     VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel);
-    VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, TrainModelItem headModel, String customName);
+    VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, Vector3 scale, TrainModelItem headModel, String customName);
     VirtualEntity spawnSeatEntity(Vector3 location, double yawRotation, TrainModelItem model);
     VirtualEntity spawnVirtualBukkitEntity(Vector3 location, EntityType entityType);
     VirtualEntity spawnVirtualBukkitEntity(Vector3 location, EntityType entityType, double yawRotation);

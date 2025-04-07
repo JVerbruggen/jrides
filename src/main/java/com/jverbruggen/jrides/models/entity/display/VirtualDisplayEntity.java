@@ -17,11 +17,13 @@ public class VirtualDisplayEntity extends BaseVirtualEntity {
 
     private final Quaternion currentRotation;
     private final VirtualDisplayConfiguration configuration;
+    private final Vector3 scale;
 
-    public VirtualDisplayEntity(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, Quaternion rotation, int entityId, @Nonnull VirtualDisplayConfiguration configuration) {
+    public VirtualDisplayEntity(PacketSender packetSender, ViewportManager viewportManager, Vector3 location, Quaternion rotation, Vector3 scale, int entityId, @Nonnull VirtualDisplayConfiguration configuration) {
         super(packetSender, viewportManager, location, entityId);
 
         this.currentRotation = rotation;
+        this.scale = scale;
         this.configuration = configuration;
     }
 
@@ -62,7 +64,7 @@ public class VirtualDisplayEntity extends BaseVirtualEntity {
         this.packetSender.sendItemDisplayMetaDataPacket(player, entityId, 3);
 
         if(configuration.models().hasHead()){
-            this.packetSender.sendApplyItemDisplayModelPacket(player, entityId, ItemDisplay.ItemDisplayTransform.HEAD, configuration.models().getHead(), configuration.scale());
+            this.packetSender.sendApplyItemDisplayModelPacket(player, entityId, ItemDisplay.ItemDisplayTransform.HEAD, configuration.models().getHead(), scale);
         }
     }
 
@@ -74,7 +76,7 @@ public class VirtualDisplayEntity extends BaseVirtualEntity {
     @Override
     public void setModel(TrainModelItem model) {
         this.configuration.models().setHead(model);
-        this.packetSender.sendApplyItemDisplayModelPacket(viewers, entityId, ItemDisplay.ItemDisplayTransform.HEAD, model, configuration.scale());
+        this.packetSender.sendApplyItemDisplayModelPacket(viewers, entityId, ItemDisplay.ItemDisplayTransform.HEAD, model, scale);
     }
 
     @Override

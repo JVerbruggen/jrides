@@ -35,11 +35,13 @@ public class ModelConfig extends BaseConfig {
     private final ItemConfig itemConfig;
     private final Vector3 position;
     private final Quaternion rotation;
+    private final Vector3 scale;
 
-    public ModelConfig(ItemConfig itemConfig, Vector3 position, Quaternion rotation) {
+    public ModelConfig(ItemConfig itemConfig, Vector3 position, Quaternion rotation, Vector3 scale) {
         this.itemConfig = itemConfig;
         this.position = position;
         this.rotation = rotation;
+        this.scale = scale;
     }
 
     public Vector3 getPosition() {
@@ -50,30 +52,35 @@ public class ModelConfig extends BaseConfig {
         return rotation;
     }
 
+    public Vector3 getScale() {
+        return scale;
+    }
+
     public ItemConfig getItemConfig() {
         return itemConfig;
     }
 
     public ModelWithOffset toModelWithOffset(Vector3 rootPosition, ViewportManager viewportManager) {
-        return toModelWithOffset(rootPosition, new Quaternion(), viewportManager);
+        return toModelWithOffset(rootPosition, new Quaternion(), new Vector3(1, 1, 1), viewportManager);
     }
 
-    public ModelWithOffset toModelWithOffset(Vector3 rootPosition, Quaternion rootOrientation, ViewportManager viewportManager){
+    public ModelWithOffset toModelWithOffset(Vector3 rootPosition, Quaternion rootOrientation, Vector3 rootScale, ViewportManager viewportManager){
         Vector3 spawnPosition = Vector3.add(rootPosition, position);
-        VirtualEntity virtualEntity = itemConfig.spawnEntity(viewportManager, spawnPosition, rootOrientation, null);
+        VirtualEntity virtualEntity = itemConfig.spawnEntity(viewportManager, spawnPosition, rootOrientation, rootScale, null);
 
         return new ModelWithOffset(virtualEntity, position.clone(), rotation.clone());
     }
 
     public static ModelConfig fromConfigurationSection(@Nullable ConfigurationSection configurationSection) {
-        if(configurationSection == null) return new ModelConfig(null, Vector3.zero(), new Quaternion());
+        if(configurationSection == null) return new ModelConfig(null, Vector3.zero(), new Quaternion(), new Vector3(1, 1, 1));
 
         ItemConfig itemConfig = ItemConfig.fromConfigurationSection(configurationSection);
 
         Vector3 vector = Vector3.fromDoubleList(getDoubleList(configurationSection, "position", List.of(0d,0d,0d)));
         Quaternion rotation = Quaternion.fromDoubleList(getDoubleList(configurationSection, "rotation", List.of(0d,0d,0d)));
+        Vector3 scale = Vector3.fromDoubleList(getDoubleList(configurationSection, "scale", List.of(1d,1d,1d)));
 
-        return new ModelConfig(itemConfig, vector, rotation);
+        return new ModelConfig(itemConfig, vector, rotation, scale);
     }
 
     public static List<ModelConfig> multipleFromConfigurationSection(ConfigurationSection configurationSection){

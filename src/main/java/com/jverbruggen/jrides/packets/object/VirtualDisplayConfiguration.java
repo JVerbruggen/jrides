@@ -19,15 +19,13 @@ package com.jverbruggen.jrides.packets.object;
 
 import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandModels;
 import com.jverbruggen.jrides.models.entity.armorstand.ArmorstandRotations;
-import com.jverbruggen.jrides.models.math.Vector3;
 
 public record VirtualDisplayConfiguration(
         ArmorstandRotations rotations,
-        ArmorstandModels models,
-        Vector3 scale
+        ArmorstandModels models
     ) {
 
     public static VirtualDisplayConfiguration createDefault(){
-        return new VirtualDisplayConfiguration(new ArmorstandRotations(), new ArmorstandModels(), new Vector3(1, 1, 1));
+        return new VirtualDisplayConfiguration(new ArmorstandRotations(), new ArmorstandModels());
     }
 }

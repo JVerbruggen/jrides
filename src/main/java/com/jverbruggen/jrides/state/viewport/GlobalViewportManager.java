@@ -122,15 +122,15 @@ public class GlobalViewportManager implements ViewportManager {
         if(packetSender.getIdentifier().equals("1.19.2")) { // TODO: Base this on configuration
             return spawnVirtualArmorstand(location, new Quaternion(), headModel, VirtualArmorstandConfiguration.createDefault());
         }
-        return spawnVirtualDisplayEntity(location, new Quaternion(), headModel, VirtualDisplayConfiguration.createDefault());
+        return spawnVirtualDisplayEntity(location, new Quaternion(), new Vector3(1, 1, 1), headModel, VirtualDisplayConfiguration.createDefault());
     }
 
     @Override
-    public VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, TrainModelItem headModel, String customName) {
+    public VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, Vector3 scale, TrainModelItem headModel, String customName) {
         if(packetSender.getIdentifier().equals("1.19.2")) { // TODO: Base this on configuration
             return spawnVirtualArmorstand(location, rotation, headModel, VirtualArmorstandConfiguration.createWithName(customName));
         }
-        return spawnVirtualDisplayEntity(location, rotation, headModel, VirtualDisplayConfiguration.createDefault());
+        return spawnVirtualDisplayEntity(location, rotation, scale, headModel, VirtualDisplayConfiguration.createDefault());
     }
 
     @Override
@@ -193,9 +193,9 @@ public class GlobalViewportManager implements ViewportManager {
         return virtualArmorstand;
     }
 
-    public VirtualDisplayEntity spawnVirtualDisplayEntity(Vector3 location, Quaternion rotation, TrainModelItem model, VirtualDisplayConfiguration configuration) {
+    public VirtualDisplayEntity spawnVirtualDisplayEntity(Vector3 location, Quaternion rotation, Vector3 scale, TrainModelItem model, VirtualDisplayConfiguration configuration) {
         int entityId = entityIdFactory.newId();
-        VirtualDisplayEntity virtualDisplayEntity = new VirtualDisplayEntity(packetSender, this, location, rotation, entityId, configuration);
+        VirtualDisplayEntity virtualDisplayEntity = new VirtualDisplayEntity(packetSender, this, location, rotation, scale, entityId, configuration);
         if(model != null) {
             virtualDisplayEntity.setModel(model);
         }

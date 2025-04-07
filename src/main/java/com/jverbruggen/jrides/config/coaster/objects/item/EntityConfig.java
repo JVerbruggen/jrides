@@ -41,7 +41,7 @@ public class EntityConfig extends BaseConfig implements ItemConfig{
     }
 
     @Override
-    public VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition, Quaternion spawnRotation, String customName) {
+    public VirtualEntity spawnEntity(ViewportManager viewportManager, Vector3 spawnPosition, Quaternion spawnRotation, Vector3 spawnScale, String customName) {
         return viewportManager.spawnVirtualBukkitEntity(spawnPosition, getEntityType(), yawRotation);
     }
 
