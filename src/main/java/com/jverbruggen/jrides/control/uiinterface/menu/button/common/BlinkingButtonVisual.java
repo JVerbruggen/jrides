@@ -17,7 +17,10 @@
 
 package com.jverbruggen.jrides.control.uiinterface.menu.button.common;
 
+import com.jverbruggen.jrides.api.JRidesPlayer;
+import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.menu.ButtonVisual;
+import com.jverbruggen.jrides.models.menu.lore.LoreSet;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -55,8 +58,8 @@ public class BlinkingButtonVisual implements ButtonVisual {
         return activeVisual.getButtonMaterial();
     }
 
-    public ItemStack toItemStack(){
-        return activeVisual.toItemStack();
+    public ItemStack toItemStack(JRidesPlayer player){
+        return activeVisual.toItemStack(player);
     }
 
     @Override
@@ -71,8 +74,8 @@ public class BlinkingButtonVisual implements ButtonVisual {
     }
 
     @Override
-    public List<String> getLore() {
-        return activeVisual.getLore();
+    public List<String> getLore(JRidesPlayer player) {
+        return activeVisual.getLore(player);
     }
 
     @Override
@@ -83,6 +86,30 @@ public class BlinkingButtonVisual implements ButtonVisual {
     @Override
     public boolean needsFullItemStackReload() {
         return false;
+    }
+
+    @Override
+    public void changeDisplayName(String displayName) {
+        blinkLowVisual.changeDisplayName(displayName);
+        blinkHighVisual.changeDisplayName(displayName);
+    }
+
+    @Override
+    public void changeMaterial(Material material) {
+        blinkLowVisual.changeMaterial(material);
+        blinkHighVisual.changeMaterial(material);
+    }
+
+    @Override
+    public void changeTitleColor(ChatColor color) {
+        blinkLowVisual.changeTitleColor(color);
+        blinkHighVisual.changeTitleColor(color);
+    }
+
+    @Override
+    public void changeLore(LoreSet loreSet) {
+        blinkLowVisual.changeLore(loreSet);
+        blinkHighVisual.changeLore(loreSet);
     }
 
     @Override

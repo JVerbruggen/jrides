@@ -22,17 +22,17 @@ import com.jverbruggen.jrides.models.menu.MenuButton;
 import org.bukkit.Sound;
 
 public abstract class BaseRideControlButton implements MenuButton {
-    protected void setButtonVisual(ButtonVisual visual){
-        visual.clearUpdate();
+    private ButtonVisual buttonVisual;
 
-        if(visual.needsFullItemStackReload()){
-            setItemStack(visual.toItemStack());
-            return;
-        }
 
-        changeMaterial(visual.getButtonMaterial());
-        changeDisplayName(visual.getButtonDisplayNameColor() + visual.getValue());
-        changeLore(visual.getLore());
+    public void setButtonVisual(ButtonVisual buttonVisual) {
+        buttonVisual.clearUpdate();
+        this.buttonVisual = buttonVisual;
+    }
+
+    @Override
+    public ButtonVisual getActiveVisual() {
+        return buttonVisual;
     }
 
     @Override

@@ -13,6 +13,19 @@ Triggers can only exist when defined. Definitions can be found in multiple place
 2. In the `<coaster_identifier>.coaster.yml` file ([link](./coaster_yml.md)), used for section types that support triggers, such as the `type: station` section type.
 3. In another track's trigger file, other than the default track. Just like the `.default.trigger.yml` file, each registered track can have its own trigger file. The trigger file name should be called `<coaster_identifier>.<track_identifier>.trigger.yml`.
 
+```
+plugins/
+├─ jrides/
+│  ├─ rides.yml
+│  ├─ coasters/
+│  │  ├─ mycoaster/
+│  │  │  ├─ mycoaster.coaster.yml                        # Triggers in section types
+│  │  │  ├─ mycoaster.default.trigger.yml                # Placing triggers alongside the default track
+│  │  │  ├─ mycoaster.some-other-track.trigger.yml       # Placing triggers alongside the 'some-other-track' track
+│  │  │  ├─ triggers/
+│  │  │  │  ├─ my-trigger.yml                            # Trigger definition
+```
+
 ### File structure
 
 As said, the file name of the general trigger.yml file is as follows: `<coaster_identifier>.<track_identifier>.trigger.yml`. The contents of this file is defined here.
@@ -67,6 +80,7 @@ The `trigger_type` can be either one of the following values:
 * [type: command-for-player](#type-command-for-player)
 * [type: command-as-player](#type-command-as-player)
 * [type: external](#type-external-for-developers)
+* [type: blender-animation]
 
 <br/><br/>
 
@@ -216,4 +230,24 @@ trigger:
     data:
         <key>: <value>
         <another_key>: <another_value>
+```
+
+---
+
+### type: blender-animation
+
+The external trigger allows you to run blender animations.
+
+The animation should be exported with the jrides blender plugin, see [docs/advanced_coaster_yml/blender-as-trigger.md](../docs/advanced_coaster_yml/blender-as-trigger.md).
+
+```yml
+trigger:
+    type: blender-animation
+    location: [50.0, 10.0, 50.0]                        # [x, y, z]
+    animationName: my-cool-animation                    # Animation identifier
+    reuseEntity: my-coaster-my-cool-animation-entity    # A unique identifier for an entity so that it can be used for multiple animations
+    preloadAnim: true                                   # Whether to load the first frame of the animation when loading the plugin
+    item:                                               # Item that is animated
+      material: YELLOW_WOOL
+
 ```

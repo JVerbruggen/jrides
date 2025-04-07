@@ -33,6 +33,7 @@ public interface ViewportManager {
     void updateVisuals(Player player);
     void updateVisuals(Player player, Vector3 playerLocation);
     void updateForEntity(VirtualEntity virtualEntity);
+    VirtualEntity findOrSpawnModelEntity(String identifier, Vector3 location, TrainModelItem headModel);
     VirtualEntity spawnModelEntity(Vector3 location, TrainModelItem headModel);
     VirtualEntity spawnModelEntity(Vector3 location, Quaternion rotation, TrainModelItem headModel, String customName);
     VirtualEntity spawnSeatEntity(Vector3 location, double yawRotation, TrainModelItem model);

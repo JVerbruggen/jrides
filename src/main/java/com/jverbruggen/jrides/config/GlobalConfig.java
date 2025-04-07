@@ -18,29 +18,39 @@
 package com.jverbruggen.jrides.config;
 
 import com.jverbruggen.jrides.config.coaster.objects.BaseConfig;
+import com.jverbruggen.jrides.config.global.RidesMenuConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class GlobalConfig extends BaseConfig {
     private final String worldName;
+    private final RidesMenuConfig ridesMenuConfig;
 
-    public GlobalConfig(String worldName) {
+    public GlobalConfig(String worldName, RidesMenuConfig ridesMenuConfig) {
         this.worldName = worldName;
+        this.ridesMenuConfig = ridesMenuConfig;
     }
 
     public String getWorldName() {
         return worldName;
     }
 
+    public RidesMenuConfig getRidesMenuConfig() {
+        return ridesMenuConfig;
+    }
+
     public static void fillDefaults(YamlConfiguration yamlConfiguration){
         String worldName = Bukkit.getWorlds().get(0).getName();
         yamlConfiguration.set("config.worldName", worldName);
+
+        RidesMenuConfig.fillDefaults(yamlConfiguration);
     }
 
     public static GlobalConfig fromConfigurationSection(ConfigurationSection configurationSection){
         String worldName = getString(configurationSection, "worldName");
+        RidesMenuConfig ridesMenuConfig = RidesMenuConfig.fromConfigurationSection(getConfigurationSection(configurationSection, "ridesMenu"));
 
-        return new GlobalConfig(worldName);
+        return new GlobalConfig(worldName, ridesMenuConfig);
     }
 }

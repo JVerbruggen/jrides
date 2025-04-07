@@ -52,7 +52,7 @@ public class AnimatedJavaTriggerConfig extends BaseTriggerConfig {
     }
 
     @Override
-    public EffectTrigger createTrigger() {
+    public EffectTrigger createTrigger(String rideIdentifier) {
         AnimatedJavaExecutor executor = new AnimatedJavaExecutor(rootEntitySelectorTag, rigName, location);
         return new AnimatedJavaEffectTrigger(executor, animationName, despawnAfterTicks);
     }

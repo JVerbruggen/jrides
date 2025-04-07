@@ -22,7 +22,6 @@ import com.jverbruggen.jrides.config.ConfigManager;
 import com.jverbruggen.jrides.config.GlobalConfig;
 import com.jverbruggen.jrides.language.LanguageFile;
 import com.jverbruggen.jrides.logging.JRidesLogger;
-import com.jverbruggen.jrides.logging.LogType;
 import com.jverbruggen.jrides.models.entity.BroadcastMessageReceiver;
 import com.jverbruggen.jrides.models.entity.MessageReceiver;
 import com.jverbruggen.jrides.packets.PacketSender;

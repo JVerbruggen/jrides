@@ -9,13 +9,13 @@ Flat Rides can be programmed with blender animations.
 ## How to
 
 1. Create a Blender animations using object animations. (do not use rigging)
-2. Create a Flat Ride file with the same layout as your Blender animation objects.
-3. Each object should have an equivalent jrides-configured Flat Ride bone.
-4. Name all animated objects equal to the bone names. (Important! Jrides matches your Blender animation objects to its bones)
-5. Export the Blender animation using the custom jrides export tool. (check the `tools` folder on GitHub: https://github.com/JVerbruggen/jrides)
+2. Create a .flatride.yml file with the same layout as your Blender animation objects.
+   1. Each object should have an equivalent jrides-configured Flat Ride bone.
+3. Name all animated objects equal to the bone names. (Important! Jrides matches your Blender animation objects to its bones)
+4. Select all objects and export the Blender animation using the custom jrides export tool. (check the `tools` folder on GitHub: https://github.com/JVerbruggen/jrides)
    1. `tools/jrides_blender_export_anim_plugin.py`
-6. Name the file in the format of `<flatride_identifier>.<animation_name>.csv`, i.e. `teacups.main_animation.csv`.
-7. Paste the file in the jrides folder `jrides/flatrides/<flatride_identifier/animations`.
+5. Name the file in the format of `<flatride_identifier>.<animation_name>.csv`, i.e. `teacups.main_animation.csv`.
+6. Paste the file in the jrides folder `jrides/flatrides/<flatride_identifier/animations`.
    1. *Your folder structure should now look something like this.*
    
       ```

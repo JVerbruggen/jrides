@@ -34,6 +34,7 @@ import com.jverbruggen.jrides.language.LanguageFileField;
 import com.jverbruggen.jrides.language.LanguageFileTag;
 import com.jverbruggen.jrides.models.menu.MenuButton;
 import com.jverbruggen.jrides.models.menu.SimpleMenuButton;
+import com.jverbruggen.jrides.models.menu.lore.LoreSet;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -96,7 +97,7 @@ public class RideControlButtonFactory {
                 new StaticButtonVisual(Material.ITEM_FRAME,
                         ChatColor.RED, languageFile.get(LanguageFileField.BUTTON_PROBLEMS_STATE)),
                 slot, null);
-        problemList.changeLore(dispatchLockCollection.getProblems(1, false));
+        problemList.changeLore(LoreSet.fromStringList(dispatchLockCollection.getProblems(1, false)));
 
         dispatchLockCollection.addEventListener(lock -> {
             List<String> problems = dispatchLockCollection.getProblems(1, false);
@@ -104,7 +105,7 @@ public class RideControlButtonFactory {
                 problemList.setVisible(false);
             }else{
                 problemList.setVisible(true);
-                problemList.changeLore(problems);
+                problemList.changeLore(LoreSet.fromStringList(problems));
             }
 
             problemList.sendUpdate();

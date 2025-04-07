@@ -11,6 +11,14 @@ and download the latest BuildTools.
 
 Run BuildTools with the '--remapped' option, or in the gui with 'Remapped Jars'.
 
+## 2. Update Java and Maven if necessary
+
+BuildTools will notify you when it needs a Java update. However, check maven as well if it is using the latest Java version.
+
+`mvn -version`
+
+You may have to change your JAVA_HOME environment variable.
+
 ## 2. Add new build profile to pom.xml
 ```xml
 <profile>

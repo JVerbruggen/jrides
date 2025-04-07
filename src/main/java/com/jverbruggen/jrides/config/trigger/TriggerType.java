@@ -29,6 +29,7 @@ public enum TriggerType {
     EXTERNAL_EVENT,
     ANIMATION_SEQUENCE,
     ANIMATED_JAVA,
+    BLENDER_ANIMATION,
     STRUCTURE,
     CART_ROTATE,
     CART_RESTRAINT;
@@ -46,6 +47,7 @@ public enum TriggerType {
         else if(typeString.equalsIgnoreCase("external")) return EXTERNAL_EVENT;
         else if(typeString.equalsIgnoreCase("animation-sequence")) return ANIMATION_SEQUENCE;
         else if(typeString.equalsIgnoreCase("animated-java")) return ANIMATED_JAVA;
+        else if(typeString.equalsIgnoreCase("blender-animation")) return BLENDER_ANIMATION;
         else if(typeString.equalsIgnoreCase("structure")) return STRUCTURE;
         else if(typeString.equalsIgnoreCase("cart-rotate")) return CART_ROTATE;
         else if(typeString.equalsIgnoreCase("cart-restraint")) return CART_RESTRAINT;

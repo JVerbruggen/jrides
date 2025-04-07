@@ -50,7 +50,7 @@ public class CartRotationTriggerConfig extends BaseTriggerConfig {
     }
 
     @Override
-    public EffectTrigger createTrigger() {
+    public EffectTrigger createTrigger(String rideIdentifier) {
         return new CartRotationEffectTrigger(getRotation(), getAnimationTicks());
     }
 }

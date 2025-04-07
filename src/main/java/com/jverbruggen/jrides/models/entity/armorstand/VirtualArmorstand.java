@@ -72,6 +72,8 @@ public class VirtualArmorstand extends BaseVirtualEntity {
 
     @Override
     public void spawnFor(Player player) {
+        super.spawnFor(player);
+
         addViewer(player);
 
         if(!rendered) return;

@@ -17,6 +17,7 @@
 
 package com.jverbruggen.jrides.config.flatride.timing;
 
+import com.jverbruggen.jrides.animator.blender.BlenderAnimationExecutor;
 import com.jverbruggen.jrides.animator.flatride.FlatRideComponent;
 import com.jverbruggen.jrides.animator.flatride.FlatRideHandle;
 import com.jverbruggen.jrides.animator.flatride.timing.instruction.AnimationInstruction;
@@ -53,7 +54,8 @@ public class AnimationActionConfig extends BaseConfig implements ActionConfig{
         AnimationLoader animationLoader = ServiceProvider.getSingleton(AnimationLoader.class);
 
         AnimationHandle animationHandle = animationLoader.loadFlatRideAnimation(this.animation, flatRideHandle);
-        timingActions.add(new InstructionBinding(new AnimationInstruction(animationHandle), targetedFlatRideComponents));
+        BlenderAnimationExecutor blenderAnimationExecutor = new BlenderAnimationExecutor(animationHandle);
+        timingActions.add(new InstructionBinding(new AnimationInstruction(blenderAnimationExecutor), targetedFlatRideComponents));
 
         return timingActions;
     }

@@ -39,7 +39,7 @@ public class PassengerListener implements Listener {
         if(!player.isSeated()) return;
 
         e.setCancelled(true);
-        bukkitPlayer.setFlying(true);
+        player.setFly(true);
     }
 
     @EventHandler

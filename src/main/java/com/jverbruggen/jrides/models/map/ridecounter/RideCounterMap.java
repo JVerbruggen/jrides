@@ -24,14 +24,13 @@ import com.jverbruggen.jrides.models.ride.count.RideCounterRecordRideCollection;
 import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import com.jverbruggen.jrides.state.ride.RideCounterManager;
 import dev.cerus.maps.api.ClientsideMap;
-import dev.cerus.maps.api.Marker;
 import dev.cerus.maps.api.graphics.ClientsideMapGraphics;
 import org.bukkit.map.MapView;
 import org.bukkit.map.MinecraftFont;
 
 import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 public class RideCounterMap extends AbstractMap {
 
@@ -81,10 +80,12 @@ public class RideCounterMap extends AbstractMap {
         // Get the ridebound record collection
         RideCounterRecordRideCollection collection = rideCounterManager.getCollectionRideBound(rideHandle.getRide().getIdentifier());
 
+        List<RideCounterRecord> orderedRecords = getOrderedRecords(collection);
+
         // For each line, draw text on the map
         lines.forEach((index, height) -> {
-            if(index >= collection.getRecords().size()) return;
-            RideCounterRecord record = collection.getRecords().get(index);
+            if(index >= orderedRecords.size()) return;
+            RideCounterRecord record = orderedRecords.get(index);
             String line = lineFormat.replace("%RANK%", String.valueOf(index + 1)).replace("%COUNT%", String.valueOf(record.getRideCount())).replace("%NAME%", record.getPlayerName());
             String[] lines = line.lines().toArray(String[]::new);
             for(int i = 0; i < lines.length; i++) {
@@ -92,6 +93,10 @@ public class RideCounterMap extends AbstractMap {
                 drawHorizontallyCenteredText(lines[i], height + (MinecraftFont.Font.getHeight() + 2) * i, color, currentGraphics);
             }
         });
+    }
+
+    private List<RideCounterRecord> getOrderedRecords(RideCounterRecordRideCollection collection){
+        return collection.getRecords().stream().sorted((r1, r2) -> Integer.compare(r2.getRideCount(), r1.getRideCount())).toList();
     }
 
     private void drawHorizontallyCenteredText(String text, int h, byte color, ClientsideMapGraphics graphics) {

@@ -17,7 +17,7 @@
 
 package com.jverbruggen.jrides.animator.flatride;
 
-import com.jverbruggen.jrides.animator.flatride.interfaces.Component6DOFPosition;
+import com.jverbruggen.jrides.models.ride.Has6DOFPosition;
 import com.jverbruggen.jrides.animator.flatride.rotor.ModelWithOffset;
 import com.jverbruggen.jrides.config.flatride.structure.attachment.joint.RelativeAttachmentJointConfig;
 import com.jverbruggen.jrides.models.math.Quaternion;
@@ -30,7 +30,7 @@ import com.jverbruggen.jrides.state.ride.flatride.AnimationLoader;
 
 import java.util.List;
 
-public class Limb extends AbstractInterconnectedFlatRideComponent implements Component6DOFPosition {
+public class Limb extends AbstractInterconnectedFlatRideComponent implements Has6DOFPosition {
     private Vector3 position;
     private Quaternion rotation;
 

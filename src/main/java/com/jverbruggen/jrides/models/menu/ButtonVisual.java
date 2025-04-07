@@ -17,6 +17,9 @@
 
 package com.jverbruggen.jrides.models.menu;
 
+import com.jverbruggen.jrides.api.JRidesPlayer;
+import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.menu.lore.LoreSet;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -27,10 +30,15 @@ public interface ButtonVisual {
     ChatColor getButtonDisplayNameColor();
     Material getButtonMaterial();
     String getValue();
-    ItemStack toItemStack();
+    ItemStack toItemStack(JRidesPlayer player);
     boolean update();
     boolean hasUpdate();
-    List<String> getLore();
+    List<String> getLore(JRidesPlayer player);
     void clearUpdate();
     boolean needsFullItemStackReload();
+
+    void changeDisplayName(String displayName);
+    void changeMaterial(Material material);
+    void changeTitleColor(ChatColor color);
+    void changeLore(LoreSet loreSet);
 }

@@ -17,7 +17,9 @@
 
 package com.jverbruggen.jrides.models.menu;
 
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.menu.lore.LoreSet;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -29,16 +31,19 @@ import java.util.UUID;
 public interface MenuButton {
     void sendUpdate();
 
+    void forceUpdate();
+
     void changeDisplayName(String displayName);
 
     void changeMaterial(Material material);
 
     void changeTitleColor(ChatColor color);
 
-    void changeLore(List<String> lore);
+    void changeLore(LoreSet loreSet);
 
-    ItemStack getItemStack();
+    ItemStack getItemStack(JRidesPlayer player);
 
+    @Deprecated
     void setItemStack(ItemStack itemStack);
 
     void setVisible(boolean visible);
@@ -53,6 +58,7 @@ public interface MenuButton {
 
     void press(Player player);
 
+    void setActiveVisual(ButtonVisual buttonVisual);
     ButtonVisual getActiveVisual();
     void updateVisual();
     Sound getPressedSound();

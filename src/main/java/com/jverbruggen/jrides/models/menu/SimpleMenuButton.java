@@ -17,7 +17,9 @@
 
 package com.jverbruggen.jrides.models.menu;
 
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.models.entity.Player;
+import com.jverbruggen.jrides.models.menu.lore.LoreSet;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,11 +31,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class SimpleMenuButton implements MenuButton {
-    private final ButtonVisual buttonVisual;
+    private ButtonVisual buttonVisual;
     private ItemStack itemStack;
-    private int slot;
-    private UUID uuid;
-    private MenuButtonAction action;
+    private final int slot;
+    private final UUID uuid;
+    private final MenuButtonAction action;
     private Menu parentMenu;
     private boolean visible;
     private boolean hasUpdate;
@@ -42,94 +44,109 @@ public class SimpleMenuButton implements MenuButton {
         this.slot = slot;
         this.action = action;
         this.visible = true;
-        this.hasUpdate = false;
+        this.hasUpdate = true;
         this.buttonVisual = visual;
 
         this.uuid = UUID.randomUUID();
-        setItemStack(visual.toItemStack());
     }
 
     @Override
     public void sendUpdate(){
-        if(buttonVisual.hasUpdate()){
-            setButtonVisual(buttonVisual);
-        }
+//        if(buttonVisual.hasUpdate()){
+//            setButtonVisual(buttonVisual);
+//        }
 
         if(hasUpdate){
             hasUpdate = false;
 
-            getParentMenu().getSessions().forEach((player, inventory) -> inventory.setItem(slot, getItemStack()));
+            getParentMenu().getSessions().forEach((player, inventory) -> inventory.setItem(slot, getItemStack(player)));
         }
     }
 
     @Override
-    public void changeDisplayName(String displayName){
-        ItemStack newItemStack = itemStack.clone();
-        ItemMeta itemMeta = newItemStack.getItemMeta();
-
-        assert itemMeta != null;
-        itemMeta.setDisplayName(displayName);
-        newItemStack.setItemMeta(itemMeta);
-
-        itemStack = newItemStack;
-
+    public void forceUpdate() {
         hasUpdate = true;
+    }
+
+    @Override
+    public void changeDisplayName(String displayName){
+//        ItemStack newItemStack = itemStack.clone();
+//        ItemMeta itemMeta = newItemStack.getItemMeta();
+//
+//        assert itemMeta != null;
+//        itemMeta.setDisplayName(displayName);
+//        newItemStack.setItemMeta(itemMeta);
+//
+//        itemStack = newItemStack;
+
+        buttonVisual.changeDisplayName(displayName);
+
+        forceUpdate();
+        sendUpdate();
     }
 
     @Override
     public void changeMaterial(Material material){
-        if(itemStack.getType() == material) return;
+//        if(itemStack.getType() == material) return;
+//
+//        ItemStack newItemStack = itemStack.clone();
+//        newItemStack.setType(material);
+//
+//        itemStack = newItemStack;
 
-        ItemStack newItemStack = itemStack.clone();
-        newItemStack.setType(material);
-
-        itemStack = newItemStack;
-
-        hasUpdate = true;
+        buttonVisual.changeMaterial(material);
+        forceUpdate();
     }
 
     @Override
     public void changeTitleColor(ChatColor color){
-        String displayName = itemStack.getItemMeta().getDisplayName();
-        displayName = ChatColor.stripColor(displayName);
-        changeDisplayName(color + displayName);
+//        String displayName = itemStack.getItemMeta().getDisplayName();
+//        displayName = ChatColor.stripColor(displayName);
+//        changeDisplayName(color + displayName);
+
+        buttonVisual.changeTitleColor(color);
+        forceUpdate();
     }
 
     @Override
-    public void changeLore(List<String> lore){
-        ItemStack newItemStack = itemStack.clone();
-        ItemMeta itemMeta = newItemStack.getItemMeta();
+    public void changeLore(LoreSet loreSet){
+//        ItemStack newItemStack = itemStack.clone();
+//        ItemMeta itemMeta = newItemStack.getItemMeta();
+//
+//        itemMeta.setLore(lore);
+//        newItemStack.setItemMeta(itemMeta);
+//
+//        itemStack = newItemStack;
 
-        itemMeta.setLore(lore);
-        newItemStack.setItemMeta(itemMeta);
-
-        itemStack = newItemStack;
-
-        hasUpdate = true;
+        buttonVisual.changeLore(loreSet);
+        forceUpdate();
     }
 
     @Override
-    public ItemStack getItemStack(){
+    public ItemStack getItemStack(JRidesPlayer player){
         if(!visible) return null;
 
-        return itemStack;
+        NBTItem nbtItem = new NBTItem(buttonVisual.toItemStack(player));
+        nbtItem.setString(BUTTON_UUID_KEY, uuid.toString());
+
+        return nbtItem.getItem();
     }
 
     @Override
     public void setItemStack(ItemStack itemStack) {
-        NBTItem nbtItem = new NBTItem(itemStack);
-        nbtItem.setString(BUTTON_UUID_KEY, uuid.toString());
+//        NBTItem nbtItem = new NBTItem(itemStack);
+//        nbtItem.setString(BUTTON_UUID_KEY, uuid.toString());
 
-        this.itemStack = nbtItem.getItem();
+//        this.itemStack = nbtItem.getItem();
 
-        hasUpdate = true;
+        forceUpdate();
     }
 
     @Override
     public void setVisible(boolean visible){
         this.visible = visible;
 
-        hasUpdate = true;
+        forceUpdate();
     }
 
     @Override
@@ -157,6 +174,7 @@ public class SimpleMenuButton implements MenuButton {
         if(action == null) return;
         action.run(player, this);
         player.playSound(getPressedSound());
+        forceUpdate();
         sendUpdate();
     }
 
@@ -167,7 +185,9 @@ public class SimpleMenuButton implements MenuButton {
 
     @Override
     public void updateVisual() {
-        setItemStack(buttonVisual.toItemStack());
+        forceUpdate();
+        sendUpdate();
+//        setItemStack(buttonVisual.toItemStack());
     }
 
     @Override
@@ -175,17 +195,12 @@ public class SimpleMenuButton implements MenuButton {
         return Sound.UI_BUTTON_CLICK;
     }
 
-    private void setButtonVisual(ButtonVisual visual){
-        visual.clearUpdate();
-
-        if(visual.needsFullItemStackReload()){
-            setItemStack(visual.toItemStack());
-            return;
-        }
-
-        changeMaterial(visual.getButtonMaterial());
-        changeDisplayName(visual.getButtonDisplayNameColor() + visual.getValue());
-        changeLore(visual.getLore());
+    @Override
+    public void setActiveVisual(ButtonVisual buttonVisual) {
+        this.buttonVisual = buttonVisual;
+        this.buttonVisual.clearUpdate();
+        forceUpdate();
+        sendUpdate();
     }
 
     public static String BUTTON_UUID_KEY = "jrides-button-uuid";

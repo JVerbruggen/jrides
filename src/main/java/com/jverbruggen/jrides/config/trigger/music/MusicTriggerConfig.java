@@ -57,7 +57,7 @@ public class MusicTriggerConfig extends BaseTriggerConfig {
     }
 
     @Override
-    public TrainEffectTrigger createTrigger() {
+    public TrainEffectTrigger createTrigger(String rideIdentifier) {
         return new ExternalMusicEffectTrigger(getResource(), getDescriptor());
     }
 }

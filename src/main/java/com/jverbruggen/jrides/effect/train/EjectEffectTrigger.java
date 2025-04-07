@@ -19,8 +19,12 @@ package com.jverbruggen.jrides.effect.train;
 
 import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.event.player.PlayerFinishedRideEvent;
+import com.jverbruggen.jrides.event.ride.RideFinishedEvent;
+import com.jverbruggen.jrides.models.entity.Passenger;
+import com.jverbruggen.jrides.models.ride.Ride;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class EjectEffectTrigger extends BaseTrainEffectTrigger {
@@ -37,11 +41,15 @@ public class EjectEffectTrigger extends BaseTrainEffectTrigger {
 
     @Override
     public boolean execute(Train train) {
-        if(asFinished)
-            PlayerFinishedRideEvent.sendFinishedRideEvent(train.getPassengers()
-                .stream()
-                .map(p -> (JRidesPlayer)p.getPlayer())
-                .collect(Collectors.toList()), train.getHandle().getCoasterHandle().getRide());
+        if(asFinished) {
+            Ride ride = train.getHandle().getCoasterHandle().getRide();
+            List<Passenger> passengers = train.getPassengers();
+            PlayerFinishedRideEvent.sendFinishedRideEvent(passengers
+                    .stream()
+                    .map(p -> (JRidesPlayer) p.getPlayer())
+                    .collect(Collectors.toList()), ride);
+            RideFinishedEvent.send(ride, passengers.stream().map(Passenger::getPlayer).toList());
+        }
 
         train.ejectPassengers();
         return true;

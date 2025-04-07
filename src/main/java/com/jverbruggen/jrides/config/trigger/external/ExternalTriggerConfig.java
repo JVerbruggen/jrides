@@ -48,7 +48,7 @@ public class ExternalTriggerConfig extends BaseTriggerConfig {
     }
 
     @Override
-    public TrainEffectTrigger createTrigger() {
+    public TrainEffectTrigger createTrigger(String rideIdentifier) {
         return new ExternalEffectTrigger(data);
     }
 }

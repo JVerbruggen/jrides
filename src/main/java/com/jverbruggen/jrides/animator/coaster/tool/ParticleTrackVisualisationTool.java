@@ -18,13 +18,14 @@
 package com.jverbruggen.jrides.animator.coaster.tool;
 
 import com.jverbruggen.jrides.animator.coaster.TrainHandle;
+import com.jverbruggen.jrides.common.particle.Particle;
+import com.jverbruggen.jrides.common.particle.ParticleSpawner;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.math.Vector3;
 import com.jverbruggen.jrides.models.ride.coaster.track.Track;
 import com.jverbruggen.jrides.models.ride.coaster.train.CoasterCart;
 import com.jverbruggen.jrides.models.ride.section.Section;
-import org.bukkit.Location;
-import org.bukkit.Particle;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 import org.bukkit.World;
 
 import java.util.List;
@@ -32,33 +33,33 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ParticleTrackVisualisationTool extends ParticleVisualisationTool {
-    private List<Location> locations;
-    private World world;
-    private List<Location> sectionSplitLocations;
-    private List<TrainHandle> trains;
+    private final List<Vector3> locations;
+    private final List<Vector3> sectionSplitLocations;
+    private final List<TrainHandle> trains;
+    private final ParticleSpawner particleSpawner;
 
-    public ParticleTrackVisualisationTool(World world, List<Location> locations, List<Location> sectionSplitLocations, List<TrainHandle> trains){
+    public ParticleTrackVisualisationTool(List<Vector3> locations, List<Vector3> sectionSplitLocations, List<TrainHandle> trains){
         super(5);
-        this.world = world;
         this.locations = locations;
         this.sectionSplitLocations = sectionSplitLocations;
         this.trains = trains;
+        this.particleSpawner = ServiceProvider.getSingleton(ParticleSpawner.class);
     }
 
-    public static ParticleTrackVisualisationTool fromTrack(World world, Track track, int takeOneInX, List<TrainHandle> trains){
+    public static ParticleTrackVisualisationTool fromTrack(Track track, int takeOneInX, List<TrainHandle> trains){
         List<Vector3> positions = track.getAllPositions();
 
-        List<Location> sectionSplitLocations = track.getSections().stream()
-                .map(s -> s.getParentTrack().getLocationFor(s.getEndFrame()).toBukkitLocation(world))
+        List<Vector3> sectionSplitLocations = track.getSections().stream()
+                .map(s -> s.getParentTrack().getLocationFor(s.getEndFrame()))
                 .collect(Collectors.toList());
 
-        List<Location> locations = IntStream
+        List<Vector3> locations = IntStream
                 .range(0, positions.size())
                 .filter(i -> i % takeOneInX == 0)
-                .mapToObj(i -> positions.get(i).toBukkitLocation(world))
+                .mapToObj(positions::get)
                 .collect(Collectors.toList());
 
-        return new ParticleTrackVisualisationTool(world, locations, sectionSplitLocations, trains);
+        return new ParticleTrackVisualisationTool(locations, sectionSplitLocations, trains);
     }
 
     @Override
@@ -69,25 +70,24 @@ public class ParticleTrackVisualisationTool extends ParticleVisualisationTool {
     }
 
     public void spawnVisualisationParticles(Player player){
-        org.bukkit.entity.Player bukkitPlayer = player.getBukkitPlayer();
-        for(Location location : locations){
-            bukkitPlayer.spawnParticle(Particle.VILLAGER_HAPPY, location, 1, 0.01, 0.01, 0.01, 0);
+        for(Vector3 location : locations){
+            particleSpawner.spawnParticle(player, Particle.TRACK_PARTICLE, location, 1, 0.01, 0.01, 0.01);
         }
-        for(Location splitSectionLocation : sectionSplitLocations){
-            bukkitPlayer.spawnParticle(Particle.CRIT_MAGIC, splitSectionLocation, 5, 0.01, 1, 0.01, 0);
+        for(Vector3 splitSectionLocation : sectionSplitLocations){
+            particleSpawner.spawnParticle(player, Particle.SECTION_DIVIDER_PARTICLE, splitSectionLocation, 5, 0.01, 1, 0.01);
         }
         for(TrainHandle train : trains){
-            bukkitPlayer.spawnParticle(Particle.DRIP_WATER, train.getTrain().getCurrentHeadLocation().toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
+            particleSpawner.spawnParticle(player, Particle.TRAIN_HEAD_PARTICLE, train.getTrain().getCurrentHeadLocation(), 5, 0.01, 1, 0.01);
             for(CoasterCart cart : train.getTrain().getCarts()){
-                bukkitPlayer.spawnParticle(Particle.VILLAGER_HAPPY, cart.getPosition().toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
+                particleSpawner.spawnParticle(player, Particle.CART_PARTICLE, cart.getPosition(), 5, 0.01, 1, 0.01);
 
                 Section cartSection = cart.getFrame().getSection();
                 if(cart.getWheelDistance() != 0) {
-                    bukkitPlayer.spawnParticle(Particle.HEART, cartSection.getLocationFor(cart.getFrame().clone().add(cart.getWheelDistance())).toBukkitLocation(world), 1, 0.01, 1, 0.01, 0);
-                    bukkitPlayer.spawnParticle(Particle.HEART, cartSection.getLocationFor(cart.getFrame().clone().add(-cart.getWheelDistance())).toBukkitLocation(world), 1, 0.01, 1, 0.01, 0);
+                    particleSpawner.spawnParticle(player, Particle.CART_WHEEL_DISTANCE_PARTICLE, cartSection.getLocationFor(cart.getFrame().clone().add(cart.getWheelDistance())), 1, 0.01, 1, 0.01);
+                    particleSpawner.spawnParticle(player, Particle.CART_WHEEL_DISTANCE_PARTICLE, cartSection.getLocationFor(cart.getFrame().clone().add(-cart.getWheelDistance())), 1, 0.01, 1, 0.01);
                 }
             }
-            bukkitPlayer.spawnParticle(Particle.DRIP_LAVA, train.getTrain().getCurrentTailLocation().toBukkitLocation(world), 5, 0.01, 1, 0.01, 0);
+            particleSpawner.spawnParticle(player, Particle.TRAIN_TAIL_PARTICLE, train.getTrain().getCurrentTailLocation(), 5, 0.01, 1, 0.01);
         }
     }
 }

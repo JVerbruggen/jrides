@@ -25,6 +25,7 @@ import com.jverbruggen.jrides.config.trigger.external.CommandForPlayerTriggerCon
 import com.jverbruggen.jrides.config.trigger.external.CommandTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.external.ExternalTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.external.animation.AnimatedJavaTriggerConfig;
+import com.jverbruggen.jrides.config.trigger.external.animation.BlenderTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.music.MusicTriggerConfig;
 import com.jverbruggen.jrides.config.trigger.structure.StructureConfig;
 import com.jverbruggen.jrides.config.trigger.train.EjectTriggerConfig;
@@ -67,6 +68,8 @@ public class TriggerConfigFactory {
                     CommandAsPlayerTriggerConfig.fromConfigurationSection(configurationSection);
             case ANIMATION_SEQUENCE ->
                     MultiEntityMovementConfig.fromConfigurationSection(configurationSection);
+            case BLENDER_ANIMATION ->
+                    BlenderTriggerConfig.fromConfigurationSection(configurationSection);
             case ANIMATED_JAVA ->
                     AnimatedJavaTriggerConfig.fromConfigurationSection(configurationSection);
             case STRUCTURE ->

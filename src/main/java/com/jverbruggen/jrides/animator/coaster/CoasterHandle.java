@@ -96,7 +96,7 @@ public class CoasterHandle extends AbstractRideHandle {
     public void setTrains(List<TrainHandle> trains) {
         this.trains = trains;
         trains.forEach(t -> t.setCoasterHandle(this));
-        this.visualisationTool = ParticleTrackVisualisationTool.fromTrack(getWorld(), track, 20, trains);
+        this.visualisationTool = ParticleTrackVisualisationTool.fromTrack(track, 20, trains);
     }
 
     public List<TrainHandle> getTrains() {

@@ -38,7 +38,7 @@ public class CartRestraintTriggerConfig extends BaseTriggerConfig {
     }
 
     @Override
-    public EffectTrigger createTrigger() {
+    public EffectTrigger createTrigger(String rideIdentifier) {
         return new CartRestraintEffectTrigger(locked);
     }
 }

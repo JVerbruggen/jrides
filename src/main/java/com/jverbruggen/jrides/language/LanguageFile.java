@@ -103,6 +103,7 @@ public class LanguageFile {
         setLanguageDefault(LanguageFileField.MENU_RIDE_OVERVIEW_STATUS_CLOSED, "This ride is currently closed");
         setLanguageDefault(LanguageFileField.MENU_RIDE_OVERVIEW_STATUS_MAINTENANCE, "This ride is in maintenance");
         setLanguageDefault(LanguageFileField.MENU_RIDE_CONTROL_TITLE, "Ride control menu");
+        setLanguageDefault(LanguageFileField.MENU_RIDE_COUNTER_INDICATOR, "&7Ride counter: %" + LanguageFileTag.rideCount + "%");
         setLanguageDefault(LanguageFileField.MENU_ADMIN_RIDE_CONTROL_TITLE, "Admin ride control menu");
 
         setLanguageDefault(LanguageFileField.BUTTON_CLAIM_CABIN, "Claim operating cabin");

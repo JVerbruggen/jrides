@@ -15,11 +15,10 @@
  * inflicted by the software.                                                                               *
  ************************************************************************************************************/
 
-package com.jverbruggen.jrides.animator.flatride.interfaces;
+package com.jverbruggen.jrides.models.ride;
 
-import com.jverbruggen.jrides.models.math.Quaternion;
-import com.jverbruggen.jrides.models.math.Vector3;
-
-public interface Component6DOFPosition {
-    void setPositionRotation(Vector3 position, Quaternion rotation);
+public interface CanSpawn {
+    void spawn();
+    void despawn();
+    boolean isSpawned();
 }

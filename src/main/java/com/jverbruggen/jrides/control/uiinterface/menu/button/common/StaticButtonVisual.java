@@ -17,7 +17,9 @@
 
 package com.jverbruggen.jrides.control.uiinterface.menu.button.common;
 
+import com.jverbruggen.jrides.api.JRidesPlayer;
 import com.jverbruggen.jrides.models.menu.ButtonVisual;
+import com.jverbruggen.jrides.models.menu.lore.LoreSet;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -27,37 +29,44 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 public class StaticButtonVisual implements ButtonVisual {
-    private final ChatColor buttonDisplayNameColor;
+    private ChatColor buttonDisplayNameColor;
     private final String value;
-    private final List<String> lore;
-    private final ItemStack itemStack;
+    private LoreSet loreSet;
+    private ItemStack itemStack;
 
     public StaticButtonVisual(Material material, ChatColor buttonDisplayNameColor, String value) {
         this.itemStack = new ItemStack(material);
         this.buttonDisplayNameColor = buttonDisplayNameColor;
         this.value = value;
-        this.lore = List.of();
+        this.loreSet = LoreSet.empty();
     }
 
     public StaticButtonVisual(ItemStack itemStack, ChatColor buttonDisplayNameColor, String value) {
         this.itemStack = itemStack;
         this.buttonDisplayNameColor = buttonDisplayNameColor;
         this.value = value;
-        this.lore = List.of();
+        this.loreSet = LoreSet.empty();
     }
 
     public StaticButtonVisual(Material material, ChatColor buttonDisplayNameColor, String value, List<String> lore) {
         this.itemStack = new ItemStack(material);
         this.buttonDisplayNameColor = buttonDisplayNameColor;
         this.value = value;
-        this.lore = lore;
+        this.loreSet = LoreSet.fromStringList(lore);
     }
 
     public StaticButtonVisual(ItemStack itemStack, ChatColor buttonDisplayNameColor, String value, List<String> lore) {
         this.itemStack = itemStack;
         this.buttonDisplayNameColor = buttonDisplayNameColor;
         this.value = value;
-        this.lore = lore;
+        this.loreSet = LoreSet.fromStringList(lore);
+    }
+
+    public StaticButtonVisual(ItemStack itemStack, ChatColor buttonDisplayNameColor, String value, LoreSet loreSet) {
+        this.itemStack = itemStack;
+        this.buttonDisplayNameColor = buttonDisplayNameColor;
+        this.value = value;
+        this.loreSet = loreSet;
     }
 
     public ChatColor getButtonDisplayNameColor() {
@@ -73,11 +82,11 @@ public class StaticButtonVisual implements ButtonVisual {
         return value;
     }
 
-    public ItemStack toItemStack(){
+    public ItemStack toItemStack(JRidesPlayer player){
         ItemStack itemStack = this.itemStack.clone();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(buttonDisplayNameColor + value);
-        if(lore.size() != 0) itemMeta.setLore(lore);
+        if(loreSet.size() != 0) itemMeta.setLore(loreSet.resolve(player));
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemStack.setItemMeta(itemMeta);
@@ -96,8 +105,8 @@ public class StaticButtonVisual implements ButtonVisual {
     }
 
     @Override
-    public List<String> getLore() {
-        return lore;
+    public List<String> getLore(JRidesPlayer player) {
+        return loreSet.resolve(player);
     }
 
     @Override
@@ -108,5 +117,32 @@ public class StaticButtonVisual implements ButtonVisual {
     @Override
     public boolean needsFullItemStackReload() {
         return true;
+    }
+
+    @Override
+    public void changeDisplayName(String displayName) {
+        ItemStack newItemStack = itemStack.clone();
+        ItemMeta itemMeta = newItemStack.getItemMeta();
+
+        assert itemMeta != null;
+        itemMeta.setDisplayName(displayName);
+        newItemStack.setItemMeta(itemMeta);
+
+        itemStack = newItemStack;
+    }
+
+    @Override
+    public void changeMaterial(Material material) {
+        this.itemStack.setType(material);
+    }
+
+    @Override
+    public void changeTitleColor(ChatColor color) {
+        buttonDisplayNameColor = color;
+    }
+
+    @Override
+    public void changeLore(LoreSet loreSet) {
+        this.loreSet = loreSet;
     }
 }

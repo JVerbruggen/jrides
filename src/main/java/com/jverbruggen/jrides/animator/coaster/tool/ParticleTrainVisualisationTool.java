@@ -17,18 +17,19 @@
 
 package com.jverbruggen.jrides.animator.coaster.tool;
 
+import com.jverbruggen.jrides.common.particle.Particle;
+import com.jverbruggen.jrides.common.particle.ParticleSpawner;
 import com.jverbruggen.jrides.models.entity.Player;
 import com.jverbruggen.jrides.models.ride.coaster.train.Train;
-import org.bukkit.Particle;
-import org.bukkit.World;
+import com.jverbruggen.jrides.serviceprovider.ServiceProvider;
 
 public class ParticleTrainVisualisationTool extends ParticleVisualisationTool {
-    private World world;
-    private Train train;
+    private final ParticleSpawner particleSpawner;
+    private final Train train;
 
-    public ParticleTrainVisualisationTool(World world, Train train){
+    public ParticleTrainVisualisationTool(Train train){
         super(5);
-        this.world = world;
+        this.particleSpawner = ServiceProvider.getSingleton(ParticleSpawner.class);
         this.train = train;
     }
 
@@ -40,7 +41,6 @@ public class ParticleTrainVisualisationTool extends ParticleVisualisationTool {
     }
 
     public void spawnVisualisationParticles(Player player){
-        org.bukkit.entity.Player bukkitPlayer = player.getBukkitPlayer();
-        bukkitPlayer.spawnParticle(Particle.VILLAGER_HAPPY, train.getCurrentHeadLocation().toBukkitLocation(world), 1, 0.01, 0.01, 0.01, 0);
+        particleSpawner.spawnParticle(player, Particle.TRAIN_HEAD_PARTICLE, train.getCurrentHeadLocation(), 1, 0.01, 0.01, 0.01);
     }
 }

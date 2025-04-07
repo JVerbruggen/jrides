@@ -57,7 +57,7 @@ public class StructureConfig extends BaseTriggerConfig {
     }
 
     @Override
-    public EffectTrigger createTrigger() {
+    public EffectTrigger createTrigger(String rideIdentifier) {
         return StructureEffectTrigger.createStructureEffectTrigger(getDelayTicks(), getPosition(), getStructureIdentifier());
     }
 }
