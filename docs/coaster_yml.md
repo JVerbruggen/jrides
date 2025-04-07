@@ -164,6 +164,7 @@ There's a lot more types of tracks available, including transfers, launches, and
 - **identifier**: your_ride_identifier, same as used in the folder name and file names
 - **displayName**: The visible name of the coaster in-game
 - **displayDescription**: The visible description of the coaster in-game
+- **useDisplayEntities**: Whether to use display entities instead of armor stands for the coaster carts
 - **displayItem**: The visible icon (item in inventory) of the coaster in-game
 - - **material**: Icon material
 - - **damage**: Damage property
@@ -204,6 +205,7 @@ There's a lot more types of tracks available, including transfers, launches, and
 - - - - - .. and other item attributes
 - - - - **position**: Model offset in [x,y,z] compared to cart origin 
 - - - - **rotation**: Model offset in [rx,ry,rz] compared to cart origin 
+- - - - **scale**: Scale of the model in [x,y,z]. *Only applies when the useDisplayEntities is set to true!*
 - **gates**: Entry and exit gates for players to wait behind at a coaster
 - - **<station_section_name>**: Name of the station section that the gates belong to
 - - - **entry**:

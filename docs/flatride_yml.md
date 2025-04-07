@@ -50,6 +50,7 @@ plugins/
 - **identifier**: your_ride_identifier, same as used in the folder name and file names
 - **displayName**: The visible name of the coaster in-game
 - **displayDescription**: The visible description of the coaster in-game
+- **useDisplayEntities**: Whether to use display entities for the flatride
 - **displayItem**: The visible icon (item in inventory) of the coaster in-game
 - - **material**: Icon material
 - - **damage**: Damage property
@@ -100,6 +101,7 @@ plugins/
 - - - - - - .. and other item attributes
 - - - - - **position**: Position in [x,y,z] compared to the bone position
 - - - - - **rotation**: Rotation in [rx,ry,rz] compared to the bone rotation
+- - - - - **scale**: Scale of the model in [x,y,z]. *Only applies when the useDisplayEntities is set to true!*
 
 
 - - - *.. Typically a bone is either a root or an arm*
